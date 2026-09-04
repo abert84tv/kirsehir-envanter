@@ -201,13 +201,19 @@ function goToMe(coords) {
   meMarker.setLatLng([me.lat, me.lon]);
   map.flyTo([me.lat, me.lon], 14, { duration: .8 });
 }
-document.getElementById('t-go').onclick = () => {
+const post = m => parent.postMessage(m, '*');
+function konumBul(sessiz) {
   if (!navigator.geolocation) return goToMe(STD);
   navigator.geolocation.getCurrentPosition(
-    p => goToMe({ lat: p.coords.latitude, lon: p.coords.longitude, label: `Cihaz GPS · ±${Math.round(p.coords.accuracy)} m` }),
-    () => goToMe(STD), { timeout: 4000 }
+    p => {
+      goToMe({ lat: p.coords.latitude, lon: p.coords.longitude, label: `Cihaz GPS · ±${Math.round(p.coords.accuracy)} m` });
+      post({ ks: 'konum', lat: p.coords.latitude, lon: p.coords.longitude, acc: Math.round(p.coords.accuracy) });
+    },
+    err => { goToMe(STD); if (!sessiz) post({ ks: 'konumYok', kod: err.code }); },
+    { enableHighAccuracy: true, timeout: 9000, maximumAge: 10000 }
   );
-};
+}
+document.getElementById('t-go').onclick = () => konumBul();
 
 const rt = id => document.getElementById(id);
 function showRoute(a, km, min, note) {
@@ -313,7 +319,7 @@ addEventListener('message', e => {
   if (d.ks === 'setBase') setBase(d.base, true);
   if (d.ks === 'navMode') setNav(!!d.on);
   if (d.ks === 'pick') setPick(d.name || null);
-  if (d.ks === 'go') goToMe(d.lat ? { lat: d.lat, lon: d.lon, label: d.label } : null);
+  if (d.ks === 'go') { if (d.lat) goToMe({ lat: d.lat, lon: d.lon, label: d.label }); else konumBul(); }
   if (d.ks === 'routeTo') {
     const a = assets.find(x => x.id === d.id)
       || (d.lat ? { id: d.id, code: d.code || 'Yeni kayıt', village: d.village || '', lat: d.lat, lon: d.lon } : null);

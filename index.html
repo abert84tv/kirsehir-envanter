@@ -30,11 +30,42 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </style>
 </helmet>
 
-<div style="min-height:100vh">
+<div style="min-height:100dvh">
+
+<!-- ══════════════ İLK GİRİŞ — ŞİFRE BELİRLEME ══════════════ -->
+<sc-if value="{{ pwChange.on }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100dvh;box-sizing:border-box;padding:24px;display:flex;align-items:center;justify-content:center">
+<div style="width:452px;max-width:100%;border:2px solid var(--color-text);background:var(--color-bg)">
+<div style="padding:26px 24px 22px">
+<div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
+<div style="font:600 9.5px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent);margin-bottom:9px">İlk giriş</div>
+<h1 style="font:700 21px/1.1 var(--font-heading);letter-spacing:-.02em;margin:0 0 6px">Kendi şifrenizi belirleyin</h1>
+<p style="font:400 11.5px/1.5 var(--font-body);color:var(--color-neutral-700);margin:0 0 20px">Hesabınız yönetici tarafından açıldı ve size geçici bir şifre verildi. Devam etmek için kendi şifrenizi yazın — bundan sonra bununla girersiniz.</p>
+<div style="display:flex;flex-direction:column;gap:13px;border-top:2px solid var(--color-divider);padding-top:18px">
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">Yeni şifre</span>
+<input value="{{ pwChange.yeni }}" onChange="{{ pwChange.onYeni }}" onKeyDown="{{ pwChange.onKey }}" type="password" autocomplete="new-password" placeholder="••••" style="all:unset;border:2px solid var(--color-text);padding:13px 12px;font:600 14px/1 ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--color-text);background:#fff">
+</label>
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">Yeni şifre — tekrar</span>
+<input value="{{ pwChange.tekrar }}" onChange="{{ pwChange.onTekrar }}" onKeyDown="{{ pwChange.onKey }}" type="password" autocomplete="new-password" placeholder="••••" style="all:unset;border:2px solid var(--color-text);padding:13px 12px;font:600 14px/1 ui-monospace,Menlo,monospace;letter-spacing:.2em;color:var(--color-text);background:#fff">
+</label>
+<sc-if value="{{ pwChange.hasErr }}" hint-placeholder-val="{{ false }}">
+<div style="border:2px solid var(--color-accent);background:var(--color-accent-100);color:var(--color-accent-700);padding:10px 12px;font:600 11.5px/1.35 var(--font-body)">{{ pwChange.err }}</div>
+</sc-if>
+</div>
+</div>
+<div style="border-top:2px solid var(--color-text);background:var(--color-neutral-200);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px">
+<button onClick="{{ pwChange.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-700);border-bottom:2px solid var(--color-neutral-600);padding-bottom:2px">Giriş ekranına dön</button>
+<button onClick="{{ pwChange.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 13px/1 var(--font-body);padding:15px 22px;justify-content:center;flex:none">Şifreyi kaydet</button>
+</div>
+</div>
+</div>
+</sc-if>
 
 <!-- ══════════════ GİRİŞ ══════════════ -->
 <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
-<div style="min-height:100vh;box-sizing:border-box;padding:24px;display:flex;align-items:center;justify-content:center">
+<div style="min-height:100dvh;box-sizing:border-box;padding:24px;display:flex;align-items:center;justify-content:center">
 <div style="width:452px;max-width:100%;border:2px solid var(--color-text);background:var(--color-bg)">
 <div style="padding:26px 24px 22px">
 <div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
@@ -73,7 +104,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <!-- ══════════════ MASAÜSTÜ ══════════════ -->
 <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-<div style="width:100%;height:100vh;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
+<div style="width:100%;height:100dvh;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
 
 <div style="flex:none;display:flex;align-items:center;gap:16px;padding:0 18px;height:56px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
 <span style="width:18px;height:18px;background:var(--color-accent);flex:none"></span>
@@ -87,11 +118,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 </div>
 <span style="flex:1"></span>
-<span style="font:600 10px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">{{ role }}</span>
-<button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">Çıkış</button>
+<span style="flex:none;font:600 10px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">{{ role }}</span>
+<button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">Çıkış</button>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;padding:8px 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
-<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:8px 12px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em">{{ net.badge }}</button>
-<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:34px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ui.themeMark }}</button>
+<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 12px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em">{{ net.badge }}</button>
+<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:36px;height:34px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ui.themeMark }}</button>
 </div>
 
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
@@ -110,9 +141,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <!-- sidebar -->
 <div style="width:216px;flex:none;border-right:2px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
-<div class="scroll" style="flex:1;min-height:0;overflow:auto">
+<div class="scroll" style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:stretch">
 <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
-<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid {{ ui.rule }};background:{{ n.bg }};border-left:3px solid {{ n.mark }}" style-hover="background:{{ ui.surf2 }}">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid {{ ui.rule }};background:{{ n.bg }};border-left:3px solid {{ n.mark }}" style-hover="background:{{ ui.surf2 }}">
 <span style="width:14px;height:14px;border:2px solid {{ n.fg }};background:{{ n.dot }};flex:none"></span>
 <span style="flex:1;font:700 11.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ n.fg }}">{{ n.label }}</span>
 <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
@@ -142,6 +173,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="padding:9px 16px;font:600 10px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}">{{ counts.line1 }} · OpenStreetMap zemini</span>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
+<div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
+<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};font:700 9.5px/1.1 var(--font-body);display:{{ map.arizaBtn }};align-items:center;justify-content:center;text-align:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">ARIZA</button>
+<button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:60px;height:60px;background:var(--color-accent);border:2px solid var(--color-accent);color:#fff;font:700 17px/1 var(--font-body);letter-spacing:.1em;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">GİT</button>
+</div>
 </div>
 
 <!-- envanter -->
@@ -804,21 +839,100 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </tbody>
 </table>
 
-<div style="padding:18px 20px 10px">
-<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Kullanıcılar ve son oturumlar</div>
-<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">Özel saha cihazı yok — herkes elinin altındaki telefondan veya bilgisayardan girer, aynı hesap her ikisinde çalışır. Oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
+<div style="padding:18px 20px 12px;border-top:2px solid {{ ui.rule }};display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
+<div>
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Kullanıcılar</div>
+<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:700px">{{ kullanici.note }}</div>
 </div>
-<sc-for list="{{ deviceRows }}" as="d" hint-placeholder-count="4">
-<div style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-top:1px solid {{ ui.rule }};background:{{ d.bg }}">
-<span style="font:700 12.5px/1 var(--font-heading);color:{{ ui.fg }};width:130px">{{ d.name }}</span>
-<span style="font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }};width:90px">{{ d.user }}</span>
-<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.fg }};width:130px">{{ d.role }}</span>
-<span style="font:600 11.5px/1 var(--font-body);color:{{ ui.fg }};width:90px">{{ d.dev }}</span>
-<span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }};width:140px">Son giriş: {{ d.kind }}</span>
-<span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }};flex:1">{{ d.crew }}</span>
-<span style="font:700 9px/1 var(--font-body);letter-spacing:.1em;color:{{ ui.acc }}">{{ d.mark }}</span>
+<sc-if value="{{ kullanici.ekleGoster }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ kullanici.ekle }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 18px">+ Yeni kullanıcı</button>
+</sc-if>
+</div>
+
+<sc-if value="{{ kullanici.formOn }}" hint-placeholder-val="{{ false }}">
+<div style="margin:0 20px 18px;border:2px solid var(--color-accent);background:{{ ui.surf }}">
+<div style="padding:13px 18px;border-bottom:2px solid var(--color-accent);background:var(--color-accent);color:#fff;display:flex;align-items:center;gap:14px">
+<span style="flex:1;font:700 11px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase">{{ kullanici.form.baslik }}</span>
+<button onClick="{{ kullanici.form.iptal }}" title="Kapat — Esc" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:26px;height:26px;border:2px solid rgba(255,255,255,.55);color:#fff;font:700 13px/1 var(--font-body);display:flex;align-items:center;justify-content:center" style-hover="background:#fff;color:var(--color-accent);border-color:#fff">✕</button>
+</div>
+<div style="padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px 20px">
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Ad soyad</span>
+<input value="{{ kullanici.form.name }}" onChange="{{ kullanici.form.onName }}" placeholder="Örnek: Ahmet Bertan" style="all:unset;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Kullanıcı adı</span>
+<input value="{{ kullanici.form.user }}" onChange="{{ kullanici.form.onUser }}" placeholder="a.bertan" style="all:unset;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">{{ kullanici.form.userNote }}</span>
+</label>
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Unvan / görev</span>
+<input value="{{ kullanici.form.unvan }}" onChange="{{ kullanici.form.onUnvan }}" placeholder="Örnek: İnşaat teknikeri" style="all:unset;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Telefon</span>
+<input value="{{ kullanici.form.tel }}" onChange="{{ kullanici.form.onTel }}" placeholder="0555 000 00 00" style="all:unset;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">İlçe / sorumluluk bölgesi</span>
+<select value="{{ kullanici.form.bolge }}" onChange="{{ kullanici.form.onBolge }}" style="all:unset;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<option value="">Tüm il</option>
+<sc-for list="{{ kullanici.form.ilceler }}" as="i" hint-placeholder-count="3">
+<option value="{{ i.n }}">{{ i.n }}</option>
+</sc-for>
+</select>
+</label>
+<sc-if value="{{ kullanici.form.yeni }}" hint-placeholder-val="{{ true }}">
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Başlangıç şifresi</span>
+<input value="{{ kullanici.form.pw }}" onChange="{{ kullanici.form.onPw }}" style="all:unset;border:2px solid var(--color-accent);padding:12px;font:700 13px/1 ui-monospace,Menlo,monospace;letter-spacing:.1em;color:{{ ui.fg }};background:{{ ui.bg }}">
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">Program bir şifre üretti — dilerseniz değiştirin. Kişiye iletin; ilk girişinde kendi şifresini belirlemesi istenecek.</span>
+</label>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Rol</span>
+<div style="display:flex;border:2px solid {{ ui.rule }};flex-wrap:wrap">
+<sc-for list="{{ kullanici.form.roller }}" as="r" hint-placeholder-count="5">
+<button onClick="{{ r.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:120px;text-align:center;padding:12px 8px;background:{{ r.bg }};color:{{ r.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">{{ r.label }}</button>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ kullanici.form.hasErr }}" hint-placeholder-val="{{ false }}">
+<div style="grid-column:1/-1;border:2px solid var(--color-accent);background:var(--color-accent-100);color:var(--color-accent-700);padding:11px 13px;font:600 11.5px/1.4 var(--font-body)">{{ kullanici.form.err }}</div>
+</sc-if>
+</div>
+<div style="padding:14px 18px;border-top:2px solid {{ ui.rule }};display:flex;gap:10px">
+<button onClick="{{ kullanici.form.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:14px 22px">Kaydet</button>
+<button onClick="{{ kullanici.form.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 18px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+
+<sc-for list="{{ kullanici.rows }}" as="u" hint-placeholder-count="5">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px 14px;padding:12px 20px;border-top:1px solid {{ ui.rule }};background:{{ u.bg }}">
+<span style="flex:none;font:700 12.5px/1.15 var(--font-heading);color:{{ ui.fg }};width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.name }}</span>
+<span style="flex:none;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }};width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.user }}</span>
+<span style="flex:none;font:400 11.5px/1 var(--font-body);color:{{ ui.fg }};width:118px;white-space:nowrap">{{ u.role }}</span>
+<span style="flex:none;font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ u.durumRenk }};width:96px;white-space:nowrap">{{ u.durum }}</span>
+<span style="flex:none;font:700 9px/1 var(--font-body);letter-spacing:.1em;color:{{ ui.acc }};width:26px">{{ u.mark }}</span>
+<span style="flex:1 1 190px;min-width:190px;font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.ozet }}</span>
+<sc-if value="{{ u.duzenlenir }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:6px;flex:none;margin-left:auto">
+<button onClick="{{ u.edit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Düzenle</button>
+<button onClick="{{ u.sifre }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Şifre sıfırla</button>
+<sc-if value="{{ u.kendisi }}" hint-placeholder-val="{{ false }}">
+<span style="font:400 10px/1 var(--font-body);color:{{ ui.mut }};align-self:center;padding:0 4px">kendi hesabınız</span>
+</sc-if>
+<sc-if value="{{ u.silinebilir }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ u.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ u.kapatLabel }}</button>
+<button onClick="{{ u.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border:2px solid var(--color-accent);color:var(--color-accent);font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px" style-hover="background:var(--color-accent);color:#fff">Sil</button>
+</sc-if>
+</div>
+</sc-if>
 </div>
 </sc-for>
+
+<div style="padding:14px 20px;border-top:2px solid {{ ui.rule }};font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">Personel ayrıldığında <strong style="color:{{ ui.fg }}">Dondur</strong> kullanın: giriş kapanır, kişinin attığı bütün kayıtlar ve düzenlemeler adıyla sistemde kalır, aynı kişi işe dönerse <strong style="color:{{ ui.fg }}">Aktif et</strong> ile eski hesabı olduğu gibi açılır — yeni hesap açmak, kullanıcı adını yeniden vermek gerekmez. <strong style="color:{{ ui.fg }}">Sil</strong> yalnızca yanlışlıkla açılmış hesaplar için; geri dönüşü yoktur ve eski kayıtlarda adı “Silinmiş kullanıcı” olarak görünür.</div>
 </sc-if>
 <div style="height:20px"></div>
 </div>
@@ -1378,11 +1492,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <!-- ══════════════ TELEFON ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
-<div style="width:100%;height:100vh;position:relative;overflow:hidden;background:{{ ui.bg }};color:{{ ui.fg }};display:flex;flex-direction:column">
-
-<div style="flex:none;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font:600 11px/1 var(--font-body);border-bottom:1px solid {{ ui.rule }}">
-<span>09:41</span><span style="color:{{ ui.mut }}">{{ net.label }}</span>
-</div>
+<div style="width:100%;height:100dvh;position:relative;overflow:hidden;background:{{ ui.bg }};color:{{ ui.fg }};display:flex;flex-direction:column">
 
 <div style="flex:none;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div style="display:flex;align-items:center;gap:9px;padding:9px 12px">
@@ -1766,6 +1876,24 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ setDevice.auto.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.auto.bg }};color:{{ setDevice.auto.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Otomatik</button>
 <button onClick="{{ setDevice.desktop.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.desktop.bg }};color:{{ setDevice.desktop.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Bilgisayar</button>
 <button onClick="{{ setDevice.phone.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.phone.bg }};color:{{ setDevice.phone.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase">Telefon</button>
+</div>
+</div>
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Kullanıcılar</div>
+<div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">Kişi ekleme ve düzenleme bilgisayardan yapılır — liste yedi sütun geniştir, telefonda okunmaz. Telefondan şifre sıfırlayabilirsiniz; sahada “şifremi unuttum” diye arayan olursa işinizi görür.</div>
+<div style="display:flex;flex-direction:column;border:2px solid {{ ui.rule }}">
+<sc-for list="{{ kullanici.rows }}" as="u" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid {{ ui.rule }};background:{{ u.bg }}">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<span style="font:700 12.5px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ u.name }}</span>
+<span style="font:600 10.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ u.user }}</span>
+<span style="font:400 10px/1.3 var(--font-body);color:{{ ui.mut }}">{{ u.role }} · {{ u.durum }}</span>
+</div>
+<sc-if value="{{ u.duzenlenir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ u.sifre }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1.2 var(--font-body);letter-spacing:.05em;text-transform:uppercase;padding:11px 10px;text-align:center;min-width:74px;min-height:44px">Şifre sıfırla</button>
+</sc-if>
+</div>
+</sc-for>
 </div>
 </div>
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
@@ -2180,24 +2308,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 
-<div style="max-width:1440px;margin-top:16px;display:flex;gap:26px;flex-wrap:wrap">
-<div style="flex:1;min-width:300px;border-top:2px solid var(--color-divider);padding-top:12px">
-<div style="font:700 10px/1 var(--font-heading);letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent);margin-bottom:11px">Bu turda eklenenler</div>
-<sc-for list="{{ notes }}" as="n" hint-placeholder-count="6">
-<div style="padding:8px 0;border-bottom:1px solid var(--color-neutral-300)">
-<div style="font:700 12px/1.25 var(--font-heading);color:var(--color-text)">{{ n.t }}</div>
-<div style="font:400 11px/1.45 var(--font-body);color:var(--color-neutral-700);margin-top:3px">{{ n.d }}</div>
-</div>
-</sc-for>
-</div>
-<div style="flex:1;min-width:300px;border-top:2px solid var(--color-divider);padding-top:12px">
-<div style="font:700 10px/1 var(--font-heading);letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent);margin-bottom:11px">Veri kaynakları</div>
-<sc-for list="{{ sources }}" as="s" hint-placeholder-count="4">
-<div style="padding:8px 0;border-bottom:1px solid var(--color-neutral-300);font:400 11px/1.45 var(--font-body);color:var(--color-neutral-700)">{{ s }}</div>
-</sc-for>
-</div>
-</div>
-
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:1160},&quot;arizaModulu&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;},&quot;yerlesimSekmesi&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;}}">
@@ -2346,6 +2456,7 @@ class Component extends DCLogic {
     filter: { kuyu: true, depo: true, ag: true, ges: true },
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
     log: {}, trash: [], conflict: null, card: null, ayarBolum: 'gorunum',
+    users: [], userForm: null, pwForm: null,
     coordMode: false, picked: null,
     conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' }
   };
@@ -2361,20 +2472,28 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     if (this._rs) window.removeEventListener('resize', this._rs);
+    if (this._esc) window.removeEventListener('keydown', this._esc);
     if (this._msg) window.removeEventListener('message', this._msg);
   }
   componentDidMount() {
     let dm = 'auto';
     try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
-    this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm });
+    this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm, users: this.usersOku() });
     this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
     window.addEventListener('resize', this._rs);
+    // Esc: açık form ve panelleri kapatır
+    this._esc = e => {
+      if (e.key !== 'Escape') return;
+      if (this.state.userForm) return this.setState({ userForm: null });
+      if (this.state.panel && this.state.panel !== 'yok') this.setState({ panel: 'yok', faultForm: null });
+    };
+    window.addEventListener('keydown', this._esc);
     try {
       const raw = localStorage.getItem(SES_KEY);
       if (raw) {
         const sv = JSON.parse(raw);
-        const u = USERS.find(x => x.user === sv.user);
-        if (u && sv.pw === (u.pw || PW)) {
+        const u = this.usersOku().find(x => x.user === sv.user);
+        if (u && u.aktif !== false && !u.mustChange && sv.pw === (u.pw || PW)) {
           this._prefYuklendi = true;
           this.setState({ session: u, role: u.roleLabel, loginUser: u.user, remember: true, autoLogin: true, ...this.prefOku(u) },
             () => setTimeout(() => this.prefUygula(), 600));
@@ -2390,6 +2509,14 @@ class Component extends DCLogic {
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
       if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
+      if (d.ks === 'konum') { this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
+      if (d.ks === 'konumYok') {
+        this.say(d.kod === 1
+          ? 'Konum izni verilmemiş. Tarayıcı ayarlarından bu siteye konum iznini açın; sonra GİT düğmesine yeniden basın.'
+          : 'Konum alınamadı — açık alana çıkıp yeniden deneyin. Harita şimdilik Kırşehir merkezine getirildi.', true);
+        setTimeout(() => this.setState({ toast: null }), 8000);
+        return;
+      }
       if (d.ks === 'coord') { this.setState({ picked: { lat: d.lat, lon: d.lon } }); return; }
       if (d.ks === 'picked') {
         this.vSave(d.name, d.lat, d.lon, true);
@@ -2834,12 +2961,54 @@ class Component extends DCLogic {
     const ts = d => { const p = String(d || '').split('.'); return p.length === 3 ? +p[2] * 10000 + +p[1] * 100 + +p[0] : 0; };
     return [...added, ...base].sort((x, y) => ts(y.date) - ts(x.date));
   }
+  // ── kullanıcı listesi bu cihazda saklanır; Supabase bağlanınca kullanicilar tablosuna gider
+  userSuret(u) {
+    return { ...u, roleLabel: ROLE_LABEL[u.role] || u.role,
+      desc: (ROLE_ORDER.find(r => r[0] === u.role) || [])[2], aktif: u.aktif !== false };
+  }
+  usersOku() {
+    try {
+      const list = JSON.parse(localStorage.getItem('ks-users') || 'null');
+      if (Array.isArray(list) && list.length) return list.map(u => this.userSuret(u));
+    } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
+    return USERS.map(u => this.userSuret(u));
+  }
+  usersKaydet(list) {
+    const n = list.map(u => this.userSuret(u));
+    try {
+      localStorage.setItem('ks-users', JSON.stringify(n.map(u => ({
+        id: u.id, name: u.name, user: u.user, role: u.role, crew: u.crew || null,
+        pw: u.pw, tel: u.tel || '', unvan: u.unvan || '', bolge: u.bolge || '',
+        aktif: u.aktif !== false, mustChange: !!u.mustChange, eklendi: u.eklendi || null
+      }))));
+    } catch (e) { /* depolama kapalı */ }
+    this.setState({ users: n });
+    return n;
+  }
+  pwDegistir() {
+    const f = this.state.pwForm;
+    if (!f) return;
+    if ((f.yeni || '').length < 4) return this.setState({ pwForm: { ...f, err: 'Şifre en az 4 karakter olmalı.' } });
+    if (f.yeni !== f.tekrar) return this.setState({ pwForm: { ...f, err: 'İki şifre aynı değil.' } });
+    const list = this.usersKaydet(this.state.users.map(u =>
+      u.user === f.user ? { ...u, pw: f.yeni, mustChange: false } : u));
+    const u = list.find(x => x.user === f.user);
+    try {
+      if (this.state.remember) localStorage.setItem(SES_KEY, JSON.stringify({ user: u.user, pw: f.yeni }));
+    } catch (e) { /* depolama kapalı */ }
+    this._prefYuklendi = true;
+    this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginUser: u.user, ...this.prefOku(u) },
+      () => { this.prefUygula(); this.say('Şifreniz değiştirildi.'); });
+  }
   doLogin() {
     const name = this.state.loginUser.trim().toLowerCase();
-    const u = USERS.find(x => x.user === name);
+    const list = this.state.users.length ? this.state.users : USERS;
+    const u = list.find(x => x.user === name);
     if (!u) return this.setState({ loginErr: 'Böyle bir kullanıcı adı yok.' });
+    if (u.aktif === false) return this.setState({ loginErr: 'Bu hesap kapatıldı — yöneticiye başvurun.' });
     const pw = this.state.loginPw;
     if (pw !== (u.pw || PW)) return this.setState({ loginErr: 'Şifre hatalı.' });
+    if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
     try {
       if (this.state.remember) localStorage.setItem(SES_KEY, JSON.stringify({ user: u.user, pw }));
       else localStorage.removeItem(SES_KEY);
@@ -3297,7 +3466,7 @@ class Component extends DCLogic {
 
     return {
       ui, role: me ? `${me.name} · ${me.roleLabel}` : '', query: s.query, offline: s.offline,
-      isLogin: !s.session,
+      isLogin: !s.session && !s.pwForm,
       isDesktop: s.device === 'desktop' && !!s.session, isPhone: s.device === 'phone' && !!s.session,
       loginForm: {
         user: s.loginUser, pw: s.loginPw, err: s.loginErr, hasErr: !!s.loginErr,
@@ -3363,14 +3532,110 @@ class Component extends DCLogic {
           mark: me && me.role === id ? 'SİZ' : ''
         }))
       },
-      deviceRows: USERS.map((u, i) => ({
-        name: u.name, user: u.user, role: u.roleLabel,
-        dev: ['Telefon', 'Bilgisayar', 'Bilgisayar', 'Telefon', 'Telefon'][i],
-        kind: ['bugün 08:14', 'bugün 09:02', 'dün 17:40', 'bugün 07:55', 'bugün 08:31'][i],
-        crew: u.crew || '—',
-        bg: me && me.id === u.id ? ui.sel : 'transparent',
-        mark: me && me.id === u.id ? 'SİZ' : ''
-      })),
+      kullanici: (() => {
+        const list = s.users;
+        const yonetici = !!me && me.role === 'yonetici';
+        const f = s.userForm;
+        const ilceler = m ? m.DISTRICTS.map(d => d.name) : [];
+        const yaz = (k, v) => this.setState({ userForm: { ...this.state.userForm, [k]: v, err: '' } });
+        const kaydet = () => {
+          const g = this.state.userForm;
+          const ad = (g.name || '').trim();
+          const kad = (g.user || '').trim().toLowerCase();
+          if (!ad) return this.setState({ userForm: { ...g, err: 'Ad soyad yazın.' } });
+          if (!/^[a-z0-9._-]{3,}$/.test(kad)) return this.setState({ userForm: { ...g, err: 'Kullanıcı adı en az 3 karakter; küçük harf, sayı, nokta ve alt çizgi kullanın.' } });
+          if (list.some(u => u.user === kad && u.id !== g.id)) return this.setState({ userForm: { ...g, err: 'Bu kullanıcı adı başkasında var.' } });
+          if (!g.id && (g.pw || '').length < 4) return this.setState({ userForm: { ...g, err: 'Başlangıç şifresi en az 4 karakter olmalı.' } });
+          const alan = { name: ad, user: kad, role: g.role, tel: g.tel || '', unvan: g.unvan || '', bolge: g.bolge || '' };
+          if (g.id) {
+            this.usersKaydet(list.map(u => u.id === g.id ? { ...u, ...alan } : u));
+            this.say(ad + ' güncellendi.');
+          } else {
+            this.usersKaydet(list.concat([{ ...alan, id: 'u' + Date.now(), crew: null, pw: g.pw, aktif: true, mustChange: true, eklendi: this.damga() }]));
+            this.say(ad + ' eklendi. Başlangıç şifresini kendisine iletin — ilk girişte değiştirmesi istenecek.', true);
+            setTimeout(() => this.setState({ toast: null }), 6000);
+          }
+          this.setState({ userForm: null });
+        };
+        return {
+          yonetici, kapali: !yonetici, ekleGoster: yonetici && !f,
+          note: yonetici
+            ? 'Kişi ekleyip çıkarma yalnızca Yönetici yetkisindedir. Eklediğiniz kişiye bir başlangıç şifresi verirsiniz; ilk girişinde programın kendisi şifreyi değiştirmesini ister.'
+            : 'Kullanıcı ekleme ve çıkarma Yönetici yetkisindedir. Listeyi görebilir, değiştiremezsiniz.',
+          rows: list.map(u => ({
+            name: u.name, user: u.user, role: u.roleLabel,
+            unvan: u.unvan || '—', tel: u.tel || '—', bolge: u.bolge || 'Tüm il',
+            ozet: [u.unvan, u.tel, u.bolge || 'Tüm il'].filter(Boolean).join(' · '),
+            durum: u.aktif === false ? 'Donduruldu' : (u.mustChange ? 'Şifre bekliyor' : 'Etkin'),
+            durumRenk: u.aktif === false ? ui.mut : (u.mustChange ? ui.acc : ui.fg),
+            bg: u.aktif === false ? ui.surf2 : (me && me.id === u.id ? ui.sel : 'transparent'),
+            mark: me && me.id === u.id ? 'SİZ' : '',
+            kendisi: !!me && me.id === u.id,
+            duzenlenir: yonetici,
+            silinebilir: yonetici && !(me && me.id === u.id),
+            kapatLabel: u.aktif === false ? 'Aktif et' : 'Dondur',
+            edit: () => this.setState({
+              userForm: { id: u.id, name: u.name, user: u.user, role: u.role, tel: u.tel || '', unvan: u.unvan || '', bolge: u.bolge || '', pw: '', err: '' }
+            }),
+            sifre: () => {
+              const yeni = String(Math.floor(100000 + Math.random() * 900000));
+              this.usersKaydet(list.map(x => x.id === u.id ? { ...x, pw: yeni, mustChange: true } : x));
+              this.say(u.name + ' için yeni şifre: ' + yeni + ' — kendisine iletin, ilk girişte değiştirecek.', true);
+              setTimeout(() => this.setState({ toast: null }), 12000);
+            },
+            kapat: () => {
+              this.usersKaydet(list.map(x => x.id === u.id ? { ...x, aktif: x.aktif === false } : x));
+              this.say(u.name + (u.aktif === false
+                ? ' hesabı yeniden aktif edildi — eski kullanıcı adıyla girer, şifresi de aynı kalır.'
+                : ' hesabı donduruldu — artık giriş yapamaz. Attığı bütün kayıtlar ve düzenlemeler adıyla sistemde kalır; işe dönerse Aktif et ile açılır.'), true);
+              setTimeout(() => this.setState({ toast: null }), 7000);
+            },
+            sil: () => {
+              this.usersKaydet(list.filter(x => x.id !== u.id));
+              this.say(u.name + ' silindi. Attığı kayıtlarda adı “Silinmiş kullanıcı” olarak görünecek.', true);
+              setTimeout(() => this.setState({ toast: null }), 6000);
+            }
+          })),
+          formOn: !!f,
+          form: f ? {
+            baslik: f.id ? 'Kullanıcıyı düzenle' : 'Yeni kullanıcı',
+            yeni: !f.id, name: f.name, user: f.user, tel: f.tel, unvan: f.unvan, pw: f.pw,
+            err: f.err, hasErr: !!f.err,
+            userNote: f.id ? 'Kullanıcı adını değiştirirseniz kişi yeni adla girer.' : 'Giriş ekranında yazacağı ad. Örnek: a.bertan',
+            onName: e => yaz('name', e.target.value),
+            onUser: e => yaz('user', e.target.value),
+            onTel: e => yaz('tel', e.target.value),
+            onUnvan: e => yaz('unvan', e.target.value),
+            onPw: e => yaz('pw', e.target.value),
+            onBolge: e => yaz('bolge', e.target.value),
+            bolge: f.bolge,
+            ilceler: ilceler.map(n => ({ n })),
+            roller: ALL_ROLES.map(r => ({
+              label: ROLE_LABEL[r],
+              bg: f.role === r ? 'var(--color-accent)' : 'transparent',
+              fg: f.role === r ? '#fff' : ui.fg,
+              pick: () => yaz('role', r)
+            })),
+            kaydet, iptal: () => this.setState({ userForm: null })
+          } : { roller: [], ilceler: [] },
+          ekle: () => this.setState({
+            userForm: { id: null, name: '', user: '', role: 'personel', tel: '', unvan: '', bolge: '', pw: String(Math.floor(100000 + Math.random() * 900000)), err: '' }
+          })
+        };
+      })(),
+      pwChange: (() => {
+        const f = s.pwForm;
+        return {
+          on: !!f, yeni: f ? f.yeni : '', tekrar: f ? f.tekrar : '',
+          err: f ? f.err : '', hasErr: !!(f && f.err),
+          kim: f ? f.user : '',
+          onYeni: e => this.setState({ pwForm: { ...this.state.pwForm, yeni: e.target.value, err: '' } }),
+          onTekrar: e => this.setState({ pwForm: { ...this.state.pwForm, tekrar: e.target.value, err: '' } }),
+          onKey: e => { if (e.key === 'Enter') this.pwDegistir(); },
+          kaydet: () => this.pwDegistir(),
+          vazgec: () => this.setState({ pwForm: null, loginPw: '', loginErr: '' })
+        };
+      })(),
 
       scen: {
         picker: !s.scenario,
@@ -3486,11 +3751,6 @@ class Component extends DCLogic {
             : `Elle sabitlendi: ${s.deviceMode === 'phone' ? 'telefon' : 'bilgisayar'} düzeni. Otomatiğe dönmek için Otomatik'e basın.`
         };
       })(),
-      devicesEski: [['desktop', 'Masaüstü 1440'], ['phone', 'Telefon 392']].map(([id, label]) => ({
-        label, bg: s.device === id ? 'var(--color-text)' : 'transparent',
-        fg: s.device === id ? '#fff' : 'var(--color-text)',
-        pick: () => this.setState({ device: id, panel: id === 'phone' ? 'yok' : 'donusum' })
-      })),
       net: s.offline
         ? { label: 'Çevrimdışı', badge: 'ÇEVRİM DIŞI', short: 'OFF', fill: 'var(--color-accent)', border: 'var(--color-accent)', ink: '#fff' }
         : { label: '4G', badge: 'ÇEVRİM İÇİ', short: 'ON', fill: 'transparent', border: ui.rule, ink: ui.fg },
@@ -4228,9 +4488,13 @@ class Component extends DCLogic {
       exportPdf: () => this.say('PDF hazırlanıyor: ilçe ve köy özeti, eksik bilgi listesi, açık arızalar ve her kuyunun son deneme değerleri.'),
       goOzet: () => this.setState({ tab: 'ozet' }),
       forgetLogin: () => this.forget(),
-      forgetNote: s.remember
-        ? 'Bu cihazda kayıtlı giriş var — program açılışta şifre sormuyor. Ortak bir cihaza geçerseniz burada silin.'
-        : 'Bu cihazda kayıtlı giriş yok.',
+      forgetNote: (() => {
+        let kayitli = false;
+        try { kayitli = !!localStorage.getItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
+        return kayitli
+          ? 'Giriş ekranındaki “Beni hatırla” işaretli olduğu için kullanıcı adınız ve şifreniz bu tarayıcıya kaydedildi — program açılışta giriş ekranını atlıyor. Ortak bir bilgisayarda ya da başkasının telefonunda açtıysanız buradan silin; hesabınız etkilenmez, yalnızca bu cihazdaki hatırlama kalkar.'
+          : 'Bu cihazda kayıtlı giriş yok — program her açılışta kullanıcı adı ve şifre istiyor.';
+      })(),
       vFill: {
         run: () => this.fillVillages(),
         label: s.vFill === 'loading' ? 'Çalışıyor…' : (s.vFill === 'done' ? 'Yeniden çalıştır' : 'Kuyulara köy adı yaz'),
@@ -4258,7 +4522,7 @@ class Component extends DCLogic {
         const id = s.selected;
         if (!id) return;
         // çakışma denetimi: aynı kaydı başkası siz yazarken değiştirmiş olabilir
-        const digerleri = USERS.filter(u => !s.session || u.id !== s.session.id);
+        const digerleri = s.users.filter(u => !s.session || u.id !== s.session.id);
         const carpisma = s.offline && !s.conflict && Math.random() < 0.5 && digerleri.length;
         if (carpisma) {
           const o = digerleri[Math.floor(Math.random() * digerleri.length)];

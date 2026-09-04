@@ -109,6 +109,78 @@ export async function kullaniciSil(id) {
   return cagir('kullanici_sil', { p_token: tokenOku(), p_id: id });
 }
 
+// ── ortak veri: tesis, arıza, deneme, saha notu
+const TUR_KOD = { kuyu: 'kuyu', depo: 'depo', ag: 'ag', ges: 'ges' };
+
+// Veritabanı tesis satırı → programın kullandığı biçim
+export function tesisSuret(r) {
+  const v = r.veri || {};
+  return {
+    id: 't' + r.id, dbId: r.id, surum: r.surum,
+    type: TUR_KOD[r.tur] || 'kuyu', code: r.kod, status: r.durum,
+    district: r.ilce, village: r.koy || '',
+    lat: r.lat, lon: r.lon, coordApprox: !!r.konum_yaklasik,
+    coordSource: r.kaynak || '', source: r.kaynak || '',
+    year: r.yapim_yili || '', barkod: r.barkod || '', direkBarkod: r.direk_barkod || '',
+    photos: v.photos || 0, sync: 'synced', d: v.d || v || {},
+    yazilabilir: r.yazilabilir !== false,
+    olusturan: r.olusturan, olusturuldu: r.olusturuldu,
+    guncelleyen: r.guncelleyen, guncellendi: r.guncellendi
+  };
+}
+
+export function arizaSuret(r) {
+  return {
+    id: 'f' + r.id, dbId: r.id, no: r.no, assetId: 't' + r.tesis_id,
+    tesisDbId: r.tesis_id, district: r.ilce, type: r.tur,
+    priority: r.oncelik, status: r.durum, crew: r.ekip || '',
+    desc: r.aciklama || '', malzeme: r.malzeme || [], maliyet: r.maliyet,
+    reporter: r.acan, opened: r.acildi, closer: r.kapatan, closed: r.kapandi,
+    sync: 'synced', yazilabilir: r.yazilabilir !== false
+  };
+}
+
+export async function tesisListesi() { return cagir('tesis_listesi', { p_token: tokenOku() }); }
+export async function arizaListesi() { return cagir('ariza_listesi', { p_token: tokenOku() }); }
+export async function denemeListesi() { return cagir('deneme_listesi', { p_token: tokenOku() }); }
+export async function notListesi() { return cagir('not_listesi', { p_token: tokenOku() }); }
+export async function copListesi() { return cagir('cop_listesi', { p_token: tokenOku() }); }
+
+export async function tesisKaydet(a) {
+  return cagir('tesis_kaydet', {
+    p_token: tokenOku(), p_id: a.dbId || null, p_kod: a.code,
+    p_tur: a.type, p_durum: a.status || 'aktif',
+    p_ilce: a.district, p_koy: a.village || null,
+    p_lat: a.lat, p_lon: a.lon,
+    p_yapim_yili: a.year ? parseInt(a.year, 10) || null : null,
+    p_barkod: a.barkod || null, p_direk_barkod: a.direkBarkod || null,
+    p_veri: { d: a.d || {}, photos: a.photos || 0 },
+    p_surum: a.surum || null
+  });
+}
+export async function tesisSil(dbId)    { return cagir('tesis_sil', { p_token: tokenOku(), p_id: dbId }); }
+export async function tesisGeriAl(dbId) { return cagir('tesis_geri_al', { p_token: tokenOku(), p_id: dbId }); }
+
+export async function arizaKaydet(f) {
+  return cagir('ariza_kaydet', {
+    p_token: tokenOku(), p_id: f.dbId || null, p_no: f.no,
+    p_tesis_id: f.tesisDbId, p_tur: f.type,
+    p_oncelik: f.priority || 'Normal', p_durum: f.status || 'acik',
+    p_ekip: f.crew || null, p_aciklama: f.desc || null,
+    p_malzeme: f.malzeme || [], p_maliyet: f.maliyet ?? null
+  });
+}
+export async function denemeEkle(d) {
+  return cagir('deneme_ekle', {
+    p_token: tokenOku(), p_tesis_id: d.tesisDbId, p_tarih: d.tarih,
+    p_statik: d.statik ?? null, p_dinamik: d.dinamik ?? null,
+    p_debi: d.debi ?? null, p_sure: d.sure ?? null, p_not: d.not || null
+  });
+}
+export async function notEkle(tesisDbId, metin) {
+  return cagir('not_ekle', { p_token: tokenOku(), p_tesis_id: tesisDbId, p_metin: metin });
+}
+
 // Veritabanı satırını programın kullandığı biçime çevirir
 export function suret(r) {
   return {

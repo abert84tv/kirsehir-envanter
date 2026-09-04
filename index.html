@@ -109,7 +109,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="flex:1;font:700 12.5px/1.3 var(--font-body);letter-spacing:.04em;text-transform:uppercase">{{ tekDokunusAd }} olarak devam et</span>
 </button>
 </sc-if>
-<div style="padding:12px 24px 18px;font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Gerçek kurulumda Supabase Auth + kurum SSO; oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
+<div style="padding:12px 24px 18px;font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Şifreniz cihazda saklanmaz; doğrulama veritabanının içinde yapılır. Oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
 </div>
 </div>
 </sc-if>
@@ -131,6 +131,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <span style="flex:1"></span>
 <span style="flex:none;font:600 10px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">{{ role }}</span>
+<button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ esitle.label }}</button>
 <button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">Çıkış</button>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;padding:8px 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
 <button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 12px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em">{{ net.badge }}</button>
@@ -1081,6 +1082,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="font:700 21px/1.05 var(--font-heading);letter-spacing:-.01em">{{ detail.code }}</div>
 <div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">{{ detail.meta }}</div>
 </div>
+<sc-if value="{{ kilit.on }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:2px solid var(--color-accent);background:var(--color-accent-100)">
+<span style="flex:none;font:700 12px/1.2 var(--font-body);color:var(--color-accent-700)">KİLİT</span>
+<span style="flex:1;font:400 10.5px/1.45 var(--font-body);color:var(--color-accent-700)">{{ kilit.text }}</span>
+</div>
+</sc-if>
 <div style="display:flex;border-bottom:2px solid {{ ui.rule }}">
 <sc-for list="{{ detail.tabs }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:10px 12px;font:700 9.5px/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;background:{{ t.bg }};color:{{ t.fg }};border-right:2px solid {{ ui.rule }}">{{ t.label }}</button>
@@ -1975,6 +1982,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 14px/1 var(--font-body);display:flex;align-items:center;justify-content:center;flex:none">×</button>
 </div>
+<sc-if value="{{ kilit.on }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:4px;padding:11px 13px;border-bottom:2px solid var(--color-accent);background:var(--color-accent-100)">
+<span style="font:700 10px/1 var(--font-body);letter-spacing:.1em;color:var(--color-accent-700)">KİLİT</span>
+<span style="font:400 10.5px/1.45 var(--font-body);color:var(--color-accent-700)">{{ kilit.text }}</span>
+</div>
+</sc-if>
 <div style="display:flex;border-bottom:2px solid {{ ui.rule }}">
 <sc-for list="{{ detail.tabs }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:10px 10px;font:700 9.5px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;background:{{ t.bg }};color:{{ t.fg }};border-right:2px solid {{ ui.rule }}">{{ t.label }}</button>
@@ -2424,14 +2437,11 @@ const ROLE_ORDER = [
   ['personel', 'Arıza Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
-const USERS = [
-  { id: 'u1', name: 'A. Bertan', user: 'a.bertan', role: 'yonetici', crew: null, pw: '510084' },
-  { id: 'u2', name: 'Fatma Yılmaz', user: 'f.yilmaz', role: 'mudur', crew: null },
-  { id: 'u3', name: 'Ayşe Demir', user: 'a.demir', role: 'muhendis', crew: null },
-  { id: 'u4', name: 'Mustafa Şahin', user: 'm.sahin', role: 'sef', crew: null },
-  { id: 'u5', name: 'Mehmet Kaya', user: 'm.kaya', role: 'personel', crew: 'Ekip 1 — Merkez' }
-].map(u => ({ ...u, roleLabel: ROLE_LABEL[u.role], desc: (ROLE_ORDER.find(r => r[0] === u.role) || [])[2] }));
-const PW = '1234';
+// Hesaplar yalnızca veritabanında. Programın içinde gömülü kullanıcı ve
+// şifre yok: çevrimdışıyken de yalnızca bu cihazda daha önce doğrulanmış
+// hesap girebilir (aşağıdaki SON_KEY kaydı).
+const USERS = [];
+const SON_KEY = 'ks-son-hesap';
 const ALL_ROLES = ROLE_ORDER.map(r => r[0]);
 const PERMS = [
   ['gor', 'Envanteri ve haritayı görüntüleme', ALL_ROLES],
@@ -2667,6 +2677,10 @@ class Component extends DCLogic {
   }
   forget(quiet) {
     try { localStorage.removeItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
+    // Sunucu oturumu da düşer: aksi halde anahtar cihazda kalır ve
+    // sayfa yenilenince bir sonraki kişiyi kendiliğinden içeri alır
+    const M = this._sb;
+    if (M) { M.cikis(); M.tokenYaz(null); }
     this.setState({
       session: null, autoLogin: false, remember: false,
       loginUser: '', loginPw: '', loginErr: '', tab: 'harita',
@@ -2985,7 +2999,21 @@ class Component extends DCLogic {
       const list = JSON.parse(localStorage.getItem('ks-users') || 'null');
       if (Array.isArray(list) && list.length) return list.map(u => this.userSuret(u));
     } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
-    return USERS.map(u => this.userSuret(u));
+    return [];
+  }
+  // Çevrimdışı giriş için: doğrulanmış hesabın şifresi değil, özeti saklanır
+  async ozet(s) {
+    const b = new TextEncoder().encode('ks|' + s);
+    const h = await crypto.subtle.digest('SHA-256', b);
+    return [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+  async sonHesapYaz(u, sifre) {
+    try {
+      localStorage.setItem(SON_KEY, JSON.stringify({
+        user: u.user, ozet: await this.ozet(sifre),
+        kayit: { ...u, pw: undefined }
+      }));
+    } catch (e) { /* depolama kapalı */ }
   }
   // ── veritabanı bağlantısı
   async anahtarlaGir(M) {
@@ -3002,7 +3030,46 @@ class Component extends DCLogic {
       session: u, role: ROLE_LABEL[u.role] || u.role, autoLogin: !!sunucudan,
       remember: true, loginUser: u.user, loginPw: '', loginErr: '', pwForm: null,
       sunucu: !!sunucudan, tab: 'harita', ...this.prefOku(u)
-    }, () => { this.prefUygula(); if (sunucudan) this.usersYenile(); });
+    }, () => { this.prefUygula(); if (sunucudan) { this.usersYenile(); this.veriYenile(); } });
+  }
+  // ── ortak veri: sunucu kaynağın kendisi olur, cihazdaki kopya yalnızca yedek
+  async veriYenile(sessiz) {
+    const M = this._sb;
+    if (!M || !M.tokenOku()) return;
+    const [t, a] = await Promise.all([M.tesisListesi(), M.arizaListesi()]);
+    if (!t.ok) {
+      if (!sessiz) this.say(t.cevrimdisi
+        ? 'Bağlantı yok — cihazdaki son kopya gösteriliyor. İnternet gelince kendiliğinden güncellenir.'
+        : t.err, true);
+      return;
+    }
+    const assets = (t.data || []).map(M.tesisSuret);
+    const faults = a.ok ? (a.data || []).map(M.arizaSuret) : this.state.faults;
+    const kilitli = assets.filter(x => !x.yazilabilir).length;
+    this.setState({ assets, faults, sunucu: true, sonEsitleme: this.damga() });
+    if (!sessiz) {
+      const me = this.state.session;
+      const bolge = me && me.bolge ? me.bolge : null;
+      this.say(kilitli && bolge
+        ? `${assets.length} tesis ve ${faults.length} arıza kaydı yüklendi. ${bolge} ilçesindeki ${assets.length - kilitli} kayıtta değişiklik yapabilirsiniz; diğer ${kilitli} kayıt görüntülemeye açık.`
+        : `${assets.length} tesis ve ${faults.length} arıza kaydı yüklendi — hepsinde değişiklik yapabilirsiniz.`, true);
+      setTimeout(() => this.setState({ toast: null }), 8000);
+    }
+  }
+  // Yazma yetkisi: kural sunucuda; buradaki denetim yalnızca ekranı doğru göstermek için
+  yazabilir(a) {
+    const me = this.state.session;
+    if (!me) return false;
+    if (!this.state.sunucu) return true;
+    if (me.role === 'yonetici' || me.role === 'mudur') return true;
+    if (!me.bolge) return true;
+    if (!a) return true;
+    return (a.district || '').toLowerCase() === me.bolge.toLowerCase();
+  }
+  kilitUyar(a) {
+    const me = this.state.session;
+    this.say(`${a.code} ${a.district} ilçesinde. Sizin sorumluluk bölgeniz ${me && me.bolge ? me.bolge : '—'} — kaydı görebilirsiniz ama değiştiremezsiniz. Değişiklik için ilçe sorumlusuna veya müdüre başvurun.`, true);
+    setTimeout(() => this.setState({ toast: null }), 8000);
   }
   async usersYenile() {
     const M = this._sb;
@@ -3556,10 +3623,14 @@ class Component extends DCLogic {
           return !!(sv && s.loginUser === sv.user && s.loginPw === sv.pw && s.loginPw);
         })(),
         temizle: () => this.setState({ loginUser: '', loginPw: '', loginErr: '', remember: false }),
-        hint: 'Rol hesaba bağlıdır, ekranda seçilmez. Yönetici: a.bertan (kendi şifresi). Diğer deneme hesapları: f.yilmaz (müdür) · a.demir (mühendis) · m.sahin (arıza şefi) · m.kaya (arıza personeli) — şifre 1234.'
+        hint: 'Rol hesaba bağlıdır, ekranda seçilmez. Hesabı olmayan personeli Yönetici, Ayarlar > Yetkiler ve kullanıcılar ekranından ekler.'
       },
       login: () => this.doLogin(),
-      hasSavedLogin: (() => { try { return !!localStorage.getItem(SES_KEY); } catch (e) { return false; } })(),
+      hasSavedLogin: (() => {
+        let sk = false;
+        try { sk = !!localStorage.getItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
+        return sk || !!(this._sb && this._sb.tokenOku());
+      })(),
       logout: () => {
         // "Beni hatırla" işaretliyse çıkıştan sonra tek dokunuşla girilir:
         // sunucu oturumunda anahtar cihazda kalır, şifre hiçbir yere yazılmaz.
@@ -3828,13 +3899,33 @@ class Component extends DCLogic {
           year: parseInt(n.year, 10) || 2026,
           d: { derinlik: '—', pompaD: '—', cap: '—', statik: '—', dinamik: '—', debi: '—', kolon: '—', kolonCap: '—', rf: 'Yok', motor: '—', kablo: '—', hacim: '—', kaynak: 0, malzeme: '—', klor: false, rfMod: false, sigorta: '—', brans: '—', kalkis: '—', pano: '—', trafo: '—', guc: '—', panelAdet: '—', inverter: '—', baglanti: '—', bakim: 'Yeni kayıt' }
         };
+        if (this._sb && this._sb.tokenOku() && !s.offline) {
+          if (!this.yazabilir(asset)) return this.kilitUyar(asset);
+          this.setState({ scenario: null, newAsset: null, tab: 'harita' });
+          this._sb.tesisKaydet(asset).then(async r => {
+            if (!r.ok) {
+              this.say(r.cevrimdisi
+                ? 'Bağlantı kesildi — kayıt gönderilemedi. Çevrimdışı kipe geçip yeniden deneyin, kayıt cihazda beklesin.'
+                : r.err, true);
+              setTimeout(() => this.setState({ toast: null }), 9000);
+              return;
+            }
+            await this.veriYenile(true);
+            const yeni = this.state.assets.find(x => x.dbId === r.data);
+            this.setState({ selected: yeni ? yeni.id : null, panel: yeni ? 'detay' : 'yok', detailTab: 'bilgi' });
+            if (yeni) this.flyTo(yeni.lat, yeni.lon, 15);
+            this.say(`${asset.code} veritabanına yazıldı — bütün ekiplerin ekranında görünüyor. Detay alanlarını şimdi doldurabilirsiniz.`, true);
+            setTimeout(() => this.setState({ toast: null }), 8000);
+          });
+          return;
+        }
         this.setState({
           assets: [asset, ...s.assets], scenario: null, newAsset: null,
           selected: asset.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita',
           queue: [{ id: 'q' + Date.now(), title: asset.code + ' · yeni tesis', meta: `${asset.village} · ${TYPES[asset.type].kind} · ${asset.photos} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
         });
         this.flyTo(asset.lat, asset.lon, 15);
-        this.say(s.offline ? 'Yeni tesis cihaza kaydedildi — kuyruğa alındı.' : 'Yeni tesis kaydı eşitlendi. Detay alanlarını şimdi doldurabilirsiniz.');
+        this.say(s.offline ? 'Yeni tesis cihaza kaydedildi — bağlantı gelince kendiliğinden yüklenir.' : 'Yeni tesis kaydı eşitlendi. Detay alanlarını şimdi doldurabilirsiniz.');
       },
       goToMyLocation: () => {
         this.toMap({ ks: 'go' });
@@ -3876,7 +3967,18 @@ class Component extends DCLogic {
       silKayit: !can('sil') ? null : () => {
         const a = sel;
         if (!a) return;
+        if (!this.yazabilir(a)) return this.kilitUyar(a);
         const me2 = s.session;
+        if (a.dbId && this._sb) {
+          this._sb.tesisSil(a.dbId).then(r => {
+            if (!r.ok) { this.say(r.err, true); return; }
+            this.setState({ selected: null, panel: 'yok' });
+            this.veriYenile(true);
+            this.say(`${a.code} çöp kutusuna taşındı — 30 gün içinde geri getirilebilir. Ayarlar > Çöp kutusu. Kayıt herkesin ekranından kalktı.`, true);
+            setTimeout(() => this.setState({ toast: null }), 7000);
+          });
+          return;
+        }
         this.setState({
           assets: s.assets.filter(x => x.id !== a.id),
           trash: [{ a, silen: me2 ? me2.name : '—', t: this.damga(), gun: 30 }, ...s.trash],
@@ -3885,8 +3987,22 @@ class Component extends DCLogic {
         this.say(`${a.code} çöp kutusuna taşındı — 30 gün içinde geri getirilebilir. Ayarlar > Çöp kutusu.`, true);
         setTimeout(() => this.setState({ toast: null }), 6000);
       },
-      silLabel: can('sil') ? 'Kaydı sil' : 'Silme yetkiniz yok',
+      silLabel: !can('sil') ? 'Silme yetkiniz yok' : (sel && !this.yazabilir(sel) ? 'Bu ilçede yetkiniz yok' : 'Kaydı sil'),
       canSil: can('sil'),
+      // ilçe yetkisi: kayıt başka ilçedeyse ekranda kilit görünür
+      kilit: (() => {
+        const me2 = s.session;
+        if (!sel || !me2 || this.yazabilir(sel)) return { on: false, text: '' };
+        return {
+          on: true,
+          text: `${sel.district} ilçesi — görüntüleme yetkiniz var, değiştirme yetkiniz yok. Sorumluluk bölgeniz ${me2.bolge || '—'}. Değişiklik için ilçe sorumlusuna veya müdüre başvurun.`
+        };
+      })(),
+      esitle: {
+        label: s.sunucu ? 'Yenile' : 'Bağlan',
+        note: s.sunucu ? (s.sonEsitleme ? 'Son eşitleme: ' + s.sonEsitleme : 'Ortak veritabanı bağlı') : 'Cihazdaki kopya',
+        tik: () => this.veriYenile()
+      },
       trash: {
         rows: s.trash.map((r, i) => ({
           code: r.a.code, kind: TYPES[r.a.type].kind, place: this.yer(r.a),
@@ -4597,11 +4713,12 @@ class Component extends DCLogic {
       goOzet: () => this.setState({ tab: 'ozet' }),
       forgetLogin: () => this.forget(),
       forgetNote: (() => {
-        let kayitli = false;
-        try { kayitli = !!localStorage.getItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
-        return kayitli
-          ? 'Giriş ekranındaki “Beni hatırla” işaretli olduğu için kullanıcı adınız ve şifreniz bu tarayıcıya kaydedildi — program açılışta giriş ekranını atlıyor. Ortak bir bilgisayarda ya da başkasının telefonunda açtıysanız buradan silin; hesabınız etkilenmez, yalnızca bu cihazdaki hatırlama kalkar.'
-          : 'Bu cihazda kayıtlı giriş yok — program her açılışta kullanıcı adı ve şifre istiyor.';
+        let sk = false;
+        try { sk = !!localStorage.getItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
+        const anahtar = !!(this._sb && this._sb.tokenOku());
+        if (anahtar) return 'Giriş ekranındaki “Beni hatırla” işaretli olduğu için bu cihaza bir oturum anahtarı kaydedildi — program açılışta giriş ekranını atlıyor. Şifreniz saklanmıyor, yalnızca bu anahtar duruyor. Ortak bir bilgisayarda ya da başkasının telefonunda açtıysanız buradan silin: anahtar hem cihazdan hem veritabanından kaldırılır, o cihaz bir daha kendiliğinden girmez. Hesabınız etkilenmez.';
+        if (sk) return 'Bu cihaza kullanıcı adınız ve şifreniz kaydedildi — program açılışta giriş ekranını atlıyor. Ortak bir cihazda açtıysanız buradan silin; hesabınız etkilenmez.';
+        return 'Bu cihazda kayıtlı giriş yok — program her açılışta kullanıcı adı ve şifre istiyor.';
       })(),
       vFill: {
         run: () => this.fillVillages(),

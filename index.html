@@ -30,20 +30,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </style>
 </helmet>
 
-<div style="min-height:100vh;padding:26px 26px 60px">
-
-<div style="display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--color-divider);padding-bottom:10px;margin-bottom:18px">
-<span style="font:700 11px/1 var(--font-heading);letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent)">Prototip v2</span>
-<span style="font:400 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-600)">Kırşehir Kırsal Altyapı ve Su Şebekesi Envanteri</span>
-<span style="flex:1"></span>
-<sc-for list="{{ devices }}" as="d" hint-placeholder-count="2">
-<button onClick="{{ d.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:7px 13px;border:2px solid var(--color-divider);background:{{ d.bg }};color:{{ d.fg }};font:700 10px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">{{ d.label }}</button>
-</sc-for>
-</div>
+<div style="min-height:100vh">
 
 <!-- ══════════════ GİRİŞ ══════════════ -->
 <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
-<div style="width:452px;border:2px solid var(--color-text);background:var(--color-bg)">
+<div style="min-height:100vh;box-sizing:border-box;padding:24px;display:flex;align-items:center;justify-content:center">
+<div style="width:452px;max-width:100%;border:2px solid var(--color-text);background:var(--color-bg)">
 <div style="padding:26px 24px 22px">
 <div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
 <div style="font:600 9.5px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent);margin-bottom:9px">Kullanıcı girişi</div>
@@ -76,11 +68,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <div style="padding:12px 24px 18px;font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Gerçek kurulumda Supabase Auth + kurum SSO; oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
 </div>
+</div>
 </sc-if>
 
 <!-- ══════════════ MASAÜSTÜ ══════════════ -->
 <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-<div style="width:1440px;height:900px;border:2px solid var(--color-text);display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
+<div style="width:100%;height:100vh;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
 
 <div style="flex:none;display:flex;align-items:center;gap:16px;padding:0 18px;height:56px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
 <span style="width:18px;height:18px;background:var(--color-accent);flex:none"></span>
@@ -116,7 +109,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="flex:1;display:flex;min-height:0">
 
 <!-- sidebar -->
-<div style="width:216px;flex:none;border-right:2px solid {{ ui.rule }};display:flex;flex-direction:column;background:{{ ui.surf }}">
+<div style="width:216px;flex:none;border-right:2px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
+<div class="scroll" style="flex:1;min-height:0;overflow:auto">
 <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
 <button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid {{ ui.rule }};background:{{ n.bg }};border-left:3px solid {{ n.mark }}" style-hover="background:{{ ui.surf2 }}">
 <span style="width:14px;height:14px;border:2px solid {{ n.fg }};background:{{ n.dot }};flex:none"></span>
@@ -126,17 +120,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 </button>
 </sc-for>
-<div style="flex:1"></div>
-<div style="padding:14px 16px;border-top:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
+</div>
+<div style="flex:none;padding:14px 16px;border-top:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
 <div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:5px">Oturum</div>
 <div style="font:700 12.5px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ sessionCard.name }}</div>
 <div style="font:600 10.5px/1.35 var(--font-body);color:{{ ui.fg }}">{{ sessionCard.role }}</div>
 <div style="font:400 10.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ sessionCard.dev }}</div>
 <div style="font:400 10.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ sessionCard.crew }}</div>
-<div style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">{{ forgetNote }}</div>
-<sc-if value="{{ hasSavedLogin }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ forgetLogin }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:12px 8px;margin-top:9px">Kayıtlı girişi sil</button>
-</sc-if>
 </div>
 </div>
 
@@ -686,6 +676,24 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ setNet.on.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setNet.on.bg }};color:{{ setNet.on.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Çevrim içi</button>
 <button onClick="{{ setNet.off.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setNet.off.bg }};color:{{ setNet.off.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Çevrim dışı</button>
 </div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr">
+<div style="padding:16px 20px;border-right:2px solid {{ ui.rule }};border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Ekran düzeni</div>
+<div style="font:400 11px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ setDevice.note }}</div>
+<div style="display:flex;border:2px solid {{ ui.rule }}">
+<button onClick="{{ setDevice.auto.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setDevice.auto.bg }};color:{{ setDevice.auto.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Otomatik</button>
+<button onClick="{{ setDevice.desktop.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setDevice.desktop.bg }};color:{{ setDevice.desktop.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Bilgisayar</button>
+<button onClick="{{ setDevice.phone.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setDevice.phone.bg }};color:{{ setDevice.phone.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Telefon</button>
+</div>
+</div>
+<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Bu cihazda kayıtlı giriş</div>
+<div style="font:400 11px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ forgetNote }}</div>
+<sc-if value="{{ hasSavedLogin }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ forgetLogin }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:11px 13px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Kayıtlı girişi sil</button>
+</sc-if>
 </div>
 </div>
 <div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }}">
@@ -1370,7 +1378,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <!-- ══════════════ TELEFON ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
-<div style="width:392px;height:812px;border:2px solid var(--color-text);position:relative;overflow:hidden;background:{{ ui.bg }};color:{{ ui.fg }};display:flex;flex-direction:column">
+<div style="width:100%;height:100vh;position:relative;overflow:hidden;background:{{ ui.bg }};color:{{ ui.fg }};display:flex;flex-direction:column">
 
 <div style="flex:none;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font:600 11px/1 var(--font-body);border-bottom:1px solid {{ ui.rule }}">
 <span>09:41</span><span style="color:{{ ui.mut }}">{{ net.label }}</span>
@@ -1749,6 +1757,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ setNet.on.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setNet.on.bg }};color:{{ setNet.on.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Ç.İçi</button>
 <button onClick="{{ setNet.off.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setNet.off.bg }};color:{{ setNet.off.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase">Ç.Dışı</button>
 </div>
+</div>
+</div>
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Ekran düzeni</div>
+<div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ setDevice.note }}</div>
+<div style="display:flex;border:2px solid {{ ui.rule }}">
+<button onClick="{{ setDevice.auto.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.auto.bg }};color:{{ setDevice.auto.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Otomatik</button>
+<button onClick="{{ setDevice.desktop.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.desktop.bg }};color:{{ setDevice.desktop.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Bilgisayar</button>
+<button onClick="{{ setDevice.phone.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.phone.bg }};color:{{ setDevice.phone.fg }};font:700 10.5px/1 var(--font-body);text-transform:uppercase">Telefon</button>
 </div>
 </div>
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
@@ -2318,7 +2335,7 @@ const fmt = n => n == null ? '—' : n.toLocaleString('tr-TR');
 
 class Component extends DCLogic {
   state = {
-    data: null, device: 'desktop', theme: 'light', offline: false,
+    data: null, device: 'desktop', deviceMode: 'auto', theme: 'light', offline: false,
     session: null, loginUser: '', loginPw: '', loginErr: '', remember: true, autoLogin: false,
     mapBase: 'street', navMode: false, route: null,
     scenario: null, newAsset: null,
@@ -2333,7 +2350,25 @@ class Component extends DCLogic {
     conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' }
   };
 
+  // ── ekran genişliğine göre düzen: dar ekran telefon, geniş ekran bilgisayar
+  olcCihaz() {
+    const w = (typeof window !== 'undefined' && window.innerWidth) || 1440;
+    return w < 820 ? 'phone' : 'desktop';
+  }
+  cihazUygula(mode) {
+    const m = mode || this.state.deviceMode;
+    this.setState({ device: m === 'auto' ? this.olcCihaz() : m });
+  }
+  componentWillUnmount() {
+    if (this._rs) window.removeEventListener('resize', this._rs);
+    if (this._msg) window.removeEventListener('message', this._msg);
+  }
   componentDidMount() {
+    let dm = 'auto';
+    try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
+    this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm });
+    this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
+    window.addEventListener('resize', this._rs);
     try {
       const raw = localStorage.getItem(SES_KEY);
       if (raw) {
@@ -3439,7 +3474,19 @@ class Component extends DCLogic {
         this.setState({ tab: 'harita' });
         this.say(`${sel.code} için karayolu güzergâhı hesaplanıyor…`);
       },
-      devices: [['desktop', 'Masaüstü 1440'], ['phone', 'Telefon 392']].map(([id, label]) => ({
+      setDevice: (() => {
+        const mk = id => seg(s.deviceMode === id, () => {
+          try { localStorage.setItem('ks-device-mode', id); } catch (e) { /* depolama kapalı */ }
+          this.setState({ deviceMode: id, device: id === 'auto' ? this.olcCihaz() : id });
+        });
+        return {
+          auto: mk('auto'), desktop: mk('desktop'), phone: mk('phone'),
+          note: s.deviceMode === 'auto'
+            ? `Otomatik: ekran genişliğine göre seçilir — şu an ${s.device === 'phone' ? 'telefon' : 'bilgisayar'} düzeni. Ekranı döndürdüğünüzde kendiliğinden uyar.`
+            : `Elle sabitlendi: ${s.deviceMode === 'phone' ? 'telefon' : 'bilgisayar'} düzeni. Otomatiğe dönmek için Otomatik'e basın.`
+        };
+      })(),
+      devicesEski: [['desktop', 'Masaüstü 1440'], ['phone', 'Telefon 392']].map(([id, label]) => ({
         label, bg: s.device === id ? 'var(--color-text)' : 'transparent',
         fg: s.device === id ? '#fff' : 'var(--color-text)',
         pick: () => this.setState({ device: id, panel: id === 'phone' ? 'yok' : 'donusum' })

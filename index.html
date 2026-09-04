@@ -84,6 +84,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-if value="{{ loginForm.hasErr }}" hint-placeholder-val="{{ false }}">
 <div style="border:2px solid var(--color-accent);background:var(--color-accent-100);color:var(--color-accent-700);padding:10px 12px;font:600 11.5px/1.35 var(--font-body)">{{ loginForm.err }}</div>
 </sc-if>
+<sc-if value="{{ loginForm.dolu }}" hint-placeholder-val="{{ false }}">
+<div style="border:2px solid var(--color-divider);background:var(--color-neutral-200);padding:11px 13px;display:flex;align-items:center;gap:12px">
+<span style="flex:1;font:400 10.5px/1.45 var(--font-body);color:var(--color-neutral-700)">Bu cihazda kayıtlı giriş dolduruldu — <strong style="color:var(--color-text)">Giriş yap</strong>'a basmanız yeterli.</span>
+<button onClick="{{ loginForm.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border:2px solid var(--color-neutral-600);color:var(--color-neutral-700);font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:10px 12px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Başka hesap</button>
+</div>
+</sc-if>
 <button onClick="{{ loginForm.toggleRemember }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:flex-start;gap:10px;padding:4px 0;text-align:left">
 <span style="flex:none;font:700 16px/1 var(--font-body);color:var(--color-accent);width:18px">{{ loginForm.rememberMark }}</span>
 <span style="display:flex;flex-direction:column;gap:3px">
@@ -97,6 +103,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="font:600 10.5px/1.4 var(--font-body);color:var(--color-neutral-700);max-width:230px">{{ loginForm.deviceLine }}</span>
 <button onClick="{{ login }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 13px/1 var(--font-body);padding:15px 22px;justify-content:center;flex:none">Giriş yap</button>
 </div>
+<sc-if value="{{ tekDokunus }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ tekDokunusGir }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;width:100%;padding:15px 24px;border-top:2px solid var(--color-text);background:var(--color-accent);color:#fff" style-hover="background:var(--color-accent-600)">
+<span style="flex:none;font:700 15px/1 var(--font-body)">→</span>
+<span style="flex:1;font:700 12.5px/1.3 var(--font-body);letter-spacing:.04em;text-transform:uppercase">{{ tekDokunusAd }} olarak devam et</span>
+</button>
+</sc-if>
 <div style="padding:12px 24px 18px;font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Gerçek kurulumda Supabase Auth + kurum SSO; oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
 </div>
 </div>
@@ -2479,6 +2491,8 @@ class Component extends DCLogic {
     let dm = 'auto';
     try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
     this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm, users: this.usersOku() });
+    import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return this.anahtarlaGir(M); })
+      .catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
     this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
     window.addEventListener('resize', this._rs);
     // Esc: açık form ve panelleri kapatır
@@ -2973,6 +2987,41 @@ class Component extends DCLogic {
     } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
     return USERS.map(u => this.userSuret(u));
   }
+  // ── veritabanı bağlantısı
+  async anahtarlaGir(M) {
+    if (!M.tokenOku()) return;
+    const r = await M.oturumAc();
+    if (!r.ok) { if (!r.cevrimdisi) M.tokenYaz(null); return; }
+    const u = M.suret(r.data);
+    if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' } });
+    this.oturumKur(u, true);
+  }
+  oturumKur(u, sunucudan) {
+    this._prefYuklendi = true;
+    this.setState({
+      session: u, role: ROLE_LABEL[u.role] || u.role, autoLogin: !!sunucudan,
+      remember: true, loginUser: u.user, loginPw: '', loginErr: '', pwForm: null,
+      sunucu: !!sunucudan, tab: 'harita', ...this.prefOku(u)
+    }, () => { this.prefUygula(); if (sunucudan) this.usersYenile(); });
+  }
+  async usersYenile() {
+    const M = this._sb;
+    if (!M) return;
+    const r = await M.kullaniciListesi();
+    if (!r.ok || !Array.isArray(r.data)) return;
+    this.usersKaydet(r.data.map(M.suret));
+  }
+  // Yönetici işlemleri internet ister: çevrimdışı eklenen hesap eşitlenirken çakışır
+  async yonetIsle(isim, fn) {
+    const M = this._sb;
+    if (!M) return this.say('Kullanıcı işlemleri internet bağlantısı gerektirir.');
+    const r = await fn(M);
+    if (!r.ok) return this.say(r.cevrimdisi ? 'Bağlantı yok — kullanıcı işlemleri internet gerektirir.' : r.err, true);
+    await this.usersYenile();
+    if (isim) this.say(isim, true);
+    setTimeout(() => this.setState({ toast: null }), 7000);
+    return r;
+  }
   usersKaydet(list) {
     const n = list.map(u => this.userSuret(u));
     try {
@@ -2985,11 +3034,18 @@ class Component extends DCLogic {
     this.setState({ users: n });
     return n;
   }
-  pwDegistir() {
+  async pwDegistir() {
     const f = this.state.pwForm;
     if (!f) return;
     if ((f.yeni || '').length < 4) return this.setState({ pwForm: { ...f, err: 'Şifre en az 4 karakter olmalı.' } });
     if (f.yeni !== f.tekrar) return this.setState({ pwForm: { ...f, err: 'İki şifre aynı değil.' } });
+    const M = this._sb;
+    if (M && M.tokenOku()) {
+      const r = await M.sifreDegistir(f.yeni);
+      if (!r.ok) return this.setState({ pwForm: { ...f, err: r.cevrimdisi ? 'Bağlantı yok — şifre değiştirmek internet gerektirir.' : r.err } });
+      const o = await M.oturumAc();
+      if (o.ok) { this.oturumKur(M.suret(o.data), true); return this.say('Şifreniz değiştirildi.'); }
+    }
     const list = this.usersKaydet(this.state.users.map(u =>
       u.user === f.user ? { ...u, pw: f.yeni, mustChange: false } : u));
     const u = list.find(x => x.user === f.user);
@@ -3000,8 +3056,22 @@ class Component extends DCLogic {
     this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginUser: u.user, ...this.prefOku(u) },
       () => { this.prefUygula(); this.say('Şifreniz değiştirildi.'); });
   }
-  doLogin() {
+  async doLogin() {
     const name = this.state.loginUser.trim().toLowerCase();
+    const M = this._sb;
+    if (M) {
+      const r = await M.giris(name, this.state.loginPw, this.state.device === 'phone' ? 'Telefon' : 'Bilgisayar');
+      if (r.ok) {
+        const u = M.suret(r.data);
+        if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
+        return this.oturumKur(u, true);
+      }
+      // sunucu cevap verdi ve reddettiyse cihazdaki listeye düşmeyiz
+      if (!r.cevrimdisi) return this.setState({ loginErr: r.err });
+    }
+    return this.yerelGiris(name);
+  }
+  yerelGiris(name) {
     const list = this.state.users.length ? this.state.users : USERS;
     const u = list.find(x => x.user === name);
     if (!u) return this.setState({ loginErr: 'Böyle bir kullanıcı adı yok.' });
@@ -3478,13 +3548,36 @@ class Component extends DCLogic {
         rememberMark: s.remember ? '■' : '□',
         toggleRemember: () => this.setState({ remember: !this.state.remember }),
         rememberNote: s.remember
-          ? 'Kullanıcı adı ve şifre bu cihazda saklanır — bir dahaki açılışta program doğrudan açılır, şifre sormaz.'
+          ? 'Kullanıcı adı ve şifre bu cihazda saklanır — bir dahaki açılışta program doğrudan açılır, çıkış yapsanız da alanlar dolu gelir.'
           : 'Her açılışta kullanıcı adı ve şifre istenir.',
+        dolu: (() => {
+          let sv = null;
+          try { sv = JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch (e) { /* depolama kapalı */ }
+          return !!(sv && s.loginUser === sv.user && s.loginPw === sv.pw && s.loginPw);
+        })(),
+        temizle: () => this.setState({ loginUser: '', loginPw: '', loginErr: '', remember: false }),
         hint: 'Rol hesaba bağlıdır, ekranda seçilmez. Yönetici: a.bertan (kendi şifresi). Diğer deneme hesapları: f.yilmaz (müdür) · a.demir (mühendis) · m.sahin (arıza şefi) · m.kaya (arıza personeli) — şifre 1234.'
       },
       login: () => this.doLogin(),
       hasSavedLogin: (() => { try { return !!localStorage.getItem(SES_KEY); } catch (e) { return false; } })(),
-      logout: () => this.setState({ session: null, autoLogin: false, panel: 'yok', faultForm: null, selected: null, loginUser: '', loginPw: '', loginErr: '', tab: 'harita', scenario: null, newAsset: null }),
+      logout: () => {
+        // "Beni hatırla" işaretliyse çıkıştan sonra tek dokunuşla girilir:
+        // sunucu oturumunda anahtar cihazda kalır, şifre hiçbir yere yazılmaz.
+        let sv = null;
+        try { sv = JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch (e) { /* depolama kapalı */ }
+        const M = this._sb;
+        const anahtar = M && M.tokenOku();
+        if (M && !s.remember) M.cikis();
+        this.setState({
+          session: null, autoLogin: false, panel: 'yok', faultForm: null, selected: null,
+          loginUser: sv ? sv.user : (s.remember && me ? me.user : ''),
+          loginPw: sv ? sv.pw : '', loginErr: '',
+          remember: !!sv || !!(s.remember && anahtar), tab: 'harita', scenario: null, newAsset: null
+        });
+      },
+      tekDokunus: !!(s.remember && !s.session && this._sb && this._sb.tokenOku()),
+      tekDokunusAd: (s.loginUser || '').trim() || 'Kayıtlı hesap',
+      tekDokunusGir: () => this.anahtarlaGir(this._sb),
       sessionCard: me ? {
         name: me.name, role: me.roleLabel,
         dev: (s.device === 'phone' ? 'Telefon' : 'Bilgisayar') + ' oturumu' + (s.autoLogin ? ' · kayıtlı girişle açıldı' : (s.remember ? ' · giriş bu cihazda saklandı' : '')),
@@ -3547,15 +3640,18 @@ class Component extends DCLogic {
           if (list.some(u => u.user === kad && u.id !== g.id)) return this.setState({ userForm: { ...g, err: 'Bu kullanıcı adı başkasında var.' } });
           if (!g.id && (g.pw || '').length < 4) return this.setState({ userForm: { ...g, err: 'Başlangıç şifresi en az 4 karakter olmalı.' } });
           const alan = { name: ad, user: kad, role: g.role, tel: g.tel || '', unvan: g.unvan || '', bolge: g.bolge || '' };
-          if (g.id) {
-            this.usersKaydet(list.map(u => u.id === g.id ? { ...u, ...alan } : u));
-            this.say(ad + ' güncellendi.');
+          const mevcut = g.id ? list.find(u => u.id === g.id) : null;
+          this.setState({ userForm: null });
+          if (mevcut && mevcut.dbId) {
+            this.yonetIsle(ad + ' güncellendi.', M => M.kullaniciGuncelle({ ...alan, id: mevcut.dbId }));
+          } else if (!g.id) {
+            this.yonetIsle(ad + ' eklendi ve veritabanına yazıldı. Başlangıç şifresini kendisine iletin — ilk girişte kendi şifresini belirleyecek, her cihazdan girebilir.',
+              M => M.kullaniciEkle({ ...alan, pw: g.pw }));
           } else {
-            this.usersKaydet(list.concat([{ ...alan, id: 'u' + Date.now(), crew: null, pw: g.pw, aktif: true, mustChange: true, eklendi: this.damga() }]));
-            this.say(ad + ' eklendi. Başlangıç şifresini kendisine iletin — ilk girişte değiştirmesi istenecek.', true);
+            this.usersKaydet(list.map(u => u.id === g.id ? { ...u, ...alan } : u));
+            this.say(ad + ' güncellendi — bu kayıt henüz veritabanında değil, yalnızca bu cihazda duruyor.', true);
             setTimeout(() => this.setState({ toast: null }), 6000);
           }
-          this.setState({ userForm: null });
         };
         return {
           yonetici, kapali: !yonetici, ekleGoster: yonetici && !f,
@@ -3579,11 +3675,21 @@ class Component extends DCLogic {
             }),
             sifre: () => {
               const yeni = String(Math.floor(100000 + Math.random() * 900000));
+              if (u.dbId) {
+                this.yonetIsle(u.name + ' için yeni şifre: ' + yeni + ' — kendisine iletin, ilk girişte kendi şifresini belirleyecek. Açık oturumları kapatıldı.',
+                  M => M.sifreSifirla(u.dbId, yeni));
+                setTimeout(() => this.setState({ toast: null }), 14000);
+                return;
+              }
               this.usersKaydet(list.map(x => x.id === u.id ? { ...x, pw: yeni, mustChange: true } : x));
               this.say(u.name + ' için yeni şifre: ' + yeni + ' — kendisine iletin, ilk girişte değiştirecek.', true);
               setTimeout(() => this.setState({ toast: null }), 12000);
             },
             kapat: () => {
+              if (u.dbId) return this.yonetIsle(u.name + (u.aktif === false
+                ? ' hesabı yeniden aktif edildi — eski kullanıcı adı ve şifresiyle her cihazdan girer.'
+                : ' hesabı donduruldu — açık oturumları kapatıldı, artık giriş yapamaz. Attığı bütün kayıtlar adıyla sistemde kalır; işe dönerse Aktif et ile açılır.'),
+                M => M.hesapDurum(u.dbId, u.aktif === false));
               this.usersKaydet(list.map(x => x.id === u.id ? { ...x, aktif: x.aktif === false } : x));
               this.say(u.name + (u.aktif === false
                 ? ' hesabı yeniden aktif edildi — eski kullanıcı adıyla girer, şifresi de aynı kalır.'
@@ -3591,6 +3697,8 @@ class Component extends DCLogic {
               setTimeout(() => this.setState({ toast: null }), 7000);
             },
             sil: () => {
+              if (u.dbId) return this.yonetIsle(u.name + ' silindi. Attığı kayıtlarda adı “Silinmiş kullanıcı” olarak görünecek.',
+                M => M.kullaniciSil(u.dbId));
               this.usersKaydet(list.filter(x => x.id !== u.id));
               this.say(u.name + ' silindi. Attığı kayıtlarda adı “Silinmiş kullanıcı” olarak görünecek.', true);
               setTimeout(() => this.setState({ toast: null }), 6000);

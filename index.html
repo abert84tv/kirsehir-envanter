@@ -2679,6 +2679,10 @@ class Component extends DCLogic {
     w.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
     w.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
     w.postMessage({ ks: 'navMode', on: this.state.navMode }, '*');
+    // harita çerçevesi yenilenirse kendi listesine döner — kayıtları geri yolla
+    if (this.state.sunucu && this.state.assets.length) {
+      w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
+    }
   }
   toMap(msg) { const w = this.mapWin(); if (w) w.postMessage(msg, '*'); }
 

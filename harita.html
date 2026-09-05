@@ -19,7 +19,8 @@
     box-shadow:0 0 0 2px rgba(27,110,243,.45)}
   .ks-lbl{background:rgba(255,255,255,.92);border:2px solid var(--color-text);border-radius:0;
     padding:1px 4px;font:700 10px/1.35 var(--font-body);color:var(--color-text);box-shadow:none;
-    white-space:nowrap}
+    white-space:nowrap;pointer-events:auto;cursor:pointer}
+  .ks-lbl:hover{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-lbl:before{display:none}
   .ks-dist{background:var(--color-text);border:2px solid var(--color-text);color:#fff;
     padding:2px 6px;font:700 10px/1.35 var(--font-body);letter-spacing:.06em;text-transform:uppercase}
@@ -167,7 +168,7 @@ for (const a of assets) {
     html: `<div class="ks-pin${pend ? ' pend' : ''}${fault ? ' fault' : ''}">${TYPES[a.type].glyph}</div>`
   });
   const mk = L.marker([a.lat, a.lon], { icon })
-    .bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [14, 0] })
+    .bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [14, 0], interactive: true })
     .bindPopup(
       `<b>${a.code}</b><br>${TYPES[a.type].kind}<br>${a.village || 'Köy girilmedi'} · ${a.district}` +
       `<br>Yapım yılı: ${a.year || '—'}<br>${a.photos} fotoğraf` +
@@ -179,6 +180,12 @@ for (const a of assets) {
       else parent.postMessage({ ks: 'select', id: a.id, code: a.code }, '*');
     });
   mk.addTo(assetLayer);
+  // etiket de dokunma alsın: sahada parmakla işaretten çok etikete basılıyor
+  const tt = mk.getTooltip();
+  if (tt) tt.on('click', () => {
+    if (navMode) routeTo(a);
+    else parent.postMessage({ ks: 'select', id: a.id, code: a.code }, '*');
+  });
   markers.push(mk);
 }
 applyLabels();

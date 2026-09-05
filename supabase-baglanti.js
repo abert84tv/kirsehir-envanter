@@ -236,6 +236,39 @@ export async function fotoYukle(file, tesisDbId, kod, aciklama) {
   return { ok: true, data: { id: r.data, anahtar, url: fotoAdres(anahtar), boyut: k.boyut, w: k.w, h: k.h } };
 }
 
+// Sesli notlar fotoğraflarla aynı depoda; ayıran tek şey tur sütunu
+export async function sesYukle(blob, tesisDbId, kod, saniye, aciklama) {
+  const c = await istemci();
+  if (!c) return { ok: false, cevrimdisi: true, err: 'Bağlantı kurulamadı.' };
+  const uzanti = /mp4/.test(blob.type) ? 'm4a' : /ogg/.test(blob.type) ? 'ogg' : 'webm';
+  const anahtar = `${kod || 'tesis'}/ses-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${uzanti}`;
+  try {
+    const { error } = await c.storage.from(BUCKET).upload(anahtar, blob, {
+      contentType: blob.type || 'audio/webm', cacheControl: '31536000', upsert: false
+    });
+    if (error) {
+      const ag = /fetch|network|failed/i.test(error.message || '');
+      return { ok: false, cevrimdisi: ag, err: temizle(error.message) };
+    }
+  } catch (e) { return { ok: false, cevrimdisi: true, err: 'Yükleme kesildi.' }; }
+  const r = await cagir('ses_ekle', {
+    p_token: tokenOku(), p_tesis_id: tesisDbId, p_adres: anahtar,
+    p_boyut: blob.size, p_sure: saniye || null, p_aciklama: aciklama || null
+  });
+  if (!r.ok) { try { await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
+  return { ok: true, data: { id: r.data, anahtar, url: fotoAdres(anahtar) } };
+}
+
+export async function sesListesi(tesisDbId) {
+  const r = await cagir('ek_listesi', { p_token: tokenOku(), p_tesis_id: tesisDbId ?? null });
+  if (!r.ok) return r;
+  return { ok: true, data: (r.data || []).filter(f => f.tur === 'ses').map(f => ({
+    id: f.id, anahtar: f.adres, url: fotoAdres(f.adres), sure: f.sure,
+    boyut: f.boyut, yukleyen: f.yukleyen, yuklendi: f.yuklendi,
+    yazilabilir: f.yazilabilir !== false
+  })) };
+}
+
 export async function fotoListesi(tesisDbId) {
   const r = await cagir('foto_listesi', { p_token: tokenOku(), p_tesis_id: tesisDbId ?? null });
   if (!r.ok) return r;

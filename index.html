@@ -129,8 +129,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="flex:none;font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent)">Aranıyor…</span>
 </sc-if>
 </div>
-<span style="flex:0 1 0;min-width:0"></span>
-<span style="flex:0 1 auto;min-width:0;font:600 10px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">{{ role }}</span>
+<span style="flex:1 1 0;min-width:0"></span>
 <button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ esitle.label }}</button>
 <button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">Çıkış</button>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:8px 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
@@ -1074,7 +1073,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <!-- right panel -->
 <sc-if value="{{ panel.any }}" hint-placeholder-val="{{ true }}">
-<div class="scroll" style="width:392px;flex:none;border-left:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;overflow:auto">
+<div class="scroll" style="width:392px;flex:0 1 392px;min-width:0;border-left:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;overflow:auto">
 
 <sc-if value="{{ panel.isDetail }}" hint-placeholder-val="{{ false }}">
 <div style="padding:16px 18px;border-bottom:2px solid {{ ui.rule }}">
@@ -1151,35 +1150,35 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-if value="{{ testForm.open }}" hint-placeholder-val="{{ false }}">
 <div style="padding:14px 18px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:11px">
 <div style="font:700 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Yeni deneme ölçümü</div>
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px">
-<label style="display:flex;flex-direction:column;gap:4px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
 <span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Statik seviye (m)</span>
-<input value="{{ testForm.statik }}" onChange="{{ onTestStatik }}" inputmode="decimal" style="all:unset;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<input value="{{ testForm.statik }}" onChange="{{ onTestStatik }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
-<label style="display:flex;flex-direction:column;gap:4px">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
 <span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Dinamik seviye (m)</span>
-<input value="{{ testForm.dinamik }}" onChange="{{ onTestDinamik }}" inputmode="decimal" style="all:unset;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<input value="{{ testForm.dinamik }}" onChange="{{ onTestDinamik }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
-<label style="display:flex;flex-direction:column;gap:4px">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
 <span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Debi (l/s)</span>
-<input value="{{ testForm.debi }}" onChange="{{ onTestDebi }}" inputmode="decimal" style="all:unset;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<input value="{{ testForm.debi }}" onChange="{{ onTestDebi }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
-<label style="display:flex;flex-direction:column;gap:4px">
-<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Deneme süresi (saat)</span>
-<input value="{{ testForm.sure }}" onChange="{{ onTestSure }}" inputmode="decimal" style="all:unset;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Süre (saat)</span>
+<input value="{{ testForm.sure }}" onChange="{{ onTestSure }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
-<label style="display:flex;flex-direction:column;gap:4px">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
 <span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Toparlanma (dk)</span>
-<input value="{{ testForm.toparlanma }}" onChange="{{ onTestToparlanma }}" inputmode="decimal" style="all:unset;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<input value="{{ testForm.toparlanma }}" onChange="{{ onTestToparlanma }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border:2px solid {{ ui.rule }};padding:9px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
-<div style="display:flex;flex-direction:column;gap:4px;border:2px solid var(--color-accent);padding:7px 9px">
-<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Düşüm · özgül debi</span>
-<span style="font:700 12.5px/1.25 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ testForm.dusum }} · {{ testForm.ozgul }}</span>
+<div style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;border:2px solid var(--color-accent);padding:9px 11px">
+<span style="flex:none;font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Düşüm · özgül debi</span>
+<span style="flex:1;text-align:right;font:700 13px/1.25 ui-monospace,Menlo,monospace;color:{{ ui.acc }};min-width:0">{{ testForm.dusum }} · {{ testForm.ozgul }}</span>
 </div>
 </div>
-<label style="display:flex;flex-direction:column;gap:4px">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
 <span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Deneme notu</span>
-<textarea value="{{ testForm.note }}" onChange="{{ onTestNote }}" rows="2" placeholder="Kesintisiz mi, hangi pompayla, kum geldi mi, seviye ne zaman oturdu" style="all:unset;border:2px solid {{ ui.rule }};padding:9px;font:400 12px/1.45 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+<textarea value="{{ testForm.note }}" onChange="{{ onTestNote }}" rows="2" placeholder="Kesintisiz mi, hangi pompayla, kum geldi mi, seviye ne zaman oturdu" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border:2px solid {{ ui.rule }};padding:9px;font:400 12px/1.45 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
 </label>
 <sc-if value="{{ testForm.hasWarn }}" hint-placeholder-val="{{ false }}">
 <div style="border:2px solid var(--color-accent);background:var(--color-accent-100);color:var(--color-accent-700);padding:9px 11px;font:600 11px/1.4 var(--font-body)">{{ testForm.warn }}</div>
@@ -1230,10 +1229,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <sc-if value="{{ detail.showMedia }}" hint-placeholder-val="{{ false }}">
 <div style="padding:16px 18px">
-<sc-if value="{{ detail.mediaEmpty }}" hint-placeholder-val="{{ false }}">
-<div style="border:2px solid {{ ui.rule }};padding:22px 14px;font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Bu kayıtta fotoğraf yok.</div>
-</sc-if>
-<sc-if value="{{ detail.foto.sunucu }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ detail.foto.izgara }}" hint-placeholder-val="{{ false }}">
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
 <sc-for list="{{ detail.foto.list }}" as="p" hint-placeholder-count="0">
 <div style="aspect-ratio:1;border:2px solid {{ ui.rule }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
@@ -1245,6 +1241,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-for>
 </div>
+</sc-if>
 <sc-if value="{{ detail.foto.bos }}" hint-placeholder-val="{{ false }}">
 <div style="border:2px dashed {{ ui.rule }};padding:22px 16px;font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu kayıtta henüz fotoğraf yok. Sahada çektiğiniz kareler burada, herkesin görebileceği şekilde durur.</div>
 </sc-if>
@@ -1254,13 +1251,24 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-if value="{{ detail.foto.kilitli }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:12px;font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.foto.note }}</div>
 </sc-if>
+<sc-for list="{{ detail.foto.sesler }}" as="sn" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:7px;border:2px solid {{ ui.rule }};padding:9px 11px;margin-top:9px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:none;font:700 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.acc }}">Sesli not</span>
+<span style="flex:1;min-width:0;font:400 10.5px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sn.meta }}</span>
+<sc-if value="{{ sn.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;font:700 9px/1 var(--font-body);text-transform:uppercase;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">Sil</button>
+</sc-if>
+</div>
+<audio src="{{ sn.url }}" controls="controls" preload="metadata" style="width:100%;height:34px;display:block"></audio>
+</div>
+</sc-for>
 <sc-if value="{{ detail.foto.eklenebilir }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:8px;margin-top:12px">
 <button onClick="{{ detail.foto.cek }}" class="btn btn-primary" style="flex:1;border:none;cursor:pointer;font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px">Fotoğraf çek</button>
 <button onClick="{{ detail.foto.galeri }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px" style-hover="background:var(--color-accent);color:#fff">Galeriden seç</button>
 </div>
 <div style="margin-top:9px;font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.foto.note }}</div>
-</sc-if>
 </sc-if>
 </div>
 </sc-if>
@@ -1362,14 +1370,18 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Arıza fotoğrafı · {{ faultForm.photoCount }}</span>
 <span style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.assignNote }}</span>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
+<button onClick="{{ cekFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 9px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
+<button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px" style-hover="background:var(--color-accent);color:#fff">GALERİDEN SEÇ</button>
 <sc-for list="{{ faultForm.photos }}" as="p" hint-placeholder-count="0">
-<button onClick="{{ p.isaretle }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border:2px solid {{ p.border }};background:repeating-linear-gradient(45deg,{{ ui.ph1 }} 0 6px,{{ ui.ph2 }} 6px 12px);display:flex;align-items:flex-end;justify-content:flex-start">
-<span style="background:{{ p.markBg }};color:{{ p.markFg }};font:700 8px/1 var(--font-body);letter-spacing:.06em;padding:3px 4px">{{ p.mark }}</span>
-</button>
+<div style="width:66px;height:66px;border:2px solid {{ p.border }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+<img src="{{ p.url }}" alt="Arıza fotoğrafı" style="width:100%;height:100%;object-fit:cover;display:block">
+<button onClick="{{ p.isaretle }}" title="İşaretleme aç" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;inset:0"></button>
+<span style="position:absolute;left:0;bottom:0;background:{{ p.markBg }};color:{{ p.markFg }};font:700 8px/1 var(--font-body);letter-spacing:.04em;padding:3px 4px">{{ p.mark }}</span>
+<button onClick="{{ p.kaldir }}" title="Kaldır" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(32,30,29,.8);color:#fff;font:700 11px/1 var(--font-body);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">✕</button>
+</div>
 </sc-for>
 </div>
-<span style="font:400 10px/1.45 var(--font-body);color:{{ ui.mut }}">Fotoğrafa dokununca işaretleme açılır: ok, daire veya yazıyla arızalı yeri gösterebilirsiniz.</span>
+<span style="font:400 10px/1.45 var(--font-body);color:{{ ui.mut }}">Fotoğraflar kaydı kaydettiğinizde yüklenir — küçültme yapılır, tesisin fotoğraf listesine eklenir. Kareye dokununca işaretleme açılır: ok, daire veya yazıyla arızalı yeri gösterebilirsiniz.</span>
 </div>
 
 <sc-if value="{{ faultForm.isaretModu }}" hint-placeholder-val="{{ false }}">
@@ -1393,11 +1405,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">Yazmak yerine konuşun</span>
 </div>
 <sc-for list="{{ faultForm.sesler }}" as="sn" hint-placeholder-count="0">
-<div style="display:flex;align-items:center;gap:10px;border:2px solid {{ ui.rule }};padding:9px 11px">
-<span style="font:700 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ sn.sure }}</span>
-<span style="flex:1;height:12px;background:repeating-linear-gradient(90deg,{{ ui.rule }} 0 2px,transparent 2px 5px)"></span>
-<span style="font:700 8.5px/1 var(--font-body);letter-spacing:.06em;color:{{ sn.durumFg }}">{{ sn.durum }}</span>
-<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:700 9px/1 var(--font-body);text-transform:uppercase;color:{{ ui.mut }}">Sil</button>
+<div style="display:flex;flex-direction:column;gap:8px;border:2px solid {{ ui.rule }};padding:9px 11px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:none;font:700 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ sn.sure }}</span>
+<span style="flex:1;font:700 8.5px/1 var(--font-body);letter-spacing:.06em;color:{{ sn.durumFg }}">{{ sn.durum }}</span>
+<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;font:700 9px/1 var(--font-body);text-transform:uppercase;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">Sil</button>
+</div>
+<sc-if value="{{ sn.calinabilir }}" hint-placeholder-val="{{ false }}">
+<audio src="{{ sn.url }}" controls="controls" preload="metadata" style="width:100%;height:34px;display:block"></audio>
+</sc-if>
 </div>
 </sc-for>
 <sc-if value="{{ faultForm.kaydediyor }}" hint-placeholder-val="{{ false }}">
@@ -2121,10 +2137,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <sc-if value="{{ detail.showMedia }}" hint-placeholder-val="{{ false }}">
 <div style="padding:14px">
-<sc-if value="{{ detail.mediaEmpty }}" hint-placeholder-val="{{ false }}">
-<div style="border:2px solid {{ ui.rule }};padding:20px 14px;font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Bu kayıtta fotoğraf yok.</div>
-</sc-if>
-<sc-if value="{{ detail.foto.sunucu }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ detail.foto.izgara }}" hint-placeholder-val="{{ false }}">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <sc-for list="{{ detail.foto.list }}" as="p" hint-placeholder-count="0">
 <div style="aspect-ratio:1;border:2px solid {{ ui.rule }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
@@ -2136,6 +2149,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-for>
 </div>
+</sc-if>
 <sc-if value="{{ detail.foto.bos }}" hint-placeholder-val="{{ false }}">
 <div style="border:2px dashed {{ ui.rule }};padding:20px 14px;font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu kayıtta henüz fotoğraf yok. Sahada çektiğiniz kareler burada, herkesin görebileceği şekilde durur.</div>
 </sc-if>
@@ -2145,13 +2159,24 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-if value="{{ detail.foto.kilitli }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:12px;font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.foto.note }}</div>
 </sc-if>
+<sc-for list="{{ detail.foto.sesler }}" as="sn" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:7px;border:2px solid {{ ui.rule }};padding:9px 11px;margin-top:9px">
+<div style="display:flex;align-items:center;gap:9px">
+<span style="flex:none;font:700 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.acc }}">Sesli not</span>
+<span style="flex:1;min-width:0;font:400 10px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sn.meta }}</span>
+<sc-if value="{{ sn.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;display:flex;align-items:center;font:700 10px/1 var(--font-body);text-transform:uppercase;color:{{ ui.mut }}">Sil</button>
+</sc-if>
+</div>
+<audio src="{{ sn.url }}" controls="controls" preload="metadata" style="width:100%;height:40px;display:block"></audio>
+</div>
+</sc-for>
 <sc-if value="{{ detail.foto.eklenebilir }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
 <button onClick="{{ detail.foto.cek }}" class="btn btn-primary" style="width:100%;justify-content:center;border:none;cursor:pointer;font:700 12.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:16px 14px;min-height:52px">Fotoğraf çek</button>
 <button onClick="{{ detail.foto.galeri }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 12px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 14px;min-height:52px">Galeriden seç</button>
 </div>
 <div style="margin-top:9px;font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.foto.note }}</div>
-</sc-if>
 </sc-if>
 </div>
 </sc-if>
@@ -2232,11 +2257,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </label>
 </div>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
+<button onClick="{{ cekFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:76px;height:76px;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 9.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
+<button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:76px;height:76px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">GALERİDEN SEÇ</button>
 <sc-for list="{{ faultForm.photos }}" as="p" hint-placeholder-count="0">
-<button onClick="{{ p.isaretle }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border:2px solid {{ p.border }};background:repeating-linear-gradient(45deg,{{ ui.ph1 }} 0 6px,{{ ui.ph2 }} 6px 12px);display:flex;align-items:flex-end">
-<span style="background:{{ p.markBg }};color:{{ p.markFg }};font:700 8px/1 var(--font-body);padding:3px 4px">{{ p.mark }}</span>
-</button>
+<div style="width:76px;height:76px;border:2px solid {{ p.border }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+<img src="{{ p.url }}" alt="Arıza fotoğrafı" style="width:100%;height:100%;object-fit:cover;display:block">
+<button onClick="{{ p.isaretle }}" title="İşaretleme aç" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;inset:0"></button>
+<span style="position:absolute;left:0;bottom:0;background:{{ p.markBg }};color:{{ p.markFg }};font:700 8px/1 var(--font-body);padding:3px 4px">{{ p.mark }}</span>
+<button onClick="{{ p.kaldir }}" title="Kaldır" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:0;right:0;width:30px;height:30px;background:rgba(32,30,29,.8);color:#fff;font:700 13px/1 var(--font-body);display:flex;align-items:center;justify-content:center">✕</button>
+</div>
 </sc-for>
 </div>
 
@@ -2258,10 +2287,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="display:flex;flex-direction:column;gap:8px">
 <span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Sesli not</span>
 <sc-for list="{{ faultForm.sesler }}" as="sn" hint-placeholder-count="0">
-<div style="display:flex;align-items:center;gap:9px;border:2px solid {{ ui.rule }};padding:9px 11px">
-<span style="font:700 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ sn.sure }}</span>
-<span style="flex:1;height:12px;background:repeating-linear-gradient(90deg,{{ ui.rule }} 0 2px,transparent 2px 5px)"></span>
-<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:700 9px/1 var(--font-body);text-transform:uppercase;color:{{ ui.mut }}">Sil</button>
+<div style="display:flex;flex-direction:column;gap:8px;border:2px solid {{ ui.rule }};padding:9px 11px">
+<div style="display:flex;align-items:center;gap:9px">
+<span style="flex:none;font:700 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ sn.sure }}</span>
+<span style="flex:1;font:700 8.5px/1 var(--font-body);letter-spacing:.06em;color:{{ sn.durumFg }}">{{ sn.durum }}</span>
+<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;display:flex;align-items:center;font:700 10px/1 var(--font-body);text-transform:uppercase;color:{{ ui.mut }}">Sil</button>
+</div>
+<sc-if value="{{ sn.calinabilir }}" hint-placeholder-val="{{ false }}">
+<audio src="{{ sn.url }}" controls="controls" preload="metadata" style="width:100%;height:40px;display:block"></audio>
+</sc-if>
 </div>
 </sc-for>
 <sc-if value="{{ faultForm.kaydediyor }}" hint-placeholder-val="{{ false }}">
@@ -2521,7 +2555,7 @@ class Component extends DCLogic {
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
     log: {}, trash: [], conflict: null, card: null, ayarBolum: 'gorunum',
     users: [], userForm: null, pwForm: null,
-    fotolar: {}, fotoYuk: null,
+    fotolar: {}, fotoYuk: null, kayitliSesler: {},
     coordMode: false, picked: null,
     conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' }
   };
@@ -3079,12 +3113,101 @@ class Component extends DCLogic {
       sunucu: !!sunucudan, tab: 'harita', ...this.prefOku(u)
     }, () => { this.prefUygula(); if (sunucudan) { this.usersYenile(); this.veriYenile(); } });
   }
+  // ── sesli not: gerçek mikrofon kaydı, cihazda çalınır, kayıtla birlikte yüklenir
+  async sesKayit() {
+    const ff = this.state.faultForm;
+    if (!ff) return;
+    if (this._rec && this._rec.state === 'recording') {
+      this._rec.stop();
+      return;
+    }
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      this.say('Bu tarayıcı ses kaydını desteklemiyor. Telefonda Chrome veya Safari kullanın.', true);
+      setTimeout(() => this.setState({ toast: null }), 8000);
+      return;
+    }
+    let akis;
+    try {
+      akis = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+      this.say('Mikrofon izni verilmedi. Tarayıcı ayarlarından bu siteye mikrofon iznini açın, sonra yeniden deneyin.', true);
+      setTimeout(() => this.setState({ toast: null }), 9000);
+      return;
+    }
+    const tur = ['audio/webm', 'audio/mp4', 'audio/ogg'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+    const rec = new MediaRecorder(akis, tur ? { mimeType: tur } : undefined);
+    const parca = [];
+    const bas = Date.now();
+    rec.ondataavailable = e => { if (e.data && e.data.size) parca.push(e.data); };
+    rec.onstop = () => {
+      akis.getTracks().forEach(t => t.stop());
+      this._rec = null;
+      const sn = Math.max(1, Math.round((Date.now() - bas) / 1000));
+      const blob = new Blob(parca, { type: tur || 'audio/webm' });
+      if (!blob.size) { this.setState(st => ({ faultForm: { ...st.faultForm, kayitta: false } })); return this.say('Ses kaydedilemedi — mikrofon boş geldi.'); }
+      const kayit = {
+        blob, url: URL.createObjectURL(blob),
+        sure: `${Math.floor(sn / 60)}:${String(sn % 60).padStart(2, '0')}`,
+        kb: Math.round(blob.size / 1024),
+        durum: this.state.offline ? 'CİHAZDA' : 'HAZIR'
+      };
+      this.setState(st => ({ faultForm: { ...st.faultForm, kayitta: false, kayitBas: null, sesler: [...(st.faultForm.sesler || []), kayit] } }));
+      this.say(`Sesli not alındı · ${kayit.sure} · ${kayit.kb} KB. Oynat düğmesiyle dinleyebilirsiniz; arıza kaydını kaydettiğinizde yüklenir.`, true);
+      setTimeout(() => this.setState({ toast: null }), 8000);
+    };
+    this._rec = rec;
+    rec.start();
+    this.setState({ faultForm: { ...this.state.faultForm, kayitta: true, kayitBas: bas } });
+  }
+  // ── arıza fotoğrafı: kayıt açılana kadar cihazda bekler, kayıtla birlikte yüklenir
+  arizaFotoSec(kamera) {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.multiple = !kamera;
+    if (kamera) inp.capture = 'environment';
+    inp.style.display = 'none';
+    inp.onchange = () => {
+      const list = [...(inp.files || [])];
+      inp.remove();
+      if (!list.length) return;
+      const ek = list.map(f => ({
+        file: f, url: URL.createObjectURL(f),
+        kb: Math.round(f.size / 1024),
+        state: this.state.offline ? 'CİHAZDA' : 'HAZIR'
+      }));
+      const ff = this.state.faultForm;
+      this.setState({ faultForm: { ...ff, photos: [...(ff.photos || []), ...ek] } });
+      this.say(`${ek.length} fotoğraf eklendi — arıza kaydını kaydettiğinizde yüklenir.`);
+    };
+    document.body.appendChild(inp);
+    inp.click();
+  }
+  async arizaFotoGonder(photos, tesisDbId, kod) {
+    const M = this._sb;
+    const gercek = (photos || []).filter(p => p.file);
+    if (!M || !M.tokenOku() || !tesisDbId || !gercek.length) return 0;
+    let ok = 0;
+    for (const p of gercek) {
+      const r = await M.fotoYukle(p.file, tesisDbId, kod, 'Arıza kaydı');
+      if (r.ok) ok++;
+      try { URL.revokeObjectURL(p.url); } catch (e) {}
+    }
+    if (ok) this.fotoYenile(tesisDbId);
+    return ok;
+  }
   // ── fotoğraf: dosya seçici gizli bir input; kamera ve galeri aynı düğmeden
   fotoSec(kamera) {
     const sel = this.state.assets.find(a => a.id === this.state.selected);
     if (!sel) return;
     if (!this.yazabilir(sel)) return this.kilitUyar(sel);
-    if (!this._sb || !this._sb.tokenOku()) return this.say('Fotoğraf yüklemek için ortak veritabanı bağlantısı gerekiyor.');
+    if (!this._sb || !this._sb.tokenOku() || !sel.dbId) {
+      this.say(!sel.dbId && this._sb && this._sb.tokenOku()
+        ? `${sel.code} henüz ortak veritabanında değil — fotoğraf oraya yazılamıyor. Üst şeritteki ${this.state.sunucu ? 'YENİLE' : 'BAĞLAN'} düğmesine basıp kayıtları veritabanından çekin, sonra tekrar deneyin.`
+        : 'Fotoğraf yüklemek için ortak veritabanı bağlantısı gerekiyor. Üst şeritteki BAĞLAN düğmesine basın; internet yoksa bağlantı gelince yeniden deneyin.', true);
+      setTimeout(() => this.setState({ toast: null }), 9000);
+      return;
+    }
     const inp = document.createElement('input');
     inp.type = 'file';
     inp.accept = 'image/*';
@@ -3123,8 +3246,11 @@ class Component extends DCLogic {
   async fotoYenile(dbId) {
     const M = this._sb;
     if (!M || !M.tokenOku() || !dbId) return;
-    const r = await M.fotoListesi(dbId);
-    if (r.ok) this.setState(st => ({ fotolar: { ...st.fotolar, [dbId]: r.data } }));
+    const [f, sn] = await Promise.all([M.fotoListesi(dbId), M.sesListesi(dbId)]);
+    this.setState(st => ({
+      fotolar: f.ok ? { ...st.fotolar, [dbId]: f.data } : st.fotolar,
+      kayitliSesler: sn.ok ? { ...st.kayitliSesler, [dbId]: sn.data } : st.kayitliSesler
+    }));
   }
   fotoKaldir(f, sel) {
     if (!this.yazabilir(sel)) return this.kilitUyar(sel);
@@ -3134,6 +3260,22 @@ class Component extends DCLogic {
       this.veriYenile(true);
       this.say('Fotoğraf silindi — herkesin ekranından kalktı.');
     });
+  }
+  // BAĞLAN / YENİLE düğmesi: neden bağlanamadığını her durumda söyler
+  async baglan() {
+    const M = this._sb;
+    if (!M) {
+      this.say('Veritabanı bağlantı dosyası yüklenemedi (supabase-baglanti.js). Dosyanın index.html ile aynı klasörde olduğundan emin olun.', true);
+      setTimeout(() => this.setState({ toast: null }), 9000);
+      return;
+    }
+    if (!M.tokenOku()) {
+      this.say('Bu oturum ortak veritabanına bağlı değil — cihazdaki kopyayla giriş yapılmış. Çıkış yapıp kullanıcı adı ve şifrenizle yeniden girin; giriş veritabanından doğrulanır ve kayıtlar oradan gelir.', true);
+      setTimeout(() => this.setState({ toast: null }), 11000);
+      return;
+    }
+    this.say('Veritabanına bağlanılıyor…');
+    await this.veriYenile();
   }
   // ── ortak veri: sunucu kaynağın kendisi olur, cihazdaki kopya yalnızca yedek
   async veriYenile(sessiz) {
@@ -3237,7 +3379,12 @@ class Component extends DCLogic {
         return this.oturumKur(u, true);
       }
       // sunucu cevap verdi ve reddettiyse cihazdaki listeye düşmeyiz
-      if (!r.cevrimdisi) return this.setState({ loginErr: r.err });
+      if (!r.cevrimdisi) {
+        const kurulum = /crypt|does not exist|function .* does not/i.test(r.err || '');
+        return this.setState({ loginErr: kurulum
+          ? 'Veritabanı kurulumu tamamlanmamış: şifre doğrulama fonksiyonu çalışmıyor. supabase/duzeltme-02.sql dosyasını SQL Editor’de çalıştırın.'
+          : r.err });
+      }
     }
     return this.yerelGiris(name);
   }
@@ -4103,8 +4250,8 @@ class Component extends DCLogic {
       })(),
       esitle: {
         label: s.sunucu ? 'Yenile' : 'Bağlan',
-        note: s.sunucu ? (s.sonEsitleme ? 'Son eşitleme: ' + s.sonEsitleme : 'Ortak veritabanı bağlı') : 'Cihazdaki kopya',
-        tik: () => this.veriYenile()
+        note: s.sunucu ? (s.sonEsitleme ? 'Son eşitleme: ' + s.sonEsitleme : 'Ortak veritabanı bağlı') : 'Cihazdaki kopya — bağlanmak için basın',
+        tik: () => this.baglan()
       },
       trash: {
         rows: s.trash.map((r, i) => ({
@@ -4341,11 +4488,17 @@ class Component extends DCLogic {
         note: ff ? ff.note : '', crew: ff ? ff.crew : CREWS[0], hours: ff ? ff.hours : '',
         photos: ff ? ff.photos.map((p, i) => ({
           ...p,
+          gercek: !!p.url,
           border: ff.isaret === i ? 'var(--color-accent)' : ui.rule,
-          mark: ff.isaret === i ? 'İŞARETLİ' : (p.state || ''),
-          markBg: ff.isaret === i ? 'var(--color-accent)' : 'transparent',
-          markFg: ff.isaret === i ? '#fff' : ui.mut,
-          isaretle: () => this.setState({ faultForm: { ...this.state.faultForm, isaret: i } })
+          mark: ff.isaret === i ? 'İŞARETLİ' : (p.kb ? p.kb + ' KB' : (p.state || '')),
+          markBg: ff.isaret === i ? 'var(--color-accent)' : 'rgba(32,30,29,.75)',
+          markFg: '#fff',
+          isaretle: () => this.setState({ faultForm: { ...this.state.faultForm, isaret: i } }),
+          kaldir: () => {
+            const g = this.state.faultForm;
+            if (p.url) { try { URL.revokeObjectURL(p.url); } catch (e) {} }
+            this.setState({ faultForm: { ...g, photos: g.photos.filter((_, k) => k !== i), isaret: null } });
+          }
         })) : [],
         photoCount: ff ? `${ff.photos.length} adet` : '0 adet',
         kaydetmiyor: !(ff && ff.kayitta),
@@ -4391,25 +4544,18 @@ class Component extends DCLogic {
         })(),
         // sesli not
         sesler: ff ? (ff.sesler || []).map((sn, i) => ({
-          sure: sn.sure, durum: sn.durum,
+          sure: sn.sure, durum: sn.durum, url: sn.url || '',
+          calinabilir: !!sn.url,
           durumFg: sn.durum === 'CİHAZDA' ? ui.acc : ui.mut,
-          sil: () => this.setState(st => ({ faultForm: { ...st.faultForm, sesler: st.faultForm.sesler.filter((_, j) => j !== i) } }))
+          sil: () => this.setState(st => {
+            const eski = st.faultForm.sesler[i];
+            if (eski && eski.url) { try { URL.revokeObjectURL(eski.url); } catch (e) {} }
+            return { faultForm: { ...st.faultForm, sesler: st.faultForm.sesler.filter((_, j) => j !== i) } };
+          })
         })) : [],
         seslerVar: !!(ff && ff.sesler && ff.sesler.length),
         kaydediyor: !!(ff && ff.kayitta),
-        sesBaslat: () => {
-          const st = this.state.faultForm;
-          if (st.kayitta) {
-            const sn = Math.max(3, Math.round((Date.now() - st.kayitBas) / 1000));
-            this.setState({ faultForm: {
-              ...st, kayitta: false, kayitBas: null,
-              sesler: [...(st.sesler || []), { sure: `${Math.floor(sn / 60)}:${String(sn % 60).padStart(2, '0')}`, durum: s.offline ? 'CİHAZDA' : 'YÜKLENDİ' }]
-            } });
-            this.say('Sesli not kaydedildi. Yazmak yerine konuşarak not bırakmak sahada daha hızlı — kayıt arıza dosyasına eklenir.');
-          } else {
-            this.setState({ faultForm: { ...st, kayitta: true, kayitBas: Date.now() } });
-          }
-        },
+        sesBaslat: () => this.sesKayit(),
         // fotoğraf işaretleme
         isaretModu: !!(ff && ff.isaret !== undefined && ff.isaret !== null),
         isaretFoto: ff && ff.isaret !== null && ff.isaret !== undefined ? `${ff.isaret + 1}. fotoğraf` : '',
@@ -4430,7 +4576,8 @@ class Component extends DCLogic {
       onFaultNote: e => this.setState({ faultForm: { ...this.state.faultForm, note: e.target.value } }),
       onFaultCrew: e => this.setState({ faultForm: { ...this.state.faultForm, crew: e.target.value } }),
       onFaultHours: e => this.setState({ faultForm: { ...this.state.faultForm, hours: e.target.value } }),
-      addFaultPhoto: () => this.setState({ faultForm: { ...this.state.faultForm, photos: [...this.state.faultForm.photos, { state: s.offline ? 'CİHAZDA' : 'HAZIR' }] } }),
+      addFaultPhoto: () => this.arizaFotoSec(false),
+      cekFaultPhoto: () => this.arizaFotoSec(true),
       isaretle: i => () => this.setState({ faultForm: { ...this.state.faultForm, isaret: i } }),
       saveFault: () => {
         const f = this.state.faultForm;
@@ -4450,6 +4597,36 @@ class Component extends DCLogic {
             panel: s.device === 'phone' ? 'yok' : 'ariza', faultForm: null, tab: 'ariza',
             queue: [{ id: 'q' + Date.now(), title: `${no} · yeni arıza`, meta: `${a.code} · ${f.type} · ${f.photos.length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
+        }
+        // sesli notlar da kayıtla birlikte gider
+        const sesler = (f.sesler || []).filter(x => x.blob);
+        if (sesler.length && a && a.dbId && !s.offline) {
+          (async () => {
+            let n = 0;
+            for (const sn of sesler) {
+              const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
+              const r = await this._sb.sesYukle(sn.blob, a.dbId, a.code, sec, 'Arıza sesli notu');
+              if (r.ok) n++;
+            }
+            if (n) {
+              this.say(`${n} sesli not ${a.code} kaydına yüklendi — ekipteki herkes dinleyebilir.`, true);
+              setTimeout(() => this.setState({ toast: null }), 8000);
+            }
+          })();
+        }
+        // seçilen fotoğraflar kaydın kendisiyle birlikte veritabanına yüklenir
+        const bekleyen = (f.photos || []).filter(p => p.file);
+        if (bekleyen.length && a && a.dbId && !s.offline) {
+          this.arizaFotoGonder(bekleyen, a.dbId, a.code).then(n => {
+            if (n) {
+              this.veriYenile(true);
+              this.say(`${n} arıza fotoğrafı ${a.code} kaydına yüklendi — herkes görebilir.`, true);
+              setTimeout(() => this.setState({ toast: null }), 8000);
+            }
+          });
+        } else if (bekleyen.length) {
+          this.say(`${bekleyen.length} fotoğraf cihazda bekliyor — ${s.offline ? 'bağlantı gelince' : 'kayıt veritabanına yazıldıktan sonra'} yüklenecek.`, true);
+          setTimeout(() => this.setState({ toast: null }), 8000);
         }
         // ekibe bildirim: acil ve yüksek öncelikli arızalar anında haber verilir
         const bildir = !f.id && (f.priority === 'Acil' || f.priority === 'Yüksek');
@@ -4595,8 +4772,9 @@ class Component extends DCLogic {
         foto: (() => {
           const list = (s.fotolar || {})[sel.dbId];
           const yuk = s.fotoYuk;
+          const bagli = !!(this._sb && s.sunucu && sel.dbId);
           return {
-            sunucu: !!(this._sb && s.sunucu && sel.dbId),
+            sunucu: true, izgara: bagli,
             list: (list || []).map(f => ({
               url: f.url, alt: sel.code + ' fotoğrafı',
               meta: `${f.yukleyen} · ${(f.yuklendi || '').slice(0, 10).split('-').reverse().join('.')}`,
@@ -4604,16 +4782,28 @@ class Component extends DCLogic {
               silinir: f.yazilabilir && this.yazabilir(sel),
               sil: () => this.fotoKaldir(f, sel)
             })),
-            bos: !!list && list.length === 0,
+            bos: bagli ? (!!list && list.length === 0) : true,
+            sesler: ((s.kayitliSesler || {})[sel.dbId] || []).map(x => ({
+              url: x.url,
+              meta: `${x.yukleyen} · ${x.sure ? Math.floor(x.sure / 60) + ':' + String(x.sure % 60).padStart(2, '0') : '—'}${x.boyut ? ' · ' + Math.round(x.boyut / 1024) + ' KB' : ''}`,
+              silinir: x.yazilabilir && this.yazabilir(sel),
+              sil: () => this._sb.fotoSil(x.id).then(r => {
+                if (!r.ok) return this.say(r.err, true);
+                this.fotoYenile(sel.dbId);
+                this.say('Sesli not silindi — herkesin ekranından kalktı.');
+              })
+            })),
             yukleniyor: !!yuk,
             yukText: yuk ? `Yükleniyor · ${yuk.biten}/${yuk.toplam}` : '',
             kilitli: !this.yazabilir(sel),
             eklenebilir: this.yazabilir(sel) && !yuk,
             cek: () => this.fotoSec(true),
             galeri: () => this.fotoSec(false),
-            note: this.yazabilir(sel)
-              ? 'Fotoğraflar yüklenmeden önce küçültülür — uzun kenar 1600 piksel, dosya yaklaşık 200 KB. Telefonun çektiği kare ile ekranda görülen arasında fark olmaz.'
-              : `${sel.district} ilçesi — fotoğraf ekleme yetkiniz yok, mevcut fotoğrafları görebilirsiniz.`
+            note: !this.yazabilir(sel)
+              ? `${sel.district} ilçesi — fotoğraf ekleme yetkiniz yok, mevcut fotoğrafları görebilirsiniz.`
+              : bagli
+                ? 'Fotoğraflar yüklenmeden önce küçültülür — uzun kenar 1600 piksel, dosya yaklaşık 200 KB. Telefonun çektiği kare ile ekranda görülen arasında fark olmaz.'
+                : `Bu kayıt henüz ortak veritabanında değil — fotoğraf seçebilirsiniz ama yükleme bağlantı kurulduktan sonra yapılır. Üst şeritteki ${s.sunucu ? 'YENİLE' : 'BAĞLAN'} düğmesi bağlantıyı dener.`
           };
         })(),
         media: Array.from({ length: sel.photos }, (_, i) => {
@@ -4629,7 +4819,7 @@ class Component extends DCLogic {
           })),
         canEdit: !canWrite ? '.45' : '1',
         editLabel: !canWrite ? 'Yetki yok' : 'Kaydı düzenle'
-      } : { tabs: [], rows: [], media: [], faults: [], tests: [], foto: { list: [] } },
+      } : { tabs: [], rows: [], media: [], faults: [], tests: [], foto: { list: [], sunucu: false, izgara: false } },
       imp: (() => {
         const im = s.imp;
         const setRow = (i, patch) => this.setState({ imp: { ...im, rows: im.rows.map(r => r.i === i ? { ...r, ...patch } : r) } });
@@ -5040,8 +5230,10 @@ class Component extends DCLogic {
         bg: s.offline ? 'var(--color-accent)' : ui.surf, fg: s.offline ? '#fff' : ui.mut,
         mut: s.offline ? 'rgba(255,255,255,.8)' : ui.mut,
         text: s.offline ? 'ÇEVRİMDIŞI — kayıtlar cihazda tutuluyor, bağlantı gelince arka planda eşitlenecek'
-          : `Bağlı · ${pendA.length + pendF.length} bekleyen işlem · son eşitleme 09:12`,
-        right: `${s.assets.length} envanter kaydı · ${s.faults.length} arıza · ${me ? me.name + ' / ' + me.roleLabel : ''}`
+          : (s.sunucu
+              ? `Ortak veritabanı bağlı${s.sonEsitleme ? ' · son eşitleme ' + s.sonEsitleme : ''}${pendA.length + pendF.length ? ' · ' + (pendA.length + pendF.length) + ' bekleyen işlem' : ''}`
+              : `Cihazdaki kopya — ortak veritabanına bağlı değil${pendA.length + pendF.length ? ' · ' + (pendA.length + pendF.length) + ' bekleyen işlem' : ''}`),
+        right: `${s.assets.length} envanter kaydı · ${s.faults.length} arıza`
       },
       toast: { show: !!s.toast, text: s.toast || '' },
       extendNotes: [

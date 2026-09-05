@@ -112,8 +112,9 @@
 import * as DATA from './kirsehir-data.js';
 import { buildAssets, TYPES, STATUS_LABEL } from './envanter.js';
 
-const { assets, faults } = buildAssets(DATA);
-const openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
+let { assets, faults } = buildAssets(DATA);
+let openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
+let sonFilter = null;
 
 const map = L.map('map', { center: [39.22, 34.12], zoom: 9, zoomControl: true, scrollWheelZoom: true });
 
@@ -155,7 +156,10 @@ for (const d of DATA.DISTRICTS) {
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);
-const markers = [];
+let markers = [];
+function cizAssets() {
+assetLayer.clearLayers();
+markers = [];
 for (const a of assets) {
   const pend = a.sync === 'pending', fault = openFaults.has(a.id);
   const icon = L.divIcon({
@@ -176,6 +180,20 @@ for (const a of assets) {
     });
   mk.addTo(assetLayer);
   markers.push(mk);
+}
+applyLabels();
+if (sonFilter) filtreUygula(sonFilter);
+}
+
+function filtreUygula(f) {
+  sonFilter = f;
+  for (let i = 0; i < assets.length; i++) {
+    const on = !!f[assets[i].type];
+    const has = assetLayer.hasLayer(markers[i]);
+    if (on && !has) assetLayer.addLayer(markers[i]);
+    if (!on && has) assetLayer.removeLayer(markers[i]);
+  }
+  applyLabels();
 }
 
 const bounds = L.latLngBounds(assets.map(a => [a.lat, a.lon]));
@@ -268,7 +286,7 @@ function applyLabels() {
   document.getElementById('t-labels').classList.toggle('on', wantLabels);
 }
 map.on('zoomend', applyLabels);
-applyLabels();
+cizAssets();
 
 document.getElementById('t-labels').onclick = () => { wantLabels = !wantLabels; applyLabels(); };
 document.getElementById('t-fit').onclick = () => map.fitBounds(bounds.pad(0.08));
@@ -325,14 +343,18 @@ addEventListener('message', e => {
       || (d.lat ? { id: d.id, code: d.code || 'Yeni kayıt', village: d.village || '', lat: d.lat, lon: d.lon } : null);
     if (a) routeTo(a);
   }
-  if (d.ks === 'filter') {
-    for (let i = 0; i < assets.length; i++) {
-      const on = !!d.filter[assets[i].type];
-      const has = assetLayer.hasLayer(markers[i]);
-      if (on && !has) assetLayer.addLayer(markers[i]);
-      if (!on && has) assetLayer.removeLayer(markers[i]);
+  // Ortak veritabanından gelen kayıtlar: işaretler yeniden çizilir, yoksa
+  // programın kimlikleri ile haritanın kimlikleri uyuşmaz ve tıklama boşa gider
+  if (d.ks === 'assets' && Array.isArray(d.assets)) {
+    assets = d.assets;
+    if (Array.isArray(d.faults)) {
+      faults = d.faults;
+      openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
     }
-    applyLabels();
+    cizAssets();
+  }
+  if (d.ks === 'filter') {
+    filtreUygula(d.filter);
   }
 });
 parent.postMessage({ ks: 'ready' }, '*');

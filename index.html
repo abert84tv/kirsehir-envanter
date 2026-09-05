@@ -27,6 +27,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
 .scroll::-webkit-scrollbar{width:10px;height:10px}
 .scroll::-webkit-scrollbar-thumb{background:rgba(128,124,120,.45)}
+@media(max-width:820px){.ks-toast{left:10px!important;right:10px!important;bottom:92px!important;max-width:none!important}}
 </style>
 </helmet>
 
@@ -134,7 +135,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">Çıkış</button>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:8px 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
 <button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 12px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em">{{ net.badge }}</button>
-<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:36px;height:34px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ui.themeMark }}</button>
+<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:36px;height:34px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 </div>
 
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
@@ -186,8 +187,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
-<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};font:700 8.5px/1.1 var(--font-body);display:{{ map.arizaBtn }};align-items:center;justify-content:center;text-align:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">ARIZA</button>
-<button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:var(--color-accent);border:2px solid var(--color-accent);color:#fff;font:700 13px/1 var(--font-body);letter-spacing:.08em;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">GİT</button>
+<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.uyari }}</button>
+<button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:var(--color-accent);border:2px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">{{ ikonlar.gpsBuyuk }}</button>
 </div>
 </div>
 
@@ -266,6 +267,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ province.line }}</div>
 </div>
 <div style="border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf2 }};padding:11px 20px;font:400 11px/1.5 var(--font-body);color:{{ ui.mut }}">{{ province.note }}</div>
+<div style="padding:14px 16px;border-bottom:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Nüfus ve hayvan varlığını yükle</div>
+<div style="font:400 11px/1.55 var(--font-body);color:{{ ui.mut }};max-width:720px">{{ yerlesimYukleme.note }}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ yerlesimYukleme.ornek }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.indir }} Örnek dosya</button>
+<button onClick="{{ yerlesimYukleme.yukle }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11.5px/1 var(--font-body);padding:14px 18px;justify-content:center;min-height:50px">Dosya yükle (CSV)</button>
+<button onClick="{{ yerlesimYukleme.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px">Yüklenen veriyi sil</button>
+</div>
+<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">Başlık satırı okunur — sütun sırası önemli değil. Tanınan başlıklar: Köy / Yerleşim · İlçe · Nüfus · Yıl · Büyükbaş · Küçükbaş. TÜİK ekstresi gibi ilçe adının yalnızca grubun ilk satırında yazıldığı dosyalar da olduğu gibi yüklenir; ayraç noktalı virgül, virgül veya sekme olabilir ve Türkçe karakterli (ANSI/Windows) kayıtlar da okunur. Köy adındaki “Köy”, “Belde”, “Mahallesi” ekleri eşleştirmede yok sayılır.</div>
+</div>
 <table class="table" style="width:100%;font-size:12px">
 <thead><tr style="background:{{ ui.surf2 }}">
 <th style="text-align:left;color:{{ ui.fg }}">Yerleşim</th><th style="text-align:left;color:{{ ui.fg }}">İlçe</th><th style="text-align:left;color:{{ ui.fg }}">Nüfus</th>
@@ -790,6 +801,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:center;justify-content:space-between;gap:18px">
 <div>
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Yeni tesis kur</div>
+<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:600px">Kayıtta olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açar. Sahadaysanız daha kısa yol: haritada boş bir noktaya dokunun, çıkan şeritten “Buraya tesis kur”.</div>
+</div>
+<button onClick="{{ yeniTesisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 16px" style-hover="background:var(--color-accent);color:#fff">Yeni tesis kaydı aç</button>
+</div>
+<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:center;justify-content:space-between;gap:18px">
+<div>
 <div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Dış veri aktarımı</div>
 <div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:600px">Google Earth (KML/KMZ), Excel/CSV, Google Sheets veya GPX dosyanızdaki noktaları bir kerede içeri alın; sonra her noktaya kuyu / depo / AG / GES işaretleyip kaydedin.</div>
 </div>
@@ -1067,8 +1085,38 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 
+<sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:center;padding:64px 12px 0;pointer-events:none">
+<div style="pointer-events:auto;max-width:600px;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:2px solid {{ duyuru.border }};border-left:6px solid var(--color-accent);box-shadow:var(--shadow-lg);padding:12px 14px">
+<span style="flex:none;color:var(--color-accent);margin-top:1px">{{ ikonlar.uyari }}</span>
+<span style="flex:1;font:600 12px/1.45 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.text }}</span>
+<button onClick="{{ duyuru.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:{{ duyuru.fg }};opacity:.55" style-hover="opacity:1">{{ ikonlar.kapat }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ buyut.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:90;background:rgba(18,17,16,.94);display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:2px solid rgba(255,255,255,.22);color:#fff">
+<span style="font:700 11px/1 var(--font-body);letter-spacing:.12em;color:var(--color-accent)">{{ buyut.sayac }}</span>
+<span style="flex:1;min-width:0;font:400 11px/1.3 var(--font-body);color:rgba(255,255,255,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ buyut.meta }}</span>
+<button onClick="{{ buyut.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.indir }}</button>
+<button onClick="{{ buyut.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.kapatBuyuk }}</button>
+</div>
+<div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px">
+<sc-if value="{{ buyut.coklu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ buyut.onceki }}" title="Önceki fotoğraf" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:52px;height:76px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.sol }}</button>
+</sc-if>
+<div style="flex:1;min-width:0;height:100%;display:flex;align-items:center;justify-content:center">{{ buyut.img }}</div>
+<sc-if value="{{ buyut.coklu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ buyut.sonraki }}" title="Sonraki fotoğraf" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:52px;height:76px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.sag }}</button>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ toast.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;right:22px;bottom:22px;z-index:60;max-width:420px;background:{{ ui.fg }};color:{{ ui.bg }};border:2px solid {{ ui.fg }};padding:13px 15px;font:600 12px/1.4 var(--font-body)">{{ toast.text }}</div>
+<div class="ks-toast" style="position:fixed;right:22px;bottom:22px;z-index:60;max-width:420px;background:{{ ui.surf }};color:{{ ui.fg }};border:2px solid {{ ui.rule }};border-left:5px solid var(--color-accent);box-shadow:var(--shadow-md);padding:13px 15px;font:600 12px/1.4 var(--font-body)">{{ toast.text }}</div>
 </sc-if>
 
 <!-- right panel -->
@@ -1076,10 +1124,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div class="scroll" style="width:392px;flex:0 1 392px;min-width:0;border-left:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;overflow:auto">
 
 <sc-if value="{{ panel.isDetail }}" hint-placeholder-val="{{ false }}">
-<div style="padding:16px 18px;border-bottom:2px solid {{ ui.rule }}">
+<div style="padding:16px 18px;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+<div style="min-width:0">
 <div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">{{ detail.kind }}</div>
 <div style="font:700 21px/1.05 var(--font-heading);letter-spacing:-.01em">{{ detail.code }}</div>
 <div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">{{ detail.meta }}</div>
+</div>
+<button onClick="{{ closeDetail }}" title="Kartı kapat — Esc" aria-label="Kartı kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }}" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.kapat }}</button>
 </div>
 <sc-if value="{{ kilit.on }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:2px solid var(--color-accent);background:var(--color-accent-100)">
@@ -1208,11 +1259,74 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 8.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Toparlanma</span><span style="font:700 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.toparlanma }}</span></span>
 </div>
 <div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};margin-top:8px">{{ t.note }}</div>
+<sc-if value="{{ t.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ t.sil }}" title="Bu deneme ölçümünü sil" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:9px;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 2px;font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">{{ ikonlar.copKucuk }} Ölçümü sil</button>
+</sc-if>
 </div>
 </sc-for>
 <div style="padding:14px 18px">
 <button onClick="{{ openTestForm }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 16px">+ Deneme ölçümü ekle</button>
 </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ detail.showBakim }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 16px;border-bottom:2px solid {{ ui.rule }}">
+<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+<span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Periyodik bakım</span>
+<span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ bakimKayit.periyot }}</span>
+<span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ bakimKayit.durum }}</span>
+</div>
+<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }}">{{ bakimKayit.note }}</div>
+</div>
+<sc-if value="{{ bakimKayit.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-bottom:2px solid var(--color-accent);background:{{ ui.surf }};display:flex;flex-direction:column;gap:11px">
+<div style="font:700 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Yeni bakım kaydı</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Bakım tarihi</span>
+<input value="{{ bakimKayit.tarih }}" onChange="{{ bakimKayit.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Yapılan iş</span>
+<textarea value="{{ bakimKayit.is }}" onChange="{{ bakimKayit.onIs }}" rows="3" placeholder="Pompa çekildi, çekvalf değişti, pano temizlendi, klor dolduruldu…" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Kullanılan malzeme</span>
+<input value="{{ bakimKayit.malzeme }}" onChange="{{ bakimKayit.onMalzeme }}" placeholder="2 boy kolon borusu, 1 termik röle" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Not</span>
+<input value="{{ bakimKayit.notu }}" onChange="{{ bakimKayit.onNotu }}" placeholder="Sonraki bakımda dikkat edilecek" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ bakimKayit.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:14px 18px;justify-content:center;min-height:50px">Bakımı kaydet</button>
+<button onClick="{{ bakimKayit.foto }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px">Fotoğraf çek</button>
+<button onClick="{{ bakimKayit.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ bakimKayit.bos }}" hint-placeholder-val="{{ true }}">
+<div style="padding:20px 16px;font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu tesiste kayıtlı bakım yok. İlk bakımı girdiğinizde takvim buradan işlemeye başlar.</div>
+</sc-if>
+<sc-for list="{{ bakimKayit.liste }}" as="b" hint-placeholder-count="0">
+<div style="padding:13px 16px;border-bottom:1px solid {{ ui.rule }};border-left:4px solid var(--color-accent)">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px">
+<span style="font:700 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ b.tarih }}</span>
+<span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }}">{{ b.kim }}</span>
+</div>
+<div style="font:400 12px/1.5 var(--font-body);color:{{ ui.fg }}">{{ b.is }}</div>
+<sc-if value="{{ b.hasMalzeme }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 11px/1.45 var(--font-body);color:{{ ui.mut }};margin-top:4px">Malzeme: {{ b.malzeme }}</div>
+</sc-if>
+<button onClick="{{ b.sil }}" title="Bu bakım kaydını sil" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:8px;display:flex;align-items:center;gap:6px;min-height:44px;font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">{{ ikonlar.copKucuk }} Kaydı sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ bakimKayit.yazabilir }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 16px">
+<button onClick="{{ bakimKayit.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 16px;min-height:52px" style-hover="background:var(--color-accent);color:#fff">+ Bakım kaydı ekle</button>
+</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -1234,10 +1348,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-for list="{{ detail.foto.list }}" as="p" hint-placeholder-count="0">
 <div style="aspect-ratio:1;border:2px solid {{ ui.rule }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
 {{ p.img }}
+<button onClick="{{ p.ac }}" title="Büyüt — tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;inset:0"></button>
 <span style="position:absolute;left:0;right:0;bottom:0;background:rgba(32,30,29,.82);color:#fff;font:600 8px/1.4 var(--font-body);padding:3px 5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.meta }}</span>
-<button onClick="{{ p.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:5px;left:5px;width:24px;height:24px;background:rgba(32,30,29,.82);color:#fff;font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">↓</button>
+<button onClick="{{ p.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:5px;left:5px;width:26px;height:26px;background:rgba(32,30,29,.82);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">{{ ikonlar.indirKucuk }}</button>
 <sc-if value="{{ p.silinir }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ p.sil }}" title="Fotoğrafı sil" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:5px;right:5px;width:24px;height:24px;background:rgba(32,30,29,.82);color:#fff;font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">✕</button>
+<button onClick="{{ p.sil }}" title="Fotoğrafı sil" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:5px;right:5px;width:26px;height:26px;background:rgba(32,30,29,.82);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">{{ ikonlar.copKucuk }}</button>
 </sc-if>
 </div>
 </sc-for>
@@ -1291,12 +1406,35 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 <div style="flex:1"></div>
+<sc-if value="{{ koyDuzelt.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 18px;border-top:2px solid var(--color-accent);background:{{ ui.surf }};display:flex;flex-direction:column;gap:10px">
+<span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Köy ve ilçe düzelt</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ koyDuzelt.ilce }}" onChange="{{ koyDuzelt.onIlce }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ koyDuzelt.ilceler }}" as="i" hint-placeholder-count="7"><option value="{{ i.n }}">{{ i.n }}</option></sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Köy / yerleşim</span>
+<input value="{{ koyDuzelt.koy }}" onChange="{{ koyDuzelt.onKoy }}" list="ks-koy-mas" placeholder="Köy adını yazın" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<datalist id="ks-koy-mas">
+<sc-for list="{{ koyDuzelt.koyler }}" as="k" hint-placeholder-count="0"><option value="{{ k.n }}"></option></sc-for>
+</datalist>
+</label>
+<div style="display:flex;gap:8px">
+<button onClick="{{ koyDuzelt.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11.5px/1 var(--font-body);padding:13px 18px;justify-content:center">Kaydet</button>
+<button onClick="{{ koyDuzelt.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
 <div style="border-top:2px solid {{ ui.rule }};padding:12px 18px 0;display:flex;gap:9px">
 <button onClick="{{ routeToSel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px;text-align:left">Yol tarifi — buraya git</button>
-<button onClick="{{ goToMyLocation }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.08em;padding:12px 15px">GİT</button>
+<button onClick="{{ goToSel }}" title="Kaydın bulunduğu noktaya git" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:12px 15px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.pin }} Tesise git</button>
 </div>
 <div style="padding:12px 18px;display:flex;gap:9px;flex-wrap:wrap">
 <button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1;justify-content:flex-start;border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:13px 14px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
+<button onClick="{{ koyDuzelt.ac }}" title="Bu kaydın köyünü ve ilçesini düzelt" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.kalem }} Köy / ilçe</button>
 <button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px">Tesis kartı</button>
 <sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px">Sil</button>
@@ -1561,7 +1699,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
 <button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 8px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center">{{ net.short }}</button>
-<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ui.themeMark }}</button>
+<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 </div>
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="border-top:2px solid {{ ui.rule }};max-height:180px;overflow:auto">
@@ -1586,8 +1724,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-<button onClick="{{ newFault }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};font:700 9.5px/1.1 var(--font-body);display:{{ map.arizaBtn }};align-items:center;justify-content:center;text-align:center">ARIZA</button>
-<button onClick="{{ goToMyLocation }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:60px;height:60px;background:var(--color-accent);border:2px solid var(--color-accent);color:#fff;font:700 17px/1 var(--font-body);letter-spacing:.1em;display:flex;align-items:center;justify-content:center">GİT</button>
+<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.uyari }}</button>
+<button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:60px;height:60px;background:var(--color-accent);border:2px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.gpsBuyuk }}</button>
 </div>
 </div>
 
@@ -1632,14 +1770,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ province.line }}</div>
 </div>
 <sc-for list="{{ settlements }}" as="s" hint-placeholder-count="10">
-<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ s.rowBg }};align-items:baseline">
+<div style="display:flex;flex-direction:column;gap:4px;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ s.rowBg }}">
+<div style="display:flex;gap:10px;align-items:baseline">
 <span style="flex:1;font:{{ s.weight }} 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ s.name }}</span>
 <span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }};width:66px">{{ s.district }}</span>
 <span style="font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ s.numColor }};width:54px;text-align:right">{{ s.pop }}</span>
 <span style="font:600 11.5px/1 var(--font-body);color:{{ ui.fg }};width:26px;text-align:right">{{ s.inv }}</span>
 </div>
+<div style="display:flex;gap:10px;align-items:baseline;font:400 9.5px/1.3 var(--font-body);color:{{ ui.mut }}">
+<span style="flex:none">BB {{ s.buyukbas }} · KB {{ s.kucukbas }}</span>
+<span style="flex:1;min-width:0;text-align:right">{{ s.src }}</span>
+</div>
+</div>
 </sc-for>
 <div style="padding:13px 14px;font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ province.note }}</div>
+<div style="padding:14px 16px;border-bottom:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Nüfus ve hayvan varlığını yükle</div>
+<div style="font:400 11px/1.55 var(--font-body);color:{{ ui.mut }};max-width:720px">{{ yerlesimYukleme.note }}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ yerlesimYukleme.ornek }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.indir }} Örnek dosya</button>
+<button onClick="{{ yerlesimYukleme.yukle }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11.5px/1 var(--font-body);padding:14px 18px;justify-content:center;min-height:50px">Dosya yükle (CSV)</button>
+<button onClick="{{ yerlesimYukleme.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px">Yüklenen veriyi sil</button>
+</div>
+<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">Başlık satırı okunur — sütun sırası önemli değil. Tanınan başlıklar: Köy / Yerleşim · İlçe · Nüfus · Yıl · Büyükbaş · Küçükbaş. TÜİK ekstresi gibi ilçe adının yalnızca grubun ilk satırında yazıldığı dosyalar da olduğu gibi yüklenir; ayraç noktalı virgül, virgül veya sekme olabilir ve Türkçe karakterli (ANSI/Windows) kayıtlar da okunur. Köy adındaki “Köy”, “Belde”, “Mahallesi” ekleri eşleştirmede yok sayılır.</div>
+</div>
 </div>
 </sc-if>
 
@@ -1901,6 +2055,37 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ goImport }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px">Aktarım ekranını aç</button>
 </div>
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">Yeni tesis kur</div>
+<div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">Kayıtta olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açın. Sahadaysanız daha kısa yol: haritada boş noktaya dokunun, çıkan şeritten “Buraya tesis kur”.</div>
+<button onClick="{{ yeniTesisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px;min-height:50px">Yeni tesis kaydı aç</button>
+</div>
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">Arıza bildirimi</div>
+<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ bildirim.note }}</div>
+<span style="display:block;font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }};margin-bottom:6px">Kanal</span>
+<div style="display:flex;border:2px solid {{ ui.rule }};margin-bottom:11px">
+<sc-for list="{{ bildirim.kanallar }}" as="k" hint-placeholder-count="3">
+<button onClick="{{ k.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:13px 4px;background:{{ k.bg }};color:{{ k.fg }};font:700 10px/1.2 var(--font-body);letter-spacing:.04em;text-transform:uppercase;min-height:48px;display:flex;align-items:center;justify-content:center">{{ k.label }}</button>
+</sc-for>
+</div>
+<span style="display:block;font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }};margin-bottom:6px">Hangi arızalarda</span>
+<div style="display:flex;border:2px solid {{ ui.rule }};margin-bottom:11px">
+<sc-for list="{{ bildirim.esikler }}" as="k" hint-placeholder-count="3">
+<button onClick="{{ k.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:13px 4px;background:{{ k.bg }};color:{{ k.fg }};font:700 9.5px/1.2 var(--font-body);letter-spacing:.04em;text-transform:uppercase;min-height:48px;display:flex;align-items:center;justify-content:center">{{ k.label }}</button>
+</sc-for>
+</div>
+<div style="border:2px solid {{ ui.rule }};padding:11px 12px;display:flex;flex-direction:column;gap:5px;margin-bottom:11px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Gidecek mesaj</span>
+<span style="font:400 11px/1.5 var(--font-body);color:{{ ui.fg }}">{{ bildirim.ornek }}</span>
+</div>
+<button onClick="{{ bildirim.test }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px;min-height:50px">Deneme mesajı gönder</button>
+</div>
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">Elle işaretlenen köy konumları</div>
+<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ vSaved }}</div>
+<button onClick="{{ vClear }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px;min-height:50px">İşaretlenmiş konumları temizle</button>
+</div>
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
 <div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:9px">Harita zemini</div>
 <div style="display:flex;border:2px solid {{ ui.rule }}">
 <button onClick="{{ setBase.street.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setBase.street.bg }};color:{{ setBase.street.fg }};font:700 10px/1 var(--font-body);letter-spacing:.05em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Sokak</button>
@@ -1938,22 +2123,100 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </div>
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
-<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Kullanıcılar</div>
-<div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">Kişi ekleme ve düzenleme bilgisayardan yapılır — liste yedi sütun geniştir, telefonda okunmaz. Telefondan şifre sıfırlayabilirsiniz; sahada “şifremi unuttum” diye arayan olursa işinizi görür.</div>
+<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+<div style="flex:1;min-width:0">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Kullanıcılar ve roller</div>
+<div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ kullanici.note }}</div>
+</div>
+</div>
+<sc-if value="{{ kullanici.ekleGoster }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kullanici.ekle }}" class="btn btn-primary" style="width:100%;justify-content:center;border:none;cursor:pointer;font:700 11.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px;min-height:52px;margin-bottom:11px">+ Yeni kullanıcı</button>
+</sc-if>
+<sc-if value="{{ kullanici.formOn }}" hint-placeholder-val="{{ false }}">
+<div style="border:2px solid var(--color-accent);margin-bottom:12px">
+<div style="padding:11px 12px;background:var(--color-accent);color:#fff;display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:700 10.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase">{{ kullanici.form.baslik }}</span>
+<button onClick="{{ kullanici.form.iptal }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.55);color:#fff">{{ ikonlar.kapat }}</button>
+</div>
+<div style="padding:13px 12px;display:flex;flex-direction:column;gap:11px;background:{{ ui.surf }}">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Ad soyad</span>
+<input value="{{ kullanici.form.name }}" onChange="{{ kullanici.form.onName }}" placeholder="Örnek: Ahmet Bertan" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Kullanıcı adı</span>
+<input value="{{ kullanici.form.user }}" onChange="{{ kullanici.form.onUser }}" placeholder="a.bertan" autocapitalize="none" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">{{ kullanici.form.userNote }}</span>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Unvan / görev</span>
+<input value="{{ kullanici.form.unvan }}" onChange="{{ kullanici.form.onUnvan }}" placeholder="İnşaat teknikeri" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Telefon</span>
+<input value="{{ kullanici.form.tel }}" onChange="{{ kullanici.form.onTel }}" inputmode="tel" placeholder="0555 000 00 00" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">İlçe / sorumluluk bölgesi</span>
+<select value="{{ kullanici.form.bolge }}" onChange="{{ kullanici.form.onBolge }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:48px">
+<option value="">Tüm il</option>
+<sc-for list="{{ kullanici.form.ilceler }}" as="i" hint-placeholder-count="7">
+<option value="{{ i.n }}">{{ i.n }}</option>
+</sc-for>
+</select>
+</label>
+<sc-if value="{{ kullanici.form.yeni }}" hint-placeholder-val="{{ true }}">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Başlangıç şifresi</span>
+<input value="{{ kullanici.form.pw }}" onChange="{{ kullanici.form.onPw }}" style="all:unset;box-sizing:border-box;border:2px solid var(--color-accent);padding:13px;font:700 14px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">Program bir şifre üretti. Kişiye iletin; ilk girişinde kendi şifresini belirler.</span>
+</label>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Rol</span>
+<div style="display:flex;flex-direction:column;border:2px solid {{ ui.rule }}">
+<sc-for list="{{ kullanici.form.roller }}" as="r" hint-placeholder-count="5">
+<button onClick="{{ r.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:left;padding:14px 12px;background:{{ r.bg }};color:{{ r.fg }};font:700 11.5px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid {{ ui.rule }};min-height:50px">{{ r.label }}</button>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ kullanici.form.hasErr }}" hint-placeholder-val="{{ false }}">
+<div style="border:2px solid var(--color-accent);background:var(--color-accent-100);color:var(--color-accent-700);padding:11px 12px;font:600 11.5px/1.4 var(--font-body)">{{ kullanici.form.err }}</div>
+</sc-if>
+<div style="display:flex;gap:8px">
+<button onClick="{{ kullanici.form.kaydet }}" class="btn btn-primary" style="flex:1;justify-content:center;border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:15px;min-height:52px">Kaydet</button>
+<button onClick="{{ kullanici.form.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 16px;min-height:52px">Vazgeç</button>
+</div>
+</div>
+</div>
+</sc-if>
 <div style="display:flex;flex-direction:column;border:2px solid {{ ui.rule }}">
 <sc-for list="{{ kullanici.rows }}" as="u" hint-placeholder-count="5">
-<div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid {{ ui.rule }};background:{{ u.bg }}">
-<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
-<span style="font:700 12.5px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ u.name }}</span>
+<div style="display:flex;flex-direction:column;gap:9px;padding:12px;border-bottom:1px solid {{ ui.rule }};background:{{ u.bg }}">
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font:700 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ u.name }} {{ u.mark }}</span>
 <span style="font:600 10.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ u.user }}</span>
-<span style="font:400 10px/1.3 var(--font-body);color:{{ ui.mut }}">{{ u.role }} · {{ u.durum }}</span>
+<span style="font:400 10px/1.35 var(--font-body);color:{{ ui.mut }}">{{ u.role }} · {{ u.ozet }}</span>
+<span style="font:700 9.5px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ u.durumRenk }}">{{ u.durum }}</span>
 </div>
 <sc-if value="{{ u.duzenlenir }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ u.sifre }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1.2 var(--font-body);letter-spacing:.05em;text-transform:uppercase;padding:11px 10px;text-align:center;min-width:74px;min-height:44px">Şifre sıfırla</button>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<button onClick="{{ u.edit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:13px 8px;min-height:46px">Düzenle</button>
+<button onClick="{{ u.sifre }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:13px 8px;min-height:46px">Şifre sıfırla</button>
+<button onClick="{{ u.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:13px 8px;min-height:46px">{{ u.kapatLabel }}</button>
+<sc-if value="{{ u.silinebilir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ u.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:6px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 10px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:13px 8px;min-height:46px">{{ ikonlar.copKucuk }} Sil</button>
+</sc-if>
+</div>
 </sc-if>
 </div>
 </sc-for>
 </div>
+</div>
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">Ayarlar hatırlanıyor</div>
+<div style="font:400 10.5px/1.55 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ prefNote }}</div>
+<button onClick="{{ prefReset }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px;min-height:50px">Varsayılana döndür</button>
 </div>
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
 <div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">Oturum ve cihaz</div>
@@ -2008,6 +2271,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 
+<sc-if value="{{ coordBar.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:64px;z-index:20;background:{{ ui.fg }};color:{{ ui.bg }};border-top:3px solid var(--color-accent);padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent)">Dokunulan nokta</span>
+<button onClick="{{ coordBar.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.bg }};color:{{ ui.bg }}">{{ ikonlar.kapat }}</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:5px">
+<span style="font:700 13.5px/1.2 ui-monospace,Menlo,monospace">{{ coordBar.wgs }}</span>
+<span style="font:600 11px/1.3 ui-monospace,Menlo,monospace;opacity:.78">{{ coordBar.dms }}</span>
+<span style="font:600 11px/1.3 ui-monospace,Menlo,monospace;opacity:.78">{{ coordBar.itrf }}</span>
+</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<button onClick="{{ coordBar.kopyala }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 auto;text-align:center;border:2px solid {{ ui.bg }};color:{{ ui.bg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 10px;min-height:48px">Kopyala</button>
+<button onClick="{{ coordBar.donustur }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 auto;text-align:center;border:2px solid {{ ui.bg }};color:{{ ui.bg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 10px;min-height:48px">Dönüştür</button>
+<sc-if value="{{ coordBar.canCreate }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ coordBar.yeniTesis }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;text-align:center;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 10px;min-height:48px">Buraya tesis kur</button>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
 <!-- phone sheets -->
 <sc-if value="{{ sheet.open }}" hint-placeholder-val="{{ false }}">
 <div onClick="{{ closePanel }}" style="position:absolute;inset:0;background:rgba(20,19,18,.55);z-index:14"></div>
@@ -2033,9 +2317,31 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:10px 10px;font:700 9.5px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;background:{{ t.bg }};color:{{ t.fg }};border-right:2px solid {{ ui.rule }}">{{ t.label }}</button>
 </sc-for>
 </div>
+<sc-if value="{{ koyDuzelt.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:2px solid var(--color-accent);background:{{ ui.surf }};display:flex;flex-direction:column;gap:10px">
+<span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Köy ve ilçe düzelt</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ koyDuzelt.ilce }}" onChange="{{ koyDuzelt.onIlce }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:48px">
+<sc-for list="{{ koyDuzelt.ilceler }}" as="i" hint-placeholder-count="7"><option value="{{ i.n }}">{{ i.n }}</option></sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Köy / yerleşim</span>
+<input value="{{ koyDuzelt.koy }}" onChange="{{ koyDuzelt.onKoy }}" list="ks-koy-tel" placeholder="Köy adını yazın" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:13px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+<datalist id="ks-koy-tel">
+<sc-for list="{{ koyDuzelt.koyler }}" as="k" hint-placeholder-count="0"><option value="{{ k.n }}"></option></sc-for>
+</datalist>
+</label>
+<div style="display:flex;gap:8px">
+<button onClick="{{ koyDuzelt.kaydet }}" class="btn btn-primary" style="flex:1;border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:15px 16px;justify-content:center;min-height:52px">Kaydet</button>
+<button onClick="{{ koyDuzelt.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 16px;min-height:52px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
 <div style="display:flex;gap:8px;padding:12px 14px;border-bottom:2px solid {{ ui.rule }}">
 <button onClick="{{ routeToSel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 12px;text-align:center">Yol tarifi</button>
-<button onClick="{{ goToMyLocation }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.1em;padding:14px 18px">GİT</button>
+<button onClick="{{ goToSel }}" title="Kaydın bulunduğu noktaya git" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 16px">{{ ikonlar.pin }} Tesise git</button>
 </div>
 <sc-if value="{{ detail.showFields }}" hint-placeholder-val="{{ true }}">
 <div>
@@ -2121,11 +2427,74 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="display:flex;justify-content:space-between;gap:6px"><span style="font:400 10.5px/1.2 var(--font-body);color:{{ ui.mut }}">Süre</span><span style="font:700 11.5px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.sure }}</span></span>
 </div>
 <div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }};margin-top:7px">{{ t.note }}</div>
+<sc-if value="{{ t.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ t.sil }}" title="Bu deneme ölçümünü sil" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:9px;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 2px;font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">{{ ikonlar.copKucuk }} Ölçümü sil</button>
+</sc-if>
 </div>
 </sc-for>
 <div style="padding:13px 14px">
 <button onClick="{{ openTestForm }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 14px">+ Deneme ölçümü ekle</button>
 </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ detail.showBakim }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 16px;border-bottom:2px solid {{ ui.rule }}">
+<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+<span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Periyodik bakım</span>
+<span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ bakimKayit.periyot }}</span>
+<span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ bakimKayit.durum }}</span>
+</div>
+<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }}">{{ bakimKayit.note }}</div>
+</div>
+<sc-if value="{{ bakimKayit.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-bottom:2px solid var(--color-accent);background:{{ ui.surf }};display:flex;flex-direction:column;gap:11px">
+<div style="font:700 10px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Yeni bakım kaydı</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Bakım tarihi</span>
+<input value="{{ bakimKayit.tarih }}" onChange="{{ bakimKayit.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Yapılan iş</span>
+<textarea value="{{ bakimKayit.is }}" onChange="{{ bakimKayit.onIs }}" rows="3" placeholder="Pompa çekildi, çekvalf değişti, pano temizlendi, klor dolduruldu…" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Kullanılan malzeme</span>
+<input value="{{ bakimKayit.malzeme }}" onChange="{{ bakimKayit.onMalzeme }}" placeholder="2 boy kolon borusu, 1 termik röle" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ ui.mut }}">Not</span>
+<input value="{{ bakimKayit.notu }}" onChange="{{ bakimKayit.onNotu }}" placeholder="Sonraki bakımda dikkat edilecek" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ bakimKayit.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:14px 18px;justify-content:center;min-height:50px">Bakımı kaydet</button>
+<button onClick="{{ bakimKayit.foto }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px">Fotoğraf çek</button>
+<button onClick="{{ bakimKayit.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:14px 15px;min-height:50px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ bakimKayit.bos }}" hint-placeholder-val="{{ true }}">
+<div style="padding:20px 16px;font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu tesiste kayıtlı bakım yok. İlk bakımı girdiğinizde takvim buradan işlemeye başlar.</div>
+</sc-if>
+<sc-for list="{{ bakimKayit.liste }}" as="b" hint-placeholder-count="0">
+<div style="padding:13px 16px;border-bottom:1px solid {{ ui.rule }};border-left:4px solid var(--color-accent)">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px">
+<span style="font:700 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ b.tarih }}</span>
+<span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }}">{{ b.kim }}</span>
+</div>
+<div style="font:400 12px/1.5 var(--font-body);color:{{ ui.fg }}">{{ b.is }}</div>
+<sc-if value="{{ b.hasMalzeme }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 11px/1.45 var(--font-body);color:{{ ui.mut }};margin-top:4px">Malzeme: {{ b.malzeme }}</div>
+</sc-if>
+<button onClick="{{ b.sil }}" title="Bu bakım kaydını sil" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:8px;display:flex;align-items:center;gap:6px;min-height:44px;font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">{{ ikonlar.copKucuk }} Kaydı sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ bakimKayit.yazabilir }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 16px">
+<button onClick="{{ bakimKayit.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 16px;min-height:52px" style-hover="background:var(--color-accent);color:#fff">+ Bakım kaydı ekle</button>
+</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -2145,10 +2514,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-for list="{{ detail.foto.list }}" as="p" hint-placeholder-count="0">
 <div style="aspect-ratio:1;border:2px solid {{ ui.rule }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
 {{ p.img }}
+<button onClick="{{ p.ac }}" title="Büyüt — tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;inset:0"></button>
 <span style="position:absolute;left:0;right:0;bottom:0;background:rgba(32,30,29,.82);color:#fff;font:600 8.5px/1.4 var(--font-body);padding:3px 5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.meta }}</span>
-<button onClick="{{ p.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:4px;left:4px;width:44px;height:44px;background:rgba(32,30,29,.75);color:#fff;font:700 17px/1 var(--font-body);display:flex;align-items:center;justify-content:center">↓</button>
+<button onClick="{{ p.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:4px;left:4px;width:44px;height:44px;background:rgba(32,30,29,.75);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.indir }}</button>
 <sc-if value="{{ p.silinir }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ p.sil }}" title="Fotoğrafı sil" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:4px;right:4px;width:44px;height:44px;background:rgba(32,30,29,.75);color:#fff;font:700 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center">✕</button>
+<button onClick="{{ p.sil }}" title="Fotoğrafı sil" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:4px;right:4px;width:44px;height:44px;background:rgba(32,30,29,.75);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.cop }}</button>
 </sc-if>
 </div>
 </sc-for>
@@ -2201,6 +2571,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </div>
 </sc-if>
+<div style="position:sticky;bottom:0;z-index:4;display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px;border-top:2px solid var(--color-accent);background:{{ ui.surf }}">
+<button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1 1 100%;justify-content:flex-start;border:none;cursor:pointer;font:700 12.5px/1 var(--font-body);padding:16px 14px;min-height:52px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
+<button onClick="{{ koyDuzelt.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:7px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:15px 10px;min-height:52px">{{ ikonlar.kalem }} Köy / ilçe</button>
+<button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 11px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:15px 10px;min-height:52px">Tesis kartı</button>
+<sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:7px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 11px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:15px 10px;min-height:52px">{{ ikonlar.cop }} Kaydı sil</button>
+</sc-if>
+<button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 11px/1 var(--font-body);letter-spacing:.04em;text-transform:uppercase;padding:15px 10px;min-height:52px">Kapat</button>
+</div>
 </sc-if>
 
 <sc-if value="{{ panel.isFault }}" hint-placeholder-val="{{ false }}">
@@ -2416,6 +2795,121 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 
 </div>
+
+<!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
+<sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:8px 8px 0;pointer-events:none">
+<div style="pointer-events:auto;display:flex;align-items:flex-start;gap:10px;background:{{ duyuru.bg }};border:2px solid {{ duyuru.border }};border-left:6px solid var(--color-accent);box-shadow:var(--shadow-lg);padding:11px 12px">
+<span style="flex:none;color:var(--color-accent);margin-top:1px">{{ ikonlar.uyari }}</span>
+<span style="flex:1;font:600 12px/1.45 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.text }}</span>
+<button onClick="{{ duyuru.kapat }}" aria-label="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:{{ duyuru.fg }}">{{ ikonlar.kapat }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ buyut.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:90;background:rgba(18,17,16,.96);display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:8px;padding:10px 10px;border-bottom:2px solid rgba(255,255,255,.22);color:#fff">
+<span style="font:700 11px/1 var(--font-body);letter-spacing:.1em;color:var(--color-accent);flex:none">{{ buyut.sayac }}</span>
+<span style="flex:1;min-width:0;font:400 10.5px/1.3 var(--font-body);color:rgba(255,255,255,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ buyut.meta }}</span>
+<button onClick="{{ buyut.indir }}" aria-label="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff">{{ ikonlar.indir }}</button>
+<button onClick="{{ buyut.kapat }}" aria-label="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff">{{ ikonlar.kapatBuyuk }}</button>
+</div>
+<div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:10px">{{ buyut.img }}</div>
+<sc-if value="{{ buyut.coklu }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;padding:10px;border-top:2px solid rgba(255,255,255,.22)">
+<button onClick="{{ buyut.onceki }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:52px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff">{{ ikonlar.sol }}</button>
+<button onClick="{{ buyut.sonraki }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:52px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.35);color:#fff">{{ ikonlar.sag }}</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ pickBar.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--color-accent);color:#fff;padding:11px 12px;display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:700 12px/1.3 var(--font-body)">{{ pickBar.text }}</span>
+<button onClick="{{ pickBar.cancel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;display:flex;align-items:center;border:2px solid #fff;color:#fff;font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:0 14px">Vazgeç</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ vFixBar.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:{{ ui.fg }};color:{{ ui.bg }};padding:11px 12px;display:flex;flex-direction:column;gap:9px">
+<span style="font:600 12px/1.35 var(--font-body)">{{ vFixBar.text }}</span>
+<div style="display:flex;gap:8px">
+<button onClick="{{ vFixBar.fix }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 10px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:0 10px">Yanlış — doğru yeri işaretle</button>
+<button onClick="{{ vFixBar.ok }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.bg }};color:{{ ui.bg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:0 16px">Doğru</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ card.on }}" hint-placeholder-val="{{ false }}">
+<div id="tesis-karti-perde" style="position:fixed;inset:0;z-index:95;background:rgba(32,30,29,.72);overflow:auto;display:flex;flex-direction:column">
+<div id="tesis-karti-arac" style="display:flex;gap:8px;padding:10px 12px;border-bottom:2px solid #201e1d;background:#f3f2f2;position:sticky;top:0">
+<button onClick="{{ card.yazdir }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11px/1 var(--font-body);padding:0 16px;min-height:46px;justify-content:center">Yazdır</button>
+<button onClick="{{ card.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;border:2px solid #201e1d;color:#201e1d;font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:0 14px;min-height:46px">Kapat</button>
+<span style="flex:1"></span>
+<span style="font:400 10px/1.2 var(--font-body);color:#6b6664;align-self:center;text-align:right">A4 · sahaya<br>götürmek için</span>
+</div>
+<div class="scroll" style="flex:1;min-height:0;overflow:auto;background:#fff">
+<div id="tesis-karti" style="width:794px;padding:30px 34px;color:#201e1d">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:2px solid #201e1d;padding-bottom:14px">
+<div>
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:#ec3013;margin-bottom:7px">Kırşehir · Tesis kartı</div>
+<div style="font:700 30px/1 var(--font-heading)">{{ card.code }}</div>
+<div style="font:400 13px/1.4 var(--font-body);color:#4a4644;margin-top:7px">{{ card.kind }} · {{ card.place }}</div>
+</div>
+<div style="text-align:right;font:400 11px/1.7 var(--font-body);color:#4a4644">
+<div>Barkod {{ card.barkod }}</div>
+<div>Yapım {{ card.yil }}</div>
+<div>{{ card.koord }}</div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:30px;margin-top:6px">
+<sc-for list="{{ card.rows }}" as="r" hint-placeholder-count="16">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #d6d3d1;break-inside:avoid">
+<span style="font:400 10.5px/1.3 var(--font-body);color:#6b6664;max-width:52%">{{ r.label }}</span>
+<span style="font:600 11.5px/1.3 var(--font-body);text-align:right">{{ r.value }}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ card.hasNot }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:20px;border:2px solid #201e1d;padding:13px 15px">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:#ec3013;margin-bottom:7px">Saha notu</div>
+<div style="font:400 11.5px/1.6 var(--font-body);white-space:pre-wrap">{{ card.notu }}</div>
+</div>
+</sc-if>
+<div style="margin-top:22px;border-top:2px solid #201e1d;padding-top:12px;display:flex;justify-content:space-between;gap:16px">
+<span style="font:400 10px/1.4 var(--font-body);color:#6b6664">Çıktı tarihi {{ card.tarih }} · doldurulmamış alanlar bu karta yazılmadı</span>
+<span style="font:400 10px/1.4 var(--font-body);color:#6b6664">Ölçüm / kontrol imzası</span>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ conflict.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:92;background:rgba(32,30,29,.72);display:flex;align-items:flex-end">
+<div class="scroll" style="width:100%;max-height:92dvh;overflow:auto;background:{{ ui.surf }};border-top:2px solid var(--color-accent)">
+<div style="padding:12px 13px;background:var(--color-accent);color:#fff;font:700 10.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase">Çakışma — iki kayıt birden değişti</div>
+<div style="padding:12px 13px;font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }};border-bottom:2px solid {{ ui.rule }}">{{ conflict.bilgi }}</div>
+<div style="padding:12px 13px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Sizin yazdığınız</div>
+<div style="font:400 12px/1.5 var(--font-body);white-space:pre-wrap">{{ conflict.benim }}</div>
+</div>
+<div style="padding:12px 13px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Sunucudaki</div>
+<div style="font:400 12px/1.5 var(--font-body);white-space:pre-wrap">{{ conflict.onun }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;padding:12px 13px">
+<button onClick="{{ conflict.birlestir }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11px/1 var(--font-body);min-height:48px;justify-content:center">İkisini birleştir</button>
+<button onClick="{{ conflict.benimKalsin }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 12px">Benimki kalsın</button>
+<button onClick="{{ conflict.onunKalsin }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 12px">Sunucudaki kalsın</button>
+</div>
+</div>
+</div>
+</sc-if>
+</sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:1160},&quot;arizaModulu&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;},&quot;yerlesimSekmesi&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;}}">
 const ELL = { grs80: { a: 6378137, f: 1 / 298.257222101 }, intl: { a: 6378388, f: 1 / 297 } };
@@ -2540,10 +3034,34 @@ const PERMS = [
 const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
+const FOTO_NIYET = 'ks-foto-niyet';
 const VKEY = 'ks-envanter-koy-konum';
 const STATUS_LABEL = { acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada', cozuldu: 'Çözüldü' };
 const norm = s => String(s).toLowerCase().replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g')
   .replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/i̇/g, 'i');
+const nkey = s => norm(String(s || '').trim().replace(/\s+/g, ' ')
+  .replace(/\s*[\(\[].*?[\)\]]\s*$/, '')
+  .replace(/\s+(köyü|köy|beldesi|belde|mahallesi|mah\.?|mh\.?)$/i, ''))
+  .replace(/[^a-z0-9]/g, '')
+  .replace(/(koyu|koy)$/, (x, _y, o) => o >= 4 ? '' : x);
+const AYIRT = ['buyuk', 'kucuk', 'asagi', 'yukari', 'orta', 'yeni', 'eski', 'dere', 'tepe'];
+const ayirtEsit = (a, b) => AYIRT.every(t => a.includes(t) === b.includes(t));
+const onEk = (a, b) => { let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++; return i; };
+const benzerlik = (a, b) => {
+  if (a === b) return 0;
+  if (Math.abs(a.length - b.length) > 2) return 99;
+  const dp = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    let onc = dp[0];
+    dp[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const t = dp[j];
+      dp[j] = Math.min(dp[j] + 1, dp[j - 1] + 1, onc + (a[i - 1] === b[j - 1] ? 0 : 1));
+      onc = t;
+    }
+  }
+  return dp[b.length];
+};
 const rng = seed => { let s = seed; return () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648; };
 const fmt = n => n == null ? '—' : n.toLocaleString('tr-TR');
 
@@ -2562,7 +3080,8 @@ class Component extends DCLogic {
     log: {}, trash: [], conflict: null, card: null, ayarBolum: 'gorunum',
     users: [], userForm: null, pwForm: null,
     fotolar: {}, fotoYuk: null, kayitliSesler: {},
-    coordMode: false, picked: null,
+    coordMode: false, picked: null, duyuru: null, koyForm: null, buyut: null,
+    bakimlar: {}, bakimForm: null, yerlesimVeri: {}, yerlesimYukle: null,
     conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' }
   };
 
@@ -2584,6 +3103,10 @@ class Component extends DCLogic {
     let dm = 'auto';
     try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
     this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm, users: this.usersOku() });
+    try {
+      const yv = JSON.parse(localStorage.getItem('ks-yerlesim-veri') || 'null');
+      if (yv && typeof yv === 'object') this.setState({ yerlesimVeri: yv });
+    } catch (e) { /* depolama kapalı */ }
     this._sbYuk = import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return M; });
     this._sbYuk.then(M => this.anahtarlaGir(M))
       .catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
@@ -2601,7 +3124,7 @@ class Component extends DCLogic {
       if (raw) {
         const sv = JSON.parse(raw);
         const u = this.usersOku().find(x => x.user === sv.user);
-        if (u && u.aktif !== false && !u.mustChange && sv.pw === (u.pw || PW)) {
+        if (u && u.aktif !== false && !u.mustChange && sv.pw === u.pw) {
           this._prefYuklendi = true;
           this.setState({ session: u, role: u.roleLabel, loginUser: u.user, remember: true, autoLogin: true, ...this.prefOku(u) },
             () => setTimeout(() => this.prefUygula(), 600));
@@ -2611,7 +3134,7 @@ class Component extends DCLogic {
     import('./koyler.js').then(k => { this._yer = k.YERLESIM; this.forceUpdate(); }).catch(() => {});
     Promise.all([import('./kirsehir-data.js'), import('./envanter.js')]).then(([m, env]) => {
       const { assets, faults } = env.buildAssets(m);
-      this.setState({ data: m, assets, faults, center: { lat: 39.16, lon: 34.12 } });
+      this.setState({ data: m, assets, faults, center: { lat: 39.16, lon: 34.12 } }, () => this.fotoNiyetGeriYukle());
     });
     this._msg = e => {
       const d = e.data || {};
@@ -2667,7 +3190,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     removeEventListener('message', this._msg);
-    clearTimeout(this._t); clearTimeout(this._f);
+    clearTimeout(this._t); clearTimeout(this._f); clearTimeout(this._d);
   }
   mapWin() {
     const f = document.querySelector('iframe[title^="Kırşehir haritası"]');
@@ -3255,18 +3778,34 @@ class Component extends DCLogic {
       setTimeout(() => this.setState({ toast: null }), 9000);
       return;
     }
-    const inp = document.createElement('input');
-    inp.type = 'file';
+    // Telefonda kamera açılırken tarayıcı sayfayı bellekten atabiliyor: dönüşte program
+    // yeniden yükleniyor ve seçim kayboluyordu. Niyeti cihaza yazıyoruz — yeniden
+    // yüklenirse fotoNiyetGeriYukle() aynı kaydın Foto sekmesini açar.
+    try {
+      localStorage.setItem(FOTO_NIYET, JSON.stringify({ id: sel.id, kod: sel.code, t: Date.now() }));
+    } catch (e) { /* depolama kapalı */ }
+    // Seçici her seferinde yeniden kurulmaz; aynı eleman kalır — bellek baskısı azalır
+    let inp = this._fotoInput;
+    if (!inp) {
+      inp = document.createElement('input');
+      inp.type = 'file';
+      inp.style.position = 'fixed';
+      inp.style.left = '-9999px';
+      inp.style.opacity = '0';
+      document.body.appendChild(inp);
+      this._fotoInput = inp;
+    }
+    inp.value = '';
     inp.accept = 'image/*';
     inp.multiple = !kamera;
-    if (kamera) inp.capture = 'environment';   // telefonda arka kamerayı açar
-    inp.style.display = 'none';
+    if (kamera) inp.setAttribute('capture', 'environment');   // telefonda arka kamerayı açar
+    else inp.removeAttribute('capture');
     inp.onchange = () => {
       const list = [...(inp.files || [])];
-      inp.remove();
+      try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* yok */ }
+      inp.value = '';
       if (list.length) this.fotoGonder(sel, list);
     };
-    document.body.appendChild(inp);
     inp.click();
   }
   async fotoGonder(sel, list) {
@@ -3287,8 +3826,7 @@ class Component extends DCLogic {
       setTimeout(() => this.setState({ toast: null }), 9000);
       return;
     }
-    this.say(`${ok} fotoğraf ${sel.code} kaydına yüklendi — toplam ${kb} KB. Küçültme yapıldı: uzun kenar 1600 piksel.${hata ? ' ' + (list.length - ok) + ' tanesi yüklenemedi: ' + hata : ''}`, true);
-    setTimeout(() => this.setState({ toast: null }), 9000);
+    this.duyur(`${ok} fotoğraf ${sel.code} kaydına yüklendi · ${kb} KB.${hata ? ' ' + (list.length - ok) + ' tanesi yüklenemedi: ' + hata : ''}`, 6000, 'iyi');
   }
   async fotoYenile(dbId) {
     const M = this._sb;
@@ -3345,16 +3883,15 @@ class Component extends DCLogic {
     const assets = (t.data || []).map(M.tesisSuret);
     const faults = a.ok ? (a.data || []).map(M.arizaSuret) : this.state.faults;
     const kilitli = assets.filter(x => !x.yazilabilir).length;
-    this.setState({ assets, faults, sunucu: true, sonEsitleme: this.damga() });
+    this.setState({ assets, faults, sunucu: true, sonEsitleme: this.damga() }, () => this.fotoNiyetGeriYukle());
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider
     this.toMap({ ks: 'assets', assets, faults });
     if (!sessiz) {
       const me = this.state.session;
       const bolge = me && me.bolge ? me.bolge : null;
-      this.say(kilitli && bolge
-        ? `${assets.length} tesis ve ${faults.length} arıza kaydı yüklendi. ${bolge} ilçesindeki ${assets.length - kilitli} kayıtta değişiklik yapabilirsiniz; diğer ${kilitli} kayıt görüntülemeye açık.`
-        : `${assets.length} tesis ve ${faults.length} arıza kaydı yüklendi — hepsinde değişiklik yapabilirsiniz.`, true);
-      setTimeout(() => this.setState({ toast: null }), 8000);
+      this.duyur(kilitli && bolge
+        ? `${assets.length} tesis · ${faults.length} arıza yüklendi — ${bolge} ilçesindeki ${assets.length - kilitli} kayıtta değişiklik yapabilirsiniz.`
+        : `${assets.length} tesis · ${faults.length} arıza yüklendi.`, 4000);
     }
   }
   // Yazma yetkisi: kural sunucuda; buradaki denetim yalnızca ekranı doğru göstermek için
@@ -3456,7 +3993,7 @@ class Component extends DCLogic {
     if (!u) return this.setState({ loginErr: 'Böyle bir kullanıcı adı yok.' });
     if (u.aktif === false) return this.setState({ loginErr: 'Bu hesap kapatıldı — yöneticiye başvurun.' });
     const pw = this.state.loginPw;
-    if (pw !== (u.pw || PW)) return this.setState({ loginErr: 'Şifre hatalı.' });
+    if (pw !== u.pw) return this.setState({ loginErr: 'Şifre hatalı.' });
     if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
     try {
       if (this.state.remember) localStorage.setItem(SES_KEY, JSON.stringify({ user: u.user, pw }));
@@ -3505,6 +4042,267 @@ class Component extends DCLogic {
     clearTimeout(this._t);
     this.setState({ toast: text });
     if (!keep) this._t = setTimeout(() => this.setState({ toast: null }), 2500);
+  }
+  // Göz yormayan bildirim: ekranın üstünde çıkar, süresi dolunca kendiliğinden kalkar
+  duyur(text, ms, tur) {
+    clearTimeout(this._d);
+    this.setState({ duyuru: { text, tur: tur || 'bilgi' } });
+    this._d = setTimeout(() => this.setState({ duyuru: null }), ms || 5000);
+  }
+  yolTarifiVer(a) {
+    if (!a) return false;
+    if (!this.state.navMode) {
+      this.duyur('Yol tarifi modu kapalı — Ayarlar > Harita ve görünüm bölümünden açtığınızda güzergâh çizilir.', 7000);
+      return false;
+    }
+    this.toMap({ ks: 'routeTo', id: a.id, code: a.code, village: a.village, lat: a.lat, lon: a.lon });
+    // telefonda kayıt sayfası haritanın üstünde duruyor; güzergâh görünsün diye kapatılır
+    this.setState({ tab: 'harita', panel: this.state.device === 'phone' ? 'yok' : this.state.panel });
+    return true;
+  }
+  dosyaIndir(ad, icerik, tur) {
+    const blob = new Blob([icerik], { type: tur });
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = u; a.download = ad;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+  }
+  yerlesimBul(ilceAd, koyAd) {
+    const kayit = this.state.yerlesimVeri || {};
+    const k = nkey(koyAd);
+    if (!k) return null;
+    const bilesik = nkey(ilceAd) + '|' + k;
+    if (kayit[bilesik]) return kayit[bilesik];
+    if (kayit[k]) return kayit[k];
+    const hepsi = Object.values(kayit);
+    for (const v of hepsi) if (nkey(v.ad) === k) return v;
+    const ik = nkey(ilceAd);
+    let en = null, enUz = 3, cok = false;
+    for (const v of hepsi) {
+      if (ik && v.ilce && nkey(v.ilce) !== ik) continue;
+      const vk = nkey(v.ad);
+      if (!ayirtEsit(k, vk)) continue;
+      const u = benzerlik(k, vk);
+      if (u > 2) continue;
+      if (u === 2 && (onEk(k, vk) < 3 || Math.min(k.length, vk.length) < 7)) continue;
+      if (u < enUz) { en = v; enUz = u; cok = false; }
+      else if (u === enUz && en && v !== en) cok = true;
+    }
+    return cok || !en ? null : { ...en, yaklasik: en.ad };
+  }
+  yerlesimCsvCoz(buf) {
+    const bytes = new Uint8Array(buf);
+    let metin = '';
+    try { metin = new TextDecoder('utf-8').decode(bytes); } catch (e) { metin = ''; }
+    if (!metin || metin.indexOf('\ufffd') >= 0) {
+      for (const enc of ['windows-1254', 'iso-8859-9', 'windows-1252']) {
+        try {
+          const alt = new TextDecoder(enc).decode(bytes);
+          if (alt && alt.indexOf('\ufffd') < 0) { metin = alt; break; }
+          if (!metin) metin = alt;
+        } catch (e) { /* kodlama desteklenmiyor */ }
+      }
+    }
+    return String(metin || '').replace(/^\ufeff/, '');
+  }
+  yerlesimSutunlar(bas) {
+    const t = s => String(s || '').toLowerCase()
+      .replace(/\u0131/g, 'i').replace(/\u0130/g, 'i').replace(/[\u00e7]/g, 'c').replace(/[\u011f]/g, 'g')
+      .replace(/[\u00f6]/g, 'o').replace(/[\u015f]/g, 's').replace(/[\u00fc]/g, 'u')
+      .replace(/[^a-z]/g, '');
+    const idx = { ad: -1, ilce: -1, nufus: -1, yil: -1, buyukbas: -1, kucukbas: -1 };
+    bas.forEach((h, i) => {
+      const k = t(h);
+      if (!k) return;
+      if (idx.buyukbas < 0 && /buyukbas|sigir|bugu/.test(k)) idx.buyukbas = i;
+      else if (idx.kucukbas < 0 && /kucukbas|koyun|keci/.test(k)) idx.kucukbas = i;
+      else if (idx.yil < 0 && /^yil|yili$|nufusyil/.test(k)) idx.yil = i;
+      else if (idx.nufus < 0 && /nufus/.test(k)) idx.nufus = i;
+      else if (idx.ilce < 0 && /ilce/.test(k)) idx.ilce = i;
+      else if (idx.ad < 0 && /koy|yerlesim|belde|mahalle|ad$|adi/.test(k)) idx.ad = i;
+    });
+    return idx;
+  }
+  yerlesimAdSadelestir(ad) {
+    return String(ad || '').trim()
+      .replace(/\s+/g, ' ')
+      .replace(/\s*[\(\[].*?[\)\]]\s*$/, '')
+      .replace(/\s+(k\u00f6y\u00fc|k\u00f6y|beldesi|belde|mahallesi|mah\.?|mh\.?)$/i, '')
+      .trim();
+  }
+  yerlesimCsvIsle(buf, dosyaAd) {
+    const metin = this.yerlesimCsvCoz(buf);
+    const satir = metin.split(/\r?\n/).filter(x => x.replace(/[;,\t"\s]/g, ''));
+    if (satir.length < 2) return this.duyur('Dosya bo\u015f g\u00f6r\u00fcn\u00fcyor \u2014 ba\u015fl\u0131k sat\u0131r\u0131 ve en az bir veri sat\u0131r\u0131 gerekli.', 7000, 'kotu');
+    const say = ['\t', ';', ',']
+      .map(d => ({ d, n: (satir[0].split(d).length - 1) }))
+      .sort((a, b) => b.n - a.n)[0];
+    const ayr = say.n > 0 ? say.d : ';';
+    const boel = r => {
+      const out = []; let cur = '', q = false;
+      for (let i = 0; i < r.length; i++) {
+        const ch = r[i];
+        if (ch === '"') { if (q && r[i + 1] === '"') { cur += '"'; i++; } else q = !q; }
+        else if (ch === ayr && !q) { out.push(cur); cur = ''; }
+        else cur += ch;
+      }
+      out.push(cur);
+      return out.map(x => x.trim());
+    };
+    let idx = this.yerlesimSutunlar(boel(satir[0]));
+    let bas = 1;
+    if (idx.ad < 0) { idx = { ad: 0, ilce: 1, nufus: 2, yil: 3, buyukbas: 4, kucukbas: 5 }; bas = 0; }
+    const nrm = a => nkey(a);
+    void nrm;
+    const sayi = x => {
+      const v = parseInt(String(x == null ? '' : x).replace(/[^0-9]/g, ''), 10);
+      return isFinite(v) ? v : null;
+    };
+    const al = (c, i) => i >= 0 && i < c.length ? c[i] : '';
+    const yeni = { ...(this.state.yerlesimVeri || {}) };
+    let n = 0, atlanan = 0, sonIlce = '', sonYil = '';
+    for (const r of satir.slice(bas)) {
+      const c = boel(r);
+      const ilceHam = al(c, idx.ilce);
+      const yilHam = al(c, idx.yil);
+      if (ilceHam) sonIlce = ilceHam;
+      if (yilHam) sonYil = yilHam;
+      const adHam = this.yerlesimAdSadelestir(al(c, idx.ad));
+      if (!adHam || /^(toplam|genel toplam|ara toplam)$/i.test(adHam)) { atlanan++; continue; }
+      const k = idx.ilce >= 0 && sonIlce ? nkey(sonIlce) + '|' + nkey(adHam) : nkey(adHam);
+      if (!k) { atlanan++; continue; }
+      const eski = yeni[k] || {};
+      const bb = idx.buyukbas >= 0 ? sayi(al(c, idx.buyukbas)) : null;
+      const kb = idx.kucukbas >= 0 ? sayi(al(c, idx.kucukbas)) : null;
+      const nf = idx.nufus >= 0 ? sayi(al(c, idx.nufus)) : null;
+      yeni[k] = {
+        ad: adHam,
+        ilce: this.yerlesimAdSadelestir(sonIlce) || eski.ilce || '',
+        nufus: nf != null ? nf : (eski.nufus != null ? eski.nufus : null),
+        yil: (sonYil || eski.yil || '').toString().trim(),
+        buyukbas: bb != null ? bb : (eski.buyukbas != null ? eski.buyukbas : null),
+        kucukbas: kb != null ? kb : (eski.kucukbas != null ? eski.kucukbas : null)
+      };
+      n++;
+    }
+    if (!n) return this.duyur('Dosyada okunabilir yerle\u015fim sat\u0131r\u0131 bulunamad\u0131. Ba\u015fl\u0131k sat\u0131r\u0131nda K\u00f6y / \u0130l\u00e7e / N\u00fcfus s\u00fctunlar\u0131 olmal\u0131.', 9000, 'kotu');
+    try { localStorage.setItem('ks-yerlesim-veri', JSON.stringify(yeni)); } catch (e) { /* depolama kapal\u0131 */ }
+    this.setState({ yerlesimVeri: yeni });
+    const nufuslu = Object.values(yeni).filter(x => x.nufus != null).length;
+    const hayvanli = Object.values(yeni).filter(x => x.buyukbas != null || x.kucukbas != null).length;
+    this.duyur(`${dosyaAd ? dosyaAd + ' \u2014 ' : ''}${n} sat\u0131r okundu \u00b7 ${nufuslu} yerle\u015fimde n\u00fcfus, ${hayvanli} yerle\u015fimde hayvan say\u0131s\u0131${atlanan ? ' \u00b7 ' + atlanan + ' sat\u0131r atland\u0131' : ''}.`, 8000, 'iyi');
+  }
+  csvKac(v) {
+    const x = String(v === undefined || v === null ? '' : v).replace(/"/g, '""');
+    return /[";\n]/.test(x) ? '"' + x + '"' : x;
+  }
+  // Excel: noktalı virgül ayırıcı + BOM — Türkçe Excel'de çift tıklamayla doğru açılır
+  excelVer() {
+    const s = this.state;
+    const list = s.assets.filter(a => s.filter[a.type]);
+    if (!list.length) return this.say('Aktarılacak kayıt yok — tür süzgeçlerini açın.');
+    const dKeys = [];
+    for (const a of list) for (const k of Object.keys(a.d || {})) if (dKeys.indexOf(k) < 0) dKeys.push(k);
+    const bas = ['Kod', 'Tür', 'Köy', 'İlçe', 'Yapım yılı', 'Enlem', 'Boylam', 'Son bakım',
+      'Eksik alan sayısı', 'Fotoğraf', 'Açık arıza'];
+    const out = [bas.concat(dKeys).map(x => this.csvKac(x)).join(';')];
+    for (const a of list) {
+      const acik = s.faults.filter(f => f.assetId === a.id && f.status !== 'cozuldu').length;
+      out.push([a.code, TYPES[a.type].kind, a.village || '', a.district || '', a.year || '',
+        String(a.lat).replace('.', ','), String(a.lon).replace('.', ','), (a.d || {}).bakim || '',
+        this.missingOf(a).length, a.photos || 0, acik]
+        .concat(dKeys.map(k => (a.d || {})[k])).map(x => this.csvKac(x)).join(';'));
+    }
+    this.dosyaIndir('kirsehir-envanter-' + new Date().toISOString().slice(0, 10) + '.csv',
+      '\ufeff' + out.join('\r\n'), 'text/csv;charset=utf-8');
+    this.duyur(list.length + ' kayıt CSV olarak indirildi — Excel’de doğrudan açılır.', 6000, 'iyi');
+  }
+  pdfVer() {
+    const s = this.state;
+    const esc = x => String(x === undefined || x === null ? '' : x)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const byD = {};
+    for (const a of s.assets) {
+      const o = (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, miss: 0 });
+      o.n++;
+      if (a.type === 'kuyu') o.kuyu++;
+      if (a.type === 'depo') o.depo++;
+      if (this.missingOf(a).length) o.miss++;
+    }
+    const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
+    const acik = s.faults.filter(f => f.status !== 'cozuldu');
+    const w = window.open('', '_blank');
+    if (!w) return this.duyur('Tarayıcı yeni sekmeyi engelledi — açılır pencere iznini verip yeniden deneyin.', 8000);
+    const satirD = Object.keys(byD).sort((x, y) => byD[y].n - byD[x].n)
+      .map(n => '<tr><td>' + esc(n) + '</td><td>' + byD[n].n + '</td><td>' + byD[n].kuyu +
+        '</td><td>' + byD[n].depo + '</td><td>' + byD[n].miss + '</td></tr>').join('');
+    const satirF = acik.map(f => {
+      const a = s.assets.find(x => x.id === f.assetId) || {};
+      return '<tr><td>' + esc(f.no) + '</td><td>' + esc(a.code || '—') + '</td><td>' + esc(f.type) +
+        '</td><td>' + esc(f.priority) + '</td><td>' + esc(STATUS_LABEL[f.status]) + '</td><td>' + esc(f.crew) + '</td></tr>';
+    }).join('');
+    const satirM = miss.slice(0, 120).map(x => '<tr><td>' + esc(x.a.code) + '</td><td>' + esc(this.yer(x.a)) +
+      '</td><td>' + x.m.length + '</td><td>' + esc(x.m.slice(0, 6).join(', ')) + '</td></tr>').join('');
+    w.document.write('<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8">' +
+      '<title>Kırşehir envanter özeti</title><style>' +
+      '@page{size:A4;margin:14mm}body{font:11px/1.5 Archivo,system-ui,sans-serif;color:#201e1d;margin:0}' +
+      'h1{font-size:19px;margin:0 0 4px}h2{font-size:10px;letter-spacing:.12em;text-transform:uppercase;' +
+      'color:#ec3013;margin:18px 0 6px;border-bottom:2px solid #201e1d;padding-bottom:5px}' +
+      'table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:4px 6px;' +
+      'border-bottom:1px solid #ccc;font-size:10px}th{background:#eee;font-size:8.5px;letter-spacing:.08em;' +
+      'text-transform:uppercase}.k{color:#666;font-size:10px}</style></head><body>' +
+      '<h1>Kırşehir su ve elektrik tesisleri — envanter özeti</h1>' +
+      '<div class="k">' + esc(this.damga()) + ' · ' + s.assets.length + ' kayıt · ' + acik.length +
+      ' açık arıza · ' + miss.length + ' eksik bilgili kayıt</div>' +
+      '<h2>İlçe dağılımı</h2><table><tr><th>İlçe</th><th>Kayıt</th><th>Kuyu</th><th>Depo</th><th>Eksik bilgili</th></tr>' +
+      satirD + '</table>' +
+      '<h2>Açık arızalar</h2>' + (acik.length
+        ? '<table><tr><th>No</th><th>Tesis</th><th>Arıza</th><th>Öncelik</th><th>Durum</th><th>Ekip</th></tr>' + satirF + '</table>'
+        : '<div class="k">Açık arıza kaydı yok.</div>') +
+      '<h2>Eksik bilgili kayıtlar</h2><table><tr><th>Kod</th><th>Yer</th><th>Boş alan</th><th>Alanlar</th></tr>' +
+      satirM + '</table></body></html>');
+    w.document.close();
+    setTimeout(() => { try { w.focus(); w.print(); } catch (e) { /* engelli */ } }, 500);
+    this.duyur('Yazdırma penceresi açıldı — “Hedef: PDF olarak kaydet”i seçin.', 7000);
+  }
+  // Lucide çizgi ikonları
+  ikon(ad, boyut) {
+    const P = {
+      gps: ['M12 2v3', 'M12 19v3', 'M2 12h3', 'M19 12h3', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
+      pin: ['M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0', 'M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4'],
+      gunes: ['M12 2v2', 'M12 20v2', 'm4.93 4.93 1.41 1.41', 'm17.66 17.66 1.41 1.41', 'M2 12h2', 'M20 12h2', 'm6.34 17.66-1.41 1.41', 'm19.07 4.93-1.41 1.41', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
+      ay: ['M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9'],
+      indir: ['M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4', 'M7 10l5 5 5-5', 'M12 15V3'],
+      cop: ['M3 6h18', 'M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2', 'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6', 'M10 11v6', 'M14 11v6'],
+      sol: ['m15 18-6-6 6-6'],
+      sag: ['m9 18 6-6-6-6'],
+      kapat: ['M18 6 6 18', 'm6 6 12 12'],
+      uyari: ['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3', 'M12 9v4', 'M12 17h.01'],
+      buyut: ['M15 3h6v6', 'M9 21H3v-6', 'M21 3l-7 7', 'M3 21l7-7'],
+      kalem: ['M12 20h9', 'M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z']
+    };
+    const b = boyut || 16;
+    return React.createElement('svg', {
+      width: b, height: b, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+      strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+      style: { display: 'block', flex: 'none' }, 'aria-hidden': true
+    }, (P[ad] || []).map((p, i) => React.createElement('path', { key: i, d: p })));
+  }
+  // Kamera açılırken telefon programı bellekten atarsa kullanıcı bıraktığı yere döner
+  fotoNiyetGeriYukle() {
+    if (this._niyetIsledi) return;
+    let n = null;
+    try { n = JSON.parse(localStorage.getItem(FOTO_NIYET) || 'null'); } catch (e) { /* yok */ }
+    if (!n) return;
+    try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* depolama kapalı */ }
+    if (!n.t || Date.now() - n.t > 600000) return;
+    const a = this.state.assets.find(x => x.id === n.id) || this.state.assets.find(x => x.code === n.kod);
+    if (!a) return;
+    this._niyetIsledi = true;
+    this.setState({ selected: a.id, panel: 'detay', detailTab: 'medya', tab: 'harita' });
+    if (a.dbId) this.fotoYenile(a.dbId);
+    this.duyur(a.code + ' yeniden açıldı. Telefon, kamera açıkken programı bellekten attığı için çekilen kare programa ulaşmadı — “Galeriden seç” ile telefonun galerisinden ekleyin.', 14000);
   }
   cm = z => Number(z) * 3;
 
@@ -3613,6 +4411,8 @@ class Component extends DCLogic {
     let tabId = s.tab;
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'yerlesim' && !yerlesimOn) tabId = 'harita';
+    // aktarım ekranı yalnızca bilgisayarda çizilir; telefonda boş gri sayfa çıkıyordu
+    if (tabId === 'aktarim' && s.device === 'phone') tabId = 'ayarlar';
     const myFaults = me && me.role === 'personel' ? s.faults.filter(f => f.crew === me.crew) : s.faults;
     const vis = s.assets.filter(a => s.filter[a.type]);
     const sel = s.assets.find(a => a.id === s.selected);
@@ -3819,11 +4619,18 @@ class Component extends DCLogic {
           rowBg: dark ? ui.surf2 : 'var(--color-neutral-200)', numColor: ui.fg
         });
         const vs = m.VILLAGES[d.id] || [];
-        for (const v of vs) settlements.push({
-          name: v, district: d.name, weight: '400', pop: '—', buyukbas: '—', kucukbas: '—',
-          inv: String(s.assets.filter(a => a.village === v).length),
-          src: 'ADNKS / İBS içe aktarımı', rowBg: 'transparent', numColor: ui.mut
-        });
+        for (const v of vs) {
+          const y = this.yerlesimBul(d.name, v);
+          settlements.push({
+            name: v, district: d.name, weight: '400',
+            pop: y && y.nufus != null ? fmt(y.nufus) : '—',
+            buyukbas: y && y.buyukbas != null ? fmt(y.buyukbas) : '—',
+            kucukbas: y && y.kucukbas != null ? fmt(y.kucukbas) : '—',
+            inv: String(s.assets.filter(a => a.village === v).length),
+            src: y ? ('Yüklenen dosya' + (y.yil ? ' · ' + y.yil : '') + (y.yaklasik ? ' · yaklaşık eşleşme: ' + y.yaklasik : '')) : 'veri yüklenmedi',
+            rowBg: 'transparent', numColor: y ? ui.fg : ui.mut
+          });
+        }
         if (!vs.length) settlements.push({
           name: `${d.villageCount} köy — isim listesi içe aktarılacak`, district: d.name, weight: '400',
           pop: '—', buyukbas: '—', kucukbas: '—', inv: '—', src: 'İçişleri mülki idare envanteri',
@@ -3895,7 +4702,7 @@ class Component extends DCLogic {
 
     const navDef = [['harita', 'Harita', 0, 1], ['envanter', 'Envanter', 0, 1],
       ['ariza', 'Arıza', myFaults.filter(f => f.status !== 'cozuldu').length, 1],
-      ['islem', 'İşlem', 0, 1], ['gunluk', 'Bugün', 0, 1], ['bakim', 'Bakım', 0, 1], ['ozet', 'Özet', 0, 1],
+      ['gunluk', 'Bugün', 0, 1], ['bakim', 'Bakım', 0, 1], ['ozet', 'Özet', 0, 1],
       ['yerlesim', 'Yerleşim', 0, 0], ['kuyruk', 'Kuyruk', pendA.length + pendF.length, 0],
       ['ayarlar', 'Ayarlar', 0, 1]];
     const navItem = ([id, label, badge]) => ({
@@ -4246,10 +5053,199 @@ class Component extends DCLogic {
       },
       routeToSel: () => {
         if (!sel) return;
-        this.toMap({ ks: 'routeTo', id: sel.id, code: sel.code, village: sel.village, lat: sel.lat, lon: sel.lon });
-        this.setState({ tab: 'harita' });
-        this.say(`${sel.code} için karayolu güzergâhı hesaplanıyor…`);
+        if (this.yolTarifiVer(sel)) this.say(`${sel.code} için karayolu güzergâhı hesaplanıyor…`);
       },
+      // Kayıt detayındaki GİT kaydın kendi noktasına götürür; ana haritadaki GİT konumunuza
+      goToSel: () => {
+        if (!sel) return;
+        this.flyTo(sel.lat, sel.lon, 17);
+        this.setState({ tab: 'harita', panel: s.device === 'phone' ? 'yok' : s.panel });
+        this.say(`${sel.code} · ${sel.lat.toFixed(5)}, ${sel.lon.toFixed(5)}`);
+      },
+      navKapali: !s.navMode,
+      ikonlar: {
+        gps: this.ikon('gps', 18), gpsBuyuk: this.ikon('gps', 26),
+        pin: this.ikon('pin', 16), pinBuyuk: this.ikon('pin', 22),
+        tema: this.ikon(dark ? 'gunes' : 'ay', 17),
+        indir: this.ikon('indir', 15), indirKucuk: this.ikon('indir', 13),
+        cop: this.ikon('cop', 15), copKucuk: this.ikon('cop', 13),
+        sol: this.ikon('sol', 24), sag: this.ikon('sag', 24),
+        kapat: this.ikon('kapat', 16), kapatBuyuk: this.ikon('kapat', 20),
+        uyari: this.ikon('uyari', 20), buyut: this.ikon('buyut', 15),
+        kalem: this.ikon('kalem', 14)
+      },
+      duyuru: (() => {
+        const d = s.duyuru;
+        const ariza = !!d && d.tur === 'ariza';
+        return {
+          show: !!d, text: d ? d.text : '',
+          bg: ariza ? (dark ? '#3a251f' : 'var(--color-accent-100)') : ui.surf,
+          fg: ariza ? (dark ? '#f4f2f0' : 'var(--color-accent-700)') : ui.fg,
+          border: ariza ? 'var(--color-accent)' : ui.rule,
+          kapat: () => { clearTimeout(this._d); this.setState({ duyuru: null }); }
+        };
+      })(),
+      buyut: (() => {
+        const b = s.buyut;
+        const liste = b ? ((s.fotolar || {})[b.dbId] || []) : [];
+        if (!b || !liste.length) return { on: false, sayac: '', meta: '', img: null, coklu: false };
+        const i = Math.max(0, Math.min(b.i, liste.length - 1));
+        const f = liste[i];
+        const git = k => this.setState({ buyut: { ...b, i: (k + liste.length) % liste.length } });
+        return {
+          on: true,
+          img: React.createElement('img', {
+            src: f.url, alt: 'Fotoğraf',
+            style: { maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }
+          }),
+          sayac: `${i + 1} / ${liste.length}`,
+          meta: `${f.yukleyen || ''} · ${(f.yuklendi || '').slice(0, 10).split('-').reverse().join('.')}${f.boyut ? ' · ' + Math.round(f.boyut / 1024) + ' KB' : ''}`,
+          coklu: liste.length > 1,
+          onceki: () => git(i - 1),
+          sonraki: () => git(i + 1),
+          indir: () => this.medyaIndir(f.url, `foto-${f.id}.jpg`),
+          kapat: () => this.setState({ buyut: null })
+        };
+      })(),
+      bakimKayit: (() => {
+        const f = s.bakimForm;
+        const liste = (sel ? (s.bakimlar[sel.id] || []) : []);
+        const yaz = (k, v) => this.setState({ bakimForm: { ...this.state.bakimForm, [k]: v } });
+        return {
+          on: !!f,
+          yazabilir: !!sel && canWrite && this.yazabilir(sel),
+          bos: liste.length === 0,
+          periyot: sel ? this.bakimPeriyot(sel.type) + ' ayda bir' : '',
+          durum: sel ? this.bakimDurum(sel).label : '',
+          note: 'Yap\u0131lan bak\u0131m\u0131 buraya yaz\u0131n: tarih, ne yap\u0131ld\u0131\u011f\u0131, kullan\u0131lan malzeme. Kaydetti\u011finizde tesisin son bak\u0131m tarihi bu tarihe \u00e7ekilir ve Bak\u0131m takvimi yeniden hesaplan\u0131r. Foto\u011fraf\u0131 Foto sekmesinden eklersiniz.',
+          liste: liste.map((b, i) => ({
+            tarih: b.tarih, kim: b.kim, is: b.is,
+            malzeme: b.malzeme || '\u2014', hasMalzeme: !!b.malzeme,
+            sil: () => {
+              this.setState(st => ({ bakimlar: { ...st.bakimlar, [sel.id]: (st.bakimlar[sel.id] || []).filter((_, k) => k !== i) } }));
+              this.duyur(b.tarih + ' tarihli bak\u0131m kayd\u0131 silindi.', 4000);
+            }
+          })),
+          tarih: f ? f.tarih : '', is: f ? f.is : '', malzeme: f ? f.malzeme : '', notu: f ? f.notu : '',
+          onTarih: e => yaz('tarih', e.target.value),
+          onIs: e => yaz('is', e.target.value),
+          onMalzeme: e => yaz('malzeme', e.target.value),
+          onNotu: e => yaz('notu', e.target.value),
+          ac: () => {
+            if (!sel) return;
+            if (!this.yazabilir(sel)) return this.kilitUyar(sel);
+            const d = new Date();
+            const p = n => String(n).padStart(2, '0');
+            this.setState({ bakimForm: { tarih: `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`, is: '', malzeme: '', notu: '' } });
+          },
+          iptal: () => this.setState({ bakimForm: null }),
+          foto: () => this.fotoSec(true),
+          kaydet: () => {
+            const g = this.state.bakimForm;
+            if (!sel || !g) return;
+            if (!g.is.trim()) return this.say('Yap\u0131lan i\u015fi yaz\u0131n.');
+            const p = String(g.tarih || '').split('-');
+            const trTarih = p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : this.damga().slice(0, 10);
+            const kayit = { tarih: trTarih, kim: me ? me.name : '\u2014', is: g.is.trim(), malzeme: (g.malzeme || '').trim(), notu: (g.notu || '').trim() };
+            const yeni = { ...sel, d: { ...sel.d, bakim: trTarih } };
+            this.setState(st => ({
+              bakimForm: null,
+              bakimlar: { ...st.bakimlar, [sel.id]: [kayit, ...(st.bakimlar[sel.id] || [])] },
+              assets: st.assets.map(x => x.id === sel.id ? yeni : x)
+            }));
+            this.iz(sel.id, 'Bak\u0131m yap\u0131ld\u0131', `${trTarih} \u00b7 ${kayit.is}${kayit.malzeme ? ' \u00b7 ' + kayit.malzeme : ''}`);
+            if (sel.dbId && this._sb && this._sb.tokenOku()) {
+              this._sb.tesisKaydet(yeni).then(() => this.veriYenile(true));
+              this._sb.notEkle(sel.dbId, `BAKIM ${trTarih} \u2014 ${kayit.is}${kayit.malzeme ? ' \u00b7 Malzeme: ' + kayit.malzeme : ''}${kayit.notu ? ' \u00b7 ' + kayit.notu : ''}`);
+            }
+            this.duyur(`${sel.code} bak\u0131m\u0131 i\u015flendi \u00b7 ${trTarih}. Sonraki bak\u0131m ${this.bakimPeriyot(sel.type)} ay sonra.`, 6000, 'iyi');
+          }
+        };
+      })(),
+      yerlesimYukleme: (() => {
+        const kayit = s.yerlesimVeri || {};
+        return {
+          sayi: Object.keys(kayit).length,
+          note: Object.keys(kayit).length
+            ? `${Object.keys(kayit).length} yerle\u015fim i\u00e7in kay\u0131t y\u00fcklendi. Yeni bir dosya y\u00fcklerseniz ayn\u0131 adl\u0131 sat\u0131rlar\u0131n \u00fczerine yaz\u0131l\u0131r; dosyada olmayan s\u00fctunlar (\u00f6rne\u011fin hayvan say\u0131lar\u0131) korunur.`
+            : 'K\u00f6y n\u00fcfusu ve hayvan varl\u0131\u011f\u0131 hen\u00fcz y\u00fcklenmedi. T\u00dc\u0130K veya Tar\u0131m M\u00fcd\u00fcrl\u00fc\u011f\u00fc ekstresini oldu\u011fu gibi y\u00fckleyebilirsiniz; biraz farkl\u0131 bir tablonuz varsa \u00f6rnek dosyay\u0131 indirip onu doldurun.',
+          ornek: () => {
+            const sat = ['Yıl;İlçe;Köy;Nüfus;Büyükbaş;Küçükbaş'];
+            if (m) for (const d of m.DISTRICTS) for (const v of (m.VILLAGES[d.id] || []).slice(0, 400)) sat.push(`2025;${d.name};${v};;;`);
+            this.dosyaIndir('koy-nufus-hayvan-sablonu.csv', '\ufeff' + sat.join('\r\n'), 'text/csv;charset=utf-8');
+            this.duyur('\u015eablon indirildi. N\u00fcfus ve hayvan s\u00fctunlar\u0131n\u0131 doldurup geri y\u00fckleyin \u2014 s\u00fctun s\u0131ras\u0131n\u0131 de\u011fi\u015ftirseniz de okunur.', 7000);
+          },
+          yukle: () => {
+            const inp = document.createElement('input');
+            inp.type = 'file';
+            inp.accept = '.csv,.txt,text/csv';
+            inp.style.display = 'none';
+            inp.onchange = () => {
+              const dosya = (inp.files || [])[0];
+              inp.remove();
+              if (!dosya) return;
+              const fr = new FileReader();
+              fr.onerror = () => this.duyur('Dosya okunamad\u0131. Ba\u015fka bir kopyas\u0131n\u0131 deneyin.', 7000, 'kotu');
+              fr.onload = () => {
+                try { this.yerlesimCsvIsle(fr.result, dosya.name); }
+                catch (e) { this.duyur('Dosya okunamad\u0131: ' + (e && e.message ? e.message : e), 8000, 'kotu'); }
+              };
+              fr.readAsArrayBuffer(dosya);
+            };
+            document.body.appendChild(inp);
+            inp.click();
+          },
+          temizle: () => {
+            try { localStorage.removeItem('ks-yerlesim-veri'); } catch (e) { /* yok */ }
+            this.setState({ yerlesimVeri: {} });
+            this.duyur('Y\u00fcklenen n\u00fcfus ve hayvan verisi silindi.', 4000);
+          }
+        };
+      })(),
+      yeniTesisAc: () => can('create')
+        ? this.setState({ tab: 'islem', scenario: 'yeni', newAsset: { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '2026', note: '', lat: null, lon: null, photos: 0 } })
+        : this.say('Yeni tesis kayd\u0131n\u0131 M\u00fchendis ve \u00fcst\u00fc a\u00e7ar.'),
+      koyDuzelt: (() => {
+        const f = s.koyForm;
+        const ilceler = m ? m.DISTRICTS.map(d => d.name) : [];
+        return {
+          on: !!f,
+          acilir: !!sel,
+          koy: f ? f.village : '', ilce: f ? f.district : '',
+          ilceler: ilceler.map(n => ({ n })),
+          koyler: (() => {
+            if (!m || !f) return [];
+            const d = m.DISTRICTS.find(x => x.name === f.district);
+            return (d ? (m.VILLAGES[d.id] || []) : []).map(n => ({ n }));
+          })(),
+          ac: () => {
+            if (!sel) return;
+            if (!this.yazabilir(sel)) return this.kilitUyar(sel);
+            this.setState({ koyForm: { village: sel.village || '', district: sel.district || (ilceler[0] || '') } });
+          },
+          onKoy: e => this.setState({ koyForm: { ...this.state.koyForm, village: e.target.value } }),
+          onIlce: e => this.setState({ koyForm: { ...this.state.koyForm, district: e.target.value } }),
+          iptal: () => this.setState({ koyForm: null }),
+          kaydet: () => {
+            const g = this.state.koyForm;
+            if (!sel || !g) return;
+            const koy = (g.village || '').trim();
+            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined };
+            this.setState({ koyForm: null, assets: s.assets.map(x => x.id === sel.id ? yeni : x) },
+              () => this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }));
+            this.iz(sel.id, 'Köy bilgisi düzeltildi', `${sel.village || '(boş)'} → ${koy || '(boş)'} · ${yeni.district}`);
+            if (sel.dbId && this._sb && this._sb.tokenOku()) {
+              this._sb.tesisKaydet(yeni).then(r => {
+                if (!r.ok) return this.say(r.err || 'Kaydedilemedi.', true);
+                this.veriYenile(true);
+                this.duyur(`${sel.code} → ${koy || '(köy boş)'} · ${yeni.district}. Herkesin ekranında güncellendi.`, 6000, 'iyi');
+              });
+            } else {
+              this.duyur(`${sel.code} → ${koy || '(köy boş)'} · ${yeni.district}. Bu kayıt henüz veritabanında değil, cihazda duruyor.`, 6000);
+            }
+          }
+        };
+      })(),
       setDevice: (() => {
         const mk = id => seg(s.deviceMode === id, () => {
           try { localStorage.setItem('ks-device-mode', id); } catch (e) { /* depolama kapalı */ }
@@ -4471,7 +5467,8 @@ class Component extends DCLogic {
         const on = id === 'all' ? Object.values(s.filter).every(Boolean) : s.filter[id];
         return {
           label, bg: on ? ui.surf2 : 'transparent', fg: on ? ui.acc : ui.mut,
-          toggle: () => id === 'all' ? this.setState({ filter: { kuyu: true, depo: true, ag: true, ges: true } }, () => this.pushMap())
+          toggle: () => id === 'all'
+            ? this.setState({ filter: { kuyu: !on, depo: !on, ag: !on, ges: !on } }, () => this.pushMap())
             : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
         };
       }),
@@ -4481,7 +5478,11 @@ class Component extends DCLogic {
       zoomOut: () => this.setState({ zoom: Math.max(9, s.zoom - 1) }),
       locate: () => { this.flyTo(39.1462, 34.1583); this.say('GPS konumu alındı · doğruluk ±4 m'); },
 
-      list: [...vis].sort((a, b) => (a.sync === 'pending' ? 0 : 1) - (b.sync === 'pending' ? 0 : 1)).map(a => {
+      list: [...vis].filter(a => {
+        if (qn.length < 2) return true;
+        return norm(a.code).includes(qn) || norm(a.village || '').includes(qn)
+          || norm(a.district || '').includes(qn) || !!this.alanAra(a, qn);
+      }).sort((a, b) => (a.sync === 'pending' ? 0 : 1) - (b.sync === 'pending' ? 0 : 1)).map(a => {
         const pend = a.sync === 'pending';
         return {
           code: a.code, typeLabel: TYPES[a.type].kind, place: this.yer(a),
@@ -4498,6 +5499,9 @@ class Component extends DCLogic {
           tap: () => { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi' }); }
         };
       }),
+      listNote: qn.length > 1
+        ? `“${q}” araması — köy adı, ilçe, kayıt kodu ve bütün teknik alanlarda arandı.`
+        : `${vis.length} kayıt. Arama kutusuna köy adı yazın — liste yalnızca o köyün kayıtlarına iner.`,
 
       faults: myFaults.map(f => {
         const a = s.assets.find(x => x.id === f.assetId) || {};
@@ -4525,7 +5529,16 @@ class Component extends DCLogic {
         this.setState({ panel: 'ariza', tab: s.device === 'phone' ? s.tab : 'ariza', faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: a ? a.id : null, type: FAULT_TYPES[a ? a.type : 'kuyu'][0], priority: 'Yüksek', status: 'acik', crew: canAssign ? CREWS[0] : (me && me.crew) || CREWS[0], note: '', hours: '', photos: [] } });
       },
       newFaultForAsset: () => sel && this.setState({ panel: 'ariza', faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: sel.id, type: FAULT_TYPES[sel.type][0], priority: 'Yüksek', status: 'acik', crew: CREWS[0], note: '', hours: '', photos: [] } }),
-      assetOptions: s.assets.map(a => ({ id: a.id, label: `${a.code} · ${a.village || a.district}` })),
+      assetOptions: (() => {
+        // 264 kaydın tamamını <select>'e basmak telefonu kilitliyordu — en yakın 40 kayıt
+        const secili = ff && ff.assetId;
+        const yakin = [...s.assets].sort((x, y) => this.distKm(x) - this.distKm(y)).slice(0, 40);
+        if (secili && !yakin.some(a => a.id === secili)) {
+          const a = s.assets.find(x => x.id === secili);
+          if (a) yakin.unshift(a);
+        }
+        return yakin.map(a => ({ id: a.id, label: `${a.code} · ${a.village || a.district}` }));
+      })(),
       crews: CREWS,
       faultForm: {
         isExisting: !!(ff && ff.id),
@@ -4536,9 +5549,7 @@ class Component extends DCLogic {
         haritada: () => ffAsset && this.flyTo(ffAsset.lat, ffAsset.lon, 16),
         yolTarifi: () => {
           if (!ffAsset) return;
-          this.toMap({ ks: 'routeTo', id: ffAsset.id, code: ffAsset.code, village: ffAsset.village, lat: ffAsset.lat, lon: ffAsset.lon });
-          this.flyTo(ffAsset.lat, ffAsset.lon, 15);
-          this.say(`${ffAsset.code} için yol tarifi çizildi — bulunduğunuz konumdan tesise. Telefon navigasyonunda açmak için haritadaki “Navigasyonda aç” düğmesini kullanın.`);
+          if (this.yolTarifiVer(ffAsset)) this.say(`${ffAsset.code} için yol tarifi çizildi. Telefon navigasyonuna aktarmak için haritadaki “Telefonda aç” düğmesini kullanın.`);
         },
         isEmri: () => {
           if (!ffAsset || !ff) return;
@@ -4695,17 +5706,16 @@ class Component extends DCLogic {
           this.say(`${bekleyen.length} fotoğraf cihazda bekliyor — ${s.offline ? 'bağlantı gelince' : 'kayıt veritabanına yazıldıktan sonra'} yüklenecek.`, true);
           setTimeout(() => this.setState({ toast: null }), 8000);
         }
-        // ekibe bildirim: acil ve yüksek öncelikli arızalar anında haber verilir
-        const bildir = !f.id && (f.priority === 'Acil' || f.priority === 'Yüksek');
-        if (bildir && !s.offline) {
-          const kanal = s.bildirimKanal || 'SMS';
-          this.say(`Arıza kaydı eşitlendi. ${f.crew} ekibine ${kanal} gönderildi: “${f.priority} — ${a.code}, ${this.yer(a)}, ${f.type}.” Ekip şefine de kopyası gitti.`, true);
-          setTimeout(() => this.setState({ toast: null }), 7000);
-        } else if (bildir && s.offline) {
-          this.say(`Arıza cihaza kaydedildi — kuyruğa alındı. ${f.priority} öncelikli olduğu için bağlantı gelince ${f.crew} ekibine bildirim de gönderilecek.`, true);
-          setTimeout(() => this.setState({ toast: null }), 7000);
+        // yeni arıza bildirimi: ekranın üstünde çıkar, birkaç saniye sonra kendiliğinden kalkar
+        const kanal = s.bildirimKanal || 'SMS';
+        const acilMi = f.priority === 'Acil' || f.priority === 'Yüksek';
+        if (!f.id) {
+          this.duyur(`Yeni arıza · ${a.code} — ${f.type} · ${f.priority} öncelik` +
+            (s.offline
+              ? '. Cihaza kaydedildi, bağlantı gelince eşitlenecek.'
+              : (acilMi ? `. ${f.crew} ekibine ${kanal} gönderildi.` : '. Kayıt eşitlendi.')), 7000, 'ariza');
         } else {
-          this.say(s.offline ? 'Arıza cihaza kaydedildi — kuyruğa alındı.' : 'Arıza kaydı eşitlendi.');
+          this.duyur(`${f.no} güncellendi — durum ${STATUS_LABEL[f.status]}${s.offline ? ' · cihazda bekliyor' : ''}.`, 4500);
         }
       },
       bildirim: {
@@ -4729,7 +5739,13 @@ class Component extends DCLogic {
 
       province: m ? {
         line: `${fmt(m.PROVINCE.population2025)} nüfus · ${m.PROVINCE.districts} ilçe · ${m.PROVINCE.municipalities} belediye · ${m.PROVINCE.mahalle} mahalle · ${m.PROVINCE.villages} köy · ${fmt(m.PROVINCE.areaKm2)} km²`,
-        note: `Nüfus: ${m.PROVINCE.source}. Köy düzeyi nüfus ve hayvan varlığı henüz içe aktarılmadı — köy nüfusları TÜİK ADNKS köy ekstresinden, büyükbaş/küçükbaş sayıları Tarım ve Orman Bakanlığı İBS il müdürlüğü ekstresinden gelecek (ulusal referans 2024: ${fmt(m.LIVESTOCK_NATIONAL_2024.sigir)} sığır, ${fmt(m.LIVESTOCK_NATIONAL_2024.koyun)} koyun, ${fmt(m.LIVESTOCK_NATIONAL_2024.keci)} keçi).`
+        note: (() => {
+          const yv = Object.values(s.yerlesimVeri || {});
+          const nf = yv.filter(x => x.nufus != null).length;
+          const hv = yv.filter(x => x.buyukbas != null || x.kucukbas != null).length;
+          if (!nf && !hv) return `Nüfus: ${m.PROVINCE.source}. Köy düzeyi nüfus ve hayvan varlığı henüz içe aktarılmadı — köy nüfusları TÜİK ADNKS köy ekstresinden, büyükbaş/küçükbaş sayıları Tarım ve Orman Bakanlığı İBS il müdürlüğü ekstresinden gelecek (ulusal referans 2024: ${fmt(m.LIVESTOCK_NATIONAL_2024.sigir)} sığır, ${fmt(m.LIVESTOCK_NATIONAL_2024.koyun)} koyun, ${fmt(m.LIVESTOCK_NATIONAL_2024.keci)} keçi).`;
+          return `Nüfus: ${m.PROVINCE.source}. Yüklenen dosyadan ${fmt(nf)} yerleşimin nüfusu` + (hv ? `, ${fmt(hv)} yerleşimin hayvan sayısı` : '') + ' işlendi.' + (hv ? '' : ' Büyükbaş/küçükbaş sayıları henüz yok — Tarım ve Orman Bakanlığı İBS ekstresini aynı ekrandan yükleyebilirsiniz.');
+        })()
       } : { line: 'Veri yükleniyor…', note: '' },
       settlements,
 
@@ -4749,7 +5765,7 @@ class Component extends DCLogic {
       detail: sel ? {
         kind: TYPES[sel.type].kind, code: sel.code,
         meta: `${this.yer(sel)} · ${sel.year ? sel.year + ' yapım' : 'yıl girilmedi'} · ${sel.sync === 'pending' ? 'eşitleme bekliyor' : 'eşitlendi'}`,
-        tabs: [['bilgi', 'Bilgi'], ...(sel.type === 'kuyu' ? [['deneme', 'Deneme']] : []), ['medya', 'Foto'], ['not', 'Not'], ['ariza', 'Arıza'], ['gecmis', 'Geçmiş']].map(([id, label]) => ({
+        tabs: [['bilgi', 'Bilgi'], ...(sel.type === 'kuyu' ? [['deneme', 'Deneme']] : []), ['medya', 'Foto'], ['bakim', 'Bakım'], ['not', 'Not'], ['ariza', 'Arıza'], ['gecmis', 'Geçmiş']].map(([id, label]) => ({
           label, bg: s.detailTab === id ? ui.surf2 : 'transparent', fg: s.detailTab === id ? ui.acc : ui.mut,
           pick: () => {
             this.setState({ detailTab: id });
@@ -4759,14 +5775,25 @@ class Component extends DCLogic {
         showFields: s.detailTab === 'bilgi',
         showGecmis: s.detailTab === 'gecmis',
         showMedia: s.detailTab === 'medya', showFaults: s.detailTab === 'ariza',
+        showBakim: s.detailTab === 'bakim',
         showTests: s.detailTab === 'deneme', showNote: s.detailTab === 'not',
-        tests: this.testsFor(sel).map(t => ({
-          date: t.date, by: t.by,
-          statik: t.statik, dinamik: t.dinamik, dusum: t.dusum,
-          debi: t.debi, sure: t.sure, ozgul: t.ozgul, toparlanma: t.toparlanma,
-          note: t.note || '—',
-          pend: t.pend ? 'CİHAZDA' : '', pendC: t.pend ? 'var(--color-accent)' : 'transparent'
-        })),
+        tests: this.testsFor(sel).map(t => {
+          const kendi = (s.tests[sel.id] || []).indexOf(t);
+          return {
+            date: t.date, by: t.by,
+            statik: t.statik, dinamik: t.dinamik, dusum: t.dusum,
+            debi: t.debi, sure: t.sure, ozgul: t.ozgul, toparlanma: t.toparlanma,
+            note: t.note || '—',
+            pend: t.pend ? 'CİHAZDA' : '', pendC: t.pend ? 'var(--color-accent)' : 'transparent',
+            // yalnızca bu programdan girilen ölçüm silinebilir; sondaj kaydı yerinde kalır
+            silinir: kendi >= 0 && canWrite,
+            sil: () => {
+              this.setState(st => ({ tests: { ...st.tests, [sel.id]: (st.tests[sel.id] || []).filter((_, k) => k !== kendi) } }));
+              this.iz(sel.id, 'Deneme ölçümü silindi', `${t.date} · ${t.debi}`);
+              this.duyur(`${t.date} tarihli deneme ölçümü silindi.`, 4000);
+            }
+          };
+        }),
         testsEmpty: this.testsFor(sel).length === 0,
         chart: (() => {
           const key = d => { const p = String(d || '').split('.'); return p.length === 3 ? +p[2] * 10000 + +p[1] * 100 + +p[0] : 0; };
@@ -4842,9 +5869,10 @@ class Component extends DCLogic {
           const bagli = !!(this._sb && s.sunucu && sel.dbId);
           return {
             sunucu: true, izgara: bagli,
-            list: (list || []).map(f => ({
+            list: (list || []).map((f, i) => ({
               url: f.url, alt: sel.code + ' fotoğrafı',
               img: this.imgEl(f.url, sel.code + ' fotoğrafı'),
+              ac: () => this.setState({ buyut: { i, dbId: sel.dbId } }),
               indir: () => this.medyaIndir(f.url, `${sel.code}-${(f.yuklendi || '').slice(0, 10)}-${f.id}.jpg`),
               meta: `${f.yukleyen} · ${(f.yuklendi || '').slice(0, 10).split('-').reverse().join('.')}`,
               kb: f.boyut ? Math.round(f.boyut / 1024) + ' KB' : '',
@@ -4969,7 +5997,7 @@ class Component extends DCLogic {
           son: r.b.son ? 'Son: ' + r.b.son : '—',
           hedef: r.b.hedef ? 'Hedef: ' + r.b.hedef : 'tarih hesaplanamıyor',
           open: () => { this.flyTo(r.a.lat, r.a.lon, 16); this.setState({ selected: r.a.id, panel: 'detay', detailTab: 'bilgi' }); },
-          git: () => { this.toMap({ ks: 'routeTo', id: r.a.id, code: r.a.code, village: r.a.village, lat: r.a.lat, lon: r.a.lon }); this.flyTo(r.a.lat, r.a.lon, 15); },
+          git: () => this.yolTarifiVer(r.a),
           done: can('write') ? () => {
             const bugun = '04.09.2026';
             this.setState(st => ({
@@ -5082,7 +6110,7 @@ class Component extends DCLogic {
             code: a.code, place: this.yer(a),
             km: km.toFixed(1) + ' km',
             kind: TYPES[a.type].kind,
-            route: () => { this.toMap({ ks: 'routeTo', id: a.id, code: a.code, village: a.village, lat: a.lat, lon: a.lon }); this.setState({ tab: 'harita' }); }
+            route: () => this.yolTarifiVer(a)
           })),
           week: [
             { n: String(s.faults.filter(f => f.status === 'cozuldu').length), label: 'Çözülen arıza' },
@@ -5094,13 +6122,9 @@ class Component extends DCLogic {
           weekNote: 'Bu hafta girilen kayıtlar. Gerçek kurulumda tarih damgasından hesaplanır; şimdilik oturum içinde yaptıklarınızı sayıyor.'
         };
       })(),
-      exportReport: kind => () => this.say(
-        kind === 'excel'
-          ? 'Excel dosyası hazırlanıyor: her satır bir kayıt, sütunlar tüm teknik alanlar + deneme değerleri + eksik alan sayısı.'
-          : 'PDF hazırlanıyor: ilçe ve köy özeti, eksik bilgi listesi, açık arızalar ve son deneme değerleri.'
-      ),
-      exportExcel: () => this.say('Excel dosyası hazırlanıyor: her satır bir kayıt; sütunlar teknik alanlar, deneme değerleri ve eksik alan sayısı. Filtre uyguladıysanız yalnızca görünen kayıtlar aktarılır.'),
-      exportPdf: () => this.say('PDF hazırlanıyor: ilçe ve köy özeti, eksik bilgi listesi, açık arızalar ve her kuyunun son deneme değerleri.'),
+      exportReport: kind => () => kind === 'excel' ? this.excelVer() : this.pdfVer(),
+      exportExcel: () => this.excelVer(),
+      exportPdf: () => this.pdfVer(),
       goOzet: () => this.setState({ tab: 'ozet' }),
       forgetLogin: () => this.forget(),
       forgetNote: (() => {
@@ -5123,12 +6147,14 @@ class Component extends DCLogic {
             const far = auto.filter(a => a.villageAuto > 4).length;
             return `${auto.length} kayda köy adı otomatik yazıldı; ${far} tanesi 4 km’den uzak eşleşti — bunları kontrol edin. Her kaydın Not sekmesinde hangi köye kaç km uzaklıkta eşleştiği yazıyor.`;
           }
-          return `Köy konumları programın içinde gömülü (HGM coğrafi ad dizini, ${(this._yer || []).length} yerleşim) — köy araması internetsiz çalışır. Bu düğme köyü boş olan ${bos} kayda en yakın yerleşimin adını yazar; uzaklık kaydın notuna geçer, yanlış olanları elle düzeltirsiniz.`;
+          return `Bu düğme bir kez çalıştırılır: köyü boş olan ${bos} kayda en yakın yerleşimin adını yazar. Bir daha basmanız gerekmez — yanlış eşleşen köyü kaydın kendi sayfasından (“Köy / ilçe düzelt” düğmesi) elle düzeltirsiniz. Köy konumları programda gömülü (HGM coğrafi ad dizini, ${(this._yer || []).length} yerleşim), köy araması internetsiz çalışır.`;
         })()
       },
-      goImport: () => can('create')
-        ? this.setState({ tab: 'aktarim', imp: null })
-        : this.say('Toplu aktarımı Mühendis ve üstü yapar.'),
+      goImport: () => !can('create')
+        ? this.say('Toplu aktarımı Mühendis ve üstü yapar.')
+        : (s.device === 'phone'
+            ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
+            : this.setState({ tab: 'aktarim', imp: null })),
       goSettings: () => this.setState({ tab: 'ayarlar' }),
       onNote: e => {
         const v = e.target.value, id = sel && sel.id;
@@ -5312,6 +6338,7 @@ class Component extends DCLogic {
         'Yeni modül: sol menüye tab, aynı sync sözleşmesi.'
       ],
       notes: [
+        { t: 'Nüfus dosyası olduğu gibi yükleniyor', d: 'Yerleşim ekranındaki yükleme, ilettiğiniz “kırşehir Belde_Köy Nüfusu” dosyasını artık hiç elle düzeltmeden okuyor. Dört şey değişti: (1) başlık satırı tanınıyor, sütun sırası önemli değil — Yıl · İlçe · Köy · Nüfus Sayısı sırası da, önceki Köy · İlçe · Nüfus sırası da geçerli; (2) Excel’in Türkçe (ANSI/Windows-1254) kaydettiği dosyalarda harfler bozulmuyor; (3) ilçe adı yalnızca grubun ilk satırında yazılıysa alttaki satırlara kendiliğinden taşınıyor; (4) köy adındaki “Köy” eki ve küçük yazım farkları (Çuğun/Çoğun, Karın/Karkın, Taşlıoluk/Taşoluk, Hirfanlı/Hirfanlar gibi) eşleştirilebiliyor. Dosyanın 252 satırının tamamı resmî köy listesindeki karşılığına oturdu. Hayvan sayıları dosyada yok; ayrı bir dosyayla yüklerseniz nüfusların üzerine yazılmaz, yanına eklenir.' },
         { t: 'Giriş: kullanıcı adı + şifre', d: 'Rol seçme düğmeleri kalktı. Kullanıcı adı ve şifre girilir, yetki hesaptan gelir. Giriş düğmesi kartın alt şeridinde, sağda. Tek yönetici hesabı: a.bertan (şifresi kendisine ait). Diğer deneme hesapları f.yilmaz / a.demir / m.sahin / m.kaya — şifre 1234.' },
         { t: 'Özel saha cihazı yok', d: 'LT/S cihaz ataması kaldırıldı. Herkes elinin altındaki cihazdan girer — telefon ya da bilgisayar, aynı hesap ikisinde de çalışır. Oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır (Ayarlar > Kullanıcılar ve son oturumlar).' },
         { t: '“Beni hatırla” gerçekten çalışıyor', d: 'İşaretli girdiğinizde kullanıcı adı ve şifre bu cihaza kaydedilir; programı bir daha açtığınızda giriş ekranı hiç gelmez, doğrudan haritaya düşer. Çıkış yapmak bu kaydı silmez — silmek için ayrı “Kayıtlı girişi sil” düğmesi var (aşağıdaki maddeye bakın). Gerçek kurulumda saklanan şey şifre değil, süreli oturum anahtarı olur.' },
@@ -5365,7 +6392,13 @@ class Component extends DCLogic {
         `Köy adları: ilettiğiniz resmî “İlçe ve Köyleri” listesi — ${m.VILLAGE_TOTAL} köy (Merkez 53, Kaman 50, Çiçekdağı 45, Mucur 44, Akpınar 26, Akçakent 20, Boztepe 14).`,
         'Harita zemini: OpenStreetMap (© OpenStreetMap katkıcıları) ve Esri World Imagery (Esri, Maxar, Earthstar Geographics) uydu karoları — ikisi de gerçek servis. Kurum lisanslı bir uydu/ortofoto servisi (ör. HGM, Tapu Kadastro) aynı yere takılabilir.',
         'Yol tarifi: OSRM açık kaynak yönlendirme servisi (deneme sunucusu) — karayolu güzergâhı, mesafe ve süre gerçek hesaplamadır; erişim yoksa kuş uçuşu tahmine düşer ve ekranda öyle yazar.',
-        'Köy düzeyi nüfus ve hayvan sayıları hâlâ yok; uydurulmadı, içe aktarım için boş bırakıldı.',
+        (() => {
+          const yv = Object.values(s.yerlesimVeri || {});
+          const nf = yv.filter(x => x.nufus != null).length;
+          const hv = yv.filter(x => x.buyukbas != null || x.kucukbas != null).length;
+          if (!nf && !hv) return 'Köy düzeyi nüfus ve hayvan sayıları henüz yok; uydurulmadı, içe aktarım için boş bırakıldı.';
+          return `Köy düzeyi veri: yüklenen dosyadan ${fmt(nf)} yerleşim nüfusu` + (hv ? `, ${fmt(hv)} yerleşim hayvan sayısı` : ' (hayvan sayıları henüz yüklenmedi)') + ' — değerler dosyadan geldiği gibidir, hesaplanmadı.';
+        })(),
         `Hayvan varlığı: TÜİK 2024 ulusal referans (sığır ${fmt(m.LIVESTOCK_NATIONAL_2024.sigir)}, koyun ${fmt(m.LIVESTOCK_NATIONAL_2024.koyun)}, keçi ${fmt(m.LIVESTOCK_NATIONAL_2024.keci)}); il/ilçe/köy kırılımı Tarım ve Orman Bakanlığı İBS ekstresinden gelecek.`,
         'Kuyu konumları KUYU YERLERİ 2026 SON.kml dosyasından gelir (264 nokta, gerçek koordinat); depo/AG/GES örnek kayıtlarının konumu ilçe merkezinden türetilmiştir. Her kaydın “Koordinat kaynağı” satırı hangisi olduğunu yazar.'
       ] : ['Veri yükleniyor…']

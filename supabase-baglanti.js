@@ -160,6 +160,29 @@ export async function tesisKaydet(a) {
 }
 export async function tesisSil(dbId)    { return cagir('tesis_sil', { p_token: tokenOku(), p_id: dbId }); }
 export async function tesisGeriAl(dbId) { return cagir('tesis_geri_al', { p_token: tokenOku(), p_id: dbId }); }
+export async function tesisKaliciSil(dbId) { return cagir('tesis_kalici_sil', { p_token: tokenOku(), p_id: dbId }); }
+export async function fotoGeriAl(id)    { return cagir('foto_geri_al', { p_token: tokenOku(), p_id: id }); }
+export async function fotoCopListesi()  { return cagir('foto_cop_listesi', { p_token: tokenOku() }); }
+// Kalıcı silme: kayıt düşer, dosya Storage'dan da kalkar
+export async function fotoKaliciSil(id) {
+  const r = await cagir('foto_kalici_sil', { p_token: tokenOku(), p_id: id });
+  if (!r.ok) return r;
+  const c = await istemci();
+  if (c && r.data) { try { await c.storage.from(BUCKET).remove([r.data]); } catch (e) {} }
+  return { ok: true };
+}
+// Süresi geçen çöp kutusu kayıtlarını temizler (30 gün)
+export async function copTemizle() {
+  const r = await cagir('cop_temizle', { p_token: tokenOku() });
+  if (!r.ok) return r;
+  const sat = Array.isArray(r.data) ? r.data[0] : r.data;
+  const adr = (sat && sat.adresler) || [];
+  if (adr.length) {
+    const c = await istemci();
+    if (c) { try { await c.storage.from(BUCKET).remove(adr); } catch (e) {} }
+  }
+  return { ok: true, data: { tesis: (sat && sat.silinen_tesis) || 0, foto: (sat && sat.silinen_foto) || 0 } };
+}
 
 export async function arizaKaydet(f) {
   return cagir('ariza_kaydet', {
@@ -279,12 +302,9 @@ export async function fotoListesi(tesisDbId) {
   })) };
 }
 
+// Sil: yumuşak silme — dosya Storage'da kalır, 30 gün çöp kutusunda bekler
 export async function fotoSil(id) {
-  const r = await cagir('foto_sil', { p_token: tokenOku(), p_id: id });
-  if (!r.ok) return r;
-  const c = await istemci();
-  if (c && r.data) { try { await c.storage.from(BUCKET).remove([r.data]); } catch (e) {} }
-  return { ok: true };
+  return cagir('foto_sil', { p_token: tokenOku(), p_id: id });
 }
 
 // Veritabanı satırını programın kullandığı biçime çevirir

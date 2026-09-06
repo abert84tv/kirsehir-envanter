@@ -144,16 +144,8 @@ document.getElementById('b-street').onclick = () => setBase('street');
 document.getElementById('b-sat').onclick = () => setBase('sat');
 document.getElementById('b-hyb').onclick = () => setBase('hyb');
 
-// ── ilçe merkezleri (gerçek koordinat)
-const districtLayer = L.layerGroup().addTo(map);
-for (const d of DATA.DISTRICTS) {
-  const pop = d.pop ? d.pop.toLocaleString('tr-TR') + ` nüfus (${d.popYear})` : 'nüfus verisi bekleniyor';
-  L.circleMarker([d.lat, d.lon], {
-    radius: 6, color: '#201e1d', weight: 3, fillColor: '#ec3013', fillOpacity: 1
-  })
-    .bindPopup(`<b>${d.name}</b><br>${pop}<br>${d.villageCount} köy${d.areaKm2 ? ' · ' + d.areaKm2.toLocaleString('tr-TR') + ' km²' : ''}`)
-    .addTo(districtLayer);
-}
+// ── ilçe merkezleri: kırmızı noktalar istek üzerine kaldırıldı
+// (ilçe adı ve nüfusu Yerleşim ekranında duruyor)
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);

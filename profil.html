@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mesafe ve yol profili — Kırşehir</title>
+<link rel="stylesheet" href="_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg);color:var(--color-text)}
+  #wrap{position:absolute;inset:0;display:flex;flex-direction:column}
+  #bar{flex:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;
+    border-bottom:2px solid var(--color-text);background:var(--color-bg)}
+  #bar .ttl{font:700 12px/1 var(--font-heading);letter-spacing:.02em;margin-right:4px}
+  #bar .hint{font:400 10.5px/1.35 var(--font-body);color:var(--color-neutral-600);flex:1 1 240px;min-width:0}
+  button,.btn2{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;
+    padding:9px 11px;min-height:38px;border:2px solid var(--color-text);background:var(--color-bg);
+    font:700 9.5px/1 var(--font-body);letter-spacing:.07em;text-transform:uppercase;color:var(--color-text)}
+  button:hover{background:var(--color-neutral-200)}
+  button:active{background:var(--color-accent-600);border-color:var(--color-accent-600);color:#fff}
+  button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+  button:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
+  button[disabled]{opacity:.45;cursor:default}
+  #body{flex:1;min-height:0;display:flex}
+  #map{flex:1 1 58%;min-width:0;min-height:220px}
+  .leaflet-container{background:#dedbd6;font-family:var(--font-body)}
+  #side{flex:0 0 340px;min-width:0;border-left:2px solid var(--color-text);display:flex;
+    flex-direction:column;overflow:auto;background:var(--color-bg)}
+  .sec{border-bottom:2px solid var(--color-text);padding:12px 14px}
+  .kick{font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent);margin-bottom:8px}
+  .nums{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+  .nums div b{display:block;font:700 21px/1 var(--font-heading);color:var(--color-text)}
+  .nums div b.acc{color:var(--color-accent)}
+  .nums div span{display:block;font:600 8.5px/1.3 var(--font-body);letter-spacing:.09em;
+    text-transform:uppercase;color:var(--color-neutral-600);margin-top:4px}
+  #chart{width:100%;height:190px;display:block;background:var(--color-neutral-100);border:2px solid var(--color-text)}
+  .note{font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)}
+  .note b{color:var(--color-text)}
+  #pts{display:flex;flex-direction:column}
+  #pts .row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--color-neutral-300)}
+  #pts .row:last-child{border-bottom:none}
+  #pts .n{flex:none;width:22px;height:22px;border:2px solid var(--color-text);display:flex;
+    align-items:center;justify-content:center;font:700 10px/1 var(--font-body)}
+  #pts .c{flex:1;min-width:0;font:600 11px/1.4 ui-monospace,Menlo,monospace;word-break:break-all}
+  #pts .e{flex:none;font:700 11px/1 var(--font-body);color:var(--color-accent)}
+  #pts .x{all:unset;cursor:pointer;flex:none;padding:5px 7px;border:2px solid var(--color-neutral-400);
+    font:700 9px/1 var(--font-body);color:var(--color-neutral-600)}
+  #pts .x:hover{border-color:var(--color-accent);color:var(--color-accent)}
+  .man{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+  .man input{all:unset;box-sizing:border-box;flex:1 1 96px;min-width:0;border:2px solid var(--color-text);
+    padding:9px;font:600 12px/1 ui-monospace,Menlo,monospace;background:#fff;color:var(--color-text)}
+  .man input:focus-visible{outline:2px solid var(--color-accent);outline-offset:1px}
+  .ks-pin{display:flex;align-items:center;justify-content:center;width:24px;height:24px;
+    border:2px solid var(--color-text);background:#fff;color:var(--color-text);font:700 11px/1 var(--font-body)}
+  .ks-pin.a{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+  .ks-seg{background:var(--color-text);border:2px solid var(--color-text);color:#fff;padding:1px 5px;
+    font:700 9.5px/1.3 var(--font-body);letter-spacing:.05em}
+  .ks-seg:before{display:none}
+  .ks-cur{width:14px;height:14px;border:3px solid var(--color-accent);background:#fff;border-radius:50%}
+  #pSec .hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  #pSec .hd .kick{margin:0}
+  #buyut{padding:7px 9px;min-height:32px;font-size:9px}
+  body.buyuk #pSec{position:fixed;inset:0;z-index:1200;background:var(--color-bg);border:none;
+    padding:14px;display:flex;flex-direction:column;gap:10px;margin:0}
+  body.buyuk #chart{flex:1;height:auto;min-height:0}
+  body.buyuk #buyut{min-height:44px;padding:10px 14px;font-size:9.5px}
+  #uyari{display:none;padding:10px 14px;border-bottom:2px solid var(--color-accent);
+    background:var(--color-accent-100);font:600 10.5px/1.45 var(--font-body);color:var(--color-accent-800)}
+  #uyari.show{display:block}
+  @media (max-width:760px){
+    #body{flex-direction:column}
+    #map{flex:0 0 46%}
+    #side{flex:1 1 auto;border-left:none;border-top:2px solid var(--color-text)}
+    button{min-height:44px}
+    #bar .hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="bar">
+    <span class="ttl">Mesafe ve yol profili</span>
+    <button id="mod" class="on">Nokta ekle</button>
+    <button id="geri">Son noktayı sil</button>
+    <button id="temiz">Temizle</button>
+    <button id="zemin">Uydu zemin</button>
+    <button id="yenile">Profili yenile</button>
+    <span class="hint">Haritaya tıklayarak nokta koyun — iki veya daha çok nokta arasındaki uzaklık, kot farkı ve yol profili kendiliğinden hesaplanır.</span>
+  </div>
+  <div id="uyari"></div>
+  <div id="body">
+    <div id="map"></div>
+    <div id="side">
+      <div class="sec">
+        <div class="kick">Ölçüm</div>
+        <div class="nums">
+          <div><b class="acc" id="mDist">—</b><span>Toplam uzaklık</span></div>
+          <div><b id="mKot">—</b><span>Kot farkı (son − ilk)</span></div>
+          <div><b id="mMin">—</b><span>En düşük rakım</span></div>
+          <div><b id="mMax">—</b><span>En yüksek rakım</span></div>
+          <div><b id="mUp">—</b><span>Toplam tırmanma</span></div>
+          <div><b id="mDown">—</b><span>Toplam iniş</span></div>
+          <div><b id="mEgim">—</b><span>Ortalama eğim</span></div>
+          <div><b id="mKus">—</b><span>Kuş uçuşu (ilk–son)</span></div>
+        </div>
+      </div>
+      <div class="sec" id="pSec">
+        <div class="hd">
+          <div class="kick">Yol profili</div>
+          <button id="buyut">Tam ekran</button>
+        </div>
+        <svg id="chart" viewBox="0 0 600 190"></svg>
+        <div class="note" id="chartNote" style="margin-top:8px">Nokta koyunca profil çizilir.</div>
+      </div>
+      <div class="sec">
+        <div class="kick">Noktalar</div>
+        <div id="pts"><div class="note">Henüz nokta yok. Haritaya tıklayın ya da aşağıya koordinat yazın.</div></div>
+        <div class="man">
+          <input id="iLat" placeholder="Enlem 39.1509" inputmode="decimal">
+          <input id="iLon" placeholder="Boylam 34.1595" inputmode="decimal">
+          <button id="iAdd">Ekle</button>
+        </div>
+        <div class="note" style="margin-top:8px">Rakım değerleri <b>Open-Meteo</b> yükseklik servisinden (SRTM, ~90 m ızgara) gelir; internet gerektirir. Uzaklık WGS84 üzerinde haversine ile, yol boyunca 180 noktada örneklenerek hesaplanır.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const KS = { lat: 39.15091, lon: 34.15952 };
+const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([KS.lat, KS.lon], 10);
+const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 19, attribution: 'Esri, Maxar, Earthstar Geographics' });
+let uyduAcik = false;
+
+let noktalar = [], pinler = [], hat = null, segEt = [], ornek = [], imlec = null, ekleModu = true, istek = 0;
+
+const el = id => document.getElementById(id);
+const uyar = t => { const u = el('uyari'); u.textContent = t || ''; u.classList.toggle('show', !!t); };
+const rad = d => d * Math.PI / 180;
+function mesafe(a, b) {
+  const R = 6371008.8, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+const km = m => m >= 1000 ? (m / 1000).toFixed(m < 10000 ? 2 : 1) + ' km' : Math.round(m) + ' m';
+const mtr = v => (v > 0 ? '+' : '') + Math.round(v) + ' m';
+
+function pinIkon(i, son) {
+  return L.divIcon({ className: '', iconSize: [24, 24], iconAnchor: [12, 12],
+    html: '<div class="ks-pin' + (son ? ' a' : '') + '">' + i + '</div>' });
+}
+function ciz() {
+  pinler.forEach(p => map.removeLayer(p)); pinler = [];
+  segEt.forEach(t => map.removeLayer(t)); segEt = [];
+  if (hat) { map.removeLayer(hat); hat = null; }
+  noktalar.forEach((p, i) => {
+    const mk = L.marker(p, { icon: pinIkon(i + 1, i === noktalar.length - 1), draggable: true });
+    mk.on('dragend', e => { const ll = e.target.getLatLng(); noktalar[i] = [ll.lat, ll.lng]; ciz(); profilAl(); });
+    mk.addTo(map); pinler.push(mk);
+  });
+  if (noktalar.length > 1) {
+    hat = L.polyline(noktalar, { color: '#ec3013', weight: 4, opacity: .95 }).addTo(map);
+    for (let i = 1; i < noktalar.length; i++) {
+      const d = mesafe(noktalar[i - 1], noktalar[i]);
+      const orta = [(noktalar[i - 1][0] + noktalar[i][0]) / 2, (noktalar[i - 1][1] + noktalar[i][1]) / 2];
+      const t = L.tooltip({ permanent: true, direction: 'center', className: 'ks-seg' })
+        .setLatLng(orta).setContent(km(d)).addTo(map);
+      segEt.push(t);
+    }
+  }
+  listele();
+  el('geri').disabled = !noktalar.length;
+  el('temiz').disabled = !noktalar.length;
+  el('yenile').disabled = noktalar.length < 2;
+}
+function listele() {
+  const k = el('pts');
+  if (!noktalar.length) {
+    k.innerHTML = '<div class="note">Henüz nokta yok. Haritaya tıklayın ya da aşağıya koordinat yazın.</div>';
+    return;
+  }
+  k.innerHTML = '';
+  noktalar.forEach((p, i) => {
+    const r = document.createElement('div'); r.className = 'row';
+    const rk = ornek.length ? ornekRakim(i) : null;
+    r.innerHTML = '<span class="n">' + (i + 1) + '</span>'
+      + '<span class="c">' + p[0].toFixed(5) + ' , ' + p[1].toFixed(5) + '</span>'
+      + '<span class="e">' + (rk != null ? Math.round(rk) + ' m' : '—') + '</span>';
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = 'SİL';
+    x.onclick = () => { noktalar.splice(i, 1); ciz(); profilAl(); };
+    r.appendChild(x); k.appendChild(r);
+  });
+}
+function ornekRakim(i) {
+  // köşe noktasının profildeki karşılığı: kümülatif uzaklığa en yakın örnek
+  if (!ornek.length) return null;
+  let hedef = 0;
+  for (let k = 1; k <= i; k++) hedef += mesafe(noktalar[k - 1], noktalar[k]);
+  let en = ornek[0], fark = Infinity;
+  for (const o of ornek) { const f = Math.abs(o.d - hedef); if (f < fark) { fark = f; en = o; } }
+  return en.h;
+}
+function orneklem(n) {
+  const cum = [0];
+  for (let i = 1; i < noktalar.length; i++) cum.push(cum[i - 1] + mesafe(noktalar[i - 1], noktalar[i]));
+  const toplam = cum[cum.length - 1];
+  if (!toplam) return [];
+  const out = [];
+  for (let s = 0; s < n; s++) {
+    const d = toplam * s / (n - 1);
+    let i = 1;
+    while (i < cum.length - 1 && cum[i] < d) i++;
+    const t = (d - cum[i - 1]) / (cum[i] - cum[i - 1] || 1);
+    out.push({
+      d,
+      lat: noktalar[i - 1][0] + (noktalar[i][0] - noktalar[i - 1][0]) * t,
+      lon: noktalar[i - 1][1] + (noktalar[i][1] - noktalar[i - 1][1]) * t,
+      h: null
+    });
+  }
+  return out;
+}
+async function profilAl() {
+  const benim = ++istek;
+  if (noktalar.length < 2) { ornek = []; cizProfil(); olcumYaz(); return; }
+  const nokta = orneklem(180);
+  olcumYaz(nokta);
+  el('chartNote').textContent = 'Rakım değerleri alınıyor…';
+  try {
+    for (let i = 0; i < nokta.length; i += 100) {
+      const par = nokta.slice(i, i + 100);
+      const u = 'https://api.open-meteo.com/v1/elevation?latitude=' + par.map(p => p.lat.toFixed(5)).join(',')
+        + '&longitude=' + par.map(p => p.lon.toFixed(5)).join(',');
+      const r = await fetch(u);
+      if (!r.ok) throw new Error('servis ' + r.status);
+      const j = await r.json();
+      (j.elevation || []).forEach((h, k) => { if (par[k]) par[k].h = h; });
+    }
+    if (benim !== istek) return;
+    ornek = nokta.filter(p => p.h != null);
+    uyar('');
+    el('chartNote').textContent = ornek.length + ' noktada rakım okundu · SRTM ~90 m ızgara. Profil üzerinde gezinin — haritada karşılığı işaretlenir.';
+  } catch (e) {
+    if (benim !== istek) return;
+    ornek = [];
+    uyar('Rakım servisine ulaşılamadı — uzaklık ölçümü çalışır, kot farkı ve profil için internet gerekir.');
+    el('chartNote').textContent = 'Rakım alınamadı. “Profili yenile” ile yeniden deneyin.';
+  }
+  cizProfil();
+  olcumYaz(ornek.length ? ornek : nokta);
+  listele();
+}
+function olcumYaz(nokta) {
+  const yaz = (id, v) => { el(id).textContent = v; };
+  if (noktalar.length < 2) {
+    ['mDist', 'mKot', 'mMin', 'mMax', 'mUp', 'mDown', 'mEgim', 'mKus'].forEach(i => yaz(i, '—'));
+    return;
+  }
+  let toplam = 0;
+  for (let i = 1; i < noktalar.length; i++) toplam += mesafe(noktalar[i - 1], noktalar[i]);
+  yaz('mDist', km(toplam));
+  yaz('mKus', km(mesafe(noktalar[0], noktalar[noktalar.length - 1])));
+  const h = (nokta || []).filter(p => p.h != null).map(p => p.h);
+  if (h.length < 2) { ['mKot', 'mMin', 'mMax', 'mUp', 'mDown', 'mEgim'].forEach(i => yaz(i, '—')); return; }
+  let up = 0, down = 0;
+  for (let i = 1; i < h.length; i++) { const d = h[i] - h[i - 1]; if (d > 0) up += d; else down -= d; }
+  const kot = h[h.length - 1] - h[0];
+  yaz('mKot', mtr(kot));
+  yaz('mMin', Math.round(Math.min(...h)) + ' m');
+  yaz('mMax', Math.round(Math.max(...h)) + ' m');
+  yaz('mUp', '+' + Math.round(up) + ' m');
+  yaz('mDown', '−' + Math.round(down) + ' m');
+  yaz('mEgim', (toplam ? (kot / toplam * 100).toFixed(1) : '0') + ' %');
+}
+function cizProfil() {
+  const svg = el('chart');
+  const kb = svg.getBoundingClientRect();
+  const W = Math.max(320, Math.round(kb.width || 600)), H = Math.max(150, Math.round(kb.height || 190));
+  const L1 = 46, R = 12, T = 14, B = 28;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  if (ornek.length < 2) { svg.innerHTML = ''; return; }
+  const hs = ornek.map(p => p.h), dmax = ornek[ornek.length - 1].d;
+  let lo = Math.min(...hs), hi = Math.max(...hs);
+  if (hi - lo < 10) { hi = lo + 10; }
+  const pad = (hi - lo) * .12; lo -= pad; hi += pad;
+  const X = d => L1 + (W - L1 - R) * (d / dmax);
+  const Y = h => T + (H - T - B) * (1 - (h - lo) / (hi - lo));
+  const cizgi = ornek.map((p, i) => (i ? 'L' : 'M') + X(p.d).toFixed(1) + ' ' + Y(p.h).toFixed(1)).join(' ');
+  const alan = cizgi + ' L' + X(dmax).toFixed(1) + ' ' + (H - B) + ' L' + L1 + ' ' + (H - B) + ' Z';
+  let g = '';
+  for (let k = 0; k <= 3; k++) {
+    const h = lo + (hi - lo) * k / 3, y = Y(h);
+    g += '<line x1="' + L1 + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1)
+      + '" stroke="#c9c5c0" stroke-width="1"/>'
+      + '<text x="4" y="' + (y + 3.5).toFixed(1) + '" font-family="Archivo" font-size="9" font-weight="600" fill="#6c6763">'
+      + Math.round(h) + '</text>';
+  }
+  // köşe noktaları
+  let kose = '', cum = 0;
+  for (let i = 0; i < noktalar.length; i++) {
+    if (i) cum += mesafe(noktalar[i - 1], noktalar[i]);
+    const x = X(Math.min(cum, dmax));
+    kose += '<line x1="' + x.toFixed(1) + '" y1="' + T + '" x2="' + x.toFixed(1) + '" y2="' + (H - B)
+      + '" stroke="#201e1d" stroke-width="1" stroke-dasharray="3 3"/>'
+      + '<text x="' + (x + 3).toFixed(1) + '" y="' + (T + 9) + '" font-family="Archivo" font-size="9" font-weight="700" fill="#201e1d">'
+      + (i + 1) + '</text>';
+  }
+  svg.innerHTML = g + kose
+    + '<path d="' + alan + '" fill="#ec3013" fill-opacity=".16"/>'
+    + '<path d="' + cizgi + '" fill="none" stroke="#ec3013" stroke-width="2.5"/>'
+    + '<line x1="' + L1 + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="#201e1d" stroke-width="2"/>'
+    + '<line x1="' + L1 + '" y1="' + T + '" x2="' + L1 + '" y2="' + (H - B) + '" stroke="#201e1d" stroke-width="2"/>'
+    + '<text x="' + L1 + '" y="' + (H - 8) + '" font-family="Archivo" font-size="9" font-weight="600" fill="#6c6763">0</text>'
+    + '<text x="' + (W - R) + '" y="' + (H - 8) + '" text-anchor="end" font-family="Archivo" font-size="9" font-weight="600" fill="#6c6763">'
+    + (dmax / 1000).toFixed(dmax < 10000 ? 2 : 1) + ' km</text>'
+    + '<text x="4" y="' + (T + 8) + '" font-family="Archivo" font-size="8" font-weight="700" fill="#6c6763">m</text>'
+    + '<g id="gz"></g>';
+  svg.onmousemove = ev => {
+    const b = svg.getBoundingClientRect();
+    const xs = (ev.clientX - b.left) / b.width * W;
+    const d = Math.max(0, Math.min(dmax, (xs - L1) / (W - L1 - R) * dmax));
+    let en = ornek[0], f = Infinity;
+    for (const o of ornek) { const q = Math.abs(o.d - d); if (q < f) { f = q; en = o; } }
+    const gz = svg.querySelector('#gz');
+    if (gz) gz.innerHTML = '<line x1="' + X(en.d).toFixed(1) + '" y1="' + T + '" x2="' + X(en.d).toFixed(1)
+      + '" y2="' + (H - B) + '" stroke="#201e1d" stroke-width="1.5"/>'
+      + '<circle cx="' + X(en.d).toFixed(1) + '" cy="' + Y(en.h).toFixed(1) + '" r="4" fill="#201e1d"/>';
+    el('chartNote').textContent = (en.d / 1000).toFixed(2) + ' km · ' + Math.round(en.h) + ' m rakım';
+    if (!imlec) imlec = L.marker([en.lat, en.lon], { icon: L.divIcon({ className: '', iconSize: [14, 14], iconAnchor: [7, 7], html: '<div class="ks-cur"></div>' }), interactive: false }).addTo(map);
+    else imlec.setLatLng([en.lat, en.lon]);
+  };
+  svg.onmouseleave = () => {
+    if (imlec) { map.removeLayer(imlec); imlec = null; }
+    const gz = svg.querySelector('#gz'); if (gz) gz.innerHTML = '';
+  };
+}
+map.on('click', e => {
+  if (!ekleModu) return;
+  noktalar.push([e.latlng.lat, e.latlng.lng]);
+  ciz(); profilAl();
+});
+el('mod').onclick = () => { ekleModu = !ekleModu; el('mod').classList.toggle('on', ekleModu); };
+el('geri').onclick = () => { noktalar.pop(); ciz(); profilAl(); };
+el('temiz').onclick = () => { noktalar = []; ornek = []; ciz(); cizProfil(); olcumYaz(); uyar(''); el('chartNote').textContent = 'Nokta koyunca profil çizilir.'; };
+el('yenile').onclick = () => profilAl();
+function buyukAyar(on) {
+  document.body.classList.toggle('buyuk', on);
+  el('buyut').textContent = on ? 'Kapat · normal görünüm' : 'Tam ekran';
+  el('buyut').classList.toggle('on', on);
+  requestAnimationFrame(() => { cizProfil(); if (!on) map.invalidateSize(); });
+}
+el('buyut').onclick = () => buyukAyar(!document.body.classList.contains('buyuk'));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.body.classList.contains('buyuk')) buyukAyar(false);
+});
+new ResizeObserver(() => { if (ornek.length > 1) cizProfil(); }).observe(el('chart'));
+el('zemin').onclick = () => {
+  uyduAcik = !uyduAcik;
+  el('zemin').classList.toggle('on', uyduAcik);
+  el('zemin').textContent = uyduAcik ? 'Sokak zemin' : 'Uydu zemin';
+  if (uyduAcik) { map.removeLayer(sokak); uydu.addTo(map); } else { map.removeLayer(uydu); sokak.addTo(map); }
+};
+el('iAdd').onclick = () => {
+  const la = parseFloat(el('iLat').value.replace(',', '.')), lo = parseFloat(el('iLon').value.replace(',', '.'));
+  if (!isFinite(la) || !isFinite(lo)) return uyar('Enlem ve boylam ondalık derece olarak yazılmalı — örnek 39.15091 / 34.15952.');
+  uyar('');
+  noktalar.push([la, lo]); el('iLat').value = ''; el('iLon').value = '';
+  ciz(); profilAl(); map.panTo([la, lo]);
+};
+// Uygulamadan gelen noktalar: iki kaydın arası ölçülmek istendiğinde
+window.addEventListener('message', ev => {
+  const d = ev.data;
+  if (!d || d.ks !== 'profil') return;
+  if (Array.isArray(d.noktalar)) {
+    noktalar = d.noktalar.filter(p => isFinite(p[0]) && isFinite(p[1])).map(p => [+p[0], +p[1]]);
+    ciz(); profilAl();
+    if (noktalar.length) map.fitBounds(L.latLngBounds(noktalar).pad(.25));
+  }
+});
+map.whenReady(() => setTimeout(() => map.invalidateSize(), 60));
+new ResizeObserver(() => map.invalidateSize()).observe(el('map'));
+ciz();
+</script>
+</body>
+</html>

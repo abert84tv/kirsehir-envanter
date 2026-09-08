@@ -15,6 +15,13 @@
     font:700 11px/1 var(--font-body)}
   .ks-pin.pend{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-pin.fault{background:var(--color-accent);border-color:var(--color-text);color:#fff}
+  /* pasif tesis: kesikli çerçeve, soluk — haritada bir bakışta ayrılır */
+  .ks-pin.pasif{background:#3f4a5a;border-style:dashed;border-color:#eceaea;color:#fff;opacity:1}
+  .ks-pin.pasif:after{content:'';position:absolute;width:26px;height:2px;
+    background:#eceaea;transform:rotate(-45deg)}
+  body.dark .ks-pin.pasif{background:#8f9bb0;border-color:#1c1a19;color:#1c1a19}
+  body.dark .ks-pin.pasif:after{background:#1c1a19}
+  .ks-pin{position:relative}
   .ks-me{width:18px;height:18px;border:3px solid #fff;background:#1b6ef3;border-radius:50%;
     box-shadow:0 0 0 2px rgba(27,110,243,.45)}
   .ks-lbl{background:rgba(255,255,255,.92);border:2px solid var(--color-text);border-radius:0;
@@ -117,7 +124,7 @@ let { assets, faults } = buildAssets(DATA);
 let openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
 let sonFilter = null;
 
-const map = L.map('map', { center: [39.22, 34.12], zoom: 9, zoomControl: true, scrollWheelZoom: true });
+const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true });
 
 // ── zeminler: sokak / uydu / uydu + yer adı
 const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -154,10 +161,10 @@ function cizAssets() {
 assetLayer.clearLayers();
 markers = [];
 for (const a of assets) {
-  const pend = a.sync === 'pending', fault = openFaults.has(a.id);
+  const pend = a.sync === 'pending', fault = openFaults.has(a.id), pasif = a.status === 'pasif';
   const icon = L.divIcon({
     className: '', iconSize: [24, 24], iconAnchor: [12, 12],
-    html: `<div class="ks-pin${pend ? ' pend' : ''}${fault ? ' fault' : ''}">${TYPES[a.type].glyph}</div>`
+    html: `<div class="ks-pin${pasif ? ' pasif' : (pend ? ' pend' : '')}${fault && !pasif ? ' fault' : ''}">${TYPES[a.type].glyph}</div>`
   });
   const mk = L.marker([a.lat, a.lon], { icon })
     .bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [14, 0], interactive: true })
@@ -187,7 +194,7 @@ if (sonFilter) filtreUygula(sonFilter);
 function filtreUygula(f) {
   sonFilter = f;
   for (let i = 0; i < assets.length; i++) {
-    const on = !!f[assets[i].type];
+    const on = !!f[assets[i].type] && (f.pasif !== false || assets[i].status !== 'pasif');
     const has = assetLayer.hasLayer(markers[i]);
     if (on && !has) assetLayer.addLayer(markers[i]);
     if (!on && has) assetLayer.removeLayer(markers[i]);
@@ -196,7 +203,24 @@ function filtreUygula(f) {
 }
 
 const bounds = L.latLngBounds(assets.map(a => [a.lat, a.lon]));
-map.fitBounds(bounds.pad(0.08));
+// açılış görünümü: her zaman Kırşehir il sınırlarını kapsar
+const IL_BOUNDS = L.latLngBounds([38.76, 33.28], [39.80, 34.66]);
+let ilkOturdu = false;
+const ilGorunumu = () => {
+  if (ilkOturdu) return;
+  map.invalidateSize();
+  const b = map.getContainer().getBoundingClientRect();
+  if (b.width < 40 || b.height < 40) return;   // kap henüz ölçülmedi
+  map.fitBounds(IL_BOUNDS, { padding: [12, 12] });
+  ilkOturdu = true;
+};
+map.whenReady(ilGorunumu);
+requestAnimationFrame(ilGorunumu);
+addEventListener('resize', ilGorunumu);
+map.on('resize', ilGorunumu);
+setTimeout(ilGorunumu, 300);
+if (typeof ResizeObserver === 'function') new ResizeObserver(ilGorunumu).observe(map.getContainer());
+const ilKilitle = () => { ilkOturdu = true; };
 
 // ── konumum (standart saha konumu) + yol tarifi
 const STD = { lat: 39.1462, lon: 34.1583, label: 'Kırşehir merkez · standart saha konumu' };
@@ -332,7 +356,7 @@ document.getElementById('t-coord').onclick = () => {
 addEventListener('message', e => {
   const d = e.data || {};
   if (d.ks === 'theme') document.body.classList.toggle('dark', d.dark);
-  if (d.ks === 'fly') map.flyTo([d.lat, d.lon], d.zoom || 13, { duration: .8 });
+  if (d.ks === 'fly') { ilKilitle(); map.flyTo([d.lat, d.lon], d.zoom || 13, { duration: .8 }); }
   if (d.ks === 'setBase') setBase(d.base, true);
   if (d.ks === 'navMode') setNav(!!d.on);
   if (d.ks === 'pick') setPick(d.name || null);

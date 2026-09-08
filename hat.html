@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hat güzergâhları — Kırşehir envanter</title>
+<link rel="stylesheet" href="_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg);color:var(--color-text)}
+  #wrap{position:absolute;inset:0;display:flex;flex-direction:column}
+  #bar{flex:none;display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:8px 12px;
+    border-bottom:2px solid var(--color-text);background:var(--color-bg)}
+  #bar .ttl{font:700 12px/1 var(--font-heading);margin-right:2px}
+  button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;
+    padding:8px 10px;min-height:38px;border:2px solid var(--color-text);background:var(--color-bg);
+    font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--color-text)}
+  button:hover{background:var(--color-neutral-200)}
+  button:active{background:var(--color-accent-600);border-color:var(--color-accent-600);color:#fff}
+  button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+  button:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
+  button[disabled]{opacity:.45;cursor:default}
+  #body{flex:1;min-height:0;display:flex}
+  #map{flex:1 1 60%;min-width:0;min-height:220px}
+  .leaflet-container{background:#dedbd6;font-family:var(--font-body)}
+  #side{flex:0 0 320px;min-width:0;border-left:2px solid var(--color-text);display:flex;
+    flex-direction:column;overflow:auto;background:var(--color-bg)}
+  .sec{border-bottom:2px solid var(--color-text);padding:12px 14px}
+  .kick{font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;
+    color:var(--color-accent);margin-bottom:8px}
+  .note{font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)}
+  .turler{display:flex;flex-direction:column;gap:6px}
+  .tur{display:flex;align-items:center;gap:9px;padding:8px 9px;border:2px solid var(--color-text);
+    cursor:pointer;background:var(--color-bg);min-height:42px}
+  .tur.on{background:var(--color-neutral-200)}
+  .tur i{flex:none;width:22px;height:0;border-top-width:4px;border-top-style:solid}
+  .tur span{font:700 10px/1.2 var(--font-body);letter-spacing:.04em;text-transform:uppercase}
+  .tur em{margin-left:auto;font:400 9.5px/1 var(--font-body);font-style:normal;color:var(--color-neutral-600)}
+  .hat{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--color-neutral-300)}
+  .hat i{flex:none;width:20px;height:0;border-top-width:4px;border-top-style:solid}
+  .hat .ad{flex:1;min-width:0;font:700 11px/1.3 var(--font-body)}
+  .hat .uz{flex:none;font:700 11px/1 ui-monospace,Menlo,monospace;color:var(--color-accent)}
+  .hat button{padding:5px 7px;min-height:32px;font-size:8.5px;border-color:var(--color-neutral-400);
+    color:var(--color-neutral-600)}
+  .toplam{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:9px}
+  .toplam b{font:700 20px/1 var(--font-heading);color:var(--color-accent)}
+  .toplam span{font:600 8.5px/1.3 var(--font-body);letter-spacing:.09em;text-transform:uppercase;
+    color:var(--color-neutral-600)}
+  .ks-uc{width:12px;height:12px;border:2px solid var(--color-text);background:#fff}
+  .ks-tesis{display:flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;
+    font:700 11px/1 var(--font-body)}
+  .ks-uzun{background:var(--color-text);border:2px solid var(--color-text);color:#fff;padding:1px 5px;
+    font:700 9.5px/1.3 var(--font-body)}
+  .ks-uzun:before{display:none}
+  #durum{flex:none;padding:9px 12px;border-bottom:2px solid var(--color-text);
+    background:var(--color-neutral-100);font:600 10.5px/1.4 var(--font-body)}
+  @media (max-width:760px){
+    #body{flex-direction:column}
+    #map{flex:0 0 48%}
+    #side{flex:1 1 auto;border-left:none;border-top:2px solid var(--color-text)}
+    button{min-height:44px}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="bar">
+    <span class="ttl" id="kodBas">Hat güzergâhları</span>
+    <button id="ciz">Yeni hat çiz</button>
+    <button id="bitir" disabled>Hattı bitir</button>
+    <button id="geri" disabled>Son noktayı sil</button>
+    <button id="vaz" disabled>Vazgeç</button>
+    <button id="zemin">Uydu zemin</button>
+  </div>
+  <div id="durum">Hat çizmek için “Yeni hat çiz”e basın, soldan tür seçin, haritaya tıklayarak güzergâhı geçin ve “Hattı bitir”e basın.</div>
+  <div id="body">
+    <div id="map"></div>
+    <div id="side">
+      <div class="sec">
+        <div class="kick">Hat türü</div>
+        <div class="turler" id="turler"></div>
+      </div>
+      <div class="sec">
+        <div class="kick">Bu kayda bağlı hatlar</div>
+        <div id="liste"><div class="note">Henüz hat çizilmedi.</div></div>
+        <div class="toplam"><span>Toplam uzunluk</span><b id="toplam">—</b></div>
+      </div>
+      <div class="sec">
+        <div class="note">Uzunluklar WGS84 üzerinde haversine ile hesaplanır — kuş uçuşu değil, çizdiğiniz kırıklı güzergâhın gerçek uzunluğudur. Hat uçlarını sürükleyerek düzeltebilirsiniz. Çizimler kaydın kendi kaydında saklanır ve envanterde bu kayıtla birlikte görünür.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const TURLER = [
+  ['terfi', 'Terfi hattı', '#ec3013', 'Kuyu → depo, pompayla basılan'],
+  ['isale', 'İsale hattı', '#201e1d', 'Depo → köy, cazibeli'],
+  ['sebeke', 'Şebeke hattı', '#6c6763', 'Köy içi dağıtım'],
+  ['ag', 'AG enerji hattı', '#1b6ef3', 'Trafo → pano, alçak gerilim'],
+  ['og', 'OG enerji hattı', '#7b3fbf', 'Orta gerilim, direkli'],
+  ['dc', 'GES DC hattı', '#c08a00', 'Panel → invertör']
+];
+const REN = Object.fromEntries(TURLER.map(t => [t[0], t[2]]));
+const AD = Object.fromEntries(TURLER.map(t => [t[0], t[1]]));
+
+const el = id => document.getElementById(id);
+const map = L.map('map', { zoomControl: true }).setView([39.15091, 34.15952], 13);
+const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 19, attribution: 'Esri, Maxar' });
+let uyduAcik = false;
+
+let tesis = null, hatlar = [], tur = 'terfi', cizim = null, yazma = true;
+const kat = L.layerGroup().addTo(map);
+let cizKat = L.layerGroup().addTo(map);
+
+const rad = d => d * Math.PI / 180;
+function mesafe(a, b) {
+  const R = 6371008.8, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+const uzunluk = n => n.reduce((t, p, i) => i ? t + mesafe(n[i - 1], p) : 0, 0);
+const km = m => m >= 1000 ? (m / 1000).toFixed(m < 10000 ? 2 : 1) + ' km' : Math.round(m) + ' m';
+
+function turleriCiz() {
+  el('turler').innerHTML = '';
+  for (const [k, ad, renk, aciklama] of TURLER) {
+    const d = document.createElement('div');
+    d.className = 'tur' + (tur === k ? ' on' : '');
+    d.innerHTML = '<i style="border-top-color:' + renk + '"></i><span>' + ad + '</span><em>' + aciklama + '</em>';
+    d.onclick = () => { tur = k; turleriCiz(); if (cizim) cizimYenile(); };
+    el('turler').appendChild(d);
+  }
+}
+function listeCiz() {
+  const k = el('liste');
+  if (!hatlar.length) { k.innerHTML = '<div class="note">Henüz hat çizilmedi.</div>'; el('toplam').textContent = '—'; return; }
+  k.innerHTML = '';
+  hatlar.forEach((ht, i) => {
+    const r = document.createElement('div'); r.className = 'hat';
+    r.innerHTML = '<i style="border-top-color:' + (REN[ht.tur] || '#201e1d') + '"></i>'
+      + '<span class="ad">' + (AD[ht.tur] || ht.tur) + '<br><span style="font:400 9.5px/1.3 var(--font-body);color:var(--color-neutral-600)">'
+      + ht.noktalar.length + ' nokta</span></span>'
+      + '<span class="uz">' + km(uzunluk(ht.noktalar)) + '</span>';
+    const g = document.createElement('button'); g.textContent = 'GÖSTER';
+    g.onclick = () => map.fitBounds(L.latLngBounds(ht.noktalar).pad(.3));
+    r.appendChild(g);
+    if (yazma) {
+      const x = document.createElement('button'); x.textContent = 'SİL';
+      x.onclick = () => { hatlar.splice(i, 1); ciz(); gonder(); };
+      r.appendChild(x);
+    }
+    k.appendChild(r);
+  });
+  el('toplam').textContent = km(hatlar.reduce((t, ht) => t + uzunluk(ht.noktalar), 0));
+}
+function ciz() {
+  kat.clearLayers();
+  if (tesis) {
+    L.marker([tesis.lat, tesis.lon], {
+      icon: L.divIcon({ className: '', iconSize: [26, 26], iconAnchor: [13, 13], html: '<div class="ks-tesis">◆</div>' }),
+      zIndexOffset: 500
+    }).bindTooltip(tesis.kod || 'Kayıt', { direction: 'top' }).addTo(kat);
+  }
+  hatlar.forEach((ht, i) => {
+    const renk = REN[ht.tur] || '#201e1d';
+    L.polyline(ht.noktalar, { color: renk, weight: 5, opacity: .95 })
+      .bindTooltip((AD[ht.tur] || ht.tur) + ' · ' + km(uzunluk(ht.noktalar)), { sticky: true })
+      .addTo(kat);
+    // uçlar sürüklenebilir: güzergâh sonradan düzeltilebilir
+    if (yazma) ht.noktalar.forEach((p, k) => {
+      const mk = L.marker(p, {
+        icon: L.divIcon({ className: '', iconSize: [12, 12], iconAnchor: [6, 6], html: '<div class="ks-uc"></div>' }),
+        draggable: true
+      });
+      mk.on('drag', e => { const ll = e.target.getLatLng(); hatlar[i].noktalar[k] = [ll.lat, ll.lng]; });
+      mk.on('dragend', () => { ciz(); listeCiz(); gonder(); });
+      mk.addTo(kat);
+    });
+    const orta = ht.noktalar[Math.floor(ht.noktalar.length / 2)];
+    if (orta) L.tooltip({ permanent: true, direction: 'center', className: 'ks-uzun' })
+      .setLatLng(orta).setContent(km(uzunluk(ht.noktalar))).addTo(kat);
+  });
+  listeCiz();
+}
+function cizimYenile() {
+  cizKat.clearLayers();
+  if (!cizim || cizim.length < 1) return;
+  const renk = REN[tur] || '#201e1d';
+  if (cizim.length > 1) L.polyline(cizim, { color: renk, weight: 5, dashArray: '8 6' }).addTo(cizKat);
+  cizim.forEach(p => L.marker(p, {
+    icon: L.divIcon({ className: '', iconSize: [12, 12], iconAnchor: [6, 6], html: '<div class="ks-uc"></div>' }),
+    interactive: false
+  }).addTo(cizKat));
+  el('durum').textContent = cizim.length < 2
+    ? AD[tur] + ' · 1 nokta kondu — güzergâhı tıklayarak sürdürün.'
+    : AD[tur] + ' · ' + cizim.length + ' nokta · ' + km(uzunluk(cizim)) + ' — bitirmek için “Hattı bitir”.';
+}
+function dugmeler() {
+  const c = !!cizim;
+  el('ciz').classList.toggle('on', c);
+  el('ciz').textContent = c ? 'Çizim açık' : 'Yeni hat çiz';
+  el('bitir').disabled = !c || cizim.length < 2;
+  el('geri').disabled = !c || !cizim.length;
+  el('vaz').disabled = !c;
+  el('ciz').disabled = !yazma;
+}
+map.on('click', e => {
+  if (!cizim || !yazma) return;
+  cizim.push([e.latlng.lat, e.latlng.lng]);
+  cizimYenile(); dugmeler();
+});
+el('ciz').onclick = () => {
+  if (!yazma) return;
+  cizim = [];
+  if (tesis) cizim.push([tesis.lat, tesis.lon]);
+  cizimYenile(); dugmeler();
+  el('durum').textContent = AD[tur] + ' çiziliyor — başlangıç kaydın kendisi. Haritaya tıklayarak güzergâhı geçin.';
+};
+el('geri').onclick = () => { if (cizim) { cizim.pop(); cizimYenile(); dugmeler(); } };
+el('vaz').onclick = () => {
+  cizim = null; cizKat.clearLayers(); dugmeler();
+  el('durum').textContent = 'Çizim iptal edildi.';
+};
+el('bitir').onclick = () => {
+  if (!cizim || cizim.length < 2) return;
+  hatlar.push({ id: 'h' + Date.now(), tur, noktalar: cizim.slice() });
+  cizim = null; cizKat.clearLayers();
+  ciz(); dugmeler(); gonder();
+  el('durum').textContent = AD[tur] + ' eklendi — listede ve haritada duruyor.';
+};
+el('zemin').onclick = () => {
+  uyduAcik = !uyduAcik;
+  el('zemin').classList.toggle('on', uyduAcik);
+  el('zemin').textContent = uyduAcik ? 'Sokak zemin' : 'Uydu zemin';
+  if (uyduAcik) { map.removeLayer(sokak); uydu.addTo(map); } else { map.removeLayer(uydu); sokak.addTo(map); }
+};
+function gonder() {
+  try {
+    parent.postMessage({ ks: 'hatlar', kod: tesis ? tesis.kod : '', id: tesis ? tesis.id : '', hatlar }, '*');
+  } catch (e) { /* çerçeve yok */ }
+}
+window.addEventListener('message', ev => {
+  const d = ev.data;
+  if (!d || d.ks !== 'hat') return;
+  tesis = d.tesis || null;
+  hatlar = Array.isArray(d.hatlar) ? d.hatlar.map(h => ({ ...h, noktalar: (h.noktalar || []).map(p => [+p[0], +p[1]]) })) : [];
+  yazma = d.yazma !== false;
+  cizim = null; cizKat.clearLayers();
+  el('kodBas').textContent = tesis ? (tesis.kod + ' · hat güzergâhları') : 'Hat güzergâhları';
+  ciz(); dugmeler();
+  const kaps = [];
+  if (tesis) kaps.push([tesis.lat, tesis.lon]);
+  hatlar.forEach(h => h.noktalar.forEach(p => kaps.push(p)));
+  if (kaps.length > 1) map.fitBounds(L.latLngBounds(kaps).pad(.3));
+  else if (kaps.length === 1) map.setView(kaps[0], 16);
+  el('durum').textContent = yazma
+    ? (hatlar.length ? hatlar.length + ' hat yüklendi. Yeni hat için “Yeni hat çiz”.' : 'Hat çizmek için “Yeni hat çiz”e basın, soldan tür seçin.')
+    : 'Bu kayıtta değişiklik yetkiniz yok — hatlar yalnızca görüntülenir.';
+});
+turleriCiz(); ciz(); dugmeler();
+map.whenReady(() => setTimeout(() => map.invalidateSize(), 60));
+new ResizeObserver(() => map.invalidateSize()).observe(el('map'));
+try { parent.postMessage({ ks: 'hatHazir' }, '*'); } catch (e) { /* çerçeve yok */ }
+</script>
+</body>
+</html>

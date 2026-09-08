@@ -1,4 +1,12 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/yayin/index.html" },
+    { "source": "/harita", "destination": "/yayin/harita.html" },
+    { "source": "/profil", "destination": "/yayin/profil.html" },
+    { "source": "/hat", "destination": "/yayin/hat.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

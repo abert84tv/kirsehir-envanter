@@ -23,6 +23,7 @@ const rng = seed => { let s = seed; return () => (s = (s * 1103515245 + 12345) %
 
 export function buildAssets(m) {
   const r = rng(4711), assets = [], order = ['kuyu', 'depo', 'ag', 'ges'];
+  const sayac = { kuyu: 0, depo: 0, ag: 0, ges: 0 };
   let i = 0;
   for (const d of m.DISTRICTS) {
     const vs = m.VILLAGES[d.id] || [];
@@ -36,7 +37,7 @@ export function buildAssets(m) {
         assets.push({
           id: 'a' + i, type, village: v, district: d.name,
           lat: d.lat + (r() - .5) * .16, lon: d.lon + (r() - .5) * .2, coordApprox: true,
-          code: `KS-${TYPES[type].pre}-${String(i).padStart(4, '0')}`,
+          code: `KS-${TYPES[type].pre}-${String(++sayac[type]).padStart(4, '0')}`,
           status: r() < .1 ? 'pasif' : 'aktif',
           sync: r() < .08 ? 'pending' : 'synced',
           photos: Math.floor(r() * 5),

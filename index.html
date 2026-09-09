@@ -3724,6 +3724,9 @@ const SAYFALAR = [['harita', 'Harita'], ['envanter', 'Envanter'], ['ariza', 'Ar�
 const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 // Kişiye özel istisna verilebilen yetkiler — silme ve kullanıcı yönetimi role bağlı kalır
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
+// Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
+// görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
+const SURUM = '2026.09.09-3';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -4916,6 +4919,8 @@ class Component extends DCLogic {
   yerelTesisOku() {
     try {
       const v = JSON.parse(localStorage.getItem('ks-yerel-tesis') || 'null');
+      // Damgasız eski kayıtlar okunur ama gönderilmez — kullanıcı görür,
+      // program kendiliğinden veritabanına yazmaz.
       return Array.isArray(v) ? v.filter(x => x && x.code && x.type) : [];
     } catch (e) { return []; }
   }
@@ -4927,7 +4932,14 @@ class Component extends DCLogic {
     if (this.state.offline) return 0;
     if (typeof navigator !== 'undefined' && navigator.onLine === false) return 0;
     if (this._gonderiyor) return 0;
-    const bekleyen = (this.state.assets || []).filter(a => a && !a.dbId && a.code && a.type);
+    // Sunucuda aynı kodda kayıt varsa cihazdaki kopya gönderilmez.
+    const sunucuKod = new Set((this.state.assets || [])
+      .filter(a => a && a.dbId != null).map(a => String(a.code || '').toUpperCase()));
+    // Yalnızca kullanıcının elle açtığı kayıtlar gönderilir (elle: true).
+    // Programın ürettiği başlangıç listesi asla veritabanına yazılmaz.
+    const bekleyen = (this.state.assets || []).filter(a =>
+      a && !a.dbId && a.elle === true && a.code && a.type
+      && !sunucuKod.has(String(a.code).toUpperCase()));
     if (!bekleyen.length) return 0;
     this._gonderiyor = true;
     let yazilan = 0, kilitli = 0, hata = '';
@@ -6519,6 +6531,9 @@ class Component extends DCLogic {
           year: parseInt(n.year, 10) || 2026,
           d: { derinlik: '—', pompaD: '—', cap: '—', statik: '—', dinamik: '—', debi: '—', kolon: '—', kolonCap: '—', rf: 'Yok', motor: '—', kablo: '—', hacim: '—', kaynak: 0, malzeme: '—', klor: false, rfMod: false, sigorta: '—', brans: '—', kalkis: '—', pano: '—', trafo: '—', guc: '—', panelAdet: '—', inverter: '—', baglanti: '—', bakim: 'Yeni kayıt' }
         };
+        // Elle açılan kayıt damgası: yalnızca bu damgayı taşıyanlar
+        // çevrimdışı kuyruktan sunucuya gönderilir.
+        asset.elle = true;
         if (this._sb && this._sb.tokenOku() && !s.offline) {
           if (!this.yazabilir(asset)) return this.kilitUyar(asset);
           this.setState({ scenario: null, newAsset: null, tab: 'harita' });
@@ -8150,7 +8165,7 @@ class Component extends DCLogic {
           : (s.sunucu
               ? `Ortak veritabanı bağlı${s.sonEsitleme ? ' · son eşitleme ' + s.sonEsitleme : ''}${pendA.length + pendF.length ? ' · ' + (pendA.length + pendF.length) + ' bekleyen işlem' : ''}`
               : `Cihazdaki kopya — ortak veritabanına bağlı değil${pendA.length + pendF.length ? ' · ' + (pendA.length + pendF.length) + ' bekleyen işlem' : ''}`),
-        right: `${s.assets.length} envanter kaydı · ${s.faults.length} arıza`
+        right: `${s.assets.length} envanter kaydı · ${s.faults.length} arıza · sürüm ${SURUM}`
       },
       toast: { show: !!s.toast, text: s.toast || '' },
       extendNotes: [

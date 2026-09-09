@@ -21,7 +21,14 @@ export const FAULT_TYPES = {
 };
 
 export const CREWS = ['Atanmadı', 'Ekip 1 — Merkez', 'Ekip 2 — Kaman', 'Ekip 3 — Mucur', 'Ekip 4 — Çiçekdağı'];
-export const STATUS_LABEL = { acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada', cozuldu: 'Çözüldü' };
+// Arıza durumları — ALİSAY çerçevesindeki akışın karşılığı. Bilgi bekliyor /
+// Beklemede sahanın elinde olmayan gecikmeleri ayırır, Kontrolde merkez
+// denetimini, İptal ise yerinde çıkmayan bildirimi karşılar.
+export const STATUS_LABEL = {
+  acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada',
+  bilgi: 'Bilgi bekliyor', bekleme: 'Beklemede', kontrol: 'Kontrolde',
+  cozuldu: 'Çözüldü', iptal: 'İptal'
+};
 
 // Yeni kayıtta bütün teknik alanlar boş açılır — sahada doldurulur.
 const BOS_ALANLAR = {

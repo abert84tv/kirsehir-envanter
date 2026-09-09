@@ -3726,7 +3726,7 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.09-5';
+const SURUM = '2026.09.09-6';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -3797,7 +3797,7 @@ class Component extends DCLogic {
     zoom: 11, center: null, fly: null,
     assets: [], faults: [], selected: null, detailTab: 'bilgi',
     panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false, hatKatman: true,
-    filter: { kuyu: true, depo: true, ag: true, ges: true },
+    filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true },
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
     log: {}, trash: [], cop: [], conflict: null, card: null, ayarBolum: 'gorunum', alanForm: null,
     users: [], userForm: null, pwForm: null,
@@ -5211,7 +5211,12 @@ class Component extends DCLogic {
       if (typeof p.navMode === 'boolean') out.navMode = p.navMode;
       // Dört tür de kapalıysa boş harita ile açılmasın: tercihi yok say
       if (p.filter && typeof p.filter === 'object') {
-        const f = { ...p.filter };
+        const f = {
+          kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
+          ag: p.filter.ag !== false, ges: p.filter.ges !== false,
+          pasif: p.filter.pasif !== false
+        };
+        // Dört tür de kapalıysa boş harita ile açılmasın
         if (!['kuyu', 'depo', 'ag', 'ges'].some(k => f[k])) {
           f.kuyu = f.depo = f.ag = f.ges = true;
         }
@@ -5240,7 +5245,11 @@ class Component extends DCLogic {
     if (!s.session) return;
     try {
       // "hepsi kapalı" bir süzgeç durumu saklanmaz — sonraki açılış boş gelmesin
-      const f = { ...s.filter };
+      const f = {
+        kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
+        ag: s.filter.ag !== false, ges: s.filter.ges !== false,
+        pasif: s.filter.pasif !== false
+      };
       if (!['kuyu', 'depo', 'ag', 'ges'].some(k => f[k])) {
         f.kuyu = f.depo = f.ag = f.ges = true;
       }
@@ -7087,7 +7096,7 @@ class Component extends DCLogic {
         if (u) { try { localStorage.removeItem('ks-pref-' + u.user); } catch (e) { /* yok */ } }
         this.setState({
           mapBase: 'street', theme: 'light', navMode: false,
-          filter: { kuyu: true, depo: true, ag: true, ges: true },
+          filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true },
           bildirimKanal: 'SMS', bildirimEsik: 'Acil ve yüksek',
           conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' },
           tab: 'harita', detailTab: 'bilgi'

@@ -182,10 +182,15 @@ function cizHatlar() {
       .addTo(hatLayer);
   }
 }
-document.getElementById('t-hat').onclick = () => {
-  hatAcik = !hatAcik;
+function hatKatman(ac) {
+  hatAcik = !!ac;
   document.getElementById('t-hat').classList.toggle('on', hatAcik);
   cizHatlar();
+}
+document.getElementById('t-hat').onclick = () => {
+  hatKatman(!hatAcik);
+  // Tercih uygulamada saklanır: kullanıcı kapattıysa bir dahaki girişte kapalı gelir
+  try { parent.postMessage({ ks: 'hatKatman', on: hatAcik }, '*'); } catch (e) { /* çerçeve yok */ }
 };
 
 // ── envanter kayıtları
@@ -414,6 +419,7 @@ addEventListener('message', e => {
     hatVeri = d.hatlar;
     cizHatlar();
   }
+  if (d.ks === 'hatKatman') hatKatman(d.on);
   if (d.ks === 'filter') {
     filtreUygula(d.filter);
   }

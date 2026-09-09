@@ -3726,7 +3726,7 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.09-3';
+const SURUM = '2026.09.09-5';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -3796,7 +3796,7 @@ class Component extends DCLogic {
     arzQ: '', arzSort: { k: 'no', dir: 1 }, arzF: {},
     zoom: 11, center: null, fly: null,
     assets: [], faults: [], selected: null, detailTab: 'bilgi',
-    panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false,
+    panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false, hatKatman: true,
     filter: { kuyu: true, depo: true, ag: true, ges: true },
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
     log: {}, trash: [], cop: [], conflict: null, card: null, ayarBolum: 'gorunum', alanForm: null,
@@ -3878,6 +3878,7 @@ class Component extends DCLogic {
     this._msg = e => {
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
+      if (d.ks === 'hatKatman') this.setState({ hatKatman: !!d.on });
       if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
       if (d.ks === 'konum') { this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
       if (d.ks === 'konumYok') {
@@ -3921,7 +3922,7 @@ class Component extends DCLogic {
     // runtime prevState vermeyebilir — kendi anlık görüntümüzle karşılaştırırız
     const s = this.state;
     if (s.session) {
-      const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.ayarBolum,
+      const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.ayarBolum, s.hatKatman,
         s.bildirimKanal, s.bildirimEsik, s.conv.sys, s.conv.zone, s.tab, s.detailTab, s.session.user]);
       if (this._prefImza !== imza) { this._prefImza = imza; this.prefYaz(); }
     }
@@ -4013,6 +4014,7 @@ class Component extends DCLogic {
     try { localStorage.setItem('ks-hatlar', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
     this.setState({ hatlar: tablo }, () => {
       this.hatlariYolla();
+      this.toMap({ ks: 'hatKatman', on: this.state.hatKatman !== false });
       if (this.state.detailTab === 'hat' || this.state.hatTam) this.hatGonder();
     });
   }
@@ -4053,6 +4055,7 @@ class Component extends DCLogic {
   }
   pushMap() {
     const w = this.mapWin(); if (!w) return;
+    w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
     w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
     w.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
     w.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
@@ -5214,11 +5217,12 @@ class Component extends DCLogic {
         }
         out.filter = f;
       }
+      if (typeof p.hatKatman === 'boolean') out.hatKatman = p.hatKatman;
       if (p.ayarBolum) out.ayarBolum = p.ayarBolum;
       if (p.bildirimKanal) out.bildirimKanal = p.bildirimKanal;
       if (p.bildirimEsik) out.bildirimEsik = p.bildirimEsik;
       if (p.convSys || p.convZone) out.conv = { ...this.state.conv, sys: p.convSys || this.state.conv.sys, zone: p.convZone || this.state.conv.zone };
-      if (p.tab) out.tab = p.tab;
+      if (p.tab && !['ayarlar', 'kuyruk'].includes(p.tab)) out.tab = p.tab;
       if (p.detailTab) out.detailTab = p.detailTab;
       return out;
     } catch (e) { return {}; }
@@ -5228,6 +5232,7 @@ class Component extends DCLogic {
     const s = this.state;
     this.toMap({ ks: 'setBase', base: s.mapBase });
     this.toMap({ ks: 'navMode', on: s.navMode });
+    this.toMap({ ks: 'hatKatman', on: s.hatKatman !== false });
     this.pushMap();
   }
   prefYaz() {
@@ -5241,6 +5246,7 @@ class Component extends DCLogic {
       }
       localStorage.setItem('ks-pref-' + s.session.user, JSON.stringify({
         mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f, ayarBolum: s.ayarBolum,
+        hatKatman: s.hatKatman,
         bildirimKanal: s.bildirimKanal, bildirimEsik: s.bildirimEsik,
         convSys: s.conv.sys, convZone: s.conv.zone, tab: s.tab, detailTab: s.detailTab
       }));

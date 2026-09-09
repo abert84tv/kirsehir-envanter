@@ -22,6 +22,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent)}
  #tesis-karti{padding:0!important}
 }
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+@keyframes bildirimGir{from{opacity:0;transform:translate3d(0,-22px,0) scale(.94)}to{opacity:1;transform:none}}
 @keyframes pulse{0%{opacity:.55;transform:scale(1)}70%{opacity:0;transform:scale(2.6)}100%{opacity:0;transform:scale(2.6)}}
 .pin:active{transform:translate(-50%,-100%) scale(.92)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
@@ -732,6 +733,25 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 <div style="border-bottom:2px solid {{ ui.rule }}">
 <div style="padding:13px 18px;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:14px">
+<span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Tekrarlayan arızalar</span>
+<span style="font:400 10.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ozet.tekrarNot }}</span>
+</div>
+<sc-for list="{{ ozet.tekrar }}" as="t" hint-placeholder-count="0">
+<button onClick="{{ t.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:10px 18px;border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
+<span style="font:700 12px/1 var(--font-body);color:{{ ui.fg }};width:130px">{{ t.code }}</span>
+<span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }};width:190px">{{ t.place }}</span>
+<span style="font:700 11px/1 var(--font-body);color:{{ ui.acc }};width:74px">{{ t.n }}</span>
+<span style="flex:1;min-width:0;font:400 11px/1.3 var(--font-body);color:{{ ui.fg }}">{{ t.tur }}</span>
+<span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }};width:100px;text-align:right">{{ t.son }}</span>
+<span style="font:600 10.5px/1 var(--font-body);color:{{ t.acikFg }};width:70px;text-align:right">{{ t.acik }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ ozet.tekrarYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:13px 18px;font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ ozet.tekrarBos }}</div>
+</sc-if>
+</div>
+<div style="border-bottom:2px solid {{ ui.rule }}">
+<div style="padding:13px 18px;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:14px">
 <span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Eksik bilgisi olan kayıtlar</span>
 <span style="font:400 10.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ozet.missingNote }}</span>
 </div>
@@ -989,6 +1009,44 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="flex:none;display:flex;border:2px solid {{ ui.rule }};width:186px">
 <button onClick="{{ m.ac.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ m.ac.bg }};color:{{ m.ac.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Açık</button>
 <button onClick="{{ m.kapa.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ m.kapa.bg }};color:{{ m.kapa.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Kapalı</button>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ayar.ekip }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Ekipler</div>
+<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ ekipYonetim.not }}</div>
+<div style="display:flex;flex-direction:column;margin-top:16px">
+<sc-for list="{{ ekipYonetim.list }}" as="e" hint-placeholder-count="4">
+<div style="padding:15px 0;border-top:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+<span style="flex:1 1 200px;min-width:0;font:700 14px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ e.ad }}</span>
+<span style="font:600 10.5px/1 var(--font-body);color:{{ e.yukFg }}">{{ e.yuk }}</span>
+</div>
+<div style="height:6px;background:{{ ui.surf2 }};width:100%">
+<div style="height:6px;width:{{ e.barW }};background:var(--color-accent)"></div>
+</div>
+<div style="display:flex;gap:24px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.mut }}">Vardiya</span>
+<div style="display:flex;border:2px solid {{ ui.rule }}">
+<sc-for list="{{ e.vardiyalar }}" as="v" hint-placeholder-count="4">
+<button onClick="{{ v.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:11px 14px;background:{{ v.bg }};color:{{ v.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">{{ v.label }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.mut }}">Yetkinlik</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ e.yetkinlikler }}" as="y" hint-placeholder-count="4">
+<button onClick="{{ y.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:11px 14px;border:2px solid {{ ui.rule }};background:{{ y.bg }};color:{{ y.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">{{ y.label }}</button>
+</sc-for>
+</div>
+</div>
 </div>
 </div>
 </sc-for>
@@ -1306,11 +1364,17 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:center;padding:64px 12px 0;pointer-events:none">
-<div style="pointer-events:auto;max-width:600px;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:2px solid {{ duyuru.border }};border-left:6px solid var(--color-accent);box-shadow:var(--shadow-lg);padding:12px 14px">
-<span style="flex:none;color:var(--color-accent);margin-top:1px">{{ ikonlar.uyari }}</span>
-<span style="flex:1;font:600 12px/1.45 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.text }}</span>
-<button onClick="{{ duyuru.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:{{ duyuru.fg }};opacity:.55" style-hover="opacity:1">{{ ikonlar.kapat }}</button>
+<div style="position:fixed;top:0;right:0;z-index:80;display:flex;justify-content:flex-end;padding:56px 18px 0;pointer-events:none;max-width:100%">
+<div style="pointer-events:auto;width:372px;max-width:calc(100vw - 36px);display:flex;align-items:flex-start;gap:12px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:18px;padding:13px 14px;box-shadow:0 16px 40px rgba(0,0,0,.20),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="flex:1;min-width:0;font:700 11.5px/1.2 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.baslik }}</span>
+<span style="flex:none;font:500 10.5px/1.2 var(--font-body);color:{{ duyuru.zamanFg }}">{{ duyuru.zaman }}</span>
+</div>
+<span style="font:400 12px/1.45 var(--font-body);color:{{ duyuru.fg }};text-wrap:pretty">{{ duyuru.text }}</span>
+</div>
+<button onClick="{{ duyuru.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:26px;height:26px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:{{ duyuru.fg }};opacity:.45" style-hover="opacity:1">{{ ikonlar.kapat }}</button>
 </div>
 </div>
 </sc-if>
@@ -1783,6 +1847,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </label>
 </div>
 
+<div style="border:2px solid {{ ui.rule }};background:{{ ui.surf }};padding:11px 13px;display:flex;flex-direction:column;gap:5px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.mut }}">Ekip durumu ve tesis geçmişi</span>
+<span style="font:600 11.5px/1.45 var(--font-body);color:{{ ui.fg }}">{{ faultForm.ekipBilgi }}</span>
+<sc-if value="{{ faultForm.ekipUyariVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 10.5px/1.45 var(--font-body);color:{{ ui.acc }}">{{ faultForm.ekipUyari }}</span>
+</sc-if>
+<span style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.gecmisNot }}</span>
+</div>
+
 <div style="display:flex;flex-direction:column;gap:7px">
 <span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Arıza fotoğrafı · {{ faultForm.photoCount }}</span>
 <span style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.assignNote }}</span>
@@ -1892,6 +1965,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-for list="{{ faultForm.workflow }}" as="w" hint-placeholder-count="4">
 <button onClick="{{ w.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;opacity:{{ w.op }};padding:9px 12px;border:2px solid {{ w.border }};background:{{ w.bg }};color:{{ w.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">{{ w.label }}</button>
 </sc-for>
+<sc-if value="{{ faultForm.yenidenAc.on }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:11px;border:2px solid {{ ui.rule }};padding:12px 13px;display:flex;flex-direction:column;gap:10px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Kapanmış kayıt</span>
+<span style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.yenidenAc.not }}</span>
+<button onClick="{{ faultForm.yenidenAc.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px;text-align:left" style-hover="background:var(--color-accent);color:#fff">Yeniden aç</button>
+</div>
+</sc-if>
 <sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border:2px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
 <span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Merkez denetimi</span>
@@ -2347,6 +2427,17 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-for>
 <div style="padding:12px 14px;border-bottom:2px solid {{ ui.rule }};border-top:2px solid {{ ui.rule }};font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Eksik bilgisi olan kayıtlar</div>
+<div style="padding:12px 14px;border-bottom:2px solid {{ ui.rule }};border-top:2px solid {{ ui.rule }};font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Tekrarlayan arızalar</div>
+<sc-for list="{{ ozet.tekrar }}" as="t" hint-placeholder-count="0">
+<button onClick="{{ t.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
+<span style="font:700 12px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ t.code }} · {{ t.n }}</span>
+<span style="font:400 10.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ t.place }} · {{ t.tur }}</span>
+<span style="font:600 10px/1.3 var(--font-body);color:{{ t.acikFg }}">son {{ t.son }} · {{ t.acik }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ ozet.tekrarYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ozet.tekrarBos }}</div>
+</sc-if>
 <sc-for list="{{ ozet.missing }}" as="m" hint-placeholder-count="10">
 <button onClick="{{ m.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
 <span style="font:700 12px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ m.code }} · {{ m.count }}</span>
@@ -2753,6 +2844,34 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="display:flex;border:2px solid {{ ui.rule }}">
 <button onClick="{{ m.ac.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;background:{{ m.ac.bg }};color:{{ m.ac.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">Açık</button>
 <button onClick="{{ m.kapa.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;background:{{ m.kapa.bg }};color:{{ m.kapa.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Kapalı</button>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ ayar.ekip }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
+<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:7px">Ekipler</div>
+<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ekipYonetim.not }}</div>
+<sc-for list="{{ ekipYonetim.list }}" as="e" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:9px;padding:13px 0;border-top:2px solid {{ ui.rule }};margin-top:12px">
+<span style="font:700 13px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ e.ad }}</span>
+<span style="font:600 10px/1.3 var(--font-body);color:{{ e.yukFg }}">{{ e.yuk }}</span>
+<div style="height:6px;background:{{ ui.surf2 }};width:100%">
+<div style="height:6px;width:{{ e.barW }};background:var(--color-accent)"></div>
+</div>
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.mut }}">Vardiya</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ e.vardiyalar }}" as="v" hint-placeholder-count="4">
+<button onClick="{{ v.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.rule }};background:{{ v.bg }};color:{{ v.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">{{ v.label }}</button>
+</sc-for>
+</div>
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.mut }}">Yetkinlik</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ e.yetkinlikler }}" as="y" hint-placeholder-count="4">
+<button onClick="{{ y.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.rule }};background:{{ y.bg }};color:{{ y.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">{{ y.label }}</button>
+</sc-for>
 </div>
 </div>
 </sc-for>
@@ -3272,6 +3391,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <input value="{{ faultForm.hours }}" onChange="{{ onFaultHours }}" inputmode="decimal" style="all:unset;border:2px solid {{ ui.rule }};padding:11px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.surf }}">
 </label>
 </div>
+<div style="border:2px solid {{ ui.rule }};background:{{ ui.surf }};padding:11px 12px;display:flex;flex-direction:column;gap:5px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.mut }}">Ekip durumu ve tesis geçmişi</span>
+<span style="font:600 11.5px/1.45 var(--font-body);color:{{ ui.fg }}">{{ faultForm.ekipBilgi }}</span>
+<sc-if value="{{ faultForm.ekipUyariVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 10.5px/1.45 var(--font-body);color:{{ ui.acc }}">{{ faultForm.ekipUyari }}</span>
+</sc-if>
+<span style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.gecmisNot }}</span>
+</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <button onClick="{{ cekFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:76px;height:76px;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 9.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
 <button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:76px;height:76px;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">GALERİDEN SEÇ</button>
@@ -3357,6 +3484,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-for list="{{ faultForm.workflow }}" as="w" hint-placeholder-count="4">
 <button onClick="{{ w.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;opacity:{{ w.op }};padding:10px 12px;border:2px solid {{ w.border }};background:{{ w.bg }};color:{{ w.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">{{ w.label }}</button>
 </sc-for>
+<sc-if value="{{ faultForm.yenidenAc.on }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:11px;border:2px solid {{ ui.rule }};padding:12px 13px;display:flex;flex-direction:column;gap:10px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Kapanmış kayıt</span>
+<span style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.yenidenAc.not }}</span>
+<button onClick="{{ faultForm.yenidenAc.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 14px;text-align:left" style-hover="background:var(--color-accent);color:#fff">Yeniden aç</button>
+</div>
+</sc-if>
 <sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border:2px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
 <span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Merkez denetimi</span>
@@ -3444,10 +3578,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:8px 8px 0;pointer-events:none">
-<div style="pointer-events:auto;display:flex;align-items:flex-start;gap:10px;background:{{ duyuru.bg }};border:2px solid {{ duyuru.border }};border-left:6px solid var(--color-accent);box-shadow:var(--shadow-lg);padding:11px 12px">
-<span style="flex:none;color:var(--color-accent);margin-top:1px">{{ ikonlar.uyari }}</span>
-<span style="flex:1;font:600 12px/1.45 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.text }}</span>
+<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:10px 10px 0;pointer-events:none">
+<div style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="flex:1;min-width:0;font:700 11.5px/1.2 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.baslik }}</span>
+<span style="flex:none;font:500 10.5px/1.2 var(--font-body);color:{{ duyuru.zamanFg }}">{{ duyuru.zaman }}</span>
+</div>
+<span style="font:400 12px/1.45 var(--font-body);color:{{ duyuru.fg }};text-wrap:pretty">{{ duyuru.text }}</span>
+</div>
 <button onClick="{{ duyuru.kapat }}" aria-label="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:{{ duyuru.fg }}">{{ ikonlar.kapat }}</button>
 </div>
 </div>
@@ -3728,7 +3868,23 @@ const MALZEME = [
   ['Vinç / kamyon (kuyu çekme)', 6500, 'gün'],
   ['İşçilik (ekip yevmiyesi)', 2800, 'gün']
 ];
-const CREWS = ['Atanmadı', 'Ekip 1 — Merkez', 'Ekip 2 — Kaman', 'Ekip 3 — Mucur', 'Ekip 4 — Çiçekdağı'];
+// Ekip adı kayıtlarda metin olarak durur, bu yüzden sabittir. Vardiya ve
+// yetkinlik Ayarlar > Ekipler bölümünden değişir, cihazda saklanır.
+const EKIP_TANIM = [
+  { ad: 'Atanmadı', vardiya: '—', yetkinlik: [] },
+  { ad: 'Ekip 1 — Merkez', vardiya: 'Gündüz', yetkinlik: ['Elektrik', 'Mekanik'] },
+  { ad: 'Ekip 2 — Kaman', vardiya: 'Vardiyalı', yetkinlik: ['Mekanik'] },
+  { ad: 'Ekip 3 — Mucur', vardiya: 'Gündüz', yetkinlik: ['Elektrik'] },
+  { ad: 'Ekip 4 — Çiçekdağı', vardiya: 'Nöbet', yetkinlik: ['Mekanik', 'Sondaj'] }
+];
+const CREWS = EKIP_TANIM.map(e => e.ad);
+const VARDIYALAR = ['Gündüz', 'Vardiyalı', 'Nöbet', 'İzinli'];
+const YETKINLIKLER = ['Elektrik', 'Mekanik', 'Sondaj', 'Kaynak'];
+// Arıza türünden gereken yetkinlik: eşleşmezse form uyarı yazar, atamayı engellemez
+const YETKINLIK_ESLEME = [
+  [/motor|akım|elektrik|sigorta|kontaktör|kablo|pano|invert|panel|şalt|rf|sensör|klorlama|üretim/i, 'Elektrik'],
+  [/pompa|kolon|kaçak|çatlak|debi|vana|kapak/i, 'Mekanik']
+];
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
   ['mudur', 'Müdür', 'Onay, silme, rapor; kullanıcı yönetimi hariç'],
@@ -3762,12 +3918,18 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.09-20';
+const SURUM = '2026.09.09-21';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
 const VKEY = 'ks-envanter-koy-konum';
-const STATUS_LABEL = { acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada', cozuldu: 'Çözüldü' };
+const STATUS_LABEL = {
+  acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada', bilgi: 'Bilgi bekliyor',
+  bekleme: 'Beklemede', yonlendirildi: 'Yönlendirildi', kontrol: 'Kontrolde',
+  yeniden: 'Yeniden açıldı', cozuldu: 'Çözüldü', iptal: 'İptal'
+};
+// Kapanmış sayılan durumlar — açık iş sayımları ve süre hesabı bunları atlar
+const KAPALI_DURUM = ['cozuldu', 'iptal'];
 // Tesis aktifliği: sunucu enum'u aktif | ariza | pasif — pasif dışındakiler hizmette sayılır
 const AKTIF_LABEL = { aktif: 'Aktif', pasif: 'Pasif', ariza: 'Arızalı' };
 const aktifMi = a => !!a && a.status !== 'pasif';
@@ -3853,7 +4015,23 @@ class Component extends DCLogic {
         if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;
       } catch (e) { /* depolama kapalı */ }
       return v;
-    })(), ayarBolum: 'gorunum', alanForm: null,
+    })(),
+    // Ekip vardiyası ve yetkinliği: cihazda saklanır, arıza formunda görünür
+    ekipler: (() => {
+      const v = {};
+      for (const e of EKIP_TANIM) v[e.ad] = { vardiya: e.vardiya, yetkinlik: [...e.yetkinlik] };
+      try {
+        const p = JSON.parse(localStorage.getItem('ks-ekipler') || 'null');
+        if (p && typeof p === 'object') {
+          for (const k in v) if (p[k]) {
+            if (p[k].vardiya) v[k].vardiya = p[k].vardiya;
+            if (Array.isArray(p[k].yetkinlik)) v[k].yetkinlik = p[k].yetkinlik;
+          }
+        }
+      } catch (e) { /* depolama kapalı */ }
+      return v;
+    })(),
+    ayarBolum: 'gorunum', alanForm: null,
     users: [], userForm: null, pwForm: null,
     fotolar: {}, fotoYuk: null, kayitliSesler: {},
     coordMode: false, picked: null, duyuru: null, koyForm: null, buyut: null,
@@ -4136,6 +4314,32 @@ class Component extends DCLogic {
         : ' modülü kapatıldı. Kayıtlar veritabanında duruyor, yeniden açtığınızda yerinde bulunur.'),
       6000, on ? 'iyi' : 'bilgi'));
   }
+  // Ekip vardiyası / yetkinliği. Ad değişmez; kayıtlardaki ekip metni bozulmasın.
+  ekipAyar(ad, yama) {
+    const y = { ...(this.state.ekipler || {}) };
+    y[ad] = { ...(y[ad] || {}), ...yama };
+    try { localStorage.setItem('ks-ekipler', JSON.stringify(y)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ ekipler: y }, () => this.duyur(ad + ' · ' + (y[ad].vardiya || '—') + ' · '
+      + ((y[ad].yetkinlik || []).join(', ') || 'yetkinlik girilmedi')
+      + '. Arıza formunda ekip seçilirken görünür.', 5000, 'iyi'));
+  }
+  // Mükerrer kayıt: aynı tesiste açık kayıt ya da son yedi günde aynı türden
+  // kapanmış kayıt varsa yeni kayıt açılmadan önce sorulur.
+  mukerrerBul(f) {
+    if (!f || !f.assetId) return [];
+    const gun = t => {
+      const p = String(t || '').split(' ')[0].split('.');
+      if (p.length !== 3) return 0;
+      const d = new Date(+p[2], +p[1] - 1, +p[0]);
+      return isNaN(d) ? 0 : d.getTime();
+    };
+    const simdi = Date.now();
+    return (this.state.faults || []).filter(x => x.assetId === f.assetId && x.id !== f.id).filter(x => {
+      if (!KAPALI_DURUM.includes(x.status)) return true;
+      const t = gun(x.opened);
+      return t && simdi - t < 7 * 86400000 && x.type === f.type;
+    });
+  }
   bakimPeriyot(t) { return t === 'kuyu' ? 6 : 12; }
   // Hedef süre: öncelik başına gün sayısı. Değerler bilinçli olarak geniş —
   // 252 köyde sınırlı personel varken kısa süre baskı yaratır, gerçeği
@@ -4143,7 +4347,7 @@ class Component extends DCLogic {
   sureGun(oncelik) { return { 'Acil': 2, 'Yüksek': 5, 'Normal': 15, 'Düşük': 30 }[oncelik] || 15; }
   // Kapanmış kayıtta ve tarihi okunamayan kayıtta süre hesaplanmaz.
   sureDurum(f) {
-    if (!f || f.status === 'cozuldu') return null;
+    if (!f || KAPALI_DURUM.includes(f.status)) return null;
     const p = String(f.opened || '').split(' ')[0].split('.');
     if (p.length !== 3) return null;
     const bas = new Date(+p[2], +p[1] - 1, +p[0]);
@@ -5581,7 +5785,7 @@ class Component extends DCLogic {
       'Eksik alan sayısı', 'Fotoğraf', 'Açık arıza'];
     const out = [bas.concat(dKeys).map(x => this.csvKac(x)).join(';')];
     for (const a of list) {
-      const acik = s.faults.filter(f => f.assetId === a.id && f.status !== 'cozuldu').length;
+      const acik = s.faults.filter(f => f.assetId === a.id && !KAPALI_DURUM.includes(f.status)).length;
       out.push([a.code, TYPES[a.type].kind, aktifAd(a), a.village || '', a.district || '', a.year || '',
         String(a.lat).replace('.', ','), String(a.lon).replace('.', ','), (a.d || {}).bakim || '',
         this.missingOf(a).length, a.photos || 0, acik]
@@ -5605,7 +5809,7 @@ class Component extends DCLogic {
       if (this.missingOf(a).length) o.miss++;
     }
     const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
-    const acik = s.faults.filter(f => f.status !== 'cozuldu');
+    const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
     const w = window.open('', '_blank');
     if (!w) return this.duyur('Tarayıcı yeni sekmeyi engelledi — açılır pencere iznini verip yeniden deneyin.', 8000);
     const satirD = Object.keys(byD).sort((x, y) => byD[y].n - byD[x].n)
@@ -5866,7 +6070,7 @@ class Component extends DCLogic {
     const sel = s.assets.find(a => a.id === s.selected);
     const pendA = s.assets.filter(a => a.sync === 'pending');
     const pendF = s.faults.filter(f => f.sync === 'pending');
-    const openF = s.faults.filter(f => f.status !== 'cozuldu');
+    const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
 
     // markers
     const markers = [];
@@ -6240,12 +6444,12 @@ class Component extends DCLogic {
     // Akış: sahanın elinde olmayan bekleyişler ayrı durumlarda; merkez onayı
     // açıkken kapanış Kontrolde adımından geçer.
     const wfSteps = [['acik', 'Açık'], ['atandi', 'Atandı'], ['sahada', 'Sahada'],
-      ['bilgi', 'Bilgi bekliyor'], ['bekleme', 'Beklemede'],
+      ['bilgi', 'Bilgi bekliyor'], ['bekleme', 'Beklemede'], ['yonlendirildi', 'Başka birime'],
       ...(onayOn ? [['kontrol', 'Kontrolde']] : []),
       ['cozuldu', 'Çözüldü'], ['iptal', 'İptal']];
 
     const navDef = [['harita', 'Harita', 0, 1], ['envanter', 'Envanter', 0, 1],
-      ['ariza', 'Arıza', myFaults.filter(f => f.status !== 'cozuldu').length, 1],
+      ['ariza', 'Arıza', myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length, 1],
       ['gunluk', 'Bugün', 0, 1], ['bakim', 'Bakım', 0, 1], ['ozet', 'Özet', 0, 1],
       ['profil', 'Profil', 0, 1], ['yerlesim', 'Yerleşim', 0, 0], ['kuyruk', 'Kuyruk', pendA.length + pendF.length, 0],
       ['ayarlar', 'Ayarlar', 0, 1]];
@@ -6699,9 +6903,16 @@ class Component extends DCLogic {
         const ariza = !!d && d.tur === 'ariza';
         return {
           show: !!d, text: d ? d.text : '',
-          bg: ariza ? (dark ? '#3a251f' : 'var(--color-accent-100)') : ui.surf,
-          fg: ariza ? (dark ? '#f4f2f0' : 'var(--color-accent-700)') : ui.fg,
-          border: ariza ? 'var(--color-accent)' : ui.rule,
+          bg: ariza
+            ? (dark ? 'rgba(74,26,18,.80)' : 'rgba(255,240,237,.86)')
+            : (dark ? 'rgba(30,30,32,.76)' : 'rgba(255,255,255,.84)'),
+          fg: ariza ? (dark ? '#fbeeea' : 'var(--color-accent-700)') : ui.fg,
+          border: ariza
+            ? (dark ? 'rgba(236,48,19,.55)' : 'rgba(236,48,19,.30)')
+            : (dark ? 'rgba(255,255,255,.14)' : 'rgba(32,30,29,.10)'),
+          zamanFg: dark ? 'rgba(255,255,255,.5)' : 'rgba(32,30,29,.45)',
+          baslik: ariza ? 'Arıza bildirimi' : (d && d.tur === 'kotu' ? 'Uyarı' : 'Envanter'),
+          zaman: 'şimdi',
           kapat: () => { clearTimeout(this._d); this.setState({ duyuru: null }); }
         };
       })(),
@@ -7149,8 +7360,35 @@ class Component extends DCLogic {
       })(),
       ayar: {
         gorunum: s.ayarBolum === 'gorunum', veri: s.ayarBolum === 'veri',
-        yetki: s.ayarBolum === 'yetki', cop: s.ayarBolum === 'cop',
+        yetki: s.ayarBolum === 'yetki', cop: s.ayarBolum === 'cop', ekip: s.ayarBolum === 'ekip',
         modul: s.ayarBolum === 'modul'
+      },
+      // Ekipler: ad sabit, vardiya ve yetkinlik burada; yük canlı sayılır
+      ekipYonetim: {
+        not: 'Ekip adı kayıtlarda metin olarak durduğu için değişmez. Vardiya ve yetkinlik bu cihazda saklanır, arıza formunda ekip seçilirken görünür ve arıza türüyle uyuşmazsa form uyarır. Yük sayıları arıza kayıtlarından canlı gelir.',
+        list: EKIP_TANIM.filter(e => e.ad !== 'Atanmadı').map(e => {
+          const cfg = (s.ekipler || {})[e.ad] || { vardiya: e.vardiya, yetkinlik: e.yetkinlik };
+          const isler = s.faults.filter(f => f.crew === e.ad);
+          const acik = isler.filter(f => !KAPALI_DURUM.includes(f.status));
+          const gecikmis = sureOn ? acik.filter(f => { const d = this.sureDurum(f); return d && d.gecikti; }).length : 0;
+          return {
+            ad: e.ad,
+            yuk: acik.length + ' açık · ' + isler.filter(f => f.status === 'cozuldu').length + ' çözüldü'
+              + (sureOn ? ' · ' + gecikmis + ' gecikmiş' : ''),
+            yukFg: gecikmis ? ui.acc : ui.mut,
+            barW: Math.round(Math.min(1, acik.length / 8) * 100) + '%',
+            vardiyalar: VARDIYALAR.map(v => ({ label: v, ...seg(cfg.vardiya === v, () => this.ekipAyar(e.ad, { vardiya: v })) })),
+            yetkinlikler: YETKINLIKLER.map(y => {
+              const on = (cfg.yetkinlik || []).includes(y);
+              return {
+                label: y, bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.mut,
+                pick: () => this.ekipAyar(e.ad, {
+                  yetkinlik: on ? (cfg.yetkinlik || []).filter(z => z !== y) : [...(cfg.yetkinlik || []), y]
+                })
+              };
+            })
+          };
+        })
       },
       // Modüller: kurum bu iki bölümü kullanmıyorsa kapatır, program yalın çalışır
       moduller: {
@@ -7196,6 +7434,7 @@ class Component extends DCLogic {
       ayarBolum: [
         ['gorunum', 'Harita ve görünüm'], ['veri', 'Veri ve bildirim'],
         ['yetki', 'Yetkiler ve kullanıcılar'],
+        ...(arizaOn ? [['ekip', 'Ekipler']] : []),
         ...(can('admin') ? [['modul', 'Modüller']] : []), ['cop', 'Çöp kutusu' + ((s.trash.length + (s.cop || []).length) ? ' · ' + (s.trash.length + (s.cop || []).length) : '')]
       ].map(([id, label]) => ({
         label,
@@ -7232,7 +7471,7 @@ class Component extends DCLogic {
       },
 
       profil: (() => {
-        const acik = s.faults.filter(f => f.status !== 'cozuldu')
+        const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status))
           .map(f => s.assets.find(a => a.id === f.assetId)).filter(Boolean).slice(0, 8);
         return {
           note: 'Haritaya tıklayarak nokta koyun; iki veya daha çok nokta arasındaki uzaklık, kot farkı (rakım), tırmanma–iniş ve yol profili hesaplanır. Noktaları sürükleyerek düzeltebilirsiniz. Rakım için internet gerekir, uzaklık çevrimdışı da ölçülür.',
@@ -7350,7 +7589,7 @@ class Component extends DCLogic {
       // için önce var olan sorulur.
       newFaultForAsset: () => {
         if (!sel) return;
-        const acikOlan = s.faults.filter(f => f.assetId === sel.id && f.status !== 'cozuldu' && f.status !== 'iptal');
+        const acikOlan = s.faults.filter(f => f.assetId === sel.id && !KAPALI_DURUM.includes(f.status) && f.status !== 'iptal');
         if (acikOlan.length) {
           const f = acikOlan[0];
           const devam = window.confirm(sel.code + ' kaydında açık arıza var:\n\n'
@@ -7454,6 +7693,53 @@ class Component extends DCLogic {
             this.say('Sahaya iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
           }
         },
+        ekipBilgi: (() => {
+          const ad = ff ? ff.crew : '';
+          const e = (s.ekipler || {})[ad];
+          if (!ad || ad === 'Atanmadı' || !e) return 'Ekip atanmadı — atama yapılmadan iş sahaya düşmez.';
+          const acik = s.faults.filter(x => x.crew === ad && !KAPALI_DURUM.includes(x.status)).length;
+          return e.vardiya + ' · ' + ((e.yetkinlik || []).join(', ') || 'yetkinlik girilmedi')
+            + ' · şu an ' + acik + ' açık iş';
+        })(),
+        ekipUyariVar: (() => {
+          const ad = ff ? ff.crew : '', e = (s.ekipler || {})[ad];
+          if (!ad || ad === 'Atanmadı' || !e) return false;
+          const gerek = (YETKINLIK_ESLEME.find(([re]) => re.test(String(ff.type || ''))) || [])[1];
+          return !!(gerek && !(e.yetkinlik || []).includes(gerek));
+        })(),
+        ekipUyari: (() => {
+          const ad = ff ? ff.crew : '', e = (s.ekipler || {})[ad];
+          const gerek = (YETKINLIK_ESLEME.find(([re]) => re.test(String(ff && ff.type || ''))) || [])[1];
+          if (!gerek || !e) return '';
+          return 'Bu arıza ' + gerek.toLowerCase() + ' yetkinliği istiyor, seçilen ekipte kayıtlı değil. Atama yine de yapılabilir.';
+        })(),
+        gecmisNot: (() => {
+          if (!ffAsset) return '';
+          const g = s.faults.filter(x => x.assetId === ffAsset.id && (!ff || x.id !== ff.id));
+          if (!g.length) return ffAsset.code + ' kaydında başka arıza yok.';
+          const sik = {};
+          for (const x of g) sik[x.type] = (sik[x.type] || 0) + 1;
+          const enSik = Object.entries(sik).sort((a, b) => b[1] - a[1])[0];
+          return ffAsset.code + ' kaydında ' + g.length + ' arıza geçmişi var · en sık: '
+            + enSik[0] + ' × ' + enSik[1] + ' · son kayıt ' + (g[0].opened || '—') + '.';
+        })(),
+        // Kapanmış kayıt yeniden açılır: geçmiş, fotoğraf ve maliyet korunur
+        yenidenAc: {
+          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canAssign),
+          not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
+          go: () => {
+            const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();
+            if (!neden) return;
+            const g = this.state.faultForm;
+            this.setState({
+              faultForm: {
+                ...g, status: 'yeniden', tekrar: (g.tekrar || 0) + 1,
+                note: ((g.note || '') + (g.note ? '\n' : '') + 'YENİDEN AÇILDI · ' + this.damga() + ' · ' + neden)
+              }
+            });
+            this.say('Kayıt yeniden açıldı — kaydetmeyi tamamlayın.');
+          }
+        },
         kanitVar: kanitOn,
         kanitNot: 'Kanıt zorunlu: “Çözüldü” işaretlemek için kayıtta en az bir fotoğraf olmalı — sahada çekilen tek fotoğraf yeterli.',
         cta: s.offline ? 'Cihaza kaydet (kuyruğa al)' : (ff && ff.id ? 'Güncelle ve eşitle' : 'Kaydet ve eşitle'),
@@ -7522,6 +7808,20 @@ class Component extends DCLogic {
       isaretle: i => () => this.setState({ faultForm: { ...this.state.faultForm, isaret: i } }),
       saveFault: () => {
         const f = this.state.faultForm;
+        // Mükerrer kayıt denetimi — yalnızca yeni kayıt açılırken
+        if (f && !f.id && f.assetId) {
+          const ben = this.mukerrerBul(f);
+          if (ben.length) {
+            const liste = ben.slice(0, 3).map(x => '• ' + x.no + ' · ' + x.type + ' · '
+              + (STATUS_LABEL[x.status] || x.status) + ' · ' + x.opened + ' · ' + x.crew).join('\n');
+            const ac = window.confirm('Bu tesiste benzer kayıt var:\n\n' + liste
+              + '\n\nTAMAM: var olan kaydı açar, yeni kayıt oluşmaz.\nİPTAL: yine de ayrı kayıt açar.');
+            if (ac) {
+              return this.setState({ faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, ...ben[0] } },
+                () => this.duyur(ben[0].no + ' açıldı — mükerrer kayıt oluşmadı. Yeni bilgiyi bu kaydın notuna yazın.', 6000, 'iyi'));
+            }
+          }
+        }
         // Kanıtsız kapanış: fotoğraf olmadan “Çözüldü” yazılamaz
         if (kanitOn && f && f.status === 'cozuldu' && !((f.photos || []).length)) {
           return this.say('Kanıt zorunlu — kapatmadan önce en az bir fotoğraf ekleyin.', true);
@@ -7801,7 +8101,7 @@ class Component extends DCLogic {
         // Açık arıza özeti: sekmeye girildiğinde ilk görülen şey bu
         arizaOzet: (() => {
           const hepsi = s.faults.filter(f => f.assetId === sel.id);
-          const acikOlan = hepsi.filter(f => f.status !== 'cozuldu' && f.status !== 'iptal');
+          const acikOlan = hepsi.filter(f => !KAPALI_DURUM.includes(f.status) && f.status !== 'iptal');
           const kapali = hepsi.length - acikOlan.length;
           if (!hepsi.length) {
             return {
@@ -7957,7 +8257,7 @@ class Component extends DCLogic {
       })(),
       isListesi: (() => {
         const my = me && me.crew;
-        const acik = s.faults.filter(f => f.status !== 'cozuldu');
+        const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
         const gecikmis = s.assets.map(a => ({ a, b: this.bakimDurum(a) }))
           .filter(r => r.b.gun !== null && r.b.gun < 0)
           .sort((x, y) => x.b.gun - y.b.gun).slice(0, 6);
@@ -8010,8 +8310,39 @@ class Component extends DCLogic {
         }
         const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
         const near = [...s.assets].map(a => ({ a, km: this.distKm(a) })).sort((x, y) => x.km - y.km).slice(0, 8);
-        const openF = s.faults.filter(f => f.status !== 'cozuldu');
+        const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
+        // Tekrarlayan arıza: aynı tesiste birden çok kayıt — kalıcı çözüm işareti
+        const tekrarList = (() => {
+          const g = {};
+          for (const f of s.faults) {
+            const o = (g[f.assetId] = g[f.assetId] || { n: 0, turler: {}, son: '', acik: 0 });
+            o.n++;
+            o.turler[f.type] = (o.turler[f.type] || 0) + 1;
+            if (!KAPALI_DURUM.includes(f.status)) o.acik++;
+            if (!o.son) o.son = f.opened;
+          }
+          return Object.entries(g).filter(([, o]) => o.n > 1).sort((x, y) => y[1].n - x[1].n).slice(0, 12)
+            .map(([id, o]) => {
+              const a = s.assets.find(x => x.id === id);
+              const enSik = Object.entries(o.turler).sort((x, y) => y[1] - x[1])[0];
+              return {
+                code: a ? a.code : '—', place: a ? this.yer(a) : 'kayıt bulunamadı',
+                n: o.n + ' arıza', tur: enSik ? enSik[0] + ' × ' + enSik[1] : '—',
+                son: o.son || '—', acik: o.acik ? o.acik + ' açık' : 'kapalı',
+                acikFg: o.acik ? ui.acc : ui.mut,
+                open: () => {
+                  if (!a) return;
+                  this.flyTo(a.lat, a.lon, 16);
+                  this.setState({ selected: a.id, panel: 'detay', detailTab: 'ariza' });
+                }
+              };
+            });
+        })();
         return {
+          tekrar: tekrarList,
+          tekrarYok: tekrarList.length === 0,
+          tekrarNot: 'Aynı tesiste birden çok arıza kaydı olanlar — en çok kayıtlıdan başlar.',
+          tekrarBos: 'Aynı tesiste ikinci arıza kaydı yok. Bir tesis burada görünmeye başladıysa aynı parça tekrar arızalanıyor demektir; kalıcı çözüm gerekir.',
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
             { n: String(s.assets.filter(a => a.type === 'kuyu').length), label: 'Kuyu' },

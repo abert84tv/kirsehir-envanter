@@ -159,7 +159,10 @@ document.getElementById('b-hyb').onclick = () => setBase('hyb');
 const HAT_REN = { terfi: '#ec3013', isale: '#201e1d', sebeke: '#6c6763', ag: '#1b6ef3', og: '#7b3fbf', dc: '#c08a00' };
 const HAT_AD = { terfi: 'Terfi hattı', isale: 'İsale hattı', sebeke: 'Şebeke hattı', ag: 'AG enerji hattı', og: 'OG enerji hattı', dc: 'GES DC hattı' };
 const hatLayer = L.layerGroup().addTo(map);
+const HAT_KEY = 'ks-hat-katman';
+const SUZ_KEY = 'ks-suzgec';
 let hatVeri = [], hatAcik = true;
+try { hatAcik = localStorage.getItem(HAT_KEY) !== '0'; } catch (e) { /* depolama kapalı */ }
 function hatMesafe(a, b) {
   const rd = x => x * Math.PI / 180;
   const dLat = rd(b[0] - a[0]), dLon = rd(b[1] - a[1]);
@@ -185,8 +188,10 @@ function cizHatlar() {
 function hatKatman(ac) {
   hatAcik = !!ac;
   document.getElementById('t-hat').classList.toggle('on', hatAcik);
+  try { localStorage.setItem(HAT_KEY, hatAcik ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
   cizHatlar();
 }
+hatKatman(hatAcik);
 document.getElementById('t-hat').onclick = () => {
   hatKatman(!hatAcik);
   // Tercih uygulamada saklanır: kullanıcı kapattıysa bir dahaki girişte kapalı gelir
@@ -421,6 +426,7 @@ addEventListener('message', e => {
   }
   if (d.ks === 'hatKatman') hatKatman(d.on);
   if (d.ks === 'filter') {
+    try { localStorage.setItem(SUZ_KEY, JSON.stringify(d.filter)); } catch (e) { /* depolama kapalı */ }
     filtreUygula(d.filter);
   }
 });

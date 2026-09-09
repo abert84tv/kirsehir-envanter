@@ -104,13 +104,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="font:600 10.5px/1.4 var(--font-body);color:var(--color-neutral-700);max-width:230px">{{ loginForm.deviceLine }}</span>
 <button onClick="{{ login }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 13px/1 var(--font-body);padding:15px 22px;justify-content:center;flex:none">Giriş yap</button>
 </div>
-<sc-if value="{{ tekDokunus }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ tekDokunusGir }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;width:100%;padding:15px 24px;border-top:2px solid var(--color-text);background:var(--color-accent);color:#fff" style-hover="background:var(--color-accent-600)">
-<span style="flex:none;font:700 15px/1 var(--font-body)">→</span>
-<span style="flex:1;font:700 12.5px/1.3 var(--font-body);letter-spacing:.04em;text-transform:uppercase">{{ tekDokunusAd }} olarak devam et</span>
-</button>
-</sc-if>
-<div style="padding:12px 24px 18px;font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Şifreniz cihazda saklanmaz; doğrulama veritabanının içinde yapılır. Oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
+<div style="padding:12px 24px 18px;font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Doğrulama veritabanının içinde yapılır; “Beni hatırla” işaretliyse kullanıcı adı ve şifre yalnızca bu cihazda saklanır. Oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
 </div>
 </div>
 </sc-if>
@@ -188,12 +182,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <span style="flex:1 1 0;min-width:8px"></span>
 <span style="flex:none;white-space:nowrap;padding:9px 16px;font:600 10px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}">{{ counts.line1 }} · OpenStreetMap zemini</span>
 </div>
-<sc-if value="{{ map.filtreBos }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:2px solid var(--color-accent);background:var(--color-accent-100)">
-<span style="flex:1;min-width:0;font:600 10.5px/1.4 var(--font-body);color:var(--color-accent-800)">Bütün tür süzgeçleri kapalı — haritada işaret görünmez.</span>
-<button onClick="{{ map.hepsiniAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid var(--color-accent);color:var(--color-accent-800);font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;min-height:36px;display:flex;align-items:center">Tümünü aç</button>
-</div>
-</sc-if>
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
 <button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.ariza }}</button>
@@ -1171,32 +1159,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 </div>
 
-<sc-if value="{{ conflict.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;inset:0;z-index:90;background:rgba(32,30,29,.55);display:flex;align-items:center;justify-content:center;padding:28px">
-<div style="background:{{ ui.bg }};border:2px solid {{ ui.fg }};max-width:640px;width:100%">
-<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};background:var(--color-accent);color:#fff">
-<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Çakışma</div>
-<div style="font:600 12px/1.45 var(--font-body)">{{ conflict.bilgi }}</div>
-</div>
-<div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
-<div style="display:flex;flex-direction:column;gap:5px">
-<span style="font:700 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.acc }}">Sizin yazdığınız</span>
-<span style="font:400 12px/1.5 var(--font-body);color:{{ ui.fg }};border:2px solid {{ ui.rule }};padding:10px">{{ conflict.benim }}</span>
-</div>
-<div style="display:flex;flex-direction:column;gap:5px">
-<span style="font:700 9px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Diğerinin yazdığı</span>
-<span style="font:400 12px/1.5 var(--font-body);color:{{ ui.fg }};border:2px solid {{ ui.rule }};padding:10px">{{ conflict.onun }}</span>
-</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onClick="{{ conflict.birlestir }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11px/1 var(--font-body);padding:13px 16px;justify-content:center">İkisini birleştir</button>
-<button onClick="{{ conflict.benimKalsin }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 15px">Benimki kalsın</button>
-<button onClick="{{ conflict.onunKalsin }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:13px 15px">Onunki kalsın</button>
-</div>
-<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">Hangisini seçerseniz seçin diğeri silinmez — Geçmiş sekmesinde ikisi de durur.</div>
-</div>
-</div>
-</div>
-</sc-if>
 
 <sc-if value="{{ card.on }}" hint-placeholder-val="{{ false }}">
 <div id="tesis-karti-perde" style="position:fixed;inset:0;z-index:95;background:rgba(32,30,29,.6);overflow:auto;padding:24px;display:flex;justify-content:center;align-items:flex-start">
@@ -1995,12 +1957,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 0;min-width:0;text-align:center;padding:8px 2px;font:700 9.5px/1.2 var(--font-body);letter-spacing:.05em;text-transform:uppercase;background:{{ f.bg }};color:{{ f.fg }};border-right:2px solid {{ ui.rule }}">{{ f.label }}</button>
 </sc-for>
 </div>
-<sc-if value="{{ map.filtreBos }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:2px solid var(--color-accent);background:var(--color-accent-100)">
-<span style="flex:1;min-width:0;font:600 10.5px/1.4 var(--font-body);color:var(--color-accent-800)">Bütün tür süzgeçleri kapalı — haritada işaret görünmez.</span>
-<button onClick="{{ map.hepsiniAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid var(--color-accent);color:var(--color-accent-800);font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;min-height:44px;display:flex;align-items:center">Tümünü aç</button>
-</div>
-</sc-if>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
 <button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.fg }};border:2px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button>
@@ -3498,27 +3454,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 
-<sc-if value="{{ conflict.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;inset:0;z-index:92;background:rgba(32,30,29,.72);display:flex;align-items:flex-end">
-<div class="scroll" style="width:100%;max-height:92dvh;overflow:auto;background:{{ ui.surf }};border-top:2px solid var(--color-accent)">
-<div style="padding:12px 13px;background:var(--color-accent);color:#fff;font:700 10.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase">Çakışma — iki kayıt birden değişti</div>
-<div style="padding:12px 13px;font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }};border-bottom:2px solid {{ ui.rule }}">{{ conflict.bilgi }}</div>
-<div style="padding:12px 13px;border-bottom:2px solid {{ ui.rule }}">
-<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Sizin yazdığınız</div>
-<div style="font:400 12px/1.5 var(--font-body);white-space:pre-wrap">{{ conflict.benim }}</div>
-</div>
-<div style="padding:12px 13px;border-bottom:2px solid {{ ui.rule }}">
-<div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Sunucudaki</div>
-<div style="font:400 12px/1.5 var(--font-body);white-space:pre-wrap">{{ conflict.onun }}</div>
-</div>
-<div style="display:flex;flex-direction:column;gap:8px;padding:12px 13px">
-<button onClick="{{ conflict.birlestir }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11px/1 var(--font-body);min-height:48px;justify-content:center">İkisini birleştir</button>
-<button onClick="{{ conflict.benimKalsin }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 12px">Benimki kalsın</button>
-<button onClick="{{ conflict.onunKalsin }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:15px 12px">Sunucudaki kalsın</button>
-</div>
-</div>
-</div>
-</sc-if>
 </sc-if>
 
 <!-- ══════════════ ALAN DÜZENLEME — masaüstü ve telefon aynı ══════════════ -->
@@ -3698,11 +3633,8 @@ const ROLE_ORDER = [
   ['personel', 'Arıza Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
-// Hesaplar yalnızca veritabanında. Programın içinde gömülü kullanıcı ve
-// şifre yok: çevrimdışıyken de yalnızca bu cihazda daha önce doğrulanmış
-// hesap girebilir (aşağıdaki SON_KEY kaydı).
-const USERS = [];
-const SON_KEY = 'ks-son-hesap';
+// Hesaplar yalnızca veritabanında; programın içinde gömülü kullanıcı ve şifre
+// yok. Çevrimdışıyken bu cihazda daha önce doğrulanmış hesaplar girebilir.
 const ALL_ROLES = ROLE_ORDER.map(r => r[0]);
 const PERMS = [
   ['gor', 'Envanteri ve haritayı görüntüleme', ALL_ROLES],
@@ -3726,7 +3658,7 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.09-6';
+const SURUM = '2026.09.09-12';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -3796,10 +3728,18 @@ class Component extends DCLogic {
     arzQ: '', arzSort: { k: 'no', dir: 1 }, arzF: {},
     zoom: 11, center: null, fly: null,
     assets: [], faults: [], selected: null, detailTab: 'bilgi',
-    panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false, hatKatman: true,
-    filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true },
+    panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false,
+    hatKatman: (() => { try { return localStorage.getItem('ks-hat-katman') !== '0'; } catch (e) { return true; } })(),
+    filter: (() => {
+      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true };
+      try {
+        const p = JSON.parse(localStorage.getItem('ks-suzgec') || 'null');
+        if (p && typeof p === 'object') for (const k in v) v[k] = p[k] !== false;
+      } catch (e) { /* depolama kapalı */ }
+      return v;
+    })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
-    log: {}, trash: [], cop: [], conflict: null, card: null, ayarBolum: 'gorunum', alanForm: null,
+    log: {}, trash: [], cop: [], card: null, ayarBolum: 'gorunum', alanForm: null,
     users: [], userForm: null, pwForm: null,
     fotolar: {}, fotoYuk: null, kayitliSesler: {},
     coordMode: false, picked: null, duyuru: null, koyForm: null, buyut: null,
@@ -3835,8 +3775,7 @@ class Component extends DCLogic {
       if (ek && typeof ek === 'object') this.setState({ ekKoyler: ek });
     } catch (e) { /* depolama kapalı */ }
     this._sbYuk = import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return M; });
-    this._sbYuk.then(M => this.anahtarlaGir(M))
-      .catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
+    this._sbYuk.catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
     this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
     window.addEventListener('resize', this._rs);
     // Bağlantı gelince çevrimdışı kuyruk kendiliğinden boşalır; dakikada bir de denenir
@@ -3857,12 +3796,7 @@ class Component extends DCLogic {
       const raw = localStorage.getItem(SES_KEY);
       if (raw) {
         const sv = JSON.parse(raw);
-        const u = this.usersOku().find(x => x.user === sv.user);
-        if (u && u.aktif !== false && !u.mustChange && sv.pw === u.pw) {
-          this._prefYuklendi = true;
-          this.setState({ session: u, role: u.roleLabel, loginUser: u.user, remember: true, autoLogin: true, ...this.prefOku(u) },
-            () => setTimeout(() => this.prefUygula(), 600));
-        }
+        if (sv && sv.user) this.setState({ loginUser: sv.user, loginPw: sv.pw || '', remember: true });
       }
     } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
     import('./koyler.js').then(k => { this._yer = k.YERLESIM; this.forceUpdate(); }).catch(() => {});
@@ -3878,7 +3812,10 @@ class Component extends DCLogic {
     this._msg = e => {
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
-      if (d.ks === 'hatKatman') this.setState({ hatKatman: !!d.on });
+      if (d.ks === 'hatKatman') {
+        try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
+        this.setState({ hatKatman: !!d.on });
+      }
       if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
       if (d.ks === 'konum') { this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
       if (d.ks === 'konumYok') {
@@ -4054,6 +3991,7 @@ class Component extends DCLogic {
     try { w.postMessage({ ks: 'profil', noktalar }, '*'); } catch (e) { /* çerçeve henüz yüklenmedi */ }
   }
   pushMap() {
+    try { localStorage.setItem('ks-suzgec', JSON.stringify(this.state.filter)); } catch (e) { /* depolama kapalı */ }
     const w = this.mapWin(); if (!w) return;
     w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
     w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
@@ -4658,20 +4596,6 @@ class Component extends DCLogic {
     } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
     return [];
   }
-  // Çevrimdışı giriş için: doğrulanmış hesabın şifresi değil, özeti saklanır
-  async ozet(s) {
-    const b = new TextEncoder().encode('ks|' + s);
-    const h = await crypto.subtle.digest('SHA-256', b);
-    return [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, '0')).join('');
-  }
-  async sonHesapYaz(u, sifre) {
-    try {
-      localStorage.setItem(SON_KEY, JSON.stringify({
-        user: u.user, ozet: await this.ozet(sifre),
-        kayit: { ...u, pw: undefined }
-      }));
-    } catch (e) { /* depolama kapalı */ }
-  }
   // ── veritabanı bağlantısı
   async anahtarlaGir(M) {
     if (!M.tokenOku()) return;
@@ -4685,7 +4609,7 @@ class Component extends DCLogic {
     this._prefYuklendi = true;
     this.setState({
       session: u, role: ROLE_LABEL[u.role] || u.role, autoLogin: !!sunucudan,
-      remember: true, loginUser: u.user, loginPw: '', loginErr: '', pwForm: null,
+      loginUser: u.user, loginErr: '', pwForm: null,
       sunucu: !!sunucudan, tab: 'harita', ...this.prefOku(u)
     }, () => { this.prefUygula(); if (sunucudan) { this.usersYenile(); this.veriYenile(); } });
   }
@@ -5148,17 +5072,27 @@ class Component extends DCLogic {
       const r = await M.sifreDegistir(f.yeni);
       if (!r.ok) return this.setState({ pwForm: { ...f, err: r.cevrimdisi ? 'Bağlantı yok — şifre değiştirmek internet gerektirir.' : r.err } });
       const o = await M.oturumAc();
-      if (o.ok) { this.oturumKur(M.suret(o.data), true); return this.say('Şifreniz değiştirildi.'); }
+      if (o.ok) {
+        this.girisKaydet(f.user, f.yeni);
+        this.oturumKur(M.suret(o.data), true);
+        return this.say('Şifreniz değiştirildi.');
+      }
     }
     const list = this.usersKaydet(this.state.users.map(u =>
       u.user === f.user ? { ...u, pw: f.yeni, mustChange: false } : u));
     const u = list.find(x => x.user === f.user);
-    try {
-      if (this.state.remember) localStorage.setItem(SES_KEY, JSON.stringify({ user: u.user, pw: f.yeni }));
-    } catch (e) { /* depolama kapalı */ }
+    this.girisKaydet(u.user, f.yeni);
     this._prefYuklendi = true;
     this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginUser: u.user, ...this.prefOku(u) },
       () => { this.prefUygula(); this.say('Şifreniz değiştirildi.'); });
+  }
+  // Kayıtlı giriş tek yerden yazılır: sunucudan da, cihazdan da giriliyor olsa
+  // "Beni hatırla" aynı şekilde davranır.
+  girisKaydet(user, pw) {
+    try {
+      if (this.state.remember && user && pw) localStorage.setItem(SES_KEY, JSON.stringify({ user, pw }));
+      else localStorage.removeItem(SES_KEY);
+    } catch (e) { /* depolama kapalı */ }
   }
   async doLogin() {
     const name = this.state.loginUser.trim().toLowerCase();
@@ -5174,6 +5108,7 @@ class Component extends DCLogic {
       if (r.ok) {
         const u = M.suret(r.data);
         if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
+        this.girisKaydet(u.user, this.state.loginPw);
         return this.oturumKur(u, true);
       }
       // sunucu cevap verdi ve reddettiyse cihazdaki listeye düşmeyiz
@@ -5187,17 +5122,14 @@ class Component extends DCLogic {
     return this.yerelGiris(name);
   }
   yerelGiris(name) {
-    const list = this.state.users.length ? this.state.users : USERS;
+    const list = this.state.users;
     const u = list.find(x => x.user === name);
     if (!u) return this.setState({ loginErr: 'Böyle bir kullanıcı adı yok.' });
     if (u.aktif === false) return this.setState({ loginErr: 'Bu hesap kapatıldı — yöneticiye başvurun.' });
     const pw = this.state.loginPw;
     if (pw !== u.pw) return this.setState({ loginErr: 'Şifre hatalı.' });
     if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
-    try {
-      if (this.state.remember) localStorage.setItem(SES_KEY, JSON.stringify({ user: u.user, pw }));
-      else localStorage.removeItem(SES_KEY);
-    } catch (e) { /* depolama kapalı olabilir */ }
+    this.girisKaydet(u.user, pw);
     this._prefYuklendi = true;
     this.setState({ session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
   }
@@ -5209,18 +5141,13 @@ class Component extends DCLogic {
       if (p.mapBase) out.mapBase = p.mapBase;
       if (p.theme) out.theme = p.theme;
       if (typeof p.navMode === 'boolean') out.navMode = p.navMode;
-      // Dört tür de kapalıysa boş harita ile açılmasın: tercihi yok say
+      // Süzgeç olduğu gibi geri gelir — hepsi kapalı bırakıldıysa kapalı açılır
       if (p.filter && typeof p.filter === 'object') {
-        const f = {
+        out.filter = {
           kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
           ag: p.filter.ag !== false, ges: p.filter.ges !== false,
           pasif: p.filter.pasif !== false
         };
-        // Dört tür de kapalıysa boş harita ile açılmasın
-        if (!['kuyu', 'depo', 'ag', 'ges'].some(k => f[k])) {
-          f.kuyu = f.depo = f.ag = f.ges = true;
-        }
-        out.filter = f;
       }
       if (typeof p.hatKatman === 'boolean') out.hatKatman = p.hatKatman;
       if (p.ayarBolum) out.ayarBolum = p.ayarBolum;
@@ -5237,22 +5164,17 @@ class Component extends DCLogic {
     const s = this.state;
     this.toMap({ ks: 'setBase', base: s.mapBase });
     this.toMap({ ks: 'navMode', on: s.navMode });
-    this.toMap({ ks: 'hatKatman', on: s.hatKatman !== false });
     this.pushMap();
   }
   prefYaz() {
     const s = this.state;
     if (!s.session) return;
     try {
-      // "hepsi kapalı" bir süzgeç durumu saklanmaz — sonraki açılış boş gelmesin
       const f = {
         kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
         ag: s.filter.ag !== false, ges: s.filter.ges !== false,
         pasif: s.filter.pasif !== false
       };
-      if (!['kuyu', 'depo', 'ag', 'ges'].some(k => f[k])) {
-        f.kuyu = f.depo = f.ag = f.ges = true;
-      }
       localStorage.setItem('ks-pref-' + s.session.user, JSON.stringify({
         mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f, ayarBolum: s.ayarBolum,
         hatKatman: s.hatKatman,
@@ -6195,13 +6117,9 @@ class Component extends DCLogic {
         rememberMark: s.remember ? '■' : '□',
         toggleRemember: () => this.setState({ remember: !this.state.remember }),
         rememberNote: s.remember
-          ? 'Kullanıcı adı ve şifre bu cihazda saklanır — bir dahaki açılışta program doğrudan açılır, çıkış yapsanız da alanlar dolu gelir.'
-          : 'Her açılışta kullanıcı adı ve şifre istenir.',
-        dolu: (() => {
-          let sv = null;
-          try { sv = JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch (e) { /* depolama kapalı */ }
-          return !!(sv && s.loginUser === sv.user && s.loginPw === sv.pw && s.loginPw);
-        })(),
+          ? 'Kullanıcı adı ve şifreniz yalnızca bu cihazda saklanır: program açılışta alanları dolu getirir, “Giriş yap”a basmanız yeter. Kendiliğinden içeri girmez.'
+          : 'Hiçbir şey saklanmaz; her açılışta kullanıcı adı ve şifre yazılır.',
+        dolu: false,
         temizle: () => this.setState({ loginUser: '', loginPw: '', loginErr: '', remember: false }),
         hint: 'Rol hesaba bağlıdır, ekranda seçilmez. Hesabı olmayan personeli Yönetici, Ayarlar > Yetkiler ve kullanıcılar ekranından ekler.'
       },
@@ -6212,23 +6130,19 @@ class Component extends DCLogic {
         return sk || !!(this._sb && this._sb.tokenOku());
       })(),
       logout: () => {
-        // "Beni hatırla" işaretliyse çıkıştan sonra tek dokunuşla girilir:
-        // sunucu oturumunda anahtar cihazda kalır, şifre hiçbir yere yazılmaz.
+        // Çıkış tam çıkıştır: sunucu oturumu kapatılır, cihazdaki anahtar
+        // silinir. Yalnızca kullanıcı adı hatırlanır — şifre istenmeden
+        // kimse yeniden giremez, sayfa yenilense de.
+        const M = this._sb;
+        if (M) { M.cikis(); M.tokenYaz(null); }
         let sv = null;
         try { sv = JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch (e) { /* depolama kapalı */ }
-        const M = this._sb;
-        const anahtar = M && M.tokenOku();
-        if (M && !s.remember) M.cikis();
         this.setState({
           session: null, autoLogin: false, panel: 'yok', faultForm: null, selected: null,
-          loginUser: sv ? sv.user : (s.remember && me ? me.user : ''),
-          loginPw: sv ? sv.pw : '', loginErr: '',
-          remember: !!sv || !!(s.remember && anahtar), tab: 'harita', scenario: null, newAsset: null
-        });
+          loginUser: sv ? sv.user : '', loginPw: sv ? (sv.pw || '') : '', loginErr: '',
+          remember: !!sv, tab: 'harita', scenario: null, newAsset: null
+        }, () => this.say('Oturum kapatıldı. Yeniden girmek için “Giriş yap”a basın.'));
       },
-      tekDokunus: !!(s.remember && !s.session && this._sb && this._sb.tokenOku()),
-      tekDokunusAd: (s.loginUser || '').trim() || 'Kayıtlı hesap',
-      tekDokunusGir: () => this.anahtarlaGir(this._sb),
       sessionCard: me ? {
         name: me.name, role: me.roleLabel || ROLE_LABEL[me.role] || me.role,
         dev: (s.device === 'phone' ? 'Telefon' : 'Bilgisayar') + ' oturumu' + (s.autoLogin ? ' · kayıtlı girişle açıldı' : (s.remember ? ' · giriş bu cihazda saklandı' : '')),
@@ -7869,7 +7783,7 @@ class Component extends DCLogic {
         try { sk = !!localStorage.getItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
         const anahtar = !!(this._sb && this._sb.tokenOku());
         if (anahtar) return 'Giriş ekranındaki “Beni hatırla” işaretli olduğu için bu cihaza bir oturum anahtarı kaydedildi — program açılışta giriş ekranını atlıyor. Şifreniz saklanmıyor, yalnızca bu anahtar duruyor. Ortak bir bilgisayarda ya da başkasının telefonunda açtıysanız buradan silin: anahtar hem cihazdan hem veritabanından kaldırılır, o cihaz bir daha kendiliğinden girmez. Hesabınız etkilenmez.';
-        if (sk) return 'Bu cihaza kullanıcı adınız ve şifreniz kaydedildi — program açılışta giriş ekranını atlıyor. Ortak bir cihazda açtıysanız buradan silin; hesabınız etkilenmez.';
+        if (sk) return '“Beni hatırla” işaretliyken kullanıcı adı ve şifre yalnızca bu cihazda saklanır: giriş ekranı alanları dolu getiriyor, “Giriş yap”a basmanız yetiyor — kendiliğinden girmiyor. Ortak bir cihazda açtıysanız buradan silin; hesabınız etkilenmez.';
         return 'Bu cihazda kayıtlı giriş yok — program her açılışta kullanıcı adı ve şifre istiyor.';
       })(),
       vFill: {
@@ -7900,21 +7814,6 @@ class Component extends DCLogic {
       saveNote: () => {
         const id = s.selected;
         if (!id) return;
-        // çakışma denetimi: aynı kaydı başkası siz yazarken değiştirmiş olabilir
-        const digerleri = s.users.filter(u => !s.session || u.id !== s.session.id);
-        const carpisma = s.offline && !s.conflict && Math.random() < 0.5 && digerleri.length;
-        if (carpisma) {
-          const o = digerleri[Math.floor(Math.random() * digerleri.length)];
-          this.setState({
-            conflict: {
-              id, alan: 'Not',
-              benim: s.notes[id] || '',
-              onun: 'Kilit değişti, yeni anahtar muhtarda. Pompa panosu kapağı kırık.',
-              kim: o.name, zaman: this.damga()
-            }
-          });
-          return;
-        }
         const metin = (s.notes[id] || '').trim();
         this.iz(id, 'Not güncellendi', metin.slice(0, 90));
         if (metin && sel && sel.dbId && this._sb && this._sb.tokenOku() && !s.offline) {
@@ -7925,33 +7824,6 @@ class Component extends DCLogic {
         }
         this.say(s.offline ? 'Not cihaza yazıldı — bağlantı gelince eşitlenecek. Değişiklik Geçmiş sekmesine işlendi.' : 'Not kaydedildi ve Geçmiş sekmesine işlendi.');
       },
-      conflict: (() => {
-        const c = s.conflict;
-        if (!c) return { on: false, benim: '', onun: '', bilgi: '', bos: '' };
-        return {
-          on: true,
-          bilgi: `${c.kim} bu kaydın “${c.alan}” alanını siz çevrimdışıyken değiştirdi (${c.zaman}). İkisini birlikte görüp hangisinin kalacağına karar verin.`,
-          benim: c.benim || '(sizin yazdığınız boş)',
-          onun: c.onun,
-          bos: !c.benim,
-          benimKalsin: () => {
-            this.iz(c.id, 'Çakışma çözüldü', `${c.kim} tarafından yapılan değişiklik yerine kendi kaydınız korundu (${c.alan}).`);
-            this.setState({ conflict: null });
-            this.say('Sizin yazdığınız korundu. Diğer kayıt geçmişte duruyor, silinmedi.');
-          },
-          onunKalsin: () => {
-            this.setState({ conflict: null, notes: { ...s.notes, [c.id]: c.onun } });
-            this.iz(c.id, 'Çakışma çözüldü', `${c.kim} tarafından yapılan değişiklik kabul edildi (${c.alan}).`);
-            this.say(`${c.kim} tarafından yazılan kayıt alındı.`);
-          },
-          birlestir: () => {
-            const yeni = (c.benim ? c.benim + '\n' : '') + c.onun;
-            this.setState({ conflict: null, notes: { ...s.notes, [c.id]: yeni } });
-            this.iz(c.id, 'Çakışma çözüldü', `İki kayıt birleştirildi (${c.alan}) — ${c.kim} ile ortak.`);
-            this.say('İki kayıt birleştirildi — ikisi de not alanında duruyor.');
-          }
-        };
-      })(),
       testForm: {
         open: !!s.testForm,
         statik: s.testForm ? s.testForm.statik : '', dinamik: s.testForm ? s.testForm.dinamik : '',

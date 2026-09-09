@@ -578,6 +578,121 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 
+<!-- ambar ve zimmet -->
+<sc-if value="{{ tab.ambar }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
+<div style="flex:1;min-width:280px">
+<h2 style="font:700 17px/1 var(--font-heading);margin:0 0 5px">Ambar ve zimmet</h2>
+<div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ ambarEkran.not }}</div>
+</div>
+<button onClick="{{ ambarEkran.yeni }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:700 11px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Hareket gir</button>
+</div>
+<div style="display:flex;border-bottom:2px solid {{ ui.rule }}">
+<sc-for list="{{ ambarEkran.stats }}" as="st" hint-placeholder-count="4">
+<div style="flex:1;padding:15px 18px;border-right:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
+<span style="font:700 26px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 9px/1.2 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">{{ st.label }}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ ambarEkran.form.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<span style="flex:1;min-width:160px;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ ambarEkran.form.baslik }}</span>
+<div style="display:flex;border:2px solid {{ ui.rule }}">
+<sc-for list="{{ ambarEkran.form.turler }}" as="t" hint-placeholder-count="5">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:10px 13px;background:{{ t.bg }};color:{{ t.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">{{ t.label }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<label style="flex:2 1 260px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Malzeme</span>
+<select value="{{ ambarEkran.form.malzeme }}" onChange="{{ ambarEkran.form.onMalzeme }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.form.malzemeler }}" as="m" hint-placeholder-count="6">
+<option value="{{ m }}">{{ m }}</option>
+</sc-for>
+</select>
+</label>
+<sc-if value="{{ ambarEkran.form.ambarVar }}" hint-placeholder-val="{{ true }}">
+<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Ambar</span>
+<select value="{{ ambarEkran.form.ambar }}" onChange="{{ ambarEkran.form.onAmbar }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.form.ambarlar }}" as="a" hint-placeholder-count="4">
+<option value="{{ a }}">{{ a }}</option>
+</sc-for>
+</select>
+</label>
+</sc-if>
+<sc-if value="{{ ambarEkran.form.ekipVar }}" hint-placeholder-val="{{ false }}">
+<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Ekip</span>
+<select value="{{ ambarEkran.form.ekip }}" onChange="{{ ambarEkran.form.onEkip }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.form.ekipler }}" as="c" hint-placeholder-count="4">
+<option value="{{ c }}">{{ c }}</option>
+</sc-for>
+</select>
+</label>
+</sc-if>
+<label style="width:120px;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Adet</span>
+<input value="{{ ambarEkran.form.adet }}" onChange="{{ ambarEkran.form.onAdet }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Not (isteğe bağlı)</span>
+<input value="{{ ambarEkran.form.not }}" onChange="{{ ambarEkran.form.onNot }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:11px;font:400 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<span style="font:600 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">Mevcut: {{ ambarEkran.form.durum }}</span>
+<div style="display:flex;gap:9px">
+<button onClick="{{ ambarEkran.form.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:700 11px/1 var(--font-body);padding:12px 16px;justify-content:flex-start">Hareketi işle</button>
+<button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:12px 16px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<div style="padding:13px 20px;border-bottom:2px solid {{ ui.rule }};font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Stok mevcudu</div>
+<sc-for list="{{ ambarEkran.kalemler }}" as="k" hint-placeholder-count="10">
+<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }};flex-wrap:wrap">
+<div style="flex:1 1 260px;min-width:180px;display:flex;flex-direction:column;gap:3px">
+<span style="font:700 12px/1.25 var(--font-heading);color:{{ ui.fg }};text-wrap:pretty">{{ k.ad }}</span>
+<span style="font:400 10.5px/1.35 var(--font-body);color:{{ ui.mut }};text-wrap:pretty">{{ k.dagitim }} · {{ k.zimmet }} · {{ k.deger }}</span>
+</div>
+<span style="flex:0 1 auto;min-width:70px;text-align:right;font:700 12.5px/1 var(--font-body);color:{{ k.toplamFg }}">{{ k.toplam }}</span>
+<div style="flex:none;display:flex;gap:8px">
+<button onClick="{{ k.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px">Giriş</button>
+<button onClick="{{ k.zimmetVer }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px" style-hover="background:var(--color-accent);color:#fff">Zimmet</button>
+</div>
+</div>
+</sc-for>
+<div style="padding:13px 20px;border-bottom:2px solid {{ ui.rule }};border-top:2px solid {{ ui.rule }};font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Ekip zimmeti</div>
+<sc-for list="{{ ambarEkran.zimmetler }}" as="z" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }};flex-wrap:wrap">
+<span style="flex:0 1 auto;min-width:140px;font:700 12px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ z.ekip }}</span>
+<span style="flex:1 1 220px;min-width:0;font:400 11px/1.4 var(--font-body);color:{{ z.ozetFg }};text-wrap:pretty">{{ z.ozet }}</span>
+<sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px">İade</button>
+<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 11px" style-hover="background:var(--color-accent);color:#fff">Sarf</button>
+</sc-if>
+</div>
+</sc-for>
+<div style="padding:13px 20px;border-bottom:2px solid {{ ui.rule }};border-top:2px solid {{ ui.rule }};font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Son hareketler</div>
+<sc-if value="{{ ambarEkran.hareketYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 20px;font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:700px">{{ ambarEkran.hareketBos }}</div>
+</sc-if>
+<sc-for list="{{ ambarEkran.hareketler }}" as="x" hint-placeholder-count="0">
+<div style="padding:10px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+<span style="flex:0 1 auto;min-width:104px;font:700 10px/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ x.turFg }}">{{ x.tur }}</span>
+<span style="flex:1 1 200px;min-width:0;font:600 11.5px/1.3 var(--font-body);color:{{ ui.fg }};text-wrap:pretty">{{ x.malzeme }}</span>
+<span style="flex:none;font:700 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ x.adet }}</span>
+</div>
+<span style="font:400 10.5px/1.4 var(--font-body);color:{{ ui.mut }};text-wrap:pretty">{{ x.yer }} · {{ x.damga }} · {{ x.kim }} · {{ x.not }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
 <!-- bakım takvimi -->
 <sc-if value="{{ tab.bakim }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
@@ -1365,7 +1480,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;top:0;right:0;z-index:80;display:flex;justify-content:flex-end;padding:56px 18px 0;pointer-events:none;max-width:100%">
-<div style="pointer-events:auto;width:372px;max-width:calc(100vw - 36px);display:flex;align-items:flex-start;gap:12px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:18px;padding:13px 14px;box-shadow:0 16px 40px rgba(0,0,0,.20),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both">
+<div onClick="{{ duyuru.git }}" style="pointer-events:auto;width:372px;max-width:calc(100vw - 36px);display:flex;align-items:flex-start;gap:12px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:18px;padding:13px 14px;box-shadow:0 16px 40px rgba(0,0,0,.20),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
 <span style="flex:none;width:34px;height:34px;border-radius:10px;background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
 <div style="display:flex;align-items:baseline;gap:10px">
@@ -2323,6 +2438,114 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </button>
 </sc-for>
 <div style="height:14px"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tab.ambar }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0">
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
+<h2 style="font:700 16px/1.1 var(--font-heading);margin:0 0 5px">Ambar ve zimmet</h2>
+<div style="font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.not }}</div>
+<button onClick="{{ ambarEkran.yeni }}" class="btn btn-primary" style="width:100%;margin-top:11px;border:none;cursor:pointer;font:700 11.5px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Hareket gir</button>
+</div>
+<div style="display:flex;flex-wrap:wrap;border-bottom:2px solid {{ ui.rule }}">
+<sc-for list="{{ ambarEkran.stats }}" as="st" hint-placeholder-count="4">
+<div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<span style="font:700 20px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 9px/1.2 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">{{ st.label }}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ ambarEkran.form.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:10px">
+<span style="font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ ambarEkran.form.baslik }}</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<sc-for list="{{ ambarEkran.form.turler }}" as="t" hint-placeholder-count="5">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.rule }};background:{{ t.bg }};color:{{ t.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">{{ t.label }}</button>
+</sc-for>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Malzeme</span>
+<select value="{{ ambarEkran.form.malzeme }}" onChange="{{ ambarEkran.form.onMalzeme }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.form.malzemeler }}" as="m" hint-placeholder-count="6">
+<option value="{{ m }}">{{ m }}</option>
+</sc-for>
+</select>
+</label>
+<sc-if value="{{ ambarEkran.form.ambarVar }}" hint-placeholder-val="{{ true }}">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Ambar</span>
+<select value="{{ ambarEkran.form.ambar }}" onChange="{{ ambarEkran.form.onAmbar }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.form.ambarlar }}" as="a" hint-placeholder-count="4">
+<option value="{{ a }}">{{ a }}</option>
+</sc-for>
+</select>
+</label>
+</sc-if>
+<sc-if value="{{ ambarEkran.form.ekipVar }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Ekip</span>
+<select value="{{ ambarEkran.form.ekip }}" onChange="{{ ambarEkran.form.onEkip }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.form.ekipler }}" as="c" hint-placeholder-count="4">
+<option value="{{ c }}">{{ c }}</option>
+</sc-for>
+</select>
+</label>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Adet</span>
+<input value="{{ ambarEkran.form.adet }}" onChange="{{ ambarEkran.form.onAdet }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:{{ ui.mut }}">Not (isteğe bağlı)</span>
+<input value="{{ ambarEkran.form.not }}" onChange="{{ ambarEkran.form.onNot }}" style="all:unset;box-sizing:border-box;border:2px solid {{ ui.rule }};padding:12px;font:400 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<span style="font:600 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">Mevcut: {{ ambarEkran.form.durum }}</span>
+<button onClick="{{ ambarEkran.form.kaydet }}" class="btn btn-primary" style="width:100%;border:none;cursor:pointer;font:700 12px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Hareketi işle</button>
+<button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;min-height:48px;display:flex;align-items:center;justify-content:center">Vazgeç</button>
+</div>
+</sc-if>
+<div style="padding:12px 14px;border-bottom:2px solid {{ ui.rule }};font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Stok mevcudu</div>
+<sc-for list="{{ ambarEkran.kalemler }}" as="k" hint-placeholder-count="10">
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="flex:1;min-width:0;font:700 12.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ k.ad }}</span>
+<span style="flex:none;font:700 12.5px/1 var(--font-body);color:{{ k.toplamFg }}">{{ k.toplam }}</span>
+</div>
+<span style="font:400 10.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ k.dagitim }} · {{ k.zimmet }}</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:3px">
+<button onClick="{{ k.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Giriş</button>
+<button onClick="{{ k.zimmetVer }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Zimmet</button>
+</div>
+</div>
+</sc-for>
+<div style="padding:12px 14px;border-bottom:2px solid {{ ui.rule }};border-top:2px solid {{ ui.rule }};font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Ekip zimmeti</div>
+<sc-for list="{{ ambarEkran.zimmetler }}" as="z" hint-placeholder-count="4">
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:5px">
+<span style="font:700 12.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ z.ekip }}</span>
+<span style="font:400 10.5px/1.4 var(--font-body);color:{{ z.ozetFg }}">{{ z.ozet }}</span>
+<sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:3px">
+<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">İade</button>
+<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-accent);color:{{ ui.acc }};font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Sarf</button>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<div style="padding:12px 14px;border-bottom:2px solid {{ ui.rule }};border-top:2px solid {{ ui.rule }};font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Son hareketler</div>
+<sc-if value="{{ ambarEkran.hareketYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:12px 14px;font:400 10.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.hareketBos }}</div>
+</sc-if>
+<sc-for list="{{ ambarEkran.hareketler }}" as="x" hint-placeholder-count="0">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="flex:1;min-width:0;font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ x.turFg }}">{{ x.tur }}</span>
+<span style="flex:none;font:700 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ x.adet }}</span>
+</div>
+<span style="font:600 11.5px/1.3 var(--font-body);color:{{ ui.fg }}">{{ x.malzeme }}</span>
+<span style="font:400 10px/1.35 var(--font-body);color:{{ ui.mut }}">{{ x.yer }} · {{ x.damga }} · {{ x.kim }}</span>
+</div>
+</sc-for>
 </div>
 </sc-if>
 
@@ -3579,7 +3802,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:10px 10px 0;pointer-events:none">
-<div style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both">
+<div onClick="{{ duyuru.git }}" style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
 <span style="flex:none;width:34px;height:34px;border-radius:10px;background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
 <div style="display:flex;align-items:baseline;gap:10px">
@@ -3870,6 +4093,15 @@ const MALZEME = [
 ];
 // Ekip adı kayıtlarda metin olarak durur, bu yüzden sabittir. Vardiya ve
 // yetkinlik Ayarlar > Ekipler bölümünden değişir, cihazda saklanır.
+// Ambar: stok kalemleri malzeme listesinden gelir. Gün birimli kalemler
+// (vinç, işçilik) hizmettir, stokta tutulmaz.
+const AMBARLAR = ['Merkez ambar', 'Kaman ambarı', 'Mucur ambarı', 'Çiçekdağı ambarı'];
+const HAREKET_AD = {
+  giris: 'Ambar girişi', cikis: 'Ambar çıkışı', zimmet: 'Ekibe zimmet',
+  iade: 'Zimmet iadesi', sarf: 'Sahada sarf'
+};
+// Kritik eşik: bu değerin altına düşen kalem kırmızı yazılır
+const KRITIK_ESIK = { adet: 2, boy: 4, metre: 50, kutu: 2 };
 const EKIP_TANIM = [
   { ad: 'Atanmadı', vardiya: '—', yetkinlik: [] },
   { ad: 'Ekip 1 — Merkez', vardiya: 'Gündüz', yetkinlik: ['Elektrik', 'Mekanik'] },
@@ -3878,6 +4110,7 @@ const EKIP_TANIM = [
   { ad: 'Ekip 4 — Çiçekdağı', vardiya: 'Nöbet', yetkinlik: ['Mekanik', 'Sondaj'] }
 ];
 const CREWS = EKIP_TANIM.map(e => e.ad);
+const SAHA_EKIP = CREWS.filter(c => c !== 'Atanmadı');
 const VARDIYALAR = ['Gündüz', 'Vardiyalı', 'Nöbet', 'İzinli'];
 const YETKINLIKLER = ['Elektrik', 'Mekanik', 'Sondaj', 'Kaynak'];
 // Arıza türünden gereken yetkinlik: eşleşmezse form uyarı yazar, atamayı engellemez
@@ -3885,6 +4118,7 @@ const YETKINLIK_ESLEME = [
   [/motor|akım|elektrik|sigorta|kontaktör|kablo|pano|invert|panel|şalt|rf|sensör|klorlama|üretim/i, 'Elektrik'],
   [/pompa|kolon|kaçak|çatlak|debi|vana|kapak/i, 'Mekanik']
 ];
+const STOK_KALEM = MALZEME.filter(m => m[2] !== 'gün');
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
   ['mudur', 'Müdür', 'Onay, silme, rapor; kullanıcı yönetimi hariç'],
@@ -3911,14 +4145,14 @@ const PERMS = [
 const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
 // Sol menüdeki sayfalar — kullanıcı bazında yetki verilebilen birimler
 const SAYFALAR = [['harita', 'Harita'], ['envanter', 'Envanter'], ['ariza', 'Arıza'],
-  ['gunluk', 'Bugün'], ['bakim', 'Bakım'], ['ozet', 'Özet'], ['profil', 'Profil'],
+  ['gunluk', 'Bugün'], ['bakim', 'Bakım'], ['ambar', 'Ambar'], ['ozet', 'Özet'], ['profil', 'Profil'],
   ['yerlesim', 'Yerleşim'], ['kuyruk', 'Kuyruk'], ['aktarim', 'Aktarım'], ['ayarlar', 'Ayarlar']];
 const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 // Kişiye özel istisna verilebilen yetkiler — silme ve kullanıcı yönetimi role bağlı kalır
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.09-21';
+const SURUM = '2026.09.10-22';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -4009,7 +4243,7 @@ class Component extends DCLogic {
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
     modul: (() => {
-      const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false };
+      const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false, ambar: true };
       try {
         const p = JSON.parse(localStorage.getItem('ks-moduller') || 'null');
         if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;
@@ -4017,6 +4251,20 @@ class Component extends DCLogic {
       return v;
     })(),
     // Ekip vardiyası ve yetkinliği: cihazda saklanır, arıza formunda görünür
+    // Ambar: mevcut, ekip zimmeti ve hareket dökümü — cihazda saklanır
+    ambar: (() => {
+      const v = { stok: {}, zimmet: {}, hareket: [] };
+      try {
+        const p = JSON.parse(localStorage.getItem('ks-ambar') || 'null');
+        if (p && typeof p === 'object') {
+          if (p.stok && typeof p.stok === 'object') v.stok = p.stok;
+          if (p.zimmet && typeof p.zimmet === 'object') v.zimmet = p.zimmet;
+          if (Array.isArray(p.hareket)) v.hareket = p.hareket;
+        }
+      } catch (e) { /* depolama kapalı */ }
+      return v;
+    })(),
+    ambarForm: null,
     ekipler: (() => {
       const v = {};
       for (const e of EKIP_TANIM) v[e.ad] = { vardiya: e.vardiya, yetkinlik: [...e.yetkinlik] };
@@ -4134,6 +4382,9 @@ class Component extends DCLogic {
         if (a && a.dbId) this.fotoYenile(a.dbId);
       }
       if (d.ks === 'hatHazir') { this.hatGonder(); return; }
+      // Profil sayfası açıldı — mevcut tesisleri gönder ki haritada görünsün
+      if (d.ks === 'profilHazir') { this.profilTesis(); return; }
+      if (d.ks === 'profilAktar') { this.profilAktar(d); return; }
       if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) {
         const id = d.id || this.state.selected;
         if (id) this.hatKaydet(id, d.hatlar);
@@ -4164,6 +4415,11 @@ class Component extends DCLogic {
     if (this.state.detailTab === 'hat'
       && (prev.detailTab !== 'hat' || prev.selected !== this.state.selected)) {
       setTimeout(() => this.hatGonder(), 120);
+    }
+    // Profil haritası: sekme açılınca ve kayıt listesi değişince tesisler yenilenir
+    if (this.state.tab === 'profil'
+      && (prev.tab !== 'profil' || prev.assets !== this.state.assets)) {
+      setTimeout(() => this.profilTesis(), prev.tab !== 'profil' ? 260 : 0);
     }
     // harita dışına çıkınca konum onay şeridi ve işaretleme modu kapanır
     if (prev.tab !== this.state.tab && this.state.tab !== 'harita' && (this.state.vFix || this.state.pick)) {
@@ -4280,7 +4536,59 @@ class Component extends DCLogic {
   toProfil(noktalar) {
     const w = this.profilWin();
     if (!w) return;
-    try { w.postMessage({ ks: 'profil', noktalar }, '*'); } catch (e) { /* çerçeve henüz yüklenmedi */ }
+    try {
+      w.postMessage({ ks: 'profil', noktalar, assets: this.profilAssets() }, '*');
+    } catch (e) { /* çerçeve henüz yüklenmedi */ }
+  }
+  // Profil haritasında gösterilecek kayıtlar — yalnız konumu olanlar
+  profilAssets() {
+    return (this.state.assets || [])
+      .filter(a => a && isFinite(a.lat) && isFinite(a.lon))
+      .map(a => ({ id: a.id, code: a.code, type: a.type, lat: a.lat, lon: a.lon, status: a.status }));
+  }
+  // Profil ekranında bulunan nokta ve güzergâhı asıl kayda taşır.
+  // Nokta seçiliyse yeni tesis formu koordinatı dolu açılır; hat seçiliyse
+  // kayıt yazıldıktan sonra o kaydın hattı olarak bağlanır.
+  profilAktar(d) {
+    const HAT_AD = { isale: 'İsale hattı', sebeke: 'Şebeke hattı', enerji: 'Enerji hattı' };
+    const hat = d.hat && Array.isArray(d.hat.noktalar) && d.hat.noktalar.length > 1 ? d.hat : null;
+    const nokta = d.nokta && isFinite(d.nokta.lat) && isFinite(d.nokta.lon) ? d.nokta : null;
+    if (!nokta && !hat) return this.say('Aktarılacak nokta ya da güzergâh gelmedi.');
+    const hatKaydi = hat ? [{
+      tur: hat.tur,
+      noktalar: hat.noktalar,
+      aciklama: (HAT_AD[hat.tur] || 'Hat') + ' · profil ekranında ölçüldü'
+        + (d.km && d.km !== '—' ? ' · ' + d.km : '')
+    }] : null;
+
+    if (nokta) {
+      const m = this.state.data;
+      this._bekleyenHat = hatKaydi;
+      this.setState({
+        tab: 'islem', scenario: 'yeni',
+        newAsset: {
+          type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '',
+          year: String(new Date().getFullYear()), note: '', photos: 0,
+          lat: nokta.lat, lon: nokta.lon
+        }
+      }, () => this.duyur('Profil noktası ' + nokta.sira + ' yeni kayıt formuna taşındı — koordinat hazır, köy ve tür seçip kaydedin.'
+        + (hatKaydi ? ' Güzergâh, kayıt yazıldıktan sonra hattına eklenecek.' : ''), 7000, 'iyi',
+        () => this.setState({ tab: 'islem' })));
+      return;
+    }
+
+    // Yalnız hat: hangi kayda bağlanacağı seçili kayıttan gelir
+    const sec = (this.state.assets || []).find(a => a.id === this.state.selected);
+    if (!sec) return this.say('Güzergâhı bağlayacak kayıt seçili değil. Haritadan ya da envanterden bir tesis seçip yeniden aktarın.');
+    this.hatKaydet(sec.id, [...((this.state.hatlar || {})[sec.id] || []), ...hatKaydi]);
+    this.setState({ tab: 'harita' }, () => this.duyur(sec.code + ' kaydına ' + (HAT_AD[hat.tur] || 'hat')
+      + ' eklendi — ana haritada çizgi olarak görünür.', 6500, 'iyi',
+      () => this.setState({ tab: 'harita', selected: sec.id, panel: 'detay', detailTab: 'hat' })));
+  }
+  profilTesis() {
+    const w = this.profilWin();
+    if (!w) return;
+    try { w.postMessage({ ks: 'profil', assets: this.profilAssets() }, '*'); } catch (e) { /* çerçeve hazır değil */ }
   }
   pushMap() {
     try { localStorage.setItem('ks-suzgec', JSON.stringify(this.state.filter)); } catch (e) { /* depolama kapalı */ }
@@ -4306,13 +4614,13 @@ class Component extends DCLogic {
     try { localStorage.setItem('ks-moduller', JSON.stringify(y)); } catch (e) { /* depolama kapalı */ }
     const geri = {
       ariza: 'Arıza ve iş emri', bakim: 'Periyodik bakım', sure: 'Hedef süre',
-      kanit: 'Kanıt zorunluluğu', onay: 'Merkez onayı'
+      kanit: 'Kanıt zorunluluğu', onay: 'Merkez onayı', ambar: 'Ambar ve zimmet'
     }[ad] || ad;
     this.setState({ modul: y }, () => this.duyur(
       geri + (on
         ? ' modülü açıldı — menüsü ve kayıt sekmesi geri geldi.'
         : ' modülü kapatıldı. Kayıtlar veritabanında duruyor, yeniden açtığınızda yerinde bulunur.'),
-      6000, on ? 'iyi' : 'bilgi'));
+      6000, on ? 'iyi' : 'bilgi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'modul' })));
   }
   // Ekip vardiyası / yetkinliği. Ad değişmez; kayıtlardaki ekip metni bozulmasın.
   ekipAyar(ad, yama) {
@@ -4321,7 +4629,8 @@ class Component extends DCLogic {
     try { localStorage.setItem('ks-ekipler', JSON.stringify(y)); } catch (e) { /* depolama kapalı */ }
     this.setState({ ekipler: y }, () => this.duyur(ad + ' · ' + (y[ad].vardiya || '—') + ' · '
       + ((y[ad].yetkinlik || []).join(', ') || 'yetkinlik girilmedi')
-      + '. Arıza formunda ekip seçilirken görünür.', 5000, 'iyi'));
+      + '. Arıza formunda ekip seçilirken görünür.', 5000, 'iyi',
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' })));
   }
   // Mükerrer kayıt: aynı tesiste açık kayıt ya da son yedi günde aynı türden
   // kapanmış kayıt varsa yeni kayıt açılmadan önce sorulur.
@@ -4339,6 +4648,94 @@ class Component extends DCLogic {
       const t = gun(x.opened);
       return t && simdi - t < 7 * 86400000 && x.type === f.type;
     });
+  }
+  ambarMevcut(malzeme, ambar) {
+    return Number((((this.state.ambar || {}).stok || {})[ambar] || {})[malzeme]) || 0;
+  }
+  ambarZimmet(malzeme, ekip) {
+    return Number((((this.state.ambar || {}).zimmet || {})[ekip] || {})[malzeme]) || 0;
+  }
+  ambarYaz(a, mesaj, git) {
+    try { localStorage.setItem('ks-ambar', JSON.stringify(a)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ ambar: a, ambarForm: null }, () => { if (mesaj) this.duyur(mesaj, 6500, 'iyi', git); });
+  }
+  // Tek hareket: giriş, çıkış, zimmet, iade, sarf. Eksi mevcuda düşürmez.
+  ambarHareket(g) {
+    if (!g || !g.malzeme) return this.duyur('Malzeme seçin.', 4000, 'kotu');
+    const kalem = STOK_KALEM.find(m => m[0] === g.malzeme);
+    const birim = kalem ? kalem[2] : 'adet';
+    const n = Math.abs(parseFloat(String(g.adet || '').replace(',', '.')) || 0);
+    if (!n) return this.duyur('Adet girin.', 4000, 'kotu');
+    if (g.tur !== 'sarf' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
+    if (['zimmet', 'iade', 'sarf'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
+    const a = this.state.ambar || {};
+    const stok = JSON.parse(JSON.stringify(a.stok || {}));
+    const zim = JSON.parse(JSON.stringify(a.zimmet || {}));
+    const S = (amb, m, d) => {
+      stok[amb] = stok[amb] || {};
+      stok[amb][m] = (Number(stok[amb][m]) || 0) + d;
+      if (stok[amb][m] <= 0) delete stok[amb][m];
+    };
+    const Z = (ek, m, d) => {
+      zim[ek] = zim[ek] || {};
+      zim[ek][m] = (Number(zim[ek][m]) || 0) + d;
+      if (zim[ek][m] <= 0) delete zim[ek][m];
+    };
+    const mevcut = this.ambarMevcut(g.malzeme, g.ambar);
+    const elde = this.ambarZimmet(g.malzeme, g.ekip);
+    if (g.tur === 'giris') S(g.ambar, g.malzeme, n);
+    else if (g.tur === 'cikis') {
+      if (n > mevcut) return this.duyur(g.ambar + ' mevcudu ' + mevcut + ' ' + birim + ' — bu kadar çıkış yapılamaz.', 6000, 'kotu');
+      S(g.ambar, g.malzeme, -n);
+    } else if (g.tur === 'zimmet') {
+      if (n > mevcut) return this.duyur(g.ambar + ' mevcudu ' + mevcut + ' ' + birim + ' — önce ambara giriş yapın.', 6000, 'kotu');
+      S(g.ambar, g.malzeme, -n); Z(g.ekip, g.malzeme, n);
+    } else if (g.tur === 'iade') {
+      if (n > elde) return this.duyur(g.ekip + ' zimmetinde ' + elde + ' ' + birim + ' var — fazlası iade edilemez.', 6000, 'kotu');
+      Z(g.ekip, g.malzeme, -n); S(g.ambar, g.malzeme, n);
+    } else if (g.tur === 'sarf') {
+      if (n > elde) return this.duyur(g.ekip + ' zimmetinde ' + elde + ' ' + birim + ' var — sarf bundan fazla olamaz.', 6000, 'kotu');
+      Z(g.ekip, g.malzeme, -n);
+    } else return this.duyur('Hareket türü seçin.', 4000, 'kotu');
+    const kayit = {
+      id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6), damga: this.damga(),
+      tur: g.tur, malzeme: g.malzeme, adet: n, birim, ambar: g.ambar || '', ekip: g.ekip || '',
+      kim: (this.state.session && this.state.session.name) || '', not: (g.not || '').trim()
+    };
+    this.ambarYaz({ stok, zimmet: zim, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) },
+      HAREKET_AD[g.tur] + ' · ' + g.malzeme + ' × ' + n + ' ' + birim
+      + (g.ekip ? ' · ' + g.ekip : '') + (g.ambar ? ' · ' + g.ambar : ''),
+      () => this.setState({ tab: 'ambar' }));
+  }
+  // Kapanan arızada kullanılan malzemeyi ekip zimmetinden topluca düşer
+  arizaStokDus(f) {
+    const a = this.state.ambar || {};
+    const stok = JSON.parse(JSON.stringify(a.stok || {}));
+    const zim = JSON.parse(JSON.stringify(a.zimmet || {}));
+    const hareket = [...(a.hareket || [])];
+    const kim = (this.state.session && this.state.session.name) || '';
+    let n = 0;
+    const eksik = [];
+    for (const mz of (f.malzeme || [])) {
+      const kalem = STOK_KALEM.find(m => m[0] === mz.ad);
+      if (!kalem) continue;
+      const adet = Math.abs(Number(mz.adet) || 1);
+      const elde = Number((zim[f.crew] || {})[mz.ad]) || 0;
+      if (elde < adet) { eksik.push(mz.ad); continue; }
+      zim[f.crew][mz.ad] = elde - adet;
+      if (zim[f.crew][mz.ad] <= 0) delete zim[f.crew][mz.ad];
+      hareket.unshift({
+        id: 'h' + Date.now() + n, damga: this.damga(), tur: 'sarf', malzeme: mz.ad,
+        adet, birim: kalem[2], ambar: '', ekip: f.crew, kim,
+        not: (f.no || 'arıza') + ' kapanışı'
+      });
+      n++;
+    }
+    if (!n && !eksik.length) return;
+    this.ambarYaz({ stok, zimmet: zim, hareket: hareket.slice(0, 400) },
+      (n ? n + ' kalem ' + f.crew + ' zimmetinden düşüldü' : 'Zimmetten düşülecek kalem bulunamadı')
+      + (eksik.length ? ' · zimmette olmayanlar: ' + eksik.join(', ') + '. Ambardan zimmet girip yeniden deneyin.' : '.'),
+      () => this.setState({ tab: 'ambar' }));
   }
   bakimPeriyot(t) { return t === 'kuyu' ? 6 : 12; }
   // Hedef süre: öncelik başına gün sayısı. Değerler bilinçli olarak geniş —
@@ -4566,6 +4963,7 @@ class Component extends DCLogic {
       loginUser: '', loginPw: '', loginErr: '', tab: 'harita',
       panel: 'donusum', faultForm: null, selected: null, scenario: null, newAsset: null
     });
+    this._bekleyenHat = null;
     if (!quiet) this.say('Bu cihazda kayıtlı giriş silindi — programı bir daha açtığınızda kullanıcı adı ve şifre istenir.');
     return true;
   }
@@ -5178,6 +5576,7 @@ class Component extends DCLogic {
       // Bağlanmanın tek yolu veritabanından giriş: kullanıcıyı elle çıkışa
       // zorlamak yerine giriş ekranını burada açıyoruz.
       const me = this.state.session;
+      this._bekleyenHat = null;
       this.setState({
         session: null, autoLogin: false, panel: 'yok', faultForm: null, selected: null,
         loginUser: me ? me.user : '', loginPw: '', remember: true,
@@ -5241,7 +5640,8 @@ class Component extends DCLogic {
     this._gonderiyor = false;
     if (yazilan) {
       this.duyur(yazilan + ' bekleyen kayıt sunucuya yazıldı — kuyruk boşaltıldı.'
-        + (kilitli ? ` ${kilitli} kayıt başka ilçede olduğu için gönderilemedi.` : ''), 6000, 'iyi');
+        + (kilitli ? ` ${kilitli} kayıt başka ilçede olduğu için gönderilemedi.` : ''), 6000, 'iyi',
+        () => this.setState({ tab: 'kuyruk' }));
     } else if (hata && !sessiz) {
       this.duyur('Kuyruk gönderilemedi: ' + hata, 7000, 'kotu');
     }
@@ -5313,7 +5713,8 @@ class Component extends DCLogic {
       if (M.copTemizle) {
         const t = await M.copTemizle();
         if (t && t.ok && t.data && (t.data.tesis || t.data.foto)) {
-          this.duyur(`Çöp kutusunda 30 günü dolan ${t.data.tesis} kayıt ve ${t.data.foto} fotoğraf kalıcı silindi.`, 6000);
+          this.duyur(`Çöp kutusunda 30 günü dolan ${t.data.tesis} kayıt ve ${t.data.foto} fotoğraf kalıcı silindi.`, 6000, 'bilgi',
+            () => this.setState({ tab: 'ayarlar', ayarBolum: 'cop' }));
         }
       }
       const [k, f] = await Promise.all([
@@ -5543,9 +5944,9 @@ class Component extends DCLogic {
     if (!keep) this._t = setTimeout(() => this.setState({ toast: null }), 2500);
   }
   // Göz yormayan bildirim: ekranın üstünde çıkar, süresi dolunca kendiliğinden kalkar
-  duyur(text, ms, tur) {
+  duyur(text, ms, tur, git) {
     clearTimeout(this._d);
-    this.setState({ duyuru: { text, tur: tur || 'bilgi' } });
+    this.setState({ duyuru: { text, tur: tur || 'bilgi', git: typeof git === 'function' ? git : null } });
     this._d = setTimeout(() => this.setState({ duyuru: null }), ms || 5000);
   }
   yolTarifiVer(a) {
@@ -5610,7 +6011,8 @@ class Component extends DCLogic {
     }
     this.setState({ koyEkleForm: { ilce: g.ilce, ad: '', lat: '', lon: '' } });
     this.duyur(ad + ' · ' + (d ? d.name : '') + ' eklendi — yeni kayıt formundaki köy listesinde ve aramada çıkar.'
-      + (lat != null ? ' Konum girildiği için yeni kayıtta koordinat buradan gelir.' : ' Koordinat girilmedi — konumu sahada GPS ile alın.'), 7000, 'iyi');
+      + (lat != null ? ' Konum girildiği için yeni kayıtta koordinat buradan gelir.' : ' Koordinat girilmedi — konumu sahada GPS ile alın.'), 7000, 'iyi',
+      () => this.setState({ tab: 'yerlesim' }));
   }
   ekKoySil(dId, i) {
     const kayit = ((this.state.ekKoyler || {})[dId] || [])[i];
@@ -6044,6 +6446,7 @@ class Component extends DCLogic {
     // Kanıt ve merkez onayı da arıza modülünün içinde yaşar
     const kanitOn = arizaOn && s.modul.kanit !== false;
     const onayOn = arizaOn && s.modul.onay === true;
+    const ambarOn = s.modul.ambar !== false;
     const yerlesimOn = this.props.yerlesimSekmesi ?? true;
     const me = s.session;
     const can = k => this.yetkiVar(me, k);
@@ -6062,6 +6465,7 @@ class Component extends DCLogic {
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
+    if (tabId === 'ambar' && !ambarOn) tabId = 'harita';
     if (tabId === 'yerlesim' && !yerlesimOn) tabId = 'harita';
     // aktarım ekranı yalnızca bilgisayarda çizilir; telefonda boş gri sayfa çıkıyordu
     if (tabId === 'aktarim' && s.device === 'phone') tabId = 'ayarlar';
@@ -6450,7 +6854,7 @@ class Component extends DCLogic {
 
     const navDef = [['harita', 'Harita', 0, 1], ['envanter', 'Envanter', 0, 1],
       ['ariza', 'Arıza', myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length, 1],
-      ['gunluk', 'Bugün', 0, 1], ['bakim', 'Bakım', 0, 1], ['ozet', 'Özet', 0, 1],
+      ['gunluk', 'Bugün', 0, 1], ['bakim', 'Bakım', 0, 1], ['ambar', 'Ambar', 0, 1], ['ozet', 'Özet', 0, 1],
       ['profil', 'Profil', 0, 1], ['yerlesim', 'Yerleşim', 0, 0], ['kuyruk', 'Kuyruk', pendA.length + pendF.length, 0],
       ['ayarlar', 'Ayarlar', 0, 1]];
     const navItem = ([id, label, badge]) => ({
@@ -6462,6 +6866,7 @@ class Component extends DCLogic {
       badge: badge > 0, badgeN: badge
     });
     const navVisible = navDef.filter(([id]) => (id !== 'ariza' || arizaOn) && (id !== 'bakim' || bakimOn)
+      && (id !== 'ambar' || ambarOn)
       && (id !== 'yerlesim' || yerlesimOn) && yetki(id) !== 'yok');
     const seg = (on, act) => ({ bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.mut, pick: act });
     const canCreateAsset = can('create') && sayfaTam;
@@ -6505,6 +6910,7 @@ class Component extends DCLogic {
         if (M) { M.cikis(); M.tokenYaz(null); }
         let sv = null;
         try { sv = JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch (e) { /* depolama kapalı */ }
+        this._bekleyenHat = null;
         this.setState({
           session: null, autoLogin: false, panel: 'yok', faultForm: null, selected: null,
           loginUser: sv ? sv.user : '', loginPw: sv ? (sv.pw || '') : '', loginErr: '',
@@ -6739,7 +7145,7 @@ class Component extends DCLogic {
         listNote: s.scenario === 'foto' ? 'Seçtiğiniz kayıt Foto sekmesinde açılır; çekilen kare çevrimdışıysa cihazda bekler.'
           : (s.scenario === 'guncelle' ? 'Kayıt Bilgi sekmesinde açılır; düzenleme önce cihaza yazılır, sonra eşitlenir.'
             : 'Kayıt detayı açılır — arıza geçmişi, fotoğraflar ve yol tarifi buradan görülür.'),
-        back: () => this.setState({ scenario: null, newAsset: null })
+        back: () => { this._bekleyenHat = null; this.setState({ scenario: null, newAsset: null }); }
       },
       scenarios: [
         ['yeni', 'Yeni tesis kur', 'Sahada olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açın; konum GPS’ten gelir.', canCreateAsset],
@@ -6850,6 +7256,7 @@ class Component extends DCLogic {
               this._sb.notEkle(r.data, naNot);
             }
             this.setState({ selected: yeni ? yeni.id : null, panel: yeni ? 'detay' : 'yok', detailTab: 'bilgi' });
+            if (yeni && this._bekleyenHat) { this.hatKaydet(yeni.id, this._bekleyenHat); this._bekleyenHat = null; }
             if (yeni) this.flyTo(yeni.lat, yeni.lon, 15);
             this.say(`${asset.code} veritabanına yazıldı — bütün ekiplerin ekranında görünüyor. Detay alanlarını şimdi doldurabilirsiniz.`, true);
             setTimeout(() => this.setState({ toast: null }), 8000);
@@ -6862,6 +7269,7 @@ class Component extends DCLogic {
           selected: asset.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita',
           queue: [{ id: 'q' + Date.now(), title: asset.code + ' · yeni tesis', meta: `${asset.village} · ${TYPES[asset.type].kind} · ${asset.photos} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
         });
+        if (this._bekleyenHat) { this.hatKaydet(asset.id, this._bekleyenHat); this._bekleyenHat = null; }
         this.yerelTesisYaz([asset, ...this.yerelTesisOku().filter(x => x.code !== asset.code)]);
         this.flyTo(asset.lat, asset.lon, 15);
         if (naNot) this.iz(asset.id, 'Saha notu eklendi', naNot.slice(0, 90));
@@ -6911,6 +7319,15 @@ class Component extends DCLogic {
             ? (dark ? 'rgba(236,48,19,.55)' : 'rgba(236,48,19,.30)')
             : (dark ? 'rgba(255,255,255,.14)' : 'rgba(32,30,29,.10)'),
           zamanFg: dark ? 'rgba(255,255,255,.5)' : 'rgba(32,30,29,.45)',
+          tiklanir: !!(d && d.git),
+          imlec: d && d.git ? 'pointer' : 'default',
+          gitNot: d && d.git ? 'Bildirime dokunun' : '',
+          git: () => {
+            const g = d && d.git;
+            clearTimeout(this._d);
+            this.setState({ duyuru: null });
+            if (g) g();
+          },
           baslik: ariza ? 'Arıza bildirimi' : (d && d.tur === 'kotu' ? 'Uyarı' : 'Envanter'),
           zaman: 'şimdi',
           kapat: () => { clearTimeout(this._d); this.setState({ duyuru: null }); }
@@ -7363,6 +7780,91 @@ class Component extends DCLogic {
         yetki: s.ayarBolum === 'yetki', cop: s.ayarBolum === 'cop', ekip: s.ayarBolum === 'ekip',
         modul: s.ayarBolum === 'modul'
       },
+      ambarEkran: (() => {
+        const af = s.ambarForm;
+        const zimTablo = (s.ambar && s.ambar.zimmet) || {};
+        const kisa = A => A.replace(' ambarı', '').replace(' ambar', '');
+        const kalemler = STOK_KALEM.map(m => {
+          const dag = AMBARLAR.map(A => ({ A, n: this.ambarMevcut(m[0], A) })).filter(x => x.n > 0);
+          const toplam = dag.reduce((t, x) => t + x.n, 0);
+          const zim = SAHA_EKIP.reduce((t, c) => t + this.ambarZimmet(m[0], c), 0);
+          const esik = KRITIK_ESIK[m[2]] || 2;
+          return {
+            ad: m[0], birim: m[2], fiyat: this.tl(m[1]) + ' / ' + m[2],
+            toplam: toplam + ' ' + m[2],
+            toplamFg: toplam <= esik ? ui.acc : ui.fg,
+            dagitim: dag.length ? dag.map(x => kisa(x.A) + ' ' + x.n).join(' · ') : 'ambarda yok',
+            zimmet: zim ? 'ekiplerde ' + zim + ' ' + m[2] : '',
+            kritik: toplam <= esik,
+            deger: this.tl((toplam + zim) * m[1]),
+            giris: () => this.setState({ ambarForm: { tur: 'giris', malzeme: m[0], ambar: AMBARLAR[0], ekip: '', adet: '', not: '' } }),
+            zimmetVer: () => this.setState({ ambarForm: { tur: 'zimmet', malzeme: m[0], ambar: (dag[0] || { A: AMBARLAR[0] }).A, ekip: SAHA_EKIP[0], adet: '', not: '' } })
+          };
+        });
+        const kritikSayi = kalemler.filter(k => k.kritik).length;
+        const zimKalem = SAHA_EKIP.reduce((t, c) => t + Object.keys(zimTablo[c] || {}).length, 0);
+        return {
+          not: 'Ambar mevcudu elle girilir: her kalem için önce “Giriş” yapılır, sahaya çıkacak malzeme ekibe zimmet edilir, iş bitince kalanı iade edilir ya da sarf olarak düşülür. Kritik eşiğin altına düşen kalem kırmızı yazılır. Kayıtlar bu cihazda saklanır — sunucuya taşınması sonraki adımda.',
+          stats: [
+            { n: String(kalemler.filter(k => k.dagitim !== 'ambarda yok').length), label: 'Ambarda kalem', fg: ui.fg },
+            { n: String(kritikSayi), label: 'Kritik seviye', fg: kritikSayi ? ui.acc : ui.fg },
+            { n: String(zimKalem), label: 'Ekip zimmetinde', fg: ui.fg },
+            { n: String(((s.ambar && s.ambar.hareket) || []).length), label: 'Hareket kaydı', fg: ui.fg }
+          ],
+          yeni: () => this.setState({ ambarForm: { tur: 'giris', malzeme: STOK_KALEM[0][0], ambar: AMBARLAR[0], ekip: '', adet: '', not: '' } }),
+          kalemler,
+          zimmetler: SAHA_EKIP.map(c => {
+            const t = zimTablo[c] || {};
+            const list = Object.keys(t).filter(k => t[k] > 0);
+            return {
+              ekip: c, varMi: list.length > 0,
+              ozet: list.length ? list.map(k => k + ' × ' + t[k]).join(' · ') : 'zimmetinde malzeme yok',
+              ozetFg: list.length ? ui.fg : ui.mut,
+              iade: () => this.setState({ ambarForm: { tur: 'iade', malzeme: list[0] || STOK_KALEM[0][0], ambar: AMBARLAR[0], ekip: c, adet: '', not: '' } }),
+              sarf: () => this.setState({ ambarForm: { tur: 'sarf', malzeme: list[0] || STOK_KALEM[0][0], ambar: '', ekip: c, adet: '', not: '' } })
+            };
+          }),
+          hareketler: ((s.ambar && s.ambar.hareket) || []).slice(0, 40).map(x => ({
+            tur: HAREKET_AD[x.tur] || x.tur,
+            turFg: x.tur === 'giris' || x.tur === 'iade' ? ui.fg : ui.acc,
+            malzeme: x.malzeme, adet: x.adet + ' ' + x.birim,
+            yer: [x.ambar, x.ekip].filter(Boolean).join(' → ') || '—',
+            damga: x.damga, kim: x.kim || '—', not: x.not || ''
+          })),
+          hareketYok: !((s.ambar && s.ambar.hareket) || []).length,
+          hareketBos: 'Henüz hareket yok. İlk adım: kullandığınız malzemelerin ambar mevcudunu “Giriş” ile girin.',
+          form: {
+            on: !!af,
+            baslik: af ? HAREKET_AD[af.tur] : '',
+            turler: Object.keys(HAREKET_AD).map(k => ({
+              label: HAREKET_AD[k],
+              ...seg(!!af && af.tur === k, () => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k } }))
+            })),
+            malzeme: af ? af.malzeme : '', malzemeler: STOK_KALEM.map(m => m[0]),
+            onMalzeme: e => this.setState({ ambarForm: { ...this.state.ambarForm, malzeme: e.target.value } }),
+            ambar: af ? af.ambar : '', ambarlar: AMBARLAR,
+            ambarVar: !!af && af.tur !== 'sarf',
+            onAmbar: e => this.setState({ ambarForm: { ...this.state.ambarForm, ambar: e.target.value } }),
+            ekip: af ? af.ekip : '', ekipler: SAHA_EKIP,
+            ekipVar: !!af && ['zimmet', 'iade', 'sarf'].includes(af.tur),
+            onEkip: e => this.setState({ ambarForm: { ...this.state.ambarForm, ekip: e.target.value } }),
+            adet: af ? af.adet : '',
+            onAdet: e => this.setState({ ambarForm: { ...this.state.ambarForm, adet: e.target.value } }),
+            not: af ? af.not : '',
+            onNot: e => this.setState({ ambarForm: { ...this.state.ambarForm, not: e.target.value } }),
+            durum: (() => {
+              if (!af || !af.malzeme) return '';
+              const kalem = STOK_KALEM.find(m => m[0] === af.malzeme);
+              const b = kalem ? kalem[2] : 'adet';
+              const m1 = af.ambar ? this.ambarMevcut(af.malzeme, af.ambar) + ' ' + b + ' · ' + af.ambar : '';
+              const m2 = af.ekip ? this.ambarZimmet(af.malzeme, af.ekip) + ' ' + b + ' · ' + af.ekip + ' zimmeti' : '';
+              return [m1, m2].filter(Boolean).join('  |  ') || '—';
+            })(),
+            kaydet: () => this.ambarHareket(this.state.ambarForm),
+            kapat: () => this.setState({ ambarForm: null })
+          }
+        };
+      })(),
       // Ekipler: ad sabit, vardiya ve yetkinlik burada; yük canlı sayılır
       ekipYonetim: {
         not: 'Ekip adı kayıtlarda metin olarak durduğu için değişmez. Vardiya ve yetkinlik bu cihazda saklanır, arıza formunda ekip seçilirken görünür ve arıza türüyle uyuşmazsa form uyarır. Yük sayıları arıza kayıtlarından canlı gelir.',
@@ -7407,6 +7909,13 @@ class Component extends DCLogic {
             kapa: seg(!bakimOn, () => { if (bakimOn) this.modulAnahtar('bakim', false); }),
             sayi: 'kuyu 6 ay · depo, AG, GES 12 ay',
             aciklama: 'Bakım takvimi, geciken bakım listesi, hedef tarih ve “Yapıldı” işareti. Menüdeki Bakım sekmesini ve kayıt detayındaki Bakım sekmesini kapsar.'
+          },
+          {
+            ad: 'Ambar ve zimmet',
+            ac: seg(ambarOn, () => { if (!ambarOn) this.modulAnahtar('ambar', true); }),
+            kapa: seg(!ambarOn, () => { if (ambarOn) this.modulAnahtar('ambar', false); }),
+            sayi: STOK_KALEM.length + ' stok kalemi · ' + AMBARLAR.length + ' ambar',
+            aciklama: 'Ambar mevcudu, ekip zimmeti ve hareket dökümü. Menüdeki Ambar sekmesini kapsar; kapatılırsa arıza kaydındaki malzeme listesi çalışmaya devam eder, yalnızca stok takibi görünmez.'
           },
           {
             ad: 'Hedef süre',
@@ -7492,7 +8001,8 @@ class Component extends DCLogic {
         harita: tabId === 'harita', envanter: tabId === 'envanter', ariza: tabId === 'ariza',
         yerlesim: tabId === 'yerlesim', kuyruk: tabId === 'kuyruk', profil: tabId === 'profil',
         islem: tabId === 'islem', ayarlar: tabId === 'ayarlar', aktarim: tabId === 'aktarim',
-        ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim'
+        ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim',
+        ambar: tabId === 'ambar'
       },
       nav: navVisible.map(navItem),
       navPhone: navVisible.filter(d => d[3]).map(navItem),
@@ -7843,6 +8353,13 @@ class Component extends DCLogic {
             queue: [{ id: 'q' + Date.now(), title: `${no} · yeni arıza`, meta: `${a.code} · ${f.type} · ${f.photos.length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
         }
+        // Kapanan kayıtta kullanılan malzeme ekip zimmetinden düşülebilir
+        if (ambarOn && f.status === 'cozuldu' && (f.malzeme || []).length
+          && f.crew && f.crew !== 'Atanmadı') {
+          const dus = window.confirm('Kullanılan malzeme ' + f.crew + ' zimmetinden düşülsün mü?\n\n'
+            + (f.malzeme || []).map(mz => '• ' + mz.ad + ' × ' + (mz.adet || 1) + ' ' + mz.birim).join('\n'));
+          if (dus) setTimeout(() => this.arizaStokDus(f), 0);
+        }
         // sesli notlar da kayıtla birlikte gider
         const sesler = (f.sesler || []).filter(x => x.blob);
         if (sesler.length && a && a.dbId && !s.offline) {
@@ -7880,9 +8397,17 @@ class Component extends DCLogic {
           this.duyur(`Yeni arıza · ${a.code} — ${f.type} · ${f.priority} öncelik` +
             (s.offline
               ? '. Cihaza kaydedildi, bağlantı gelince eşitlenecek.'
-              : (acilMi ? `. ${f.crew} ekibine ${kanal} gönderildi.` : '. Kayıt eşitlendi.')), 7000, 'ariza');
+              : (acilMi ? `. ${f.crew} ekibine ${kanal} gönderildi.` : '. Kayıt eşitlendi.')), 7000, 'ariza',
+            () => {
+              const yeni = this.state.faults[0];
+              this.setState({
+                tab: 'ariza', panel: 'ariza',
+                faultForm: yeni ? { malzeme: [], sesler: [], iscilik: '', isaret: null, ...yeni } : null
+              });
+            });
         } else {
-          this.duyur(`${f.no} güncellendi — durum ${STATUS_LABEL[f.status]}${s.offline ? ' · cihazda bekliyor' : ''}.`, 4500);
+          this.duyur(`${f.no} güncellendi — durum ${STATUS_LABEL[f.status]}${s.offline ? ' · cihazda bekliyor' : ''}.`, 4500, 'bilgi',
+            () => this.setState({ tab: 'ariza', panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, ...f } }));
         }
       },
       bildirim: {

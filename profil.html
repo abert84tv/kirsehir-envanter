@@ -121,7 +121,7 @@
           <input id="iLon" placeholder="Boylam 34.1595" inputmode="decimal">
           <button id="iAdd">Ekle</button>
         </div>
-        <div class="note" style="margin-top:8px">Rakım değerleri <b>Open-Meteo</b> yükseklik servisinden (SRTM, ~90 m ızgara) gelir; internet gerektirir. Uzaklık WGS84 üzerinde haversine ile, yol boyunca 180 noktada örneklenerek hesaplanır.</div>
+        <div class="note" style="margin-top:8px">Rakım değerleri <b>Open-Meteo</b> yükseklik servisinden (SRTM, ~90 m ızgara) gelir. Okunan noktalar cihazda saklanır — aynı güzergâh yeniden ölçüldüğünde servise gidilmez, beklemeden çizilir. Uzaklık WGS84 üzerinde haversine ile, yol boyunca 180 noktada örneklenerek hesaplanır.</div>
       </div>
     </div>
   </div>
@@ -223,31 +223,81 @@ function orneklem(n) {
   }
   return out;
 }
+// Rakım önbelleği: okunan noktalar cihazda saklanır, aynı güzergâh yeniden
+// ölçüldüğünde servise gidilmez. Anahtar 4 ondalık (~11 m) ızgaraya yuvarlanır.
+const RAKIM_KEY = 'ks-rakim';
+let rakimBellek = null, rakimZaman = null;
+function rakimOku() {
+  if (rakimBellek) return rakimBellek;
+  try {
+    const v = JSON.parse(localStorage.getItem(RAKIM_KEY) || '{}');
+    rakimBellek = v && typeof v === 'object' ? v : {};
+  } catch (e) { rakimBellek = {}; }
+  return rakimBellek;
+}
+function rakimYaz() {
+  clearTimeout(rakimZaman);
+  rakimZaman = setTimeout(() => {
+    try {
+      const b = rakimOku(), k = Object.keys(b);
+      if (k.length > 20000) {
+        const y = {};
+        k.slice(k.length - 20000).forEach(x => { y[x] = b[x]; });
+        rakimBellek = y;
+      }
+      localStorage.setItem(RAKIM_KEY, JSON.stringify(rakimBellek));
+    } catch (e) { /* depolama kapalı ya da dolu */ }
+  }, 800);
+}
+const rakimAnahtar = p => p.lat.toFixed(4) + ',' + p.lon.toFixed(4);
+
 async function profilAl() {
   const benim = ++istek;
   if (noktalar.length < 2) { ornek = []; cizProfil(); olcumYaz(); return; }
   const nokta = orneklem(180);
   olcumYaz(nokta);
   el('chartNote').textContent = 'Rakım değerleri alınıyor…';
+  const bellek = rakimOku();
+  nokta.forEach(p => { const v = bellek[rakimAnahtar(p)]; if (v != null) p.h = v; });
+  const eksik = nokta.filter(p => p.h == null);
+  const bellektenGelen = nokta.length - eksik.length;
+  if (!eksik.length) el('chartNote').textContent = 'Rakımlar cihaz belleğinden okunuyor…';
+  let yeniOkunan = 0;
   try {
-    for (let i = 0; i < nokta.length; i += 100) {
-      const par = nokta.slice(i, i + 100);
+    for (let i = 0; i < eksik.length; i += 100) {
+      const par = eksik.slice(i, i + 100);
       const u = 'https://api.open-meteo.com/v1/elevation?latitude=' + par.map(p => p.lat.toFixed(5)).join(',')
         + '&longitude=' + par.map(p => p.lon.toFixed(5)).join(',');
       const r = await fetch(u);
       if (!r.ok) throw new Error('servis ' + r.status);
       const j = await r.json();
-      (j.elevation || []).forEach((h, k) => { if (par[k]) par[k].h = h; });
+      (j.elevation || []).forEach((h, k) => {
+        if (!par[k] || h == null) return;
+        par[k].h = h;
+        bellek[rakimAnahtar(par[k])] = h;
+        yeniOkunan++;
+      });
     }
+    if (yeniOkunan) rakimYaz();
     if (benim !== istek) return;
     ornek = nokta.filter(p => p.h != null);
     uyar('');
-    el('chartNote').textContent = ornek.length + ' noktada rakım okundu · SRTM ~90 m ızgara. Profil üzerinde gezinin — haritada karşılığı işaretlenir.';
+    el('chartNote').textContent = ornek.length + ' noktada rakım okundu · SRTM ~90 m ızgara'
+      + (bellektenGelen ? ' · ' + bellektenGelen + ' nokta cihaz belleğinden' : '')
+      + '. Profil üzerinde gezinin — haritada karşılığı işaretlenir.';
   } catch (e) {
+    if (yeniOkunan) rakimYaz();
     if (benim !== istek) return;
-    ornek = [];
-    uyar('Rakım servisine ulaşılamadı — uzaklık ölçümü çalışır, kot farkı ve profil için internet gerekir.');
-    el('chartNote').textContent = 'Rakım alınamadı. “Profili yenile” ile yeniden deneyin.';
+    // önbellekte duran noktalarla profil yine çizilir
+    ornek = nokta.filter(p => p.h != null);
+    if (ornek.length > 1) {
+      uyar('Rakım servisine ulaşılamadı — profil cihaz belleğindeki ' + ornek.length + ' noktayla çizildi, eksik bölümler için internet gerekiyor.');
+      el('chartNote').textContent = ornek.length + ' nokta önbellekten geldi · eksikler için “Profili yenile”.';
+    } else {
+      ornek = [];
+      uyar('Rakım servisine ulaşılamadı — uzaklık ölçümü çalışır, kot farkı ve profil için internet gerekir.');
+      el('chartNote').textContent = 'Rakım alınamadı. “Profili yenile” ile yeniden deneyin.';
+    }
   }
   cizProfil();
   olcumYaz(ornek.length ? ornek : nokta);

@@ -316,3 +316,27 @@ export function suret(r) {
     eklendi: r.eklendi || null, sonGiris: r.son_giris || null
   };
 }
+
+// ── hat güzergâhları · elle eklenen yerleşim · sayfa yetkileri (duzeltme-03.sql)
+export async function hatListesi() { return cagir('hat_listesi', { p_token: tokenOku() }); }
+export async function hatKaydet(tesisDbId, hatlar) {
+  return cagir('hat_kaydet', { p_token: tokenOku(), p_tesis_id: tesisDbId, p_hatlar: hatlar || [] });
+}
+export async function hatSil(id) { return cagir('hat_sil', { p_token: tokenOku(), p_id: id }); }
+
+export async function yerlesimEkListesi() { return cagir('yerlesim_ek_listesi', { p_token: tokenOku() }); }
+export async function yerlesimEkEkle(ilce, ad, lat, lon) {
+  return cagir('yerlesim_ek_ekle', {
+    p_token: tokenOku(), p_ilce: ilce, p_ad: ad,
+    p_lat: lat == null ? null : lat, p_lon: lon == null ? null : lon
+  });
+}
+export async function yerlesimEkSil(id) { return cagir('yerlesim_ek_sil', { p_token: tokenOku(), p_id: id }); }
+
+export async function yetkiListesi() { return cagir('yetki_listesi', { p_token: tokenOku() }); }
+export async function yetkiKaydet(id, sayfaYetki, yetkiIstisna) {
+  return cagir('yetki_kaydet', {
+    p_token: tokenOku(), p_id: id,
+    p_sayfa_yetki: sayfaYetki || {}, p_yetki_istisna: yetkiIstisna || {}
+  });
+}

@@ -96,6 +96,7 @@
   <button id="t-go">Git — konumum</button>
   <div class="sep"></div>
   <button id="t-labels" class="on">Kayıt etiketleri</button>
+  <button id="t-hat" class="on">Hat güzergâhları</button>
   <button id="t-coord">Koordinat işaretini temizle</button>
   <button id="t-fit">İl sınırına sığdır</button>
   </div>
@@ -153,6 +154,39 @@ document.getElementById('b-hyb').onclick = () => setBase('hyb');
 
 // ── ilçe merkezleri: kırmızı noktalar istek üzerine kaldırıldı
 // (ilçe adı ve nüfusu Yerleşim ekranında duruyor)
+
+// ── hat güzergâhları: kayıtlara bağlı terfi, isale, şebeke ve enerji hatları
+const HAT_REN = { terfi: '#ec3013', isale: '#201e1d', sebeke: '#6c6763', ag: '#1b6ef3', og: '#7b3fbf', dc: '#c08a00' };
+const HAT_AD = { terfi: 'Terfi hattı', isale: 'İsale hattı', sebeke: 'Şebeke hattı', ag: 'AG enerji hattı', og: 'OG enerji hattı', dc: 'GES DC hattı' };
+const hatLayer = L.layerGroup().addTo(map);
+let hatVeri = [], hatAcik = true;
+function hatMesafe(a, b) {
+  const rd = x => x * Math.PI / 180;
+  const dLat = rd(b[0] - a[0]), dLon = rd(b[1] - a[1]);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(rd(a[0])) * Math.cos(rd(b[0])) * Math.sin(dLon / 2) ** 2;
+  return 2 * 6371008.8 * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+const hatKm = v => v >= 1000 ? (v / 1000).toFixed(v < 10000 ? 2 : 1) + ' km' : Math.round(v) + ' m';
+function cizHatlar() {
+  hatLayer.clearLayers();
+  if (!hatAcik) return;
+  for (const h of hatVeri) {
+    const p = (h.noktalar || []).map(x => [+x[0], +x[1]]).filter(x => isFinite(x[0]) && isFinite(x[1]));
+    if (p.length < 2) continue;
+    let uz = 0;
+    for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
+    const renk = HAT_REN[h.tur] || '#201e1d';
+    L.polyline(p, { color: '#fff', weight: 8, opacity: .65 }).addTo(hatLayer);
+    L.polyline(p, { color: renk, weight: 4.5, opacity: .95 })
+      .bindTooltip((HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + ' · ' + hatKm(uz), { sticky: true })
+      .addTo(hatLayer);
+  }
+}
+document.getElementById('t-hat').onclick = () => {
+  hatAcik = !hatAcik;
+  document.getElementById('t-hat').classList.toggle('on', hatAcik);
+  cizHatlar();
+};
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);
@@ -375,6 +409,10 @@ addEventListener('message', e => {
       openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
     }
     cizAssets();
+  }
+  if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) {
+    hatVeri = d.hatlar;
+    cizHatlar();
   }
   if (d.ks === 'filter') {
     filtreUygula(d.filter);

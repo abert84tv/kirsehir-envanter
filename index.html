@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -126,6 +126,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 </div>
 <span style="flex:1 1 0;min-width:0"></span>
+<sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">{{ kuyrukG.label }}</button>
+</sc-if>
 <button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.yenile }} {{ esitle.label }}</button>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:8px 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 9.5px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
 <button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 12px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 9.5px/1 var(--font-body);letter-spacing:.08em">{{ net.badge }}</button>
@@ -150,14 +153,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <!-- sidebar -->
 <div style="width:216px;flex:none;border-right:2px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
 <div class="scroll" style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:stretch">
-<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
-<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid {{ ui.rule }};background:{{ n.bg }};border-left:3px solid {{ n.mark }}" style-hover="background:{{ ui.surf2 }}">
-<span style="width:14px;height:14px;border:2px solid {{ n.fg }};background:{{ n.dot }};flex:none"></span>
+<sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch">
+<div style="padding:13px 16px 7px;font:700 8.5px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:{{ ui.mut }};border-bottom:1px solid {{ ui.rule }}">{{ g.baslik }}</div>
+<sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:11px;padding:11px 16px;border-bottom:1px solid {{ ui.rule }};background:{{ n.bg }};border-left:3px solid {{ n.mark }}" style-hover="background:{{ ui.surf2 }}">
+<span style="width:12px;height:12px;border:2px solid {{ n.fg }};background:{{ n.dot }};flex:none"></span>
 <span style="flex:1;font:700 11.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ n.fg }}">{{ n.label }}</span>
 <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
 <span style="min-width:20px;padding:2px 5px;background:var(--color-accent);color:#fff;font:700 9.5px/1.4 var(--font-body);text-align:center">{{ n.badgeN }}</span>
 </sc-if>
 </button>
+</sc-for>
+</div>
 </sc-for>
 </div>
 <div style="flex:none;padding:14px 16px;border-top:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
@@ -173,6 +181,26 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="flex:1;min-width:0;display:flex;flex-direction:column">
 <sc-if value="{{ saltOkur }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;padding:9px 20px;border-bottom:2px solid var(--color-accent);background:var(--color-accent-100);font:600 10.5px/1.45 var(--font-body);color:var(--color-accent-800)">{{ saltOkurNot }}</div>
+</sc-if>
+
+<!-- Sayfa süzgeç çubuğu — birleşmiş sayfaların başlığı ve süzgeçleri -->
+<sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;flex-direction:column;gap:9px;padding:13px 20px 12px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+<span style="font:700 15px/1.1 var(--font-heading);color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
+<span style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }};flex:1;min-width:0">{{ sayfaBar.alt }}</span>
+</div>
+<div style="display:flex;width:fit-content;border:2px solid {{ ui.rule }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 16px;background:{{ z.bg }};color:{{ z.fg }};font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-right:2px solid {{ ui.rule }}">
+<span>{{ z.label }}</span>
+<sc-if value="{{ z.nVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:700 9.5px/1 var(--font-body);opacity:.75">{{ z.n }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
@@ -1297,17 +1325,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 
 <!-- ayarlar -->
-<sc-if value="{{ tab.ayarlar }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
-<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 17px/1 var(--font-heading);margin:0 0 5px">Ayarlar</h2>
-<div style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">Ayarlar açılır pencere değil, menüden açılan ayrı bir ekran — telefonda da tam genişlikte çalışır. Menü masaüstünde solda, telefonda alt çubukta durur.</div>
-</div>
+<sc-if value="{{ ayar.bolumBar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
 <sc-for list="{{ ayarBolum }}" as="b" hint-placeholder-count="3">
 <button onClick="{{ b.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:14px 20px;border-right:2px solid {{ ui.rule }};background:{{ b.bg }};color:{{ b.fg }};font:700 10px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase">{{ b.label }}</button>
 </sc-for>
 </div>
+</sc-if>
 
 <sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:1fr 1fr">
@@ -1484,6 +1510,33 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </sc-if>
 
 <sc-if value="{{ ayar.yetki }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px;border-bottom:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
+<span style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Süzgeç haritası — birleşmeden sonra</span>
+<span style="font:400 11px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ suzgecHarita.not }}</span>
+<div style="display:flex;flex-direction:column;gap:0;border-top:2px solid {{ ui.rule }}">
+<sc-for list="{{ suzgecHarita.sayfalar }}" as="sp" hint-placeholder-count="6">
+<div style="padding:11px 0;border-bottom:2px solid {{ ui.rule }};display:grid;grid-template-columns:minmax(0,14ch) minmax(0,1fr);gap:16px">
+<span style="font:700 12px/1.3 var(--font-heading);color:{{ ui.fg }}">{{ sp.ad }}</span>
+<div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+<sc-for list="{{ sp.suzgecler }}" as="sz" hint-placeholder-count="3">
+<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+<span style="font:600 11px/1.4 var(--font-body);color:{{ ui.fg }}">{{ sz.ad }}</span>
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">bugünkü {{ sz.eskiAd }} yetkisinden</span>
+<span style="font:700 9.5px/1.4 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ sz.fg }}">{{ sz.yetki }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<sc-for list="{{ suzgecHarita.gosterge }}" as="gz" hint-placeholder-count="1">
+<div style="padding:11px 0;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+<span style="font:700 12px/1.3 var(--font-heading);color:{{ ui.fg }}">Üst çubuk</span>
+<span style="font:600 11px/1.4 var(--font-body);color:{{ ui.fg }}">{{ gz.ad }}</span>
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">bugünkü {{ gz.eskiAd }} yetkisinden · {{ gz.yetki }}</span>
+</div>
+</sc-for>
+</div>
+</div>
 <div style="padding:16px 20px 12px">
 <div style="font:700 9.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:6px">Roller ve yetkiler</div>
 <div style="font:400 11px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ perm.note }}</div>
@@ -2913,6 +2966,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }}">
 </div>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border:2px solid var(--color-accent);color:var(--color-accent);font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
+<sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;min-width:36px;padding:0 9px;border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;font:700 11px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
+</sc-if>
 <button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border:2px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:700 8px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center">{{ net.short }}</button>
 <button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border:2px solid {{ ui.rule }};color:{{ ui.fg }};font:700 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 </div>
@@ -2930,6 +2986,25 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="background:var(--color-accent);color:#fff;padding:7px 14px;font:600 10.5px/1.3 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Çevrimdışı — kayıtlar cihazda</div>
 </sc-if>
 </div>
+
+<sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;flex-direction:column;gap:8px;padding:11px 14px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+<span style="font:700 13.5px/1.1 var(--font-heading);color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
+<span style="font:400 10px/1.45 var(--font-body);color:{{ ui.mut }};flex:1;min-width:0">{{ sayfaBar.alt }}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:7px">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 10px;background:{{ z.bg }};color:{{ z.fg }};font:700 11px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;border:2px solid {{ ui.rule }}">
+<span>{{ z.label }}</span>
+<sc-if value="{{ z.nVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:700 9.5px/1 var(--font-body);opacity:.75">{{ z.n }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
 <div style="flex:none;display:flex;min-width:0;background:{{ ui.surf }};border-bottom:2px solid {{ ui.rule }}">
@@ -3836,17 +3911,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 
-<sc-if value="{{ tab.ayarlar }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
-<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 15px/1.1 var(--font-heading);margin-bottom:4px">Ayarlar</div>
-<div style="font:400 10.5px/1.45 var(--font-body);color:{{ ui.mut }}">Ayrı bir ekran — açılır pencere değil. Menü alt çubuktadır.</div>
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
-<sc-for list="{{ ayarBolum }}" as="b" hint-placeholder-count="4">
+<sc-if value="{{ ayar.bolumBar }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
+<sc-for list="{{ ayarBolum }}" as="b" hint-placeholder-count="3">
 <button onClick="{{ b.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:left;padding:14px 12px;background:{{ b.bg }};color:{{ b.fg }};font:700 10px/1.25 var(--font-body);letter-spacing:.05em;text-transform:uppercase;border-right:2px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};min-height:52px;display:flex;align-items:center">{{ b.label }}</button>
 </sc-for>
 </div>
+</sc-if>
 <sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
 <div style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }};margin-bottom:9px">Diğer ekranlar</div>
@@ -3999,6 +4072,33 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 </sc-if>
 <sc-if value="{{ ayar.yetki }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
+<span style="font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:{{ ui.acc }}">Süzgeç haritası — birleşmeden sonra</span>
+<span style="font:400 10.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ suzgecHarita.not }}</span>
+<div style="display:flex;flex-direction:column;gap:0;border-top:2px solid {{ ui.rule }}">
+<sc-for list="{{ suzgecHarita.sayfalar }}" as="sp" hint-placeholder-count="6">
+<div style="padding:11px 0;border-bottom:2px solid {{ ui.rule }};display:grid;grid-template-columns:1fr;gap:7px">
+<span style="font:700 12px/1.3 var(--font-heading);color:{{ ui.fg }}">{{ sp.ad }}</span>
+<div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+<sc-for list="{{ sp.suzgecler }}" as="sz" hint-placeholder-count="3">
+<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+<span style="font:600 11px/1.4 var(--font-body);color:{{ ui.fg }}">{{ sz.ad }}</span>
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">bugünkü {{ sz.eskiAd }} yetkisinden</span>
+<span style="font:700 9.5px/1.4 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:{{ sz.fg }}">{{ sz.yetki }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<sc-for list="{{ suzgecHarita.gosterge }}" as="gz" hint-placeholder-count="1">
+<div style="padding:11px 0;border-bottom:2px solid {{ ui.rule }};display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+<span style="font:700 12px/1.3 var(--font-heading);color:{{ ui.fg }}">Üst çubuk</span>
+<span style="font:600 11px/1.4 var(--font-body);color:{{ ui.fg }}">{{ gz.ad }}</span>
+<span style="font:400 10px/1.4 var(--font-body);color:{{ ui.mut }}">bugünkü {{ gz.eskiAd }} yetkisinden · {{ gz.yetki }}</span>
+</div>
+</sc-for>
+</div>
+</div>
 <div style="padding:13px 14px;border-bottom:2px solid {{ ui.rule }}">
 <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
 <div style="flex:1;min-width:0">
@@ -5220,7 +5320,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div style="position:absolute;left:12px;right:12px;bottom:82px;z-index:30;background:{{ ui.fg }};color:{{ ui.bg }};border:2px solid {{ ui.fg }};padding:11px 13px;font:600 11.5px/1.35 var(--font-body)">{{ toast.text }}</div>
 </sc-if>
 
-<div style="flex:none;display:flex;border-top:2px solid {{ ui.rule }};background:{{ ui.surf }}">
+<sc-if value="{{ menuSayfa.acik }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="position:absolute;left:0;right:0;top:0;bottom:60px;z-index:60;overflow:auto;background:{{ ui.bg }};display:flex;flex-direction:column">
+<div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:2px solid {{ ui.rule }};background:{{ ui.surf }}">
+<span style="font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">Bütün ekranlar</span>
+<button onClick="{{ menuSayfa.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 14px;border:2px solid {{ ui.rule }};color:{{ ui.mut }};font:700 10px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase">Kapat</button>
+</div>
+<sc-for list="{{ menuSayfa.gruplar }}" as="g" hint-placeholder-count="4">
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch">
+<div style="padding:14px 14px 8px;font:700 8.5px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:{{ ui.acc }};border-bottom:1px solid {{ ui.rule }}">{{ g.baslik }}</div>
+<sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:12px;min-height:54px;padding:0 14px;border-bottom:1px solid {{ ui.rule }};background:{{ n.bg }};border-left:3px solid {{ n.mark }}">
+<span style="width:14px;height:14px;border:2px solid {{ n.fg }};background:{{ n.dot }};flex:none"></span>
+<span style="flex:1;font:700 12.5px/1 var(--font-body);letter-spacing:.05em;text-transform:uppercase;color:{{ n.fg }}">{{ n.label }}</span>
+<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+<span style="min-width:22px;padding:3px 6px;background:var(--color-accent);color:#fff;font:700 10px/1.4 var(--font-body);text-align:center">{{ n.badgeN }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="flex:none;display:flex;border-top:2px solid {{ ui.rule }};background:{{ ui.surf }};position:relative;z-index:61">
 <sc-for list="{{ navPhone }}" as="n" hint-placeholder-count="5">
 <button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;padding:9px 2px 11px;display:flex;flex-direction:column;align-items:center;gap:5px;background:{{ n.bg }};border-right:2px solid {{ ui.rule }};position:relative">
 <span style="width:15px;height:15px;border:2px solid {{ n.fg }};background:{{ n.dot }}"></span>
@@ -5713,16 +5836,79 @@ const PERMS = [
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];
 const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
+// Menü grupları — on üç sayfa dört başlık altında toplanır.
+// Sıra kullanım sıklığına göre: günlük iş üstte, sistem işleri altta.
+const MENU_GRUP = [
+  ['Saha', ['isler', 'envanter']],
+  ['Kayıtlar', ['kaynaklar']],
+  ['Çözümleme', ['ozet', 'kesit']],
+  ['Sistem', ['ayarlar']]
+];
+// Menüdeki sayfaların tam sırası — grup başlıkları bunun üstüne oturur
+const MENU_SIRA = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayarlar'];
+// Ayarlar bölümleri sekizden üçe indi; eski bölüm kimlikleri buraya düşer
+const AYAR_GRUP = {
+  kurum: ['yetki', 'ekip', 'kvkk'],
+  veri: ['veri'],
+  program: ['gorunum', 'modul']
+};
+const AYAR_ESKI = {
+  yetki: 'kurum', ekip: 'kurum', kvkk: 'kurum',
+  veri: 'veri', bildirim: 'veri', denetim: 'veri', cop: 'veri',
+  gorunum: 'program', modul: 'program'
+};
+const ayarGrup = id => AYAR_GRUP[id] ? id : (AYAR_ESKI[id] || 'kurum');
+// Eşitleme mesajlarında geçen modül adları
+const MODUL_ADI = {
+  ekip: 'Ekip', personel: 'Personel', nobet: 'Nöbet takvimi',
+  ambar: 'Ambar', arac: 'Araç', talep: 'Talep'
+};
+// Telefonun alt çubuğunda en çok dört sayfa durur; gerisi "Tümü" sayfasında.
+const TELEFON_SIRA = ['isler', 'envanter', 'kaynaklar', 'ozet'];
 // Sol menüdeki sayfalar — kullanıcı bazında yetki verilebilen birimler
 const SAYFALAR = [['harita', 'Harita'], ['envanter', 'Envanter'], ['ariza', 'Arıza'],
-  ['gunluk', 'Bugün'], ['talep', 'Talep'], ['bakim', 'Bakım'], ['ambar', 'Ambar'], ['arac', 'Araç'], ['ozet', 'Özet'], ['profil', 'Profil'],
+  ['gunluk', 'Bugün'], ['talep', 'Talep'], ['bakim', 'Bakım'], ['ambar', 'Ambar'], ['arac', 'Araç'], ['ozet', 'Özet'], ['profil', 'Hat Kesiti'],
   ['yerlesim', 'Yerleşim'], ['kuyruk', 'Kuyruk'], ['aktarim', 'Aktarım'], ['ayarlar', 'Ayarlar']];
 const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
+// ── Süzgeç haritası ──────────────────────────────────────────────
+// Menü birleşmesinden sonraki altı sayfa ve içindeki süzgeçler. Her süzgeç
+// bugünkü sayfa yetkisini MİRAS ALIR: yetki tablosu ve kullanıcı kayıtları
+// hiç değişmez, yalnızca yetkinin nereye uygulandığı değişir. Talebi görme
+// yetkisi olmayan kullanıcı, İşler sayfası açıksa Gelen süzgecini görmez.
+// Üçüncü sütun: yetkinin okunduğu bugünkü sayfa kimliği.
+const SUZGEC_TANIM = {
+  isler: [['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
+    ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
+  envanter: [['liste', 'Liste', 'envanter'], ['harita', 'Harita', 'harita']],
+  kaynaklar: [['malzeme', 'Malzeme', 'ambar'], ['arac', 'Araç', 'arac']],
+  ozet: [['ozet', 'Özet', 'ozet'], ['denetim', 'Denetim izi', 'ayarlar', 'denetim'],
+    ['cop', 'Çöp kutusu', 'ayarlar', 'cop']],
+  kesit: [['kesit', 'Hat kesiti', 'profil']],
+  ayarlar: [['ayarlar', 'Ayarlar', 'ayarlar'], ['yerlesim', 'Köy konumları', 'yerlesim'],
+    ['aktarim', 'İçe ve dışa aktarım', 'aktarim']]
+};
+// Kuyruk sayfa olmaktan çıkıp üst çubukta göstergeye dönüşür; yetkisi kalır.
+const SUZGEC_GOSTERGE = [['kuyruk', 'Bekleyen kayıt', 'kuyruk']];
+// Bugünkü sayfa kimliğinin yeni sayfa ve süzgeç karşılığı. Birleşme
+// tamamlanana kadar program eski kimlikleri kullanır; geçişi bu tablo taşır.
+const SUZGEC_ESKI = (() => {
+  const m = {};
+  for (const sayfa in SUZGEC_TANIM)
+    for (const [sid, , eski, hedef] of SUZGEC_TANIM[sayfa])
+      if (!m[hedef || eski]) m[hedef || eski] = { sayfa, suzgec: sid };
+  for (const [sid, , eski] of SUZGEC_GOSTERGE) m[eski] = { sayfa: 'gosterge', suzgec: sid };
+  return m;
+})();
+// Birleşmeden sonraki sayfa adları
+const SUZGEC_SAYFA_AD = {
+  isler: 'İşler', envanter: 'Envanter', kaynaklar: 'Kaynaklar',
+  ozet: 'Özet', kesit: 'Hat Kesiti', ayarlar: 'Ayarlar', gosterge: 'Üst çubuk'
+};
 // Kişiye özel istisna verilebilen yetkiler — silme ve kullanıcı yönetimi role bağlı kalır
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.11-33';
+const SURUM = '2026.09.11-46';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -5898,6 +6084,23 @@ class Component extends DCLogic {
       return [];
     })(),
     denetimQ: '', denetimSinif: '', denetimKim: '',
+    menuAcik: false,
+    // Sunucuya işlenmeyi bekleyen ambar hareketleri
+    ambarKuyruk: (() => {
+      try {
+        const p = JSON.parse(localStorage.getItem('ks-ambar-kuyruk') || 'null');
+        if (Array.isArray(p)) return p;
+      } catch (e) { /* depolama kapalı */ }
+      return [];
+    })(),
+    // Okunan sürümler: yazarken geri gönderilir, çakışma böyle bulunur
+    modulSurum: (() => {
+      try {
+        const p = JSON.parse(localStorage.getItem('ks-modul-surum') || 'null');
+        if (p && typeof p === 'object') return p;
+      } catch (e) { /* depolama kapalı */ }
+      return {};
+    })(),
     // Sunucuya yazılamayan modüller: anahtar → deneme zamanı
     modulKuyruk: (() => {
       try {
@@ -6012,6 +6215,11 @@ class Component extends DCLogic {
       const ek = JSON.parse(localStorage.getItem('ks-ek-koyler') || 'null');
       if (ek && typeof ek === 'object') this.setState({ ekKoyler: ek });
     } catch (e) { /* depolama kapalı */ }
+    // Son bilinen saat farkı: çevrimdışı açılışta da doğru damga üretilsin
+    this._saatFarki = (() => {
+      const v = parseInt(localStorage.getItem('ks-saat-farki') || '0', 10);
+      return isNaN(v) ? 0 : v;
+    })();
     this._sbYuk = import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return M; });
     this._sbYuk.catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
     this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
@@ -6321,13 +6529,39 @@ class Component extends DCLogic {
       geri + (on
         ? ' modülü açıldı — menüsü ve kayıt sekmesi geri geldi.'
         : ' modülü kapatıldı. Kayıtlar veritabanında duruyor, yeniden açtığınızda yerinde bulunur.'),
-      6000, on ? 'iyi' : 'bilgi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'modul' })));
+      6000, on ? 'iyi' : 'bilgi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'program' })));
   }
   // Ekip vardiyası / yetkinliği. Ad değişmez; kayıtlardaki ekip metni bozulmasın.
   // ── Modül deposu ─────────────────────────────────────────────
   // Yedi modül hem cihazda hem sunucuda durur. Cihaz kopyası her zaman
   // yazılır (çevrimdışı çalışsın), sunucuya yazma başarısız olursa kayıt
   // kuyruğa girer ve bağlantı gelince gönderilir.
+  // Bir modülün kayıtlarını hangi alandan tanıdığımız. Birleştirme buna bakar.
+  modulKimlik(anahtar) {
+    return { ekip: 'ad', personel: 'id', talep: 'id' }[anahtar] || null;
+  }
+  // Çakışma birleştirmesi: sunucudaki liste temel alınır, benim
+  // kayıtlarım üstüne yazılır, sunucuda olup bende olmayanlar KORUNUR.
+  // Böylece ben yazarken başkasının eklediği kayıt silinmez.
+  modulBirlestir(anahtar, sunucu, benim) {
+    const kim = this.modulKimlik(anahtar);
+    if (kim && Array.isArray(sunucu) && Array.isArray(benim)) {
+      const harita = new Map();
+      for (const r of sunucu) if (r && r[kim] != null) harita.set(String(r[kim]), r);
+      for (const r of benim) if (r && r[kim] != null) harita.set(String(r[kim]), r);
+      return { veri: [...harita.values()], yontem: 'kayit' };
+    }
+    // ambar ve araç: içleri sayı ve bakiye — kör birleştirme yanlış sonuç verir,
+    // sunucudaki doğru kabul edilir ve kullanıcıya işlemi yenilemesi söylenir
+    if (anahtar === 'ambar' || anahtar === 'arac') return { veri: null, yontem: 'yok' };
+    // nobet gibi anahtar–değer nesneleri: benim anahtarlarım kazanır, gerisi kalır
+    if (sunucu && benim && typeof sunucu === 'object' && !Array.isArray(sunucu)
+        && typeof benim === 'object' && !Array.isArray(benim)) {
+      return { veri: { ...sunucu, ...benim }, yontem: 'anahtar' };
+    }
+    // ambar ve araç: sayı içerdikleri için kör birleştirme yapılmaz
+    return { veri: null, yontem: 'yok' };
+  }
   modulYaz(anahtar, veri) {
     try { localStorage.setItem('ks-' + anahtar, JSON.stringify(veri)); } catch (e) { /* depolama kapalı */ }
     const M = this._sb;
@@ -6335,19 +6569,60 @@ class Component extends DCLogic {
       if (M && this.state.sunucu) this.modulKuyrukEkle(anahtar);
       return;
     }
-    M.veriYaz(anahtar, veri).then(r => {
-      if (r && r.ok) {
+    this.modulGonder(anahtar, veri, 0);
+  }
+  // Tek modülü sürümüyle gönderir. Çakışırsa birleştirip bir kez daha dener.
+  modulGonder(anahtar, veri, deneme) {
+    const M = this._sb;
+    const surum = (this.state.modulSurum || {})[anahtar] ?? null;
+    return M.veriYazSurumlu(anahtar, veri, surum).then(r => {
+      if (r && r.ok && r.data && r.data.ok) {
+        this.modulSurumYaz(anahtar, r.data.surum);
         const k = { ...(this.state.modulKuyruk || {}) };
         if (k[anahtar]) { delete k[anahtar]; this.modulKuyrukYaz(k); }
-        return;
+        return true;
+      }
+      // Çakışma: başkası aynı listeyi değiştirmiş
+      if (r && r.ok && r.data && r.data.cakisma) {
+        this.modulSurumYaz(anahtar, r.data.surum);
+        const b = this.modulBirlestir(anahtar, r.data.veri, veri);
+        if (b.veri && deneme < 2) {
+          this.modulDurumYaz(anahtar, b.veri);
+          this.denetimYaz('veri', 'Çakışma birleştirildi',
+            MODUL_ADI[anahtar] + ' listesini başkası da değiştirmiş; iki değişiklik birleştirildi',
+            'Eşitleme');
+          this.duyur(MODUL_ADI[anahtar] + ' listesini bu arada başkası da değiştirmiş. '
+            + 'İki değişiklik birleştirildi, kimsenin kaydı silinmedi.', 8000, 'iyi');
+          return this.modulGonder(anahtar, b.veri, deneme + 1);
+        }
+        // Sayı içeren modüllerde kör birleştirme yapılmaz: sunucudaki doğru kabul edilir
+        this.modulDurumYaz(anahtar, r.data.veri);
+        this.duyur(MODUL_ADI[anahtar] + ' kaydını bu arada başkası değiştirdi. '
+          + 'Sunucudaki güncel durum yüklendi — sayıların doğru kalması için '
+          + 'işleminizi yeniden yapın.', 11000, 'kotu');
+        return false;
       }
       // Yetki hatası kuyruğa girmez: tekrar denemek de aynı sonucu verir
       if (r && r.err && /yalnızca müdür|İzleyici hesabı/.test(r.err)) {
         this.duyur('Sunucuya yazılamadı: ' + r.err + ' Değişiklik bu cihazda kaldı.', 9000, 'kotu');
-        return;
+        return false;
       }
       this.modulKuyrukEkle(anahtar);
-    }).catch(() => this.modulKuyrukEkle(anahtar));
+      return false;
+    }).catch(() => { this.modulKuyrukEkle(anahtar); return false; });
+  }
+  modulSurumYaz(anahtar, surum) {
+    const s = { ...(this.state.modulSurum || {}), [anahtar]: surum };
+    try { localStorage.setItem('ks-modul-surum', JSON.stringify(s)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ modulSurum: s });
+  }
+  // Sunucudan gelen veriyi programın kendi alan adlarına yazar
+  modulDurumYaz(anahtar, veri) {
+    const alan = { ekip: 'ekipler', personel: 'personel', nobet: 'nobet',
+      ambar: 'ambar', arac: 'arac', talep: 'talepler' }[anahtar];
+    if (!alan) return;
+    try { localStorage.setItem('ks-' + anahtar, JSON.stringify(veri)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ [alan]: veri });
   }
   modulKuyrukYaz(k) {
     try { localStorage.setItem('ks-modul-kuyruk', JSON.stringify(k)); } catch (e) { /* depolama kapalı */ }
@@ -6362,19 +6637,33 @@ class Component extends DCLogic {
   async modulleriYukle(sessiz) {
     const M = this._sb;
     if (!M || !this.state.sunucu) return;
-    const r = await M.veriHepsi();
+    const r = await M.veriHepsiSurumlu();
     if (!r || !r.ok || !r.data || typeof r.data !== 'object') {
       if (!sessiz) this.duyur('Modül verileri sunucudan okunamadı — cihazdaki kopya kullanılıyor.', 7000, 'kotu');
       return;
     }
-    const d = r.data;
+    // Gelen biçim: { "ekip": { veri, surum }, ... } — sürüm yazmada geri gönderilir
+    const d = {};
+    const surumler = {};
+    for (const a in r.data) {
+      const x = r.data[a];
+      if (x && typeof x === 'object' && 'veri' in x) { d[a] = x.veri; surumler[a] = x.surum; }
+      else d[a] = x;
+    }
+    if (Object.keys(surumler).length) {
+      try { localStorage.setItem('ks-modul-surum', JSON.stringify(surumler)); } catch (e) { /* depolama kapalı */ }
+      this.setState({ modulSurum: surumler });
+    }
+    // Kuyrukta bekleyen anahtar sunucudan gelenle EZİLMEZ: cihazdaki
+    // değişiklik daha yeni, önce o gönderilir.
+    const bekleyen = this.state.modulKuyruk || {};
     const yama = {};
-    if (Array.isArray(d.ekip)) yama.ekipler = d.ekip;
-    if (Array.isArray(d.personel)) yama.personel = d.personel;
-    if (d.nobet && typeof d.nobet === 'object' && !Array.isArray(d.nobet)) yama.nobet = d.nobet;
-    if (d.ambar && typeof d.ambar === 'object' && !Array.isArray(d.ambar)) yama.ambar = d.ambar;
-    if (d.arac && typeof d.arac === 'object' && !Array.isArray(d.arac)) yama.arac = d.arac;
-    if (Array.isArray(d.talep)) yama.talepler = d.talep;
+    if (!bekleyen.ekip && Array.isArray(d.ekip)) yama.ekipler = d.ekip;
+    if (!bekleyen.personel && Array.isArray(d.personel)) yama.personel = d.personel;
+    if (!bekleyen.nobet && d.nobet && typeof d.nobet === 'object' && !Array.isArray(d.nobet)) yama.nobet = d.nobet;
+    if (!bekleyen.ambar && d.ambar && typeof d.ambar === 'object' && !Array.isArray(d.ambar)) yama.ambar = d.ambar;
+    if (!bekleyen.arac && d.arac && typeof d.arac === 'object' && !Array.isArray(d.arac)) yama.arac = d.arac;
+    if (!bekleyen.talep && Array.isArray(d.talep)) yama.talepler = d.talep;
     // Sunucu bomboşsa cihazdaki kopya korunur: ilk kurulumda veri kaybolmasın
     for (const k of Object.keys(yama)) {
       const bos = Array.isArray(yama[k]) ? yama[k].length === 0 : Object.keys(yama[k]).length === 0;
@@ -6391,12 +6680,21 @@ class Component extends DCLogic {
     }
     const dl = await M.denetimListesi(600);
     if (dl && dl.ok && Array.isArray(dl.data)) {
-      const liste = dl.data.map(x => ({
+      const sunucu = dl.data.map(x => ({
         id: 'dz' + x.id, iso: x.olusma, t: this.damgaCevir(x.olusma),
         sinif: x.sinif, ne: x.ne, detay: x.detay || '', kapsam: x.kapsam || '',
-        kim: x.kim || '—', rol: x.rol || '', nereden: x.nereden || '', cevrimdisi: !!x.cevrimdisi
+        kim: x.kim || '—', rol: x.rol || '', nereden: x.nereden || '',
+        cevrimdisi: !!x.cevrimdisi, gonderildi: true
       }));
-      if (liste.length) this.setState({ denetim: liste });
+      // Gönderilmemiş yerel satırlar KORUNUR — yoksa çevrimdışı yapılan iş kaybolur
+      const yerel = (this.state.denetim || []).filter(x => x.cevrimdisi && !x.gonderildi);
+      if (sunucu.length || yerel.length) {
+        const birlesik = [...yerel, ...sunucu]
+          .sort((a, b) => String(b.iso || '').localeCompare(String(a.iso || '')))
+          .slice(0, DENETIM_SINIR);
+        try { localStorage.setItem('ks-denetim', JSON.stringify(birlesik)); } catch (e) { /* depolama kapalı */ }
+        this.setState({ denetim: birlesik });
+      }
     }
     if (!sessiz) {
       const say = Object.keys(yama).length;
@@ -6414,18 +6712,36 @@ class Component extends DCLogic {
       + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
   }
   // Bekleyen modülleri sunucuya gönderir
+  // Girişte: varsa kuyruk gönderilir, ardından sunucudan okunur
+  async modulGirisEsitle() {
+    // Saat farkı önce ölçülür: sonraki kayıtların damgası doğru olsun
+    await this.saatEsitle();
+    if (Object.keys(this.state.modulKuyruk || {}).length) await this.modulKuyrukGonder(true);
+    await this.ambarKuyrukGonder();
+    await this.modulleriYukle(true);
+    await this.talepNoDuzelt();
+  }
   // Bağlantı geri geldiğinde bekleyen modülleri kendiliğinden gönderir
   modulKuyrukDene() {
     if (!this._sb || !this.state.sunucu || this.state.offline) return;
+    if ((this.state.ambarKuyruk || []).length) this.ambarKuyrukGonder();
+    if ((this.state.talepler || []).some(t => t.noGecici)) this.talepNoDuzelt();
     if (!Object.keys(this.state.modulKuyruk || {}).length) return;
     this.modulKuyrukGonder();
   }
-  async modulKuyrukGonder() {
+  async modulKuyrukGonder(sessiz) {
     const M = this._sb;
     const kuyruk = { ...(this.state.modulKuyruk || {}) };
     const anahtarlar = Object.keys(kuyruk);
-    if (!anahtarlar.length) return this.duyur('Sunucuya gönderilecek bekleyen modül yok.', 4000);
-    if (!M || !this.state.sunucu) return this.duyur('Ortak veritabanına bağlı değilsiniz.', 5000, 'kotu');
+    if (!anahtarlar.length) {
+      if ((this.state.ambarKuyruk || []).length) return this.ambarKuyrukGonder();
+      if (!sessiz) this.duyur('Sunucuya gönderilecek bekleyen modül yok.', 4000);
+      return;
+    }
+    if (!M || !this.state.sunucu) {
+      if (!sessiz) this.duyur('Ortak veritabanına bağlı değilsiniz.', 5000, 'kotu');
+      return;
+    }
     const veri = {
       ekip: this.state.ekipler, personel: this.state.personel, nobet: this.state.nobet,
       ambar: this.state.ambar, arac: this.state.arac, talep: this.state.talepler
@@ -6433,8 +6749,8 @@ class Component extends DCLogic {
     let giden = 0;
     const kalan = {};
     for (const a of anahtarlar) {
-      const r = await M.veriYaz(a, veri[a]);
-      if (r && r.ok) giden++; else kalan[a] = kuyruk[a];
+      const ok = await this.modulGonder(a, veri[a], 0);
+      if (ok) giden++; else kalan[a] = kuyruk[a];
     }
     // Çevrimdışı biriken denetim satırları da gider
     const bekleyenIz = (this.state.denetim || []).filter(x => x.cevrimdisi && !x.gonderildi);
@@ -6449,6 +6765,7 @@ class Component extends DCLogic {
       }
     }
     this.modulKuyrukYaz(kalan);
+    if (sessiz && !Object.keys(kalan).length && !bekleyenIz.length) return;
     this.duyur(giden + ' modül sunucuya yazıldı'
       + (Object.keys(kalan).length ? ', ' + Object.keys(kalan).length + ' hâlâ bekliyor.' : ', kuyruk boşaldı.')
       + (bekleyenIz.length ? ' ' + bekleyenIz.length + ' denetim satırı gönderildi.' : ''),
@@ -6458,7 +6775,7 @@ class Component extends DCLogic {
   personelYaz(liste, mesaj) {
     this.modulYaz('personel', liste);
     this.setState({ personel: liste, personelForm: null }, () => {
-      if (mesaj) this.duyur(mesaj, 6000, 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' }));
+      if (mesaj) this.duyur(mesaj, 6000, 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' }));
     });
   }
   personelBul(id) { return (this.state.personel || []).find(p => p.id === id) || null; }
@@ -6530,7 +6847,7 @@ class Component extends DCLogic {
   ekipKaydetHam(liste, mesaj, tur) {
     this.modulYaz('ekip', liste);
     this.setState({ ekipler: liste, ekipForm: null }, () => {
-      if (mesaj) this.duyur(mesaj, 6500, tur || 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' }));
+      if (mesaj) this.duyur(mesaj, 6500, tur || 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' }));
     });
   }
   // Ekip ekle / güncelle. Ad değişirse arıza, zimmet ve araç kayıtları da taşınır.
@@ -6616,7 +6933,7 @@ class Component extends DCLogic {
       + ((y.tel || '').trim() || 'telefon girilmedi') + ' · '
       + ((y.yetkinlik || []).join(', ') || 'yetkinlik girilmedi')
       + '. Arıza formunda ekip seçilirken görünür.', 5000, 'iyi',
-      () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' })));
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' })));
   }
   // Mükerrer kayıt: aynı tesiste açık kayıt ya da son yedi günde aynı türden
   // kapanmış kayıt varsa yeni kayıt açılmadan önce sorulur.
@@ -6640,10 +6957,6 @@ class Component extends DCLogic {
   }
   ambarZimmet(malzeme, ekip) {
     return Number((((this.state.ambar || {}).zimmet || {})[ekip] || {})[malzeme]) || 0;
-  }
-  ambarYaz(a, mesaj, git) {
-    this.modulYaz('ambar', a);
-    this.setState({ ambar: a, ambarForm: null }, () => { if (mesaj) this.duyur(mesaj, 6500, 'iyi', git); });
   }
   // Tek hareket: giriş, çıkış, zimmet, iade, sarf. Eksi mevcuda düşürmez.
   ambarHareket(g) {
@@ -6691,10 +7004,15 @@ class Component extends DCLogic {
     this.denetimYaz('ambar', HAREKET_AD[g.tur], g.malzeme + ' × ' + n + ' ' + birim
       + [g.ambar, g.ekip].filter(Boolean).map(x => ' · ' + x).join('')
       + (kayit.not ? ' · ' + kayit.not : ''), g.ambar || g.ekip);
-    this.ambarYaz({ stok, zimmet: zim, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) },
-      HAREKET_AD[g.tur] + ' · ' + g.malzeme + ' × ' + n + ' ' + birim
+    // Bakiye hesabı sunucuda yapılır; buradaki stok/zim yalnızca ekranın
+    // hemen güncellenmesi için. Sunucudan gelen sonuç bunun üstüne yazar.
+    this.ambarIslem([{
+      id: kayit.id, tur: g.tur, malzeme: g.malzeme, adet: n, birim,
+      ambar: g.ambar || '', ekip: g.ekip || '', not: kayit.not
+    }], HAREKET_AD[g.tur] + ' · ' + g.malzeme + ' × ' + n + ' ' + birim
       + (g.ekip ? ' · ' + g.ekip : '') + (g.ambar ? ' · ' + g.ambar : ''),
-      () => this.setState({ tab: 'ambar' }));
+      { stok, zimmet: zim, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) });
+    this.setState({ ambarForm: null });
   }
   kvkkYaz(yama) {
     const y = { ...(this.state.kvkk || {}), ...yama };
@@ -6710,7 +7028,7 @@ class Component extends DCLogic {
     try { localStorage.setItem('ks-kvkk', JSON.stringify(y)); } catch (e) { /* depolama kapalı */ }
     this.setState({ kvkk: y }, () => this.duyur(ad + ' saklama süresi ' + (sec ? sec.ad : gun + ' gün')
       + ' olarak ayarlandı. Süresi dolan kayıtlar Ayarlar > KVKK bölümünden temizlenir.', 6500, 'iyi',
-      () => this.setState({ tab: 'ayarlar', ayarBolum: 'kvkk' })));
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' })));
   }
   // Bir tarihin kaç gün önce olduğunu döndürür (gg.aa.yyyy biçiminden)
   gunGecti(damga) {
@@ -6882,7 +7200,7 @@ class Component extends DCLogic {
     this.smsKuyrukYaz(kuyruk);
     this.denetimYaz('bildirim', 'Mesaj kuyruğa alındı', kanal + ' · ' + r.hata, kapsam);
     this.duyur(kapsam + ' bildirimi gönderilemedi: ' + r.hata + ' Mesaj kuyrukta bekliyor.', 8000, 'kotu',
-      () => this.setState({ tab: 'ayarlar', ayarBolum: 'bildirim' }));
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'veri' }));
   }
   async smsKuyrukGonder() {
     const kuyruk = [...(this.state.smsKuyruk || [])];
@@ -6909,8 +7227,51 @@ class Component extends DCLogic {
   talepNo() {
     const y = new Date().getFullYear();
     const n = (this.state.talepler || []).filter(t => String(t.no || '').includes('-' + y + '-')).length + 1;
+    // Çevrimdışı geçici numara: cihaz eki numarayı benzersiz kılar, eşitlenince
+    // sunucudan kesin numara alınır. talepNoAl() bu işi yapar.
     return 'TLP-' + y + '-' + String(n).padStart(3, '0');
   }
+  // Numarayı sunucudan alır. Bağlantı yoksa geçici numara verir ve kaydı
+  // işaretler — iki cihaz aynı numarayı üretemesin.
+  async talepNoAl() {
+    const M = this._sb;
+    if (M && this.state.sunucu && !this.state.offline) {
+      const r = await M.numaraAl('talep');
+      if (r && r.ok && typeof r.data === 'string') return { no: r.data, gecici: false };
+    }
+    const cihaz = this.cihazEki();
+    return { no: this.talepNo().replace(/^TLP-(\d+)-/, 'TLP-$1-G' + cihaz + '-'), gecici: true };
+  }
+  // Bu cihaza özgü kalıcı üç harf. Çevrimdışı verilen geçici numaraların
+  // farklı cihazlarda çakışmamasını sağlar.
+  cihazEki() {
+    let v = null;
+    try { v = localStorage.getItem('ks-cihaz-eki'); } catch (e) { /* depolama kapalı */ }
+    if (!v) {
+      v = Math.random().toString(36).slice(2, 5).toUpperCase();
+      try { localStorage.setItem('ks-cihaz-eki', v); } catch (e) { /* depolama kapalı */ }
+    }
+    return v;
+  }
+  // Geçici numaralı talepler eşitlenince kesin numarayı alır
+  async talepNoDuzelt() {
+    const M = this._sb;
+    if (!M || !this.state.sunucu || this.state.offline) return;
+    const gecici = (this.state.talepler || []).filter(t => t.noGecici);
+    if (!gecici.length) return;
+    const r = await M.numaraToplu('talep', gecici.length);
+    if (!(r && r.ok && Array.isArray(r.data) && r.data.length === gecici.length)) return;
+    const esle = new Map(gecici.map((t, i) => [t.id, r.data[i]]));
+    const liste = (this.state.talepler || []).map(t => esle.has(t.id)
+      ? { ...t, no: esle.get(t.id), noGecici: false, noEski: t.no } : t);
+    this.denetimYaz('veri', 'Geçici talep numaraları kesinleşti',
+      gecici.length + ' talep sunucudan kesin numara aldı', 'Talep');
+    this.modulYaz('talep', liste.slice(0, 1000));
+    this.setState({ talepler: liste });
+    this.duyur(gecici.length + ' talebin geçici numarası kesin numaraya çevrildi.', 7000, 'iyi');
+  }
+  // Yeni talepte numara sunucudan alınır; alma işi beklediği için kayıt
+  // iki adıma bölünür. Var olan talebin numarası değişmez.
   talepKaydet(g) {
     if (!g) return;
     const ad = (g.ad || '').trim();
@@ -6920,11 +7281,29 @@ class Component extends DCLogic {
     if ((this.state.kvkk || {}).onayZorunlu && !g.id && !g.kvkkOnay) {
       return this.duyur('Bildiren kişiye adının ve telefonunun ne için kaydedildiği söylenmeli — formdaki onay kutusunu işaretleyin. Metin Ayarlar > KVKK bölümünde.', 9000, 'kotu');
     }
+    // Numara ancak buraya kadar gelen, yazılacağı kesin kayıt için alınır.
+    // Doğrulamadan önce alınsa hatalı her denemede bir numara yanar ve
+    // resmî talep sırasında açıklanamayan boşluk kalır.
+    if (!g.id && !g.no && !this._talepNo) {
+      this.talepNoAl().then(x => {
+        this._talepNo = x.no; this._talepGecici = x.gecici;
+        this.talepKaydet(g);
+        this._talepNo = null; this._talepGecici = false;
+        if (x.gecici) this.duyur('Bağlantı olmadığı için geçici numara verildi (' + x.no
+          + '). Bağlantı gelince kesin numaraya çevrilecek.', 8000);
+      }).catch(() => {
+        this._talepNo = this.talepNo(); this._talepGecici = false;
+        this.talepKaydet(g); this._talepNo = null;
+      });
+      return;
+    }
+
     const liste = [...(this.state.talepler || [])];
     const i = liste.findIndex(x => x.id === g.id);
     const kayit = {
       id: g.id || 'tl' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      no: g.no || this.talepNo(),
+      no: g.no || this._talepNo || this.talepNo(),
+      noGecici: g.no ? !!g.noGecici : !!this._talepGecici,
       acilis: g.acilis || this.damga(),
       guncelleme: this.damga(),
       ad, tel: (g.tel || '').trim(), sifat: g.sifat || 'vatandas',
@@ -7071,6 +7450,7 @@ class Component extends DCLogic {
     const kim = (this.state.session && this.state.session.name) || '';
     let n = 0;
     const eksik = [];
+    const islemler = [];
     for (const mz of (f.malzeme || [])) {
       const kalem = STOK_KALEM.find(m => m[0] === mz.ad);
       if (!kalem) continue;
@@ -7079,20 +7459,80 @@ class Component extends DCLogic {
       if (elde < adet) { eksik.push(mz.ad); continue; }
       zim[f.crew][mz.ad] = elde - adet;
       if (zim[f.crew][mz.ad] <= 0) delete zim[f.crew][mz.ad];
+      const hid = 'h' + Date.now() + n;
       hareket.unshift({
-        id: 'h' + Date.now() + n, damga: this.damga(), tur: 'sarf', malzeme: mz.ad,
+        id: hid, damga: this.damga(), tur: 'sarf', malzeme: mz.ad,
         adet, birim: kalem[2], ambar: '', ekip: f.crew, kim,
         not: (f.no || 'arıza') + ' kapanışı'
       });
+      islemler.push({ id: hid, tur: 'sarf', malzeme: mz.ad, adet, birim: kalem[2],
+        ambar: '', ekip: f.crew, not: (f.no || 'arıza') + ' kapanışı' });
       n++;
     }
     if (n) this.denetimYaz('ambar', 'Arıza kapanışında sarf', n + ' kalem ' + f.crew
       + ' zimmetinden düşüldü' + (eksik.length ? ' · zimmette olmayan: ' + eksik.join(', ') : ''), f.no || '');
     if (!n && !eksik.length) return;
-    this.ambarYaz({ stok, zimmet: zim, hareket: hareket.slice(0, 400) },
+    this.ambarIslem(islemler,
       (n ? n + ' kalem ' + f.crew + ' zimmetinden düşüldü' : 'Zimmetten düşülecek kalem bulunamadı')
       + (eksik.length ? ' · zimmette olmayanlar: ' + eksik.join(', ') + '. Ambardan zimmet girip yeniden deneyin.' : '.'),
-      () => this.setState({ tab: 'ambar' }));
+      { stok, zimmet: zim, hareket: hareket.slice(0, 400) });
+  }
+  // Ambar hareketini sunucuya gönderir. Cihaz yeni bakiyeyi hesaplamaz;
+  // yapılacak hareketi gönderir, toplama çıkarma sunucuda satır kilidi
+  // altında yapılır. İki kişi aynı anda düşerse ikisi de tutar.
+  // Çevrimdışıysa hareket kuyrukta bekler, bağlantı gelince gider.
+  async ambarIslem(islemler, mesaj, yerelVeri) {
+    // Ekranda hemen görünmesi için cihaz kopyası yine yazılır
+    if (yerelVeri) {
+      try { localStorage.setItem('ks-ambar', JSON.stringify(yerelVeri)); } catch (e) { /* depolama kapalı */ }
+      this.setState({ ambar: yerelVeri });
+    }
+    const M = this._sb;
+    if (!M || !this.state.sunucu || this.state.offline) {
+      this.ambarKuyrukEkle(islemler);
+      if (mesaj) this.duyur(mesaj + ' Bağlantı gelince ambar sunucuda da düşülecek.', 7000);
+      return;
+    }
+    const r = await M.ambarHareket(islemler);
+    if (r && r.ok && r.data && r.data.ok) {
+      this.modulSurumYaz('ambar', r.data.surum);
+      this.modulDurumYaz('ambar', r.data.veri);
+      const red = (r.data.red || []);
+      if (red.length) {
+        this.duyur('Bakiye yetmediği için işlenmeyen kalem var: '
+          + red.map(x => x.malzeme + ' (' + x.neden + ')').join(', ')
+          + '. Sunucudaki güncel durum yüklendi.', 11000, 'kotu');
+      } else if (mesaj) {
+        this.duyur(mesaj, 6000, 'iyi', () => this.setState({ tab: 'ambar' }));
+      }
+      return;
+    }
+    this.ambarKuyrukEkle(islemler);
+    if (mesaj) this.duyur(mesaj + ' Sunucuya yazılamadı, kuyrukta bekliyor.', 8000, 'kotu');
+  }
+  ambarKuyrukEkle(islemler) {
+    const k = [...(this.state.ambarKuyruk || []), ...(islemler || [])];
+    try { localStorage.setItem('ks-ambar-kuyruk', JSON.stringify(k)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ ambarKuyruk: k });
+  }
+  // Bekleyen ambar hareketlerini gönderir. Sunucu aritmetiği yaptığı için
+  // bekleyen hareketler sırayla işlenir ve hiçbiri kaybolmaz.
+  async ambarKuyrukGonder() {
+    const bekleyen = this.state.ambarKuyruk || [];
+    if (!bekleyen.length) return true;
+    const M = this._sb;
+    if (!M || !this.state.sunucu || this.state.offline) return false;
+    const r = await M.ambarHareket(bekleyen);
+    if (!(r && r.ok && r.data && r.data.ok)) return false;
+    this.modulSurumYaz('ambar', r.data.surum);
+    this.modulDurumYaz('ambar', r.data.veri);
+    try { localStorage.setItem('ks-ambar-kuyruk', '[]'); } catch (e) { /* depolama kapalı */ }
+    this.setState({ ambarKuyruk: [] });
+    const red = (r.data.red || []);
+    this.duyur(bekleyen.length + ' bekleyen ambar hareketi sunucuya işlendi'
+      + (red.length ? ' · bakiye yetmeyen ' + red.length + ' kalem işlenmedi' : '') + '.',
+      7000, red.length ? 'kotu' : 'iyi');
+    return true;
   }
   bakimPeriyot(t) { return t === 'kuyu' ? 6 : 12; }
   // Hedef süre: öncelik başına gün sayısı. Değerler bilinçli olarak geniş —
@@ -7341,10 +7781,35 @@ class Component extends DCLogic {
   }
   // konum kaynağı etiketi tek yerden üretilir — liste ve şerit aynı metni kullanır
   // ── kayıt geçmişi: her değişiklik kim, ne zaman, nereden diye yazılır
+  // Kayıt damgası. Cihaz saati yanlış ayarlıysa süre uyumu ölçümü bozulur;
+  // bu yüzden girişte sunucu saatiyle arasındaki fark ölçülür ve buradan
+  // düzeltilir. Çevrimdışı açılışta son bilinen fark kullanılır.
   damga() {
-    const d = new Date();
+    const d = new Date(Date.now() + (this._saatFarki || 0));
     const p = n => String(n).padStart(2, '0');
     return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  // Sunucu saatiyle cihaz saati arasındaki farkı ölçer.
+  // Bir dakikadan küçük fark yok sayılır — her açılışta uyarı vermenin anlamı yok.
+  async saatEsitle() {
+    const M = this._sb;
+    if (!M || !this.state.sunucu || this.state.offline) return;
+    const t0 = Date.now();
+    const r = await M.sunucuSaati();
+    if (!r || !r.ok || !r.data || !r.data.ms) return;
+    // Gidiş dönüş süresinin yarısı yol payı olarak düşülür
+    const gecikme = (Date.now() - t0) / 2;
+    const fark = Math.round(Number(r.data.ms) + gecikme - Date.now());
+    this._saatFarki = Math.abs(fark) < 60000 ? 0 : fark;
+    try { localStorage.setItem('ks-saat-farki', String(this._saatFarki)); } catch (e) { /* depolama kapalı */ }
+    if (this._saatFarki) {
+      const dk = Math.round(Math.abs(this._saatFarki) / 60000);
+      this.denetimYaz('ayar', 'Cihaz saati düzeltildi',
+        'Sunucuyla fark ' + dk + ' dakika (' + (fark > 0 ? 'cihaz geride' : 'cihaz ileride') + ')', 'Saat');
+      this.duyur('Bu cihazın saati sunucudan ' + dk + ' dakika '
+        + (fark > 0 ? 'geride' : 'ileride') + '. Kayıt zamanları düzeltiliyor — '
+        + 'cihazın saatini elle de düzeltmeniz iyi olur.', 9000, 'kotu');
+    }
   }
   // Sistem geneli denetim izi. iz() kayda bağlı geçmişi, bu ise
   // programın tamamını yazar — kayıt dışı işlemler de buraya düşer.
@@ -7757,7 +8222,13 @@ class Component extends DCLogic {
       this.denetimYaz('oturum', 'Giriş yapıldı',
         (ROLE_LABEL[u.role] || u.role) + ' · ' + (sunucudan ? 'ortak veritabanı' : 'cihaz kopyası'), u.user);
       this.prefUygula();
-      if (sunucudan) { this.usersYenile(); this.veriYenile(); this.modulleriYukle(true); }
+      if (sunucudan) {
+        this.usersYenile();
+        this.veriYenile();
+        // Önce bekleyen değişiklikler gider, sonra sunucudan okunur:
+        // tersi olursa cihazdaki yeni kayıt eski sunucu verisiyle ezilir.
+        this.modulGirisEsitle();
+      }
     });
   }
   // Medya kaynağı şablon deliğiyle verilemez: tarayıcı hole çözülmeden
@@ -8109,7 +8580,7 @@ class Component extends DCLogic {
         const t = await M.copTemizle();
         if (t && t.ok && t.data && (t.data.tesis || t.data.foto)) {
           this.duyur(`Çöp kutusunda 30 günü dolan ${t.data.tesis} kayıt ve ${t.data.foto} fotoğraf kalıcı silindi.`, 6000, 'bilgi',
-            () => this.setState({ tab: 'ayarlar', ayarBolum: 'cop' }));
+            () => this.setState({ tab: 'cop' }));
         }
       }
       const [k, f] = await Promise.all([
@@ -8859,9 +9330,25 @@ class Component extends DCLogic {
       const v = (me.sayfalar || {})[id];
       return v === 'yok' || v === 'gor' ? v : 'tam';
     };
+    // Süzgeç yetkisi: birleşmeden sonra yetki sayfa değil süzgeç düzeyinde
+    // ölçülür. Bugün her eski sayfa tek süzgece karşılık geldiği için sonuç
+    // aynı — bu adım altyapıyı kurar, görünürde bir şey değiştirmez.
+    const suzgecYetki = (sayfa, sid) => {
+      const t = (SUZGEC_TANIM[sayfa] || SUZGEC_GOSTERGE).find(x => x[0] === sid);
+      return t ? yetki(t[2]) : 'yok';
+    };
+    // Bir sayfanın kullanıcıya görünen süzgeçleri
+    const suzgecler = sayfa => (SUZGEC_TANIM[sayfa] || [])
+      .filter(x => yetki(x[2]) !== 'yok')
+      .map(([sid, ad, eski, hedef]) => ({ id: sid, ad, eski, hedef: hedef || eski, yetki: yetki(eski) }));
+    // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
+    const sayfaGorunur = sayfa => (SUZGEC_TANIM[sayfa] || []).some(x => yetki(x[2]) !== 'yok');
     let tabId = s.tab;
     if (yetki(tabId) === 'yok') tabId = SAYFALAR.map(x => x[0]).find(id => yetki(id) !== 'yok') || 'harita';
-    const sayfaTam = yetki(tabId) === 'tam';
+    // Aktif sayfanın yetkisi süzgeç haritasından okunur; haritada karşılığı
+    // olmayan sayfa (yerleşim, kuyruk) eski yola düşer.
+    const aktif = SUZGEC_ESKI[tabId];
+    const sayfaTam = (aktif ? suzgecYetki(aktif.sayfa, aktif.suzgec) : yetki(tabId)) === 'tam';
     const canWrite = can('write') && sayfaTam;
     const canAssign = can('assign');
     const canCreateFault = canWrite && arizaOn;
@@ -9256,22 +9743,37 @@ class Component extends DCLogic {
       ...(onayOn ? [['kontrol', 'Kontrolde']] : []),
       ['cozuldu', 'Çözüldü'], ['iptal', 'İptal']];
 
-    const navDef = [['harita', 'Harita', 0, 1], ['envanter', 'Envanter', 0, 1],
-      ['ariza', 'Arıza', myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length, 1],
-      ['gunluk', 'Bugün', 0, 1], ['talep', 'Talep', 0, 1], ['bakim', 'Bakım', 0, 1], ['ambar', 'Ambar', 0, 1], ['arac', 'Araç', 0, 1], ['ozet', 'Özet', 0, 1],
-      ['profil', 'Profil', 0, 1], ['yerlesim', 'Yerleşim', 0, 0], ['kuyruk', 'Kuyruk', pendA.length + pendF.length, 0],
-      ['ayarlar', 'Ayarlar', 0, 1]];
-    const navItem = ([id, label, badge]) => ({
-      label, go: () => this.setState({ tab: id }),
-      bg: tabId === id ? ui.surf2 : 'transparent',
-      fg: tabId === id ? ui.acc : ui.mut,
-      mark: tabId === id ? 'var(--color-accent)' : 'transparent',
-      dot: tabId === id ? 'var(--color-accent)' : 'transparent',
-      badge: badge > 0, badgeN: badge
+    // İşler: talep, arıza, bugün ve bakım tek sayfada dört süzgeç. Program
+    // içeride eski sayfa kimliklerini kullanmaya devam eder — böylece
+    // "arıza kaydına git" gibi bütün mevcut geçişler olduğu gibi çalışır.
+    // Birleşmiş sayfalar. Menüde altı girdi var; her girdi bir süzgeç kümesi.
+    // Program içeride eski sayfa kimliklerini kullanmayı sürdürür, böylece
+    // "arıza kaydına git" gibi bütün mevcut geçişler olduğu gibi çalışır.
+    const acikAriza = myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length;
+    const acikTalep = (s.talepler || []).filter(t => !TALEP_KAPALI.includes(t.durum)).length;
+    // Modül anahtarı kapalıysa o süzgeç hiç çıkmaz
+    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn };
+    const suzgecSayi = { ariza: acikAriza, talep: acikTalep };
+    const gruplar = {};
+    for (const sayfa in SUZGEC_TANIM) {
+      const zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      gruplar[sayfa] = {
+        id: sayfa, ad: SUZGEC_SAYFA_AD[sayfa] || sayfa, suz: zs,
+        acik: zs.some(z => z.hedef === tabId),
+        badge: zs.reduce((t, z) => t + (suzgecSayi[z.hedef] || 0), 0)
+      };
+    }
+    // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
+    const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length);
+    const navItem = g => ({
+      label: g.ad, go: () => this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }),
+      bg: g.acik ? ui.surf2 : 'transparent',
+      fg: g.acik ? ui.acc : ui.mut,
+      mark: g.acik ? 'var(--color-accent)' : 'transparent',
+      dot: g.acik ? 'var(--color-accent)' : 'transparent',
+      badge: g.badge > 0, badgeN: g.badge
     });
-    const navVisible = navDef.filter(([id]) => (id !== 'ariza' || arizaOn) && (id !== 'bakim' || bakimOn)
-      && (id !== 'ambar' || ambarOn) && (id !== 'arac' || aracOn) && (id !== 'talep' || talepOn)
-      && (id !== 'yerlesim' || yerlesimOn) && yetki(id) !== 'yok');
+    const aktifGrup = navVisible.find(g => g.acik) || null;
     const seg = (on, act) => ({ bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.mut, pick: act });
     const canCreateAsset = can('create') && sayfaTam;
     const na = s.newAsset;
@@ -10186,12 +10688,17 @@ class Component extends DCLogic {
           ? `Köy konumları programın içinde gömülü. Bunun dışında elle işaretlediğiniz ${n} konum bu cihazda saklı ve gömülü listeye göre öncelikli.`
           : 'Köy konumları programın içinde gömülü — elle işaretlenmiş ayrı bir konum yok.';
       })(),
-      ayar: {
-        gorunum: s.ayarBolum === 'gorunum', veri: s.ayarBolum === 'veri',
-        yetki: s.ayarBolum === 'yetki', cop: s.ayarBolum === 'cop', ekip: s.ayarBolum === 'ekip',
-        denetim: s.ayarBolum === 'denetim', kvkk: s.ayarBolum === 'kvkk',
-        modul: s.ayarBolum === 'modul'
-      },
+      ayar: (() => {
+        const ic = AYAR_GRUP[ayarGrup(s.ayarBolum)];
+        const a = tabId === 'ayarlar';
+        return {
+          bolumBar: a,
+          gorunum: a && ic.includes('gorunum'), veri: a && ic.includes('veri'),
+          yetki: a && ic.includes('yetki'), ekip: a && ic.includes('ekip'),
+          kvkk: a && ic.includes('kvkk'), modul: a && ic.includes('modul'),
+          denetim: tabId === 'denetim', cop: tabId === 'cop'
+        };
+      })(),
       ambarEkran: (() => {
         const af = s.ambarForm;
         const zimTablo = (s.ambar && s.ambar.zimmet) || {};
@@ -10560,22 +11067,53 @@ class Component extends DCLogic {
           }
         };
       })(),
+      // Süzgeç haritası — birleşmeden sonra hangi yetkinin nereye gideceği.
+      // Yönetici birleşmeden ÖNCE buradan görüp doğrulayabilir.
+      suzgecHarita: (() => {
+        const sayfalar = Object.keys(SUZGEC_TANIM).map(sayfa => ({
+          ad: SUZGEC_SAYFA_AD[sayfa],
+          suzgecler: SUZGEC_TANIM[sayfa].map(([sid, ad, eski]) => {
+            const y = yetki(eski);
+            return {
+              ad, eskiAd: (SAYFALAR.find(x => x[0] === eski) || [, eski])[1],
+              yetki: y === 'tam' ? 'Tam' : (y === 'gor' ? 'Görür' : 'Yok'),
+              fg: y === 'yok' ? ui.mut : (y === 'gor' ? ui.fg : ui.acc)
+            };
+          })
+        }));
+        return {
+          not: 'Menü birleşmesinden sonra on üç sayfa altıya inecek. Yetkiler değişmiyor — her süzgeç bugünkü sayfa yetkisini olduğu gibi devralıyor. Aşağıdaki tablo, sizin hesabınız için bunun nasıl karşılık bulacağını gösterir. Bir süzgecin yetkisi Yok ise birleşmeden sonra o süzgeç görünmeyecek.',
+          sayfalar,
+          gosterge: SUZGEC_GOSTERGE.map(([, ad, eski]) => ({
+            ad, eskiAd: (SAYFALAR.find(x => x[0] === eski) || [, eski])[1],
+            yetki: yetki(eski) === 'yok' ? 'Yok' : 'Var'
+          }))
+        };
+      })(),
       modulEsitleme: (() => {
         const kuyruk = s.modulKuyruk || {};
         const ADLAR = { ekip: 'Ekipler', personel: 'Personel havuzu', nobet: 'Nöbet takvimi',
           ambar: 'Ambar ve zimmet', arac: 'Araç ve ekipman', talep: 'Dış talepler' };
         const bekleyen = Object.keys(kuyruk);
         const izBekleyen = (s.denetim || []).filter(x => x.cevrimdisi && !x.gonderildi).length;
+        const ambarBekleyen = (s.ambarKuyruk || []).length;
+        const geciciNo = (s.talepler || []).filter(t => t.noGecici).length;
         return {
-          not: 'Ekip, personel, nöbet, ambar, araç ve talep kayıtları ortak veritabanında durur — her bilgisayar aynı veriyi görür. Bağlantı yoksa değişiklik cihazda tutulur ve bağlantı gelince kendiliğinden yazılır.',
+          not: 'Ekip, personel, nöbet, ambar, araç ve talep kayıtları ortak veritabanında durur — her bilgisayar aynı veriyi görür. Bağlantı yoksa değişiklik cihazda tutulur ve bağlantı gelince kendiliğinden yazılır. İki kişi aynı listeyi değiştirirse iki değişiklik birleştirilir; ambarda bakiye hesabı sunucuda yapıldığı için eşzamanlı düşüşler birbirini silmez.',
           durum: !s.sunucu
             ? 'Cihaz kopyasıyla çalışıyorsunuz — ortak veritabanına giriş yapılmadı, kayıtlar yalnızca bu bilgisayarda.'
-            : (bekleyen.length
-              ? bekleyen.length + ' modül sunucuya yazılamadı, kuyrukta bekliyor.'
+            : ((bekleyen.length || ambarBekleyen)
+              ? [bekleyen.length ? bekleyen.length + ' modül' : '',
+                 ambarBekleyen ? ambarBekleyen + ' ambar hareketi' : '']
+                 .filter(Boolean).join(' ve ') + ' sunucuya yazılamadı, kuyrukta bekliyor.'
               : 'Bütün modüller sunucuyla eşit.'),
-          durumFg: !s.sunucu || bekleyen.length ? ui.acc : ui.fg,
-          bekleyen: bekleyen.map(a => ({ ad: ADLAR[a] || a, zaman: kuyruk[a] })),
-          bekleyenVar: bekleyen.length > 0,
+          durumFg: !s.sunucu || bekleyen.length || ambarBekleyen ? ui.acc : ui.fg,
+          bekleyen: [
+            ...bekleyen.map(a => ({ ad: ADLAR[a] || a, zaman: kuyruk[a] })),
+            ...(ambarBekleyen ? [{ ad: 'Ambar hareketi × ' + ambarBekleyen, zaman: 'bakiye sunucuda hesaplanacak' }] : []),
+            ...(geciciNo ? [{ ad: 'Geçici numaralı talep × ' + geciciNo, zaman: 'kesin numara alınacak' }] : [])
+          ],
+          bekleyenVar: bekleyen.length > 0 || ambarBekleyen > 0 || geciciNo > 0,
           izNot: izBekleyen ? izBekleyen + ' denetim satırı da gönderilmeyi bekliyor.' : '',
           gonder: () => this.modulKuyrukGonder(),
           yukle: () => {
@@ -10925,15 +11463,14 @@ class Component extends DCLogic {
           }
         ]
       },
+      // Ayarlar üç bölüm: Kurum (yetki, ekip, KVKK) · Veri · Program
       ayarBolum: [
-        ['gorunum', 'Harita ve görünüm'], ['veri', 'Veri ve bildirim'],
-        ['yetki', 'Yetkiler ve kullanıcılar'],
-        ...(arizaOn ? [['ekip', 'Ekipler']] : []), ['denetim', 'Denetim izi'], ['kvkk', 'KVKK'],
-        ...(can('admin') ? [['modul', 'Modüller']] : []), ['cop', 'Çöp kutusu' + ((s.trash.length + (s.cop || []).length) ? ' · ' + (s.trash.length + (s.cop || []).length) : '')]
+        ['kurum', 'Kurum'], ['veri', 'Veri'],
+        ...(can('admin') ? [['program', 'Program']] : [['program', 'Görünüm']])
       ].map(([id, label]) => ({
         label,
-        bg: s.ayarBolum === id ? ui.bg : 'transparent',
-        fg: s.ayarBolum === id ? ui.acc : ui.mut,
+        bg: ayarGrup(s.ayarBolum) === id ? ui.bg : 'transparent',
+        fg: ayarGrup(s.ayarBolum) === id ? ui.acc : ui.mut,
         pick: () => this.setState({ ayarBolum: id })
       })),
       prefNote: (() => {
@@ -10982,16 +11519,95 @@ class Component extends DCLogic {
           }
         };
       })(),
+      // Sayfa süzgeç çubuğu — birleşmiş sayfaların üstünde durur.
+      // Tek süzgeçli sayfada (Hat Kesiti) çubuk hiç çıkmaz.
+      sayfaBar: (() => {
+        const ALT = {
+          gelen: 'Köyden gelen ihbar ve istekler. Gereken talep arızaya dönüşür.',
+          acik: 'Açık arıza ve iş emirleri.',
+          bugun: 'Bugün size ve ekibinize düşen işler.',
+          planli: 'Tarihi önceden belli periyodik bakımlar.',
+          liste: 'Bütün tesisler tablo olarak — başlığa basarak sırala, alt satırdan süz.',
+          harita: 'Aynı kayıtlar harita üzerinde; tıklayınca kayıt açılır.',
+          malzeme: 'Ambar stoğu, ekip zimmeti ve hareket dökümü.',
+          arac: 'Araç, ekipman ve bunların zimmeti.',
+          ozet: 'İlçe dağılımı, eksik bilgi, ekip ve arıza özetleri.',
+          denetim: 'Kim neyi ne zaman değiştirdi — silinemeyen kayıt.',
+          cop: 'Silinen kayıtlar burada bekler; 30 gün içinde geri alınır.',
+          ayarlar: 'Kurum, veri ve program ayarları.',
+          yerlesim: 'Köy konumlarının elle düzeltilmesi.',
+          aktarim: 'Dosyadan içe alma ve dışa aktarma.'
+        };
+        const g = aktifGrup;
+        if (!g || g.suz.length < 2) return { acik: false, baslik: '', alt: '', suzgecler: [] };
+        const z0 = g.suz.find(z => z.hedef === tabId);
+        return {
+          acik: true, baslik: g.ad, alt: ALT[(z0 || {}).id] || '',
+          suzgecler: g.suz.map(z => {
+            const n = suzgecSayi[z.hedef] || 0;
+            return {
+              label: z.ad, n, nVar: n > 0,
+              bg: tabId === z.hedef ? 'var(--color-accent)' : 'transparent',
+              fg: tabId === z.hedef ? '#fff' : ui.mut,
+              pick: () => this.setState({ tab: z.hedef })
+            };
+          })
+        };
+      })(),
+      // Kuyruk artık sayfa değil, üst çubukta gösterge
+      kuyrukG: (() => {
+        const n = pendA.length + pendF.length;
+        return {
+          var: yetki('kuyruk') !== 'yok' && n > 0, n,
+          label: 'Kuyruk ' + n,
+          not: n + ' kayıt sunucuya gönderilmeyi bekliyor — dokununca listesi açılır.',
+          git: () => this.setState({ tab: 'kuyruk' })
+        };
+      })(),
       tab: {
         harita: tabId === 'harita', envanter: tabId === 'envanter', ariza: tabId === 'ariza',
         yerlesim: tabId === 'yerlesim', kuyruk: tabId === 'kuyruk', profil: tabId === 'profil',
         islem: tabId === 'islem', ayarlar: tabId === 'ayarlar', aktarim: tabId === 'aktarim',
+        // Denetim izi ve çöp kutusu Özet sayfasının süzgeçleri oldu; gövdeleri
+        // ayarlar kabının içinde durduğu için kap bu üç sekmede açılır.
+        ayarKap: tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop',
         ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim',
         ambar: tabId === 'ambar', arac: tabId === 'arac', talep: tabId === 'talep'
       },
       nav: navVisible.map(navItem),
-      navPhone: navVisible.filter(d => d[3]).map(navItem),
-      otherScreens: navVisible.filter(d => !d[3]).map(navItem),
+      // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez
+      navGruplu: MENU_GRUP.map(([baslik, idler]) => ({
+        baslik,
+        ogeler: idler.map(id => navVisible.find(g => g.id === id)).filter(Boolean).map(navItem)
+      })).filter(g => g.ogeler.length),
+      // Telefon alt çubuğu: en çok dört sayfa, kalanı "Tümü"
+      navPhone: (() => {
+        const secili = TELEFON_SIRA
+          .map(id => navVisible.find(g => g.id === id))
+          .filter(Boolean).slice(0, 4);
+        const acikBadge = navVisible
+          .filter(g => !secili.includes(g))
+          .reduce((t, g) => t + (g.badge || 0), 0);
+        return [...secili.map(navItem), {
+          label: 'Tümü', go: () => this.setState({ menuAcik: true }),
+          bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
+          mark: 'transparent', dot: s.menuAcik ? 'var(--color-accent)' : 'transparent',
+          badge: acikBadge > 0, badgeN: acikBadge
+        }];
+      })(),
+      // "Tümü" sayfası — başlıklı tam liste
+      menuSayfa: {
+        acik: !!s.menuAcik,
+        kapat: () => this.setState({ menuAcik: false }),
+        gruplar: MENU_GRUP.map(([baslik, idler]) => ({
+          baslik,
+          ogeler: idler.map(id => navVisible.find(g => g.id === id)).filter(Boolean).map(g => {
+            const n = navItem(g);
+            return { ...n, go: () => this.setState({ tab: (g.suz[0] || {}).hedef || 'harita', menuAcik: false }) };
+          })
+        })).filter(g => g.ogeler.length)
+      },
+      otherScreens: navVisible.filter(g => !TELEFON_SIRA.includes(g.id)).map(navItem),
 
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
       filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['pasif', 'Pasifler']].map(([id, label]) => {

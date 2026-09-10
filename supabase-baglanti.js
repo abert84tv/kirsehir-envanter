@@ -368,3 +368,29 @@ export async function denetimToplu(satirlar) {
 export async function denetimListesi(limit) {
   return cagir('denetim_listesi', { p_token: tokenOku(), p_limit: limit || 500 });
 }
+
+// ── veri bütünlüğü (SQL-veri-butunlugu.sql)
+// Sürümlü okuma ve yazma: iki kişi aynı listeyi düzenlerse ikincisinin
+// yazması reddedilir, program birleştirip yeniden yazar.
+export async function veriHepsiSurumlu() {
+  return cagir('veri_hepsi_surumlu', { p_token: tokenOku() });
+}
+export async function veriYazSurumlu(anahtar, veri, surum) {
+  return cagir('veri_yaz_surumlu', {
+    p_token: tokenOku(), p_anahtar: anahtar,
+    p_veri: veri ?? null, p_surum: surum ?? null
+  });
+}
+// Ambar aritmetiği sunucuda: cihaz yeni bakiyeyi değil hareketi gönderir
+export async function ambarHareket(islemler) {
+  return cagir('ambar_hareket', { p_token: tokenOku(), p_islemler: islemler || [] });
+}
+export async function numaraAl(tur) {
+  return cagir('numara_al', { p_token: tokenOku(), p_tur: tur });
+}
+export async function numaraToplu(tur, adet) {
+  return cagir('numara_toplu', { p_token: tokenOku(), p_tur: tur, p_adet: adet });
+}
+export async function sunucuSaati() {
+  return cagir('sunucu_saati', {});
+}

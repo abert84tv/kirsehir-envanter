@@ -343,3 +343,28 @@ export async function yetkiKaydet(id, sayfaYetki, yetkiIstisna) {
     p_sayfa_yetki: sayfaYetki || {}, p_yetki_istisna: yetkiIstisna || {}
   });
 }
+
+// ── modül verileri (SQL-moduller-sunucu.sql)
+// Yedi modül ortak bir anahtarlı tabloda durur; her biri tek liste olarak
+// toptan yazılır. Denetim izi ayrı: satır satır eklenir, değiştirilemez.
+export async function veriHepsi() {
+  return cagir('veri_hepsi', { p_token: tokenOku() });
+}
+export async function veriOku(anahtar) {
+  return cagir('veri_oku', { p_token: tokenOku(), p_anahtar: anahtar });
+}
+export async function veriYaz(anahtar, veri) {
+  return cagir('veri_yaz', { p_token: tokenOku(), p_anahtar: anahtar, p_veri: veri ?? null });
+}
+export async function denetimEkle(k) {
+  return cagir('denetim_ekle', {
+    p_token: tokenOku(), p_sinif: k.sinif, p_ne: k.ne, p_detay: k.detay || null,
+    p_kapsam: k.kapsam || null, p_nereden: k.nereden || null, p_cevrimdisi: !!k.cevrimdisi
+  });
+}
+export async function denetimToplu(satirlar) {
+  return cagir('denetim_toplu', { p_token: tokenOku(), p_satirlar: satirlar || [] });
+}
+export async function denetimListesi(limit) {
+  return cagir('denetim_listesi', { p_token: tokenOku(), p_limit: limit || 500 });
+}

@@ -57,6 +57,7 @@ h6,.card-kicker{text-transform:none;letter-spacing:-.01em;font-size:12px}
  #tesis-karti-arac{display:none!important}
  #tesis-karti{padding:0!important}
 }
+:root{--tel-bas:58px;--tel-nav:60px}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
 @keyframes bildirimGir{from{opacity:0;transform:translate3d(0,-22px,0) scale(.94)}to{opacity:1;transform:none}}
 @keyframes pulse{0%{opacity:.55;transform:scale(1)}70%{opacity:0;transform:scale(2.6)}100%{opacity:0;transform:scale(2.6)}}
@@ -219,17 +220,17 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <!-- Sayfa süzgeç çubuğu — birleşmiş sayfaların başlığı ve süzgeçleri -->
 <sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;flex-direction:column;gap:8px;padding:9px 20px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="display:flex;align-items:baseline;gap:12px;min-width:0">
-<span style="flex:none;font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
+<div style="flex:none;display:flex;align-items:center;gap:16px;padding:7px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="flex:1;display:flex;align-items:baseline;gap:12px;min-width:0">
+<span style="flex:none;font:600 17px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
 <span style="flex:1;min-width:0;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sayfaBar.alt }}</span>
 <sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
 <span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
 </sc-if>
 </div>
-<div style="display:flex;width:fit-content;gap:2px;padding:2px;border-radius:11px;background:{{ ui.surf2 }}">
+<div style="flex:none;display:flex;width:fit-content;gap:2px;padding:2px;border-radius:11px;background:{{ ui.surf2 }}">
 <sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
-<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:34px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 15px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13.5px/1 var(--font-body);letter-spacing:-.012em">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:32px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13.5px/1 var(--font-body);letter-spacing:-.012em">
 <span>{{ z.label }}</span>
 <sc-if value="{{ z.nVar }}" hint-placeholder-val="{{ false }}">
 <span style="font:600 11px/1 var(--font-body);opacity:.75">{{ z.n }}</span>
@@ -241,9 +242,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
-<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:9px 16px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:7px 14px;border-radius:16px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
 </sc-for>
 <span style="flex:1 1 auto;min-width:0;margin-left:auto;padding-left:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}" title="{{ counts.line1 }} · nokta bırakmak için haritaya çift tıklayın">{{ counts.kisa }} · çift tıkla nokta bırak</span>
 </div>
@@ -3010,18 +3011,18 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="flex:none;padding:8px 14px;border-bottom:1px solid var(--color-uyari-200);background:var(--color-uyari-100);font:600 12px/1.45 var(--font-body);color:var(--color-uyari-800)">{{ saltOkurNot }}</div>
 </sc-if>
 
-<div style="position:relative;z-index:62;flex:none;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div id="tel-bas" style="position:relative;z-index:62;flex:none;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div style="display:flex;align-items:center;gap:9px;padding:9px 12px">
-<div style="flex:1;display:flex;align-items:center;gap:8px;border-radius:10px;border:1px solid {{ ui.rule }};padding:8px 10px;background:{{ ui.bg }}">
+<div style="flex:1;min-height:42px;display:flex;align-items:center;gap:8px;border-radius:11px;border:1px solid {{ ui.rule }};padding:0 12px;background:{{ ui.bg }}">
 <span style="width:11px;height:11px;border-radius:10px;border:1px solid {{ ui.mut }};border-radius:50%;flex:none"></span>
-<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 13.5px/1 var(--font-body);color:{{ ui.fg }}">
+<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 14px/1 var(--font-body);color:{{ ui.fg }}">
 </div>
-<button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--color-accent);color:var(--color-accent);font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
+<button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;padding:0 16px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);font:600 13px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:7px;white-space:nowrap">↔ Koordinat</button>
 <sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;min-width:36px;padding:0 9px;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;min-width:46px;padding:0 10px;border-radius:11px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 13.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
 </sc-if>
-<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:10px;border:1px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:600 9.5px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center">{{ net.short }}</button>
-<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
+<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-width:46px;height:42px;padding:0 10px;border-radius:11px;border:1px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:600 12px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap">{{ net.short }}</button>
+<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 </div>
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="position:absolute;left:8px;right:8px;top:100%;margin-top:4px;z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 30px rgba(0,0,0,.2);max-height:280px;overflow:auto;padding:4px">
@@ -3055,12 +3056,12 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
-<div class="scroll" style="position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:10px 12px 12px">
+<div class="scroll" style="position:relative;flex:none;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:9px 12px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
 <sc-if value="{{ telGecis.var }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ telGecis.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 13px;border-radius:16px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 1px 5px rgba(0,0,0,.18)">{{ telGecis.label }}</button>
+<button onClick="{{ telGecis.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.bg }};color:{{ ui.fg }};border:1px solid {{ ui.rule }}">{{ telGecis.label }}</button>
 </sc-if>
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;text-align:center;padding:8px 13px;border-radius:16px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.telBg }};color:{{ f.telFg }};box-shadow:0 1px 5px rgba(0,0,0,.18)">{{ f.label }}</button>
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;text-align:center;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.telBg }};color:{{ f.telFg }};border:1px solid {{ ui.rule }}">{{ f.label }}</button>
 </sc-for>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
@@ -4766,7 +4767,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <sc-if value="{{ coordBar.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;left:0;right:0;bottom:64px;z-index:20;background:{{ ui.fg }};color:{{ ui.bg }};border-top:3px solid var(--color-accent);padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+<div style="position:absolute;left:0;right:0;bottom:calc(var(--tel-nav) + 6px);z-index:20;background:{{ ui.fg }};color:{{ ui.bg }};border-top:3px solid var(--color-accent);padding:12px 14px;display:flex;flex-direction:column;gap:10px">
 <div style="display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent)">Dokunulan nokta</span>
 <button onClick="{{ coordBar.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }}">{{ ikonlar.kapat }}</button>
@@ -4789,7 +4790,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- phone sheets -->
 <sc-if value="{{ sheet.open }}" hint-placeholder-val="{{ false }}">
 <div onClick="{{ closePanel }}" style="position:absolute;inset:0;background:rgba(20,19,18,.55);z-index:14"></div>
-<div class="scroll" style="position:absolute;left:0;right:0;bottom:0;top:70px;background:{{ ui.bg }};border-top:1px solid var(--color-accent);z-index:15;overflow:auto">
+<div class="scroll" style="position:absolute;left:0;right:0;bottom:var(--tel-nav);top:var(--tel-bas);background:{{ ui.bg }};border-top:1px solid var(--color-accent);z-index:15;overflow:auto">
 
 <sc-if value="{{ panel.isDetail }}" hint-placeholder-val="{{ false }}">
 <div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:{{ ui.surf }}">
@@ -5395,7 +5396,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 
 <sc-if value="{{ menuSayfa.acik }}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="position:absolute;left:0;right:0;top:0;bottom:60px;z-index:60;overflow:auto;background:{{ ui.bg }};display:flex;flex-direction:column">
+<div class="scroll" style="position:absolute;left:0;right:0;top:var(--tel-bas);bottom:var(--tel-nav);z-index:60;overflow:auto;background:{{ ui.bg }};display:flex;flex-direction:column">
 <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <span style="font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">Bütün ekranlar</span>
 <button onClick="{{ menuSayfa.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">Kapat</button>
@@ -5419,7 +5420,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 </sc-if>
 
-<div style="flex:none;display:flex;border-top:1px solid {{ ui.rule }};background:{{ ui.surf }};position:relative;z-index:61">
+<div id="tel-nav" style="flex:none;display:flex;border-top:1px solid {{ ui.rule }};background:{{ ui.surf }};position:relative;z-index:61">
 <sc-for list="{{ navPhone }}" as="n" hint-placeholder-count="5">
 <button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;padding:9px 2px calc(9px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:5px;position:relative">
 <span style="width:7px;height:7px;border-radius:50%;background:{{ n.dot }}"></span>
@@ -5439,7 +5440,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:calc(58px + env(safe-area-inset-top)) 10px 0;pointer-events:none">
+<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:calc(var(--tel-bas) + 8px) 10px 0;pointer-events:none">
 <div onClick="{{ duyuru.git }}" style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
 <span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ duyuru.simgeBg }};color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
@@ -5473,14 +5474,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <sc-if value="{{ pickBar.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--color-accent);color:#fff;padding:11px 12px calc(11px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px">
+<div style="position:fixed;left:0;right:0;bottom:var(--tel-nav);z-index:70;background:var(--color-accent);color:#fff;padding:11px 12px;display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:600 13px/1.3 var(--font-body)">{{ pickBar.text }}</span>
 <button onClick="{{ pickBar.cancel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;display:flex;align-items:center;border-radius:10px;border:1px solid #fff;color:#fff;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 14px">Vazgeç</button>
 </div>
 </sc-if>
 
 <sc-if value="{{ vFixBar.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:{{ ui.fg }};color:{{ ui.bg }};padding:11px 12px calc(11px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:9px">
+<div style="position:fixed;left:0;right:0;bottom:var(--tel-nav);z-index:70;background:{{ ui.fg }};color:{{ ui.bg }};padding:11px 12px;display:flex;flex-direction:column;gap:9px">
 <span style="font:600 13px/1.35 var(--font-body)">{{ vFixBar.text }}</span>
 <div style="display:flex;gap:8px">
 <button onClick="{{ vFixBar.fix }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;padding:0 10px">Yanlış — doğru yeri işaretle</button>
@@ -6005,7 +6006,7 @@ const SUZGEC_SAYFA_AD = {
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.14-80';
+const SURUM = '2026.09.14-87';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6299,6 +6300,12 @@ class Component extends DCLogic {
     if (this._rs) window.removeEventListener('resize', this._rs);
     if (this._esc) window.removeEventListener('keydown', this._esc);
     if (this._msg) window.removeEventListener('message', this._msg);
+    if (this._katSaat) clearInterval(this._katSaat);
+    if (this._olcKat) { window.removeEventListener('resize', this._olcKat); window.removeEventListener('orientationchange', this._olcKat); }
+  }
+  componentDidUpdate() {
+    // Telefon kabuğu yeni geldiyse ölçüyü beklemeden tazele
+    if (this._olcKat) requestAnimationFrame(this._olcKat);
   }
   componentDidMount() {
     let dm = 'auto';
@@ -6321,6 +6328,21 @@ class Component extends DCLogic {
     this._sbYuk.catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
     this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
     window.addEventListener('resize', this._rs);
+    // Telefon katmanları: üst çubuğun alt kenarı ve alt menünün yüksekliği CSS
+    // değişkenine yazılır; açılan paneller bu değerlere yaslanır, üst üste binmez.
+    this._olcKat = () => {
+      const r = document.documentElement;
+      const b = document.getElementById('tel-bas');
+      const n = document.getElementById('tel-nav');
+      // Eleman yoksa varsayılan (58/60) korunur — 0 yazmak panelleri çakıştırır
+      if (b) { const bv = Math.round(b.getBoundingClientRect().bottom); if (bv > 0 && this._katB !== bv) { this._katB = bv; r.style.setProperty('--tel-bas', bv + 'px'); } }
+      if (n) { const nv = Math.round(n.getBoundingClientRect().height); if (nv > 0 && this._katN !== nv) { this._katN = nv; r.style.setProperty('--tel-nav', nv + 'px'); } }
+    };
+    this._olcKat();
+    requestAnimationFrame(this._olcKat);
+    this._katSaat = setInterval(this._olcKat, 400);
+    window.addEventListener('resize', this._olcKat);
+    window.addEventListener('orientationchange', this._olcKat);
     // Bağlantı gelince çevrimdışı kuyruk kendiliğinden boşalır; dakikada bir de denenir
     this._agGeldi = () => this.kuyrukGonder(true);
     window.addEventListener('online', this._agGeldi);
@@ -8884,10 +8906,8 @@ class Component extends DCLogic {
       if (p.bildirimKanal) out.bildirimKanal = p.bildirimKanal;
       if (p.bildirimEsik) out.bildirimEsik = p.bildirimEsik;
       if (p.convSys || p.convZone) out.conv = { ...this.state.conv, sys: p.convSys || this.state.conv.sys, zone: p.convZone || this.state.conv.zone };
-      // Bırakılan sayfa olduğu gibi geri gelir. Kuyruk artık sayfa değil,
-      // aktarım telefonda çizilmez — yalnız bu ikisi dışarıda kalır.
-      if (p.tab && p.tab !== 'kuyruk') out.tab = p.tab;
-      if (p.ayarBolum) out.ayarBolum = p.ayarBolum;
+      // Her giriş Envanter > Harita ekranında başlar: bırakılan sayfa geri
+      // getirilmez, yoksa kullanıcı Ayarlar'da kaldıysa orada açılıyordu.
       if (p.envQ) out.envQ = p.envQ;
       if (p.envTur) out.envTur = p.envTur;
       if (p.envIlce) out.envIlce = p.envIlce;

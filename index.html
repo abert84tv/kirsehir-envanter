@@ -6006,7 +6006,7 @@ const SUZGEC_SAYFA_AD = {
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.14-87';
+const SURUM = '2026.09.14-88';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6073,7 +6073,9 @@ const fmt = n => n == null ? '—' : n.toLocaleString('tr-TR');
 
 class Component extends DCLogic {
   state = {
-    data: null, device: 'desktop', deviceMode: 'auto', theme: 'light', offline: false,
+    data: null, device: 'desktop', deviceMode: 'auto',
+    theme: (() => { try { return localStorage.getItem('ks-tema') === 'dark' ? 'dark' : 'light'; } catch (e) { return 'light'; } })(),
+    offline: false,
     session: null, loginUser: '', loginPw: '', loginErr: '', remember: true, autoLogin: false,
     mapBase: 'street', navMode: false, route: null,
     scenario: null, newAsset: null,
@@ -6303,10 +6305,6 @@ class Component extends DCLogic {
     if (this._katSaat) clearInterval(this._katSaat);
     if (this._olcKat) { window.removeEventListener('resize', this._olcKat); window.removeEventListener('orientationchange', this._olcKat); }
   }
-  componentDidUpdate() {
-    // Telefon kabuğu yeni geldiyse ölçüyü beklemeden tazele
-    if (this._olcKat) requestAnimationFrame(this._olcKat);
-  }
   componentDidMount() {
     let dm = 'auto';
     try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
@@ -6424,6 +6422,8 @@ class Component extends DCLogic {
     addEventListener('message', this._msg);
   }
   componentDidUpdate(prevProps, prev) {
+    // Telefon kabuğu yeni geldiyse katman ölçüsünü beklemeden tazele
+    if (this._olcKat) requestAnimationFrame(this._olcKat);
     // Ayarlar'dan çıkıldığında bölüm seçimi sıfırlanır ki bir dahaki
     // girişte kullanıcı yine listeyi görsün
     if (prev.tab === 'ayarlar' && this.state.tab !== 'ayarlar' && this.state.ayarBolum)
@@ -8892,7 +8892,7 @@ class Component extends DCLogic {
       const p = JSON.parse(localStorage.getItem('ks-pref-' + u.user) || '{}');
       const out = {};
       if (p.mapBase) out.mapBase = p.mapBase;
-      if (p.theme) out.theme = p.theme;
+      if (p.theme) { out.theme = p.theme; try { localStorage.setItem('ks-tema', p.theme); } catch (e) { /* depolama kapalı */ } }
       if (typeof p.navMode === 'boolean') out.navMode = p.navMode;
       // Süzgeç olduğu gibi geri gelir — hepsi kapalı bırakıldıysa kapalı açılır
       if (p.filter && typeof p.filter === 'object') {
@@ -8924,6 +8924,12 @@ class Component extends DCLogic {
     this.toMap({ ks: 'setBase', base: s.mapBase });
     this.toMap({ ks: 'navMode', on: s.navMode });
     this.pushMap();
+  }
+  // Tema seçimi hem kullanıcı tercihine hem cihaza yazılır; oturum
+  // kapanınca da, tercih dosyası okunamasa da seçim korunur.
+  temaSec(t) {
+    try { localStorage.setItem('ks-tema', t); } catch (e) { /* depolama kapalı */ }
+    this.setState({ theme: t }, () => this.pushMap());
   }
   prefYaz() {
     const s = this.state;
@@ -10007,8 +10013,8 @@ class Component extends DCLogic {
         hyb: seg(s.mapBase === 'hyb', () => this.setState({ mapBase: 'hyb' }, () => this.toMap({ ks: 'setBase', base: 'hyb' })))
       },
       setTheme: {
-        light: seg(!dark, () => this.setState({ theme: 'light' }, () => this.pushMap())),
-        dark: seg(dark, () => this.setState({ theme: 'dark' }, () => this.pushMap()))
+        light: seg(!dark, () => this.temaSec('light')),
+        dark: seg(dark, () => this.temaSec('dark'))
       },
       setNet: {
         on: seg(!s.offline, () => this.setState({ offline: false })),
@@ -10629,7 +10635,7 @@ class Component extends DCLogic {
         ? { label: 'Çevrimdışı', badge: 'Çevrimdışı', short: 'Off', fill: 'var(--color-uyari)', border: 'var(--color-uyari)', ink: '#fff' }
         : { label: '4G', badge: 'Çevrim içi', short: 'On', fill: 'transparent', border: ui.rule, ink: ui.mut },
       toggleNet: () => { const off = !s.offline; this.setState({ offline: off }); this.say(off ? 'Çevrimdışı — kayıtlar IndexedDB’de tutulacak.' : 'Bağlantı geldi — arka plan eşitlemesi hazır.'); },
-      toggleTheme: () => this.setState({ theme: dark ? 'light' : 'dark' }, () => this.pushMap()),
+      toggleTheme: () => this.temaSec(dark ? 'light' : 'dark'),
       onQuery: e => this.setState({ query: e.target.value }),
       onQueryKey: e => {
         if (e.key !== 'Enter') return;

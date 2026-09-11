@@ -45,13 +45,14 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .leaflet-marker-icon:hover .ks-pin{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-me{width:18px;height:18px;border:3px solid #fff;background:#1b6ef3;border-radius:50%;
     box-shadow:0 0 0 2px rgba(27,110,243,.45)}
-  .ks-lbl{background:rgba(255,255,255,.92);border:1px solid var(--color-divider);border-radius:9px;border-radius:0;
-    padding:1px 4px;font:600 11.5px/1.35 var(--font-body);color:var(--color-text);box-shadow:none;
-    white-space:nowrap;pointer-events:auto;cursor:pointer}
+  .ks-lbl{background:rgba(255,255,255,.94);border:1px solid var(--color-divider);border-radius:7px;
+    padding:2px 7px;font:600 12px/1.35 var(--font-body);letter-spacing:-.01em;color:var(--color-text);
+    box-shadow:0 1px 3px rgba(0,0,0,.14);white-space:nowrap;pointer-events:auto;cursor:pointer;
+    transition:background-color .12s ease,border-color .12s ease,color .12s ease}
   .ks-lbl:hover{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-lbl:before{display:none}
-  .ks-dist{background:var(--color-text);border:1px solid var(--color-divider);border-radius:9px;color:#fff;
-    padding:2px 6px;font:600 11.5px/1.35 var(--font-body);letter-spacing:-.01em}
+  .ks-dist{background:rgba(29,29,31,.9);border:none;border-radius:13px;color:#fff;
+    padding:3px 10px;font:600 12px/1.35 var(--font-body);letter-spacing:-.01em;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .ks-dist:before{display:none}
   .panel{position:absolute;z-index:500;background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px}
   #tools{right:12px;top:12px;border:none;background:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
@@ -94,7 +95,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   body.dark #route .rt-note,body.dark #route .rt-nums span{color:rgba(244,242,240,.7)}
   body.dark #tools.open #menu{background:#f4f2f0;color:#1b1a19}
   body.dark #route .rt-title,body.dark #route .rt-acts button{color:#f4f2f0}
-  body.dark .ks-lbl{background:rgba(28,26,25,.9);border-color:rgba(244,242,240,.5);color:#f4f2f0}
+  body.dark .ks-lbl{background:rgba(28,28,30,.92);border-color:rgba(255,255,255,.2);color:#f5f5f7}
   body.dark .ks-pin{background:#242221;border-color:#f4f2f0;color:#f4f2f0}
   body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
   body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}

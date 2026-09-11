@@ -231,6 +231,10 @@ const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
 const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   { maxZoom: 19, attribution: 'Esri, Maxar, Earthstar Geographics' });
+// Uydu görüntüsünde il, ilçe ve köy adları yok — adlar ayrı bir saydam
+// katmandan gelir, yoksa uyduda hiçbir yer adı okunmaz.
+const uyduAd = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+  { maxZoom: 19, opacity: .95, attribution: 'Esri' });
 let uyduAcik = false;
 
 let noktalar = [], pinler = [], hat = null, segEt = [], ornek = [], imlec = null, ekleModu = true, istek = 0;
@@ -510,7 +514,8 @@ el('zemin').onclick = () => {
   uyduAcik = !uyduAcik;
   el('zemin').classList.toggle('on', uyduAcik);
   el('zemin').textContent = uyduAcik ? 'Sokak zemin' : 'Uydu zemin';
-  if (uyduAcik) { map.removeLayer(sokak); uydu.addTo(map); } else { map.removeLayer(uydu); sokak.addTo(map); }
+  if (uyduAcik) { map.removeLayer(sokak); uydu.addTo(map); uyduAd.addTo(map); }
+  else { map.removeLayer(uyduAd); map.removeLayer(uydu); sokak.addTo(map); }
 };
 el('iAdd').onclick = () => {
   const la = parseFloat(el('iLat').value.replace(',', '.')), lo = parseFloat(el('iLon').value.replace(',', '.'));

@@ -150,7 +150,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <!-- ══════════════ MASAÜSTÜ ══════════════ -->
 <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-<div style="width:100%;height:100dvh;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
+<div style="position:relative;width:100%;height:100dvh;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
 
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:0 14px;height:56px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
 <span style="width:18px;height:18px;background:var(--color-accent);flex:none"></span>
@@ -175,9 +175,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};max-height:150px;overflow:auto" class="scroll">
+<div class="scroll" style="position:absolute;top:58px;left:176px;width:520px;max-width:calc(100% - 200px);z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 34px rgba(0,0,0,.16);max-height:320px;overflow:auto;padding:4px">
 <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
-<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:9px 18px;border-bottom:1px solid {{ ui.rule }}" style-hover="background:{{ ui.surf2 }}">
+<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:9px 12px;border-radius:9px" style-hover="background:{{ ui.surf2 }}">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};width:78px;flex:none">{{ s.kind }}</span>
 <span style="font:600 13.5px/1 var(--font-body)">{{ s.name }}</span>
 <span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ s.meta }}</span>
@@ -189,14 +189,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="flex:1;display:flex;min-height:0">
 
 <!-- sidebar -->
-<div style="width:250px;flex:none;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
+<div style="width:196px;flex:none;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
 <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:6px 10px 8px;gap:2px">
 <sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
-<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:4px">
-<div style="padding:6px 10px 2px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:1px;margin-top:2px">
+<div style="padding:7px 10px 3px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};opacity:.8">{{ g.baslik }}</div>
 <sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
-<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;background:{{ n.pill }}" style-hover="background:{{ n.hover }}">
-<span style="flex:1;min-width:0;font:600 14px/1.25 var(--font-body);letter-spacing:-.012em;color:{{ n.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:9px;background:{{ n.pill }}" style-hover="background:{{ n.hover }}">
+<span style="flex:1;min-width:0;font:600 13.5px/1.25 var(--font-body);letter-spacing:-.012em;color:{{ n.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
 <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
 <span style="flex:none;min-width:20px;padding:2px 6px;border-radius:9px;background:{{ n.badgeBg }};color:{{ n.badgeFg }};font:600 11.5px/1.4 var(--font-body);text-align:center">{{ n.badgeN }}</span>
 </sc-if>
@@ -205,12 +205,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 </sc-for>
 </div>
-<div style="flex:none;padding:14px 16px;border-top:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:5px">Oturum</div>
-<div style="font:600 13.5px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ sessionCard.name }}</div>
-<div style="font:600 12px/1.35 var(--font-body);color:{{ ui.fg }}">{{ sessionCard.role }}</div>
-<div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ sessionCard.dev }}</div>
-<div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ sessionCard.crew }}</div>
+<div title="{{ sessionCard.dev }} · {{ sessionCard.crew }}" style="flex:none;padding:10px 12px;border-top:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:1px">
+<div style="font:600 13px/1.25 var(--font-heading);color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.name }}</div>
+<div style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.role }}</div>
 </div>
 </div>
 
@@ -3013,7 +3010,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="flex:none;padding:8px 14px;border-bottom:1px solid var(--color-uyari-200);background:var(--color-uyari-100);font:600 12px/1.45 var(--font-body);color:var(--color-uyari-800)">{{ saltOkurNot }}</div>
 </sc-if>
 
-<div style="flex:none;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="position:relative;z-index:62;flex:none;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div style="display:flex;align-items:center;gap:9px;padding:9px 12px">
 <div style="flex:1;display:flex;align-items:center;gap:8px;border-radius:10px;border:1px solid {{ ui.rule }};padding:8px 10px;background:{{ ui.bg }}">
 <span style="width:11px;height:11px;border-radius:10px;border:1px solid {{ ui.mut }};border-radius:50%;flex:none"></span>
@@ -3027,9 +3024,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 </div>
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="border-top:1px solid {{ ui.rule }};max-height:180px;overflow:auto">
+<div class="scroll" style="position:absolute;left:8px;right:8px;top:100%;margin-top:4px;z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 30px rgba(0,0,0,.2);max-height:280px;overflow:auto;padding:4px">
 <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
-<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;width:100%;padding:10px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
+<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;width:100%;padding:10px 12px;border-radius:9px;text-align:left">
 <span style="font:600 14px/1.15 var(--font-body)">{{ s.name }}</span>
 <span style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }}">{{ s.kind }} · {{ s.meta }}</span>
 </button>
@@ -3058,7 +3055,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
-<div class="scroll" style="position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:9px 12px">
+<div class="scroll" style="position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:10px 12px 12px">
 <sc-if value="{{ telGecis.var }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ telGecis.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 13px;border-radius:16px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 1px 5px rgba(0,0,0,.18)">{{ telGecis.label }}</button>
 </sc-if>
@@ -5442,7 +5439,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:10px 10px 0;pointer-events:none">
+<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:calc(58px + env(safe-area-inset-top)) 10px 0;pointer-events:none">
 <div onClick="{{ duyuru.git }}" style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
 <span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ duyuru.simgeBg }};color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
@@ -5476,14 +5473,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <sc-if value="{{ pickBar.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--color-accent);color:#fff;padding:11px 12px;display:flex;align-items:center;gap:10px">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--color-accent);color:#fff;padding:11px 12px calc(11px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:600 13px/1.3 var(--font-body)">{{ pickBar.text }}</span>
 <button onClick="{{ pickBar.cancel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;display:flex;align-items:center;border-radius:10px;border:1px solid #fff;color:#fff;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 14px">Vazgeç</button>
 </div>
 </sc-if>
 
 <sc-if value="{{ vFixBar.on }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:{{ ui.fg }};color:{{ ui.bg }};padding:11px 12px;display:flex;flex-direction:column;gap:9px">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:{{ ui.fg }};color:{{ ui.bg }};padding:11px 12px calc(11px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:9px">
 <span style="font:600 13px/1.35 var(--font-body)">{{ vFixBar.text }}</span>
 <div style="display:flex;gap:8px">
 <button onClick="{{ vFixBar.fix }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;padding:0 10px">Yanlış — doğru yeri işaretle</button>
@@ -6008,7 +6005,7 @@ const SUZGEC_SAYFA_AD = {
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.13-68';
+const SURUM = '2026.09.14-80';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6413,7 +6410,9 @@ class Component extends DCLogic {
     const s = this.state;
     if (s.session) {
       const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.hatKatman,
-        s.bildirimKanal, s.bildirimEsik, s.conv.sys, s.conv.zone, s.tab, s.detailTab, s.session.user]);
+        s.bildirimKanal, s.bildirimEsik, s.conv.sys, s.conv.zone, s.tab, s.detailTab,
+        s.ayarBolum, s.deviceMode, s.envQ, s.envTur, s.envIlce, s.envAktiflik, s.envDurum,
+        s.session.user]);
       if (this._prefImza !== imza) { this._prefImza = imza; this.prefYaz(); }
     }
     if (!prev) return;
@@ -8094,14 +8093,10 @@ class Component extends DCLogic {
       this.flyTo(saved.lat, saved.lon, 15);
       this.toMap({ ks: 'go', lat: saved.lat, lon: saved.lon, label: `${name} · ${d.name}` });
       // Konum daha önce onaylanmış ya da elle işaretlenmişse soru sorulmaz
-      if (saved.manual === false) {
-        this.setState({ vFix: {
-          name, district: d.name, lat: saved.lat, lon: saved.lon,
-          from: this.vSrc(saved)
-        } });
-      } else {
-        this.setState({ vFix: null });
-      }
+      this.setState({ vFix: this.vOnayli(name) ? null : {
+        name, district: d.name, lat: saved.lat, lon: saved.lon,
+        from: this.vSrc(saved)
+      } });
       return;
     }
     // gömülü HGM listesi: internet gerekmez, kayıt ortalamasından daha kesindir
@@ -8110,7 +8105,7 @@ class Component extends DCLogic {
       this.vSave(g.name, g.lat, g.lon, false);
       this.flyTo(g.lat, g.lon, 15);
       this.toMap({ ks: 'go', lat: g.lat, lon: g.lon, label: `${name} · ${d.name}` });
-      this.setState({ vFix: { name, district: d.name, from: 'HGM yerleşim listesi', lat: g.lat, lon: g.lon } });
+      this.setState({ vFix: this.vOnayli(name) ? null : { name, district: d.name, from: 'HGM yerleşim listesi', lat: g.lat, lon: g.lon } });
       return;
     }
     const own = this.state.assets.filter(a => a.village === name);
@@ -8118,7 +8113,7 @@ class Component extends DCLogic {
       const lat = own.reduce((t, a) => t + a.lat, 0) / own.length;
       const lon = own.reduce((t, a) => t + a.lon, 0) / own.length;
       this.flyTo(lat, lon, own.length > 1 ? 14 : 15);
-      this.setState({ vFix: { name, district: d.name, from: `${own.length} kaydın ortası`, lat, lon } });
+      this.setState({ vFix: this.vOnayli(name) ? null : { name, district: d.name, from: `${own.length} kaydın ortası`, lat, lon } });
       return;
     }
     this.setState({ seeking: name });
@@ -8128,7 +8123,7 @@ class Component extends DCLogic {
     if (hit) {
       this.flyTo(hit.lat, hit.lon, 15);
       this.toMap({ ks: 'go', lat: hit.lat, lon: hit.lon, label: `${name} · ${d.name}` });
-      this.setState({ vFix: { name, district: d.name, from: hit.from, lat: hit.lat, lon: hit.lon } });
+      this.setState({ vFix: this.vOnayli(name) ? null : { name, district: d.name, from: hit.from, lat: hit.lat, lon: hit.lon } });
     } else {
       // haritayı rastgele bir yere GÖTÜRMEYİZ — yanlış yere gitmek, hiç gitmemekten kötüdür
       // İnternete gerek yok: kullanıcı köyü haritada bir kez işaretler, konum kalıcı olarak saklanır
@@ -8864,6 +8859,12 @@ class Component extends DCLogic {
     this.setState({ session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
   }
   // ── kişisel ayarlar: her kullanıcının son kullandığı görünüm bu cihazda saklanır
+  // Köyün konumu onaylanmış mı? vSave(…, true) onay ve elle işaretlemede
+  // manual alanını doldurur; dolu olan köy için soru şeridi bir daha çıkmaz.
+  vOnayli(name) {
+    const e = this.vCache()[norm(name)];
+    return !!(e && e.manual);
+  }
   prefOku(u) {
     try {
       const p = JSON.parse(localStorage.getItem('ks-pref-' + u.user) || '{}');
@@ -8883,7 +8884,16 @@ class Component extends DCLogic {
       if (p.bildirimKanal) out.bildirimKanal = p.bildirimKanal;
       if (p.bildirimEsik) out.bildirimEsik = p.bildirimEsik;
       if (p.convSys || p.convZone) out.conv = { ...this.state.conv, sys: p.convSys || this.state.conv.sys, zone: p.convZone || this.state.conv.zone };
-      if (p.tab && !['ayarlar', 'kuyruk'].includes(p.tab)) out.tab = p.tab;
+      // Bırakılan sayfa olduğu gibi geri gelir. Kuyruk artık sayfa değil,
+      // aktarım telefonda çizilmez — yalnız bu ikisi dışarıda kalır.
+      if (p.tab && p.tab !== 'kuyruk') out.tab = p.tab;
+      if (p.ayarBolum) out.ayarBolum = p.ayarBolum;
+      if (p.envQ) out.envQ = p.envQ;
+      if (p.envTur) out.envTur = p.envTur;
+      if (p.envIlce) out.envIlce = p.envIlce;
+      if (p.envAktiflik) out.envAktiflik = p.envAktiflik;
+      if (p.envDurum) out.envDurum = p.envDurum;
+      if (p.deviceMode) out.deviceMode = p.deviceMode;
       if (p.detailTab) out.detailTab = p.detailTab;
       return out;
     } catch (e) { return {}; }
@@ -8908,7 +8918,10 @@ class Component extends DCLogic {
         mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f,
         hatKatman: s.hatKatman,
         bildirimKanal: s.bildirimKanal, bildirimEsik: s.bildirimEsik,
-        convSys: s.conv.sys, convZone: s.conv.zone, tab: s.tab, detailTab: s.detailTab
+        convSys: s.conv.sys, convZone: s.conv.zone, tab: s.tab, detailTab: s.detailTab,
+        ayarBolum: s.ayarBolum, deviceMode: s.deviceMode,
+        envQ: s.envQ, envTur: s.envTur, envIlce: s.envIlce,
+        envAktiflik: s.envAktiflik, envDurum: s.envDurum
       }));
     } catch (e) { /* depolama kapalı */ }
   }
@@ -9752,7 +9765,7 @@ class Component extends DCLogic {
               this.vSave(v, hgm.lat, hgm.lon, false);
               this.flyTo(hgm.lat, hgm.lon, 15);
               this.toMap({ ks: 'go', lat: hgm.lat, lon: hgm.lon, label: `${v} · ${d.name}` });
-              this.setState({ query: '', tab: 'harita', vFix: { name: v, district: d.name, from: 'HGM yerleşim listesi', lat: hgm.lat, lon: hgm.lon } });
+              this.setState({ query: '', tab: 'harita', vFix: this.vOnayli(v) ? null : { name: v, district: d.name, from: 'HGM yerleşim listesi', lat: hgm.lat, lon: hgm.lon } });
             }
           : () => this.gotoVillage(v, d)
       })).concat(s.assets.filter(a => norm(a.code).includes(qn)).slice(0, 3).map(a => ({

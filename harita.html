@@ -4,15 +4,35 @@
 <meta charset="utf-8">
 <title>Kırşehir — gerçek harita katmanı</title>
 <link rel="stylesheet" href="_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css">
+<style id="ks-tema">
+/* Arayüz yenilemesi — ana pencereyle aynı belirteçler.
+   Tasarım sisteminin kırmızı vurgusu maviye çevrildi; kırmızı yalnız uyarı. */
+:root{
+ --font-heading:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+ --font-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+ --color-bg:#f5f5f7;--color-text:#1d1d1f;--color-divider:rgba(0,0,0,.09);--color-surface:#ffffff;
+ --color-neutral-100:#fbfbfd;--color-neutral-200:#f0f0f3;--color-neutral-300:#e4e4e9;
+ --color-neutral-400:#c9c9ce;--color-neutral-500:#aeaeb2;--color-neutral-600:#6e6e73;
+ --color-neutral-700:#48484a;--color-neutral-800:#2c2c2e;--color-neutral-900:#1d1d1f;
+ --color-accent:#0071e3;--color-accent-100:#eef5ff;--color-accent-200:#d9e9ff;
+ --color-accent-300:#aecfff;--color-accent-400:#5aa9ff;--color-accent-500:#0071e3;
+ --color-accent-600:#0062c6;--color-accent-700:#0a57a8;--color-accent-800:#0a4382;--color-accent-900:#093362;
+ --color-uyari:#d70015;
+ --radius-md:12px;--radius-sm:9px;--radius-lg:18px;
+ --shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 18px rgba(0,0,0,.07);--shadow-lg:0 18px 48px rgba(0,0,0,.14);
+}
+body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+</style>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
 <style>
   html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg)}
   #map{position:absolute;inset:0}
-  .leaflet-container{background:#dedbd6;font-family:var(--font-body)}
+  .leaflet-container{background:#e8e8ed;font-family:var(--font-body)}
   .ks-pin{display:flex;align-items:center;justify-content:center;width:24px;height:24px;
-    border:2px solid var(--color-text);background:#fff;color:var(--color-text);
-    font:700 11px/1 var(--font-body)}
+    border:1px solid var(--color-divider);border-radius:9px;background:#fff;color:var(--color-text);
+    font:600 12.5px/1 var(--font-body)}
   .ks-pin.pend{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-pin.fault{background:var(--color-accent);border-color:var(--color-text);color:#fff}
   /* pasif tesis: kesikli çerçeve, soluk — haritada bir bakışta ayrılır */
@@ -21,51 +41,52 @@
     background:#eceaea;transform:rotate(-45deg)}
   body.dark .ks-pin.pasif{background:#8f9bb0;border-color:#1c1a19;color:#1c1a19}
   body.dark .ks-pin.pasif:after{background:#1c1a19}
-  .ks-pin{position:relative}
+  .ks-pin{position:relative;transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+  .leaflet-marker-icon:hover .ks-pin{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-me{width:18px;height:18px;border:3px solid #fff;background:#1b6ef3;border-radius:50%;
     box-shadow:0 0 0 2px rgba(27,110,243,.45)}
-  .ks-lbl{background:rgba(255,255,255,.92);border:2px solid var(--color-text);border-radius:0;
-    padding:1px 4px;font:700 10px/1.35 var(--font-body);color:var(--color-text);box-shadow:none;
+  .ks-lbl{background:rgba(255,255,255,.92);border:1px solid var(--color-divider);border-radius:9px;border-radius:0;
+    padding:1px 4px;font:600 11.5px/1.35 var(--font-body);color:var(--color-text);box-shadow:none;
     white-space:nowrap;pointer-events:auto;cursor:pointer}
   .ks-lbl:hover{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-lbl:before{display:none}
-  .ks-dist{background:var(--color-text);border:2px solid var(--color-text);color:#fff;
-    padding:2px 6px;font:700 10px/1.35 var(--font-body);letter-spacing:.06em;text-transform:uppercase}
+  .ks-dist{background:var(--color-text);border:1px solid var(--color-divider);border-radius:9px;color:#fff;
+    padding:2px 6px;font:600 11.5px/1.35 var(--font-body);letter-spacing:-.01em}
   .ks-dist:before{display:none}
-  .panel{position:absolute;z-index:500;background:var(--color-bg);border:2px solid var(--color-text)}
+  .panel{position:absolute;z-index:500;background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px}
   #tools{right:12px;top:12px;border:none;background:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
   #tools .body{display:none;flex-direction:column;gap:6px;align-items:stretch;width:168px}
   #tools.open .body{display:flex}
   #menu{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;
-    background:var(--color-bg);border:2px solid var(--color-text);font:700 9.5px/1 var(--font-body);
-    letter-spacing:.08em;text-transform:uppercase;color:var(--color-text)}
+    background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);
+    letter-spacing:-.01em;color:var(--color-text)}
   #menu:hover{background:var(--color-neutral-200)}
   #tools.open #menu{background:var(--color-text);border-color:var(--color-text);color:#fff}
   #menu .bars{display:flex;flex-direction:column;gap:2.5px}
   #menu .bars i{display:block;width:13px;height:2px;background:currentColor}
   #tools button{all:unset;cursor:pointer;padding:8px 11px;background:var(--color-bg);
-    border:2px solid var(--color-text);font:700 9.5px/1 var(--font-body);letter-spacing:.06em;
-    text-transform:uppercase;color:var(--color-text);text-align:left}
+    border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;
+    color:var(--color-text);text-align:left}
   #tools button:hover{background:var(--color-neutral-200)}
   #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
-  #tools .grp{display:flex;border:2px solid var(--color-text);background:var(--color-bg)}
-  #tools .grp button{border:none;border-right:2px solid var(--color-text);flex:1;text-align:center;padding:8px 9px}
+  #tools .grp{display:flex;border:1px solid var(--color-divider);border-radius:9px;background:var(--color-bg)}
+  #tools .grp button{border:none;border-right:1px solid var(--color-divider);flex:1;text-align:center;padding:8px 9px}
   #tools .grp button:last-child{border-right:none}
   #tools .sep{height:5px}
   #route{right:12px;bottom:12px;max-width:280px;padding:0;display:none}
   #route.show{display:block}
   #route .rt-head{background:var(--color-text);color:#fff;padding:7px 10px;
-    font:700 9.5px/1 var(--font-body);letter-spacing:.1em;text-transform:uppercase}
+    font:600 11px/1 var(--font-body);letter-spacing:-.01em}
   #route .rt-body{padding:10px}
-  #route .rt-title{font:700 13px/1.2 var(--font-heading);color:var(--color-text)}
+  #route .rt-title{font:600 14px/1.2 var(--font-heading);color:var(--color-text)}
   #route .rt-nums{display:flex;gap:14px;margin:9px 0 8px}
-  #route .rt-nums b{font:700 19px/1 var(--font-heading);color:var(--color-accent);display:block}
-  #route .rt-nums span{font:600 8.5px/1.4 var(--font-body);letter-spacing:.09em;text-transform:uppercase;color:var(--color-neutral-600)}
-  #route .rt-note{font:400 10px/1.45 var(--font-body);color:var(--color-neutral-600)}
+  #route .rt-nums b{font:700 21px/1 var(--font-heading);color:var(--color-accent);display:block}
+  #route .rt-nums span{font:600 10px/1.4 var(--font-body);letter-spacing:-.01em;color:var(--color-neutral-600)}
+  #route .rt-note{font:400 11.5px/1.45 var(--font-body);color:var(--color-neutral-600)}
   #route .rt-acts{display:flex;gap:6px;margin-top:9px}
   #route .rt-acts a,#route .rt-acts button{all:unset;cursor:pointer;flex:1;text-align:center;padding:9px 6px;
-    border:2px solid var(--color-text);font:700 9.5px/1 var(--font-body);letter-spacing:.06em;
-    text-transform:uppercase;color:var(--color-text)}
+    border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;
+    color:var(--color-text)}
   #route .rt-acts a{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   body.dark{background:#1b1a19}
   body.dark .leaflet-container{background:#26241f}
@@ -82,7 +103,7 @@
 </head>
 <body>
 <div id="map"></div>
-<div id="pickbar" style="display:none;position:absolute;left:0;right:0;top:0;z-index:1200;background:#ec3013;color:#fff;padding:11px 14px;font:700 12px/1.3 Archivo,system-ui,sans-serif;letter-spacing:.02em"></div>
+<div id="pickbar" style="display:none;position:absolute;left:0;right:0;top:0;z-index:1200;background:#0071e3;color:#fff;padding:11px 14px;font:700 12px/1.3 Archivo,system-ui,sans-serif;letter-spacing:.02em"></div>
 <div class="panel" id="tools">
   <button id="menu"><span class="bars"><i></i><i></i><i></i></span><span id="menu-lbl">Harita menüsü</span></button>
   <div class="body">
@@ -156,7 +177,7 @@ document.getElementById('b-hyb').onclick = () => setBase('hyb');
 // (ilçe adı ve nüfusu Yerleşim ekranında duruyor)
 
 // ── hat güzergâhları: kayıtlara bağlı terfi, isale, şebeke ve enerji hatları
-const HAT_REN = { terfi: '#ec3013', isale: '#201e1d', sebeke: '#6c6763', ag: '#1b6ef3', og: '#7b3fbf', dc: '#c08a00' };
+const HAT_REN = { terfi: '#0071e3', isale: '#201e1d', sebeke: '#6c6763', ag: '#1b6ef3', og: '#7b3fbf', dc: '#c08a00' };
 const HAT_AD = { terfi: 'Terfi hattı', isale: 'İsale hattı', sebeke: 'Şebeke hattı', ag: 'AG enerji hattı', og: 'OG enerji hattı', dc: 'GES DC hattı' };
 const hatLayer = L.layerGroup().addTo(map);
 const HAT_KEY = 'ks-hat-katman';
@@ -215,7 +236,7 @@ for (const a of assets) {
     .bindPopup(
       `<b>${a.code}</b><br>${TYPES[a.type].kind}<br>${a.village || 'Köy girilmedi'} · ${a.district}` +
       `<br>Yapım yılı: ${a.year || '—'}<br>${a.photos} fotoğraf` +
-      (fault ? '<br><b style="color:#ec3013">Açık arıza kaydı var</b>' : '') +
+      (fault ? '<br><b style="color:#0071e3">Açık arıza kaydı var</b>' : '') +
       (a.coordApprox ? '<br><i>Konum yaklaşık — saha ölçümü bekliyor</i>' : '<br><i>Konum: KML / saha ölçümü</i>')
     )
     .on('click', () => {
@@ -318,7 +339,7 @@ async function routeTo(a) {
   if (routeLine) { routeLine.remove(); routeLine = null; }
   const straight = map.distance([me.lat, me.lon], [a.lat, a.lon]) / 1000;
   routeLine = L.polyline([[me.lat, me.lon], [a.lat, a.lon]],
-    { color: '#ec3013', weight: 4, dashArray: '8 7', opacity: .9 }).addTo(map);
+    { color: '#0071e3', weight: 4, dashArray: '8 7', opacity: .9 }).addTo(map);
   showRoute(a, straight.toFixed(1), '—', 'Kuş uçuşu mesafe — karayolu güzergâhı isteniyor…');
   map.fitBounds(routeLine.getBounds().pad(.25));
   try {
@@ -329,7 +350,7 @@ async function routeTo(a) {
     if (!route) throw new Error('rota yok');
     routeLine.remove();
     routeLine = L.polyline(route.geometry.coordinates.map(([lo, la]) => [la, lo]),
-      { color: '#ec3013', weight: 5, opacity: .95 }).addTo(map);
+      { color: '#0071e3', weight: 5, opacity: .95 }).addTo(map);
     map.fitBounds(routeLine.getBounds().pad(.2));
     showRoute(a, (route.distance / 1000).toFixed(1), Math.round(route.duration / 60),
       `Karayolu güzergâhı · ${me.label}. Ekipler için sürüş süresi tahminidir.`);
@@ -342,9 +363,11 @@ async function routeTo(a) {
 }
 
 // ── etiket görünürlüğü: yakınlaşınca kayıt etiketleri açılır
+const ETIKET_ZOOM = 14;
 let wantLabels = true;
 function applyLabels() {
-  const show = wantLabels && map.getZoom() >= 13;
+  // Etiketler 14. kademeden sonra okunur — hat kesiti ekranıyla aynı eşik
+  const show = wantLabels && map.getZoom() >= ETIKET_ZOOM;
   for (const mk of markers) {
     const tt = mk.getTooltip();
     if (!tt || !assetLayer.hasLayer(mk)) continue;
@@ -371,6 +394,21 @@ function setPick(name) {
   b.style.display = name ? 'block' : 'none';
   if (name) b.textContent = name + ' köyünün merkezine dokunun — konum kaydedilecek';
 }
+// Nokta bırakma: masaüstünde ÇİFT tıklama, telefonda basılı tutma.
+// Tek tıklama haritada gezinmek için serbest kaldı — sürükleyip yakınlaşmak
+// artık koordinat kartını açmıyor.
+let coordMode = false, coordMark = null;
+function noktaBirak(latlng) {
+  parent.postMessage({ ks: 'coord', lat: +latlng.lat.toFixed(6), lon: +latlng.lng.toFixed(6) }, '*');
+  if (coordMark) coordMark.remove();
+  coordMark = L.circleMarker(latlng, { radius: 8, color: '#0071e3', weight: 3, fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+}
+// Çift tıklamayı yakınlaştırmaya değil nokta bırakmaya verdik
+map.doubleClickZoom.disable();
+map.on('dblclick', e => { if (!pickName) noktaBirak(e.latlng); });
+
+// Köy konumu işaretleme ve koordinat modu tek dokunuşta kalır —
+// bu ikisinde kullanıcı zaten "bir yere basacağını" bilerek giriyor
 map.on('click', e => {
   if (pickName) {
     const n = pickName;
@@ -378,19 +416,39 @@ map.on('click', e => {
     parent.postMessage({ ks: 'picked', name: n, lat: +e.latlng.lat.toFixed(6), lon: +e.latlng.lng.toFixed(6) }, '*');
     return;
   }
-  if (coordMode) {
-    parent.postMessage({ ks: 'coord', lat: +e.latlng.lat.toFixed(6), lon: +e.latlng.lng.toFixed(6) }, '*');
-    if (coordMark) coordMark.remove();
-    coordMark = L.circleMarker(e.latlng, { radius: 7, color: '#ec3013', weight: 3, fillColor: '#fff', fillOpacity: 1 }).addTo(map);
-    return;
-  }
-  // mod açık olmasa da boş zemine dokunmak koordinatı gösterir
-  parent.postMessage({ ks: 'coord', lat: +e.latlng.lat.toFixed(6), lon: +e.latlng.lng.toFixed(6) }, '*');
-  if (coordMark) coordMark.remove();
-  coordMark = L.circleMarker(e.latlng, { radius: 7, color: '#ec3013', weight: 3, fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+  if (coordMode) noktaBirak(e.latlng);
 });
 
-let coordMode = false, coordMark = null;
+// Telefonda basılı tutmak çift tıklamanın karşılığı: 550 ms, parmak 14 px'den
+// az kaydıysa nokta bırakılır. Kaydırma ve iki parmakla yakınlaşma bozulmaz.
+(() => {
+  let t = null, x0 = 0, y0 = 0, ll = null;
+  const iptal = () => { if (t) { clearTimeout(t); t = null; } };
+  const el = map.getContainer();
+  el.addEventListener('touchstart', ev => {
+    if (ev.touches.length !== 1 || pickName || coordMode) return iptal();
+    const tt = ev.touches[0];
+    x0 = tt.clientX; y0 = tt.clientY;
+    const r = el.getBoundingClientRect();
+    ll = map.containerPointToLatLng([x0 - r.left, y0 - r.top]);
+    iptal();
+    t = setTimeout(() => {
+      t = null;
+      if (ll) {
+        noktaBirak(ll);
+        if (navigator.vibrate) try { navigator.vibrate(18); } catch (e) { /* titreşim yok */ }
+      }
+    }, 550);
+  }, { passive: true });
+  el.addEventListener('touchmove', ev => {
+    if (!t || !ev.touches.length) return;
+    const tt = ev.touches[0];
+    if (Math.abs(tt.clientX - x0) > 14 || Math.abs(tt.clientY - y0) > 14) iptal();
+  }, { passive: true });
+  el.addEventListener('touchend', iptal, { passive: true });
+  el.addEventListener('touchcancel', iptal, { passive: true });
+})();
+
 document.getElementById('t-coord').onclick = () => {
   if (coordMark) { coordMark.remove(); coordMark = null; }
   parent.postMessage({ ks: 'coordMode', on: false }, '*');

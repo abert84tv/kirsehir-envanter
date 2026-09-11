@@ -5,17 +5,37 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hat güzergâhları — Kırşehir envanter</title>
 <link rel="stylesheet" href="_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css">
+<style id="ks-tema">
+/* Arayüz yenilemesi — ana pencereyle aynı belirteçler.
+   Tasarım sisteminin kırmızı vurgusu maviye çevrildi; kırmızı yalnız uyarı. */
+:root{
+ --font-heading:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+ --font-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+ --color-bg:#f5f5f7;--color-text:#1d1d1f;--color-divider:rgba(0,0,0,.09);--color-surface:#ffffff;
+ --color-neutral-100:#fbfbfd;--color-neutral-200:#f0f0f3;--color-neutral-300:#e4e4e9;
+ --color-neutral-400:#c9c9ce;--color-neutral-500:#aeaeb2;--color-neutral-600:#6e6e73;
+ --color-neutral-700:#48484a;--color-neutral-800:#2c2c2e;--color-neutral-900:#1d1d1f;
+ --color-accent:#0071e3;--color-accent-100:#eef5ff;--color-accent-200:#d9e9ff;
+ --color-accent-300:#aecfff;--color-accent-400:#5aa9ff;--color-accent-500:#0071e3;
+ --color-accent-600:#0062c6;--color-accent-700:#0a57a8;--color-accent-800:#0a4382;--color-accent-900:#093362;
+ --color-uyari:#d70015;
+ --radius-md:12px;--radius-sm:9px;--radius-lg:18px;
+ --shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 18px rgba(0,0,0,.07);--shadow-lg:0 18px 48px rgba(0,0,0,.14);
+}
+body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+</style>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
 <style>
   html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg);color:var(--color-text)}
   #wrap{position:absolute;inset:0;display:flex;flex-direction:column}
   #bar{flex:none;display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:8px 12px;
-    border-bottom:2px solid var(--color-text);background:var(--color-bg)}
-  #bar .ttl{font:700 12px/1 var(--font-heading);margin-right:2px}
+    border-bottom:1px solid var(--color-divider);background:var(--color-bg)}
+  #bar .ttl{font:600 13px/1 var(--font-heading);margin-right:2px}
   button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;
-    padding:8px 10px;min-height:38px;border:2px solid var(--color-text);background:var(--color-bg);
-    font:700 9.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--color-text)}
+    padding:8px 10px;min-height:38px;border:1px solid var(--color-divider);border-radius:9px;background:var(--color-bg);
+    font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-text)}
   button:hover{background:var(--color-neutral-200)}
   button:active{background:var(--color-accent-600);border-color:var(--color-accent-600);color:#fff}
   button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
@@ -23,43 +43,43 @@
   button[disabled]{opacity:.45;cursor:default}
   #body{flex:1;min-height:0;display:flex}
   #map{flex:1 1 60%;min-width:0;min-height:220px}
-  .leaflet-container{background:#dedbd6;font-family:var(--font-body)}
-  #side{flex:0 0 320px;min-width:0;border-left:2px solid var(--color-text);display:flex;
+  .leaflet-container{background:#e8e8ed;font-family:var(--font-body)}
+  #side{flex:0 0 320px;min-width:0;border-left:1px solid var(--color-divider);display:flex;
     flex-direction:column;overflow:auto;background:var(--color-bg)}
-  .sec{border-bottom:2px solid var(--color-text);padding:12px 14px}
-  .kick{font:700 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;
+  .sec{border-bottom:1px solid var(--color-divider);padding:12px 14px}
+  .kick{font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;
     color:var(--color-accent);margin-bottom:8px}
-  .note{font:400 10.5px/1.5 var(--font-body);color:var(--color-neutral-600)}
+  .note{font:400 12px/1.5 var(--font-body);color:var(--color-neutral-600)}
   .turler{display:flex;flex-direction:column;gap:6px}
-  .tur{display:flex;align-items:center;gap:9px;padding:8px 9px;border:2px solid var(--color-text);
+  .tur{display:flex;align-items:center;gap:9px;padding:8px 9px;border:1px solid var(--color-divider);border-radius:9px;
     cursor:pointer;background:var(--color-bg);min-height:42px}
   .tur.on{background:var(--color-neutral-200)}
   .tur i{flex:none;width:22px;height:0;border-top-width:4px;border-top-style:solid}
-  .tur span{font:700 10px/1.2 var(--font-body);letter-spacing:.04em;text-transform:uppercase}
-  .tur em{margin-left:auto;font:400 9.5px/1 var(--font-body);font-style:normal;color:var(--color-neutral-600)}
+  .tur span{font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em}
+  .tur em{margin-left:auto;font:400 11px/1 var(--font-body);font-style:normal;color:var(--color-neutral-600)}
   .hat{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--color-neutral-300)}
   .hat i{flex:none;width:20px;height:0;border-top-width:4px;border-top-style:solid}
-  .hat .ad{flex:1;min-width:0;font:700 11px/1.3 var(--font-body)}
-  .hat .uz{flex:none;font:700 11px/1 ui-monospace,Menlo,monospace;color:var(--color-accent)}
+  .hat .ad{flex:1;min-width:0;font:600 12.5px/1.3 var(--font-body)}
+  .hat .uz{flex:none;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:var(--color-accent)}
   .hat button{padding:5px 7px;min-height:32px;font-size:8.5px;border-color:var(--color-neutral-400);
     color:var(--color-neutral-600)}
   .toplam{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:9px}
-  .toplam b{font:700 20px/1 var(--font-heading);color:var(--color-accent)}
-  .toplam span{font:600 8.5px/1.3 var(--font-body);letter-spacing:.09em;text-transform:uppercase;
+  .toplam b{font:700 22px/1 var(--font-heading);color:var(--color-accent)}
+  .toplam span{font:600 10px/1.3 var(--font-body);letter-spacing:-.01em;
     color:var(--color-neutral-600)}
-  .ks-uc{width:12px;height:12px;border:2px solid var(--color-text);background:#fff}
+  .ks-uc{width:12px;height:12px;border:1px solid var(--color-divider);border-radius:9px;background:#fff}
   .ks-tesis{display:flex;align-items:center;justify-content:center;width:26px;height:26px;
     border:2px solid var(--color-accent);background:var(--color-accent);color:#fff;
-    font:700 11px/1 var(--font-body)}
-  .ks-uzun{background:var(--color-text);border:2px solid var(--color-text);color:#fff;padding:1px 5px;
-    font:700 9.5px/1.3 var(--font-body)}
+    font:600 12.5px/1 var(--font-body)}
+  .ks-uzun{background:var(--color-text);border:1px solid var(--color-divider);border-radius:9px;color:#fff;padding:1px 5px;
+    font:600 11px/1.3 var(--font-body)}
   .ks-uzun:before{display:none}
-  #durum{flex:none;padding:9px 12px;border-bottom:2px solid var(--color-text);
-    background:var(--color-neutral-100);font:600 10.5px/1.4 var(--font-body)}
+  #durum{flex:none;padding:9px 12px;border-bottom:1px solid var(--color-divider);
+    background:var(--color-neutral-100);font:600 12px/1.4 var(--font-body)}
   @media (max-width:760px){
     #body{flex-direction:column}
     #map{flex:0 0 62%}
-    #side{flex:1 1 auto;border-left:none;border-top:2px solid var(--color-text)}
+    #side{flex:1 1 auto;border-left:none;border-top:1px solid var(--color-divider)}
     button{min-height:44px}
   }
 </style>
@@ -95,7 +115,7 @@
 </div>
 <script>
 const TURLER = [
-  ['terfi', 'Terfi hattı', '#ec3013', 'Kuyu → depo, pompayla basılan'],
+  ['terfi', 'Terfi hattı', 'var(--color-accent)', 'Kuyu → depo, pompayla basılan'],
   ['isale', 'İsale hattı', '#201e1d', 'Depo → köy, cazibeli'],
   ['sebeke', 'Şebeke hattı', '#6c6763', 'Köy içi dağıtım'],
   ['ag', 'AG enerji hattı', '#1b6ef3', 'Trafo → pano, alçak gerilim'],

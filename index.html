@@ -79,7 +79,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="padding:26px 24px 22px">
 <div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:9px">İlk giriş</div>
-<h1 style="font:700 23px/1.1 var(--font-heading);letter-spacing:-.01em;margin:0 0 6px">Kendi şifrenizi belirleyin</h1>
+<h1 style="font:600 23px/1.1 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em;margin:0 0 6px">Kendi şifrenizi belirleyin</h1>
 <p style="font:400 12.5px/1.5 var(--font-body);color:var(--color-neutral-700);margin:0 0 20px">Hesabınız yönetici tarafından açıldı ve size geçici bir şifre verildi. Devam etmek için kendi şifrenizi yazın — bundan sonra bununla girersiniz.</p>
 <div style="display:flex;flex-direction:column;gap:13px;border-top:1px solid var(--color-divider);padding-top:18px">
 <label style="display:flex;flex-direction:column;gap:6px">
@@ -110,7 +110,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="padding:26px 24px 22px">
 <div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:9px">Kullanıcı girişi</div>
-<h1 style="font:700 25px/1.06 var(--font-heading);letter-spacing:-.01em;margin:0 0 6px">Kırsal Altyapı ve Su Şebekesi Envanteri</h1>
+<h1 style="font:600 25px/1.06 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em;margin:0 0 6px">Kırsal Altyapı ve Su Şebekesi Envanteri</h1>
 <p style="font:400 12.5px/1.5 var(--font-body);color:var(--color-neutral-700);margin:0 0 20px">Kullanıcı adı ve şifre ile girilir. Rol seçilmez — yetki hesaba bağlıdır. Aynı hesap telefonda da bilgisayarda da çalışır.</p>
 <div style="display:flex;flex-direction:column;gap:13px;border-top:1px solid var(--color-divider);padding-top:18px">
 <label style="display:flex;flex-direction:column;gap:6px">
@@ -190,12 +190,12 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <!-- sidebar -->
 <div style="width:250px;flex:none;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
-<div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:8px 10px 12px;gap:2px">
+<div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:6px 10px 8px;gap:2px">
 <sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
-<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:10px">
-<div style="padding:6px 10px 4px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:4px">
+<div style="padding:6px 10px 2px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
 <sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
-<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:{{ n.pill }}" style-hover="background:{{ n.hover }}">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;background:{{ n.pill }}" style-hover="background:{{ n.hover }}">
 <span style="flex:1;min-width:0;font:600 14px/1.25 var(--font-body);letter-spacing:-.012em;color:{{ n.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
 <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
 <span style="flex:none;min-width:20px;padding:2px 6px;border-radius:9px;background:{{ n.badgeBg }};color:{{ n.badgeFg }};font:600 11.5px/1.4 var(--font-body);text-align:center">{{ n.badgeN }}</span>
@@ -222,10 +222,13 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <!-- Sayfa süzgeç çubuğu — birleşmiş sayfaların başlığı ve süzgeçleri -->
 <sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;flex-direction:column;gap:9px;padding:13px 20px 12px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
-<span style="font:600 26px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
-<span style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }};flex:1;min-width:0">{{ sayfaBar.alt }}</span>
+<div style="flex:none;display:flex;flex-direction:column;gap:8px;padding:9px 20px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="display:flex;align-items:baseline;gap:12px;min-width:0">
+<span style="flex:none;font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
+<span style="flex:1;min-width:0;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sayfaBar.alt }}</span>
+<sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
+<span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
+</sc-if>
 </div>
 <div style="display:flex;width:fit-content;gap:2px;padding:2px;border-radius:11px;background:{{ ui.surf2 }}">
 <sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
@@ -245,7 +248,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
 <button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:7px 14px;border-radius:16px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
 </sc-for>
-<span style="flex:1 1 auto;min-width:0;margin-left:auto;padding-left:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ counts.line1 }} · OpenStreetMap zemini</span>
+<span style="flex:1 1 auto;min-width:0;margin-left:auto;padding-left:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}" title="{{ counts.line1 }} · nokta bırakmak için haritaya çift tıklayın">{{ counts.kisa }} · çift tıkla nokta bırak</span>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
@@ -257,14 +260,12 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- envanter -->
 <sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
-<div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:14px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<span style="font:600 15px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
-<span style="font:400 13px/1 var(--font-body);color:{{ ui.mut }}">başlığa basarak sırala, alt satırdan süz</span>
-<span style="flex:1"></span>
-<input value="{{ envKontrol.q }}" onChange="{{ envKontrol.onQ }}" placeholder="Envanterde ara — kod, köy, ilçe, teknik alan" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 11px;min-height:40px;width:320px"></input>
-<sc-if value="{{ envKontrol.suzuluyor }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ envKontrol.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 12px;min-height:40px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Süzgeci temizle</button>
-</sc-if>
+<div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="flex:1 1 240px;min-width:200px;display:flex"><input value="{{ envKontrol.q }}" onChange="{{ envKontrol.onQ }}" placeholder="Ara — kod, köy, alan" style="all:unset;box-sizing:border-box;width:100%;border-radius:9px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 10px;min-height:36px"></input></div>
+<div style="flex:0 0 auto;min-width:150px;display:flex"><select value="{{ envKontrol.turVal }}" onChange="{{ envKontrol.onTur }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.turler }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+<div style="flex:0 0 auto;min-width:170px;display:flex"><select value="{{ envKontrol.ilceVal }}" onChange="{{ envKontrol.onIlceF }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.ilceler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+<div style="flex:0 0 auto;min-width:140px;display:flex"><select value="{{ envKontrol.aktiflikVal }}" onChange="{{ envKontrol.onAktiflik }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:7px 8px;min-height:34px"><sc-for list="{{ envKontrol.aktiflikler }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+<div style="flex:0 0 auto;min-width:170px;display:flex"><select value="{{ envKontrol.durumVal }}" onChange="{{ envKontrol.onDurum }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.durumlar }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
 </div>
 <table class="table" style="width:100%;font-size:12px">
 <thead>
@@ -276,15 +277,6 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <th onClick="{{ envKontrol.h.photos.tik }}" title="Fotoğraf sayısına göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Fotoğraf{{ envKontrol.h.photos.ok }}</th>
 <th onClick="{{ envKontrol.h.aktiflik.tik }}" title="Aktif / pasif durumuna göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Durum{{ envKontrol.h.aktiflik.ok }}</th>
 <th onClick="{{ envKontrol.h.status.tik }}" title="Eşitleme durumuna göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Eşitleme{{ envKontrol.h.status.ok }}</th>
-</tr>
-<tr style="background:{{ ui.surf }}">
-<td></td>
-<td><select value="{{ envKontrol.turVal }}" onChange="{{ envKontrol.onTur }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.turler }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></td>
-<td><select value="{{ envKontrol.ilceVal }}" onChange="{{ envKontrol.onIlceF }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.ilceler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></td>
-<td></td>
-<td></td>
-<td><select value="{{ envKontrol.aktiflikVal }}" onChange="{{ envKontrol.onAktiflik }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:7px 8px;min-height:34px"><sc-for list="{{ envKontrol.aktiflikler }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></td>
-<td><select value="{{ envKontrol.durumVal }}" onChange="{{ envKontrol.onDurum }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.durumlar }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></td>
 </tr>
 </thead>
 <tbody>
@@ -308,7 +300,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.ariza }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0">Arıza kayıtları</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0">Arıza kayıtları</h2>
 <span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ faultSummary }} · {{ arzKontrol.sayi }}</span>
 <span style="flex:1"></span>
 <input value="{{ arzKontrol.q }}" onChange="{{ arzKontrol.onQ }}" placeholder="Arızada ara — no, kayıt, tür, ekip, not" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 11px;min-height:40px;width:300px"></input>
@@ -320,7 +312,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <sc-for list="{{ faultStats }}" as="s" hint-placeholder-count="4">
 <div style="padding:13px 18px;border-right:1px solid {{ ui.rule }}">
-<div style="font:700 23px/1 var(--font-heading);color:{{ s.color }}">{{ s.n }}</div>
+<div style="font:600 23px/1 var(--font-heading);letter-spacing:-.022em;color:{{ s.color }}">{{ s.n }}</div>
 <div style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-top:5px">{{ s.label }}</div>
 </div>
 </sc-for>
@@ -379,10 +371,12 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- profil: mesafe ve yol profili -->
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
-<div style="flex:none;padding:13px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 19px/1 var(--font-heading);margin-bottom:4px">Mesafe ve yol profili</div>
-<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ profil.note }}</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+<div style="flex:none;display:flex;align-items:center;gap:16px;padding:8px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+<span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">Hat Kesiti</span>
+<span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ profil.note }}</span>
+</div>
+<div style="flex:none;display:flex;gap:8px;flex-wrap:wrap">
 <button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
 <button onClick="{{ profil.arizali }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ profil.arizaLabel }}</button>
 </div>
@@ -395,7 +389,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.yerlesim }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:14px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Yerleşimler</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Yerleşimler</h2>
 <div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ province.line }}</div>
 </div>
 <div style="border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }};padding:11px 20px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ province.note }}</div>
@@ -476,7 +470,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.kuyruk }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0">Eşitleme kuyruğu</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0">Eşitleme kuyruğu</h2>
 <span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ queue.summary }}</span>
 <span style="flex:1"></span>
 <button onClick="{{ syncNow }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:11px 15px;justify-content:flex-start;opacity:{{ queue.canSync }}">{{ queue.cta }}</button>
@@ -484,7 +478,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <sc-for list="{{ queue.stats }}" as="s" hint-placeholder-count="3">
 <div style="padding:13px 18px;border-right:1px solid {{ ui.rule }}">
-<div style="font:700 23px/1 var(--font-heading);color:{{ s.color }}">{{ s.n }}</div>
+<div style="font:600 23px/1 var(--font-heading);letter-spacing:-.022em;color:{{ s.color }}">{{ s.n }}</div>
 <div style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-top:5px">{{ s.label }}</div>
 </div>
 </sc-for>
@@ -505,7 +499,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.islem }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">İşlem başlat</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">İşlem başlat</h2>
 <div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">Sahada dört senaryo var: yeni tesis kurmak, mevcut tesise girmek, bilgi güncellemek, fotoğraf eklemek. Hepsi aynı kaydı ve aynı eşitleme kuyruğunu kullanır.</div>
 </div>
 
@@ -514,7 +508,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-for list="{{ scenarios }}" as="sc" hint-placeholder-count="4">
 <button onClick="{{ sc.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:7px;padding:20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};border-left:4px solid {{ sc.border }};text-align:left" style-hover="background:{{ ui.surf }}">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ sc.badgeFg }}">{{ sc.badge }}</span>
-<span style="font:700 20px/1.1 var(--font-heading);color:{{ sc.fg }}">{{ sc.title }}</span>
+<span style="font:600 20px/1.1 var(--font-heading);letter-spacing:-.022em;color:{{ sc.fg }}">{{ sc.title }}</span>
 <span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ sc.desc }}</span>
 </button>
 </sc-for>
@@ -525,7 +519,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="padding:18px 20px;max-width:720px;display:flex;flex-direction:column;gap:16px">
 <div style="display:flex;align-items:center;gap:12px">
 <button onClick="{{ scen.back }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 12px">← Senaryolar</button>
-<span style="font:700 17px/1 var(--font-heading);color:{{ ui.fg }}">Yeni tesis kaydı · {{ newAsset.code }}</span>
+<span style="font:600 17px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">Yeni tesis kaydı · {{ newAsset.code }}</span>
 </div>
 <div style="display:flex;flex-direction:column;gap:7px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tesis türü</span>
@@ -602,7 +596,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div>
 <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid {{ ui.rule }}">
 <button onClick="{{ scen.back }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 12px">← Senaryolar</button>
-<span style="font:700 17px/1 var(--font-heading);color:{{ ui.fg }}">{{ scen.listTitle }}</span>
+<span style="font:600 17px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ scen.listTitle }}</span>
 </div>
 <div style="padding:11px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ scen.listNote }}</div>
 <sc-for list="{{ scenList }}" as="a" hint-placeholder-count="8">
@@ -622,7 +616,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.gunluk }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Bugün</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Bugün</h2>
 <div style="font:600 12.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ isListesi.who }} · {{ isListesi.date }}</div>
 <div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};margin-top:4px;max-width:640px">{{ isListesi.note }}</div>
 </div>
@@ -647,15 +641,15 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
 <div style="flex:1;min-width:280px">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Dış talepler</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Dış talepler</h2>
 <div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ talepEkran.not }}</div>
 </div>
 <button onClick="{{ talepEkran.yeni }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Talep al</button>
 </div>
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ talepEkran.stats }}" as="st" hint-placeholder-count="4">
-<div style="flex:1;padding:15px 18px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 28px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -791,15 +785,15 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
 <div style="flex:1;min-width:280px">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Araç ve ekipman</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Araç ve ekipman</h2>
 <div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ aracEkran.not }}</div>
 </div>
 <button onClick="{{ aracEkran.yeni }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Araç ekle</button>
 </div>
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ aracEkran.stats }}" as="st" hint-placeholder-count="4">
-<div style="flex:1;padding:15px 18px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 28px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -950,15 +944,15 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
 <div style="flex:1;min-width:280px">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Ambar ve zimmet</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Ambar ve zimmet</h2>
 <div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ ambarEkran.not }}</div>
 </div>
 <button onClick="{{ ambarEkran.yeni }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Hareket gir</button>
 </div>
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ambarEkran.stats }}" as="st" hint-placeholder-count="4">
-<div style="flex:1;padding:15px 18px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 28px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -1064,13 +1058,13 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.bakim }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Bakım takvimi</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Bakım takvimi</h2>
 <div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:700px">{{ bakim.note }}</div>
 </div>
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ bakim.stats }}" as="st" hint-placeholder-count="4">
-<div style="flex:1;padding:15px 18px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 28px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -1146,8 +1140,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
-<div style="flex:1;padding:15px 18px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 28px/1 var(--font-heading);color:{{ ui.fg }}">{{ st.n }}</span>
+<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -1179,8 +1173,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-for>
 <div style="padding:11px 18px;display:flex;align-items:center;gap:10px;background:{{ ui.surf }}">
 <span style="flex:1;min-width:0;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.tur }} · {{ ozet.aktiflik.toplam.oran }} aktif</span>
-<span style="width:52px;text-align:right;font:700 15px/1 var(--font-heading);color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
-<span style="width:52px;text-align:right;font:700 15px/1 var(--font-heading);color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
+<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
+<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
 <span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ ozet.aktiflik.toplam.toplam }}</span>
 </div>
 </div>
@@ -1272,7 +1266,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;flex-wrap:wrap">
 <sc-for list="{{ ozet.week }}" as="w" hint-placeholder-count="5">
 <div style="width:50%;padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ ui.fg }}">{{ w.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ w.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ w.label }}</span>
 </div>
 </sc-for>
@@ -1300,7 +1294,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
 <div>
-<h2 style="font:700 19px/1 var(--font-heading);margin:0 0 5px">Dış veri aktarımı</h2>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Dış veri aktarımı</h2>
 <div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};max-width:640px">Elinizdeki toplu nokta listesini bir kerede içeri alır: dosya okunur, noktalar listelenir, her noktaya kuyu / depo / AG / GES işaretlenir, sonra kaydedilir. Bu ekran çalışma ekranlarında durmaz — Ayarlar’dan girilir, çoğunlukla bir kez kullanılır.</div>
 </div>
 <button onClick="{{ goSettings }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 13px">Ayarlar</button>
@@ -1312,7 +1306,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:grid;grid-template-columns:1fr 1fr">
 <sc-for list="{{ imp.sources }}" as="sr" hint-placeholder-count="4">
 <button onClick="{{ sr.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:18px 20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
-<span style="font:700 17px/1.1 var(--font-heading);color:{{ ui.fg }}">{{ sr.label }}</span>
+<span style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sr.label }}</span>
 <span style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ sr.desc }}</span>
 </button>
 </sc-for>
@@ -1362,11 +1356,28 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- ayarlar -->
 <sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
-<sc-if value="{{ ayar.bolumBar }}" hint-placeholder-val="{{ true }}">
-<div style="display:flex;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<sc-for list="{{ ayarBolum }}" as="b" hint-placeholder-count="3">
-<button onClick="{{ b.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:14px 20px;border-right:1px solid {{ ui.rule }};background:{{ b.bg }};color:{{ b.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">{{ b.label }}</button>
+<sc-if value="{{ ayar.listeAcik }}" hint-placeholder-val="{{ true }}">
+<div style="max-width:700px;padding:4px 20px 28px">
+<sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
+<div style="padding:22px 4px 7px;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="border-radius:12px;overflow:hidden;background:{{ ui.surf }};border:1px solid {{ ui.rule }}">
+<sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:14px;min-height:58px;padding:11px 16px;border-bottom:1px solid {{ ui.rule }}" style-hover="background:{{ ui.surf2 }}">
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;text-align:left">
+<span style="font:500 15px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ r.alt }}</span>
+</span>
+<span style="flex:none;color:{{ ui.mut }};font:400 18px/1 var(--font-body);opacity:.5">›</span>
+</button>
 </sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ayar.detay }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;align-items:center;gap:12px;padding:8px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};position:sticky;top:0;z-index:3">
+<button onClick="{{ ayar.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:5px;padding:7px 12px 7px 8px;border-radius:9px;color:{{ ui.acc }};font:500 14.5px/1 var(--font-body);letter-spacing:-.015em" style-hover="background:{{ ui.surf2 }}"><span style="font-size:19px;line-height:1">‹</span> Ayarlar</button>
+<span style="font:600 17px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ayar.bolumAd }}</span>
 </div>
 </sc-if>
 
@@ -1432,6 +1443,17 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <sc-if value="{{ ayar.veri }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:8px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Program sürümü</span>
+<span style="font:600 13.5px/1.35 var(--font-body);color:{{ ui.fg }}">{{ surumBilgi.surum }}</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:640px">{{ surumBilgi.not }}</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px">
+<button onClick="{{ surumBilgi.tazele }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 14px;min-height:42px" style-hover="background:{{ ui.sel }}">Programı tazele</button>
+<sc-if value="{{ surumBilgi.yerelVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ surumBilgi.yereliSil }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 14px;min-height:42px" style-hover="background:{{ ui.sel }}">{{ surumBilgi.yerelLabel }}</button>
+</sc-if>
+</div>
+</div>
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Ortak veritabanı — modüller</span>
 <span style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ modulEsitleme.not }}</span>
@@ -1587,7 +1609,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;align-items:flex-start;gap:20px;padding:15px 0;border-top:1px solid {{ ui.rule }}">
 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">
 <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
-<span style="font:700 15px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ m.ad }}</span>
+<span style="font:600 15px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ m.ad }}</span>
 <span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.sayi }}</span>
 </div>
 <span style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:58em">{{ m.aciklama }}</span>
@@ -1611,7 +1633,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ kvkkEkran.durum }}" as="st" hint-placeholder-count="4">
 <div style="padding:15px 18px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 28px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -1682,7 +1704,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ denetimEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="flex:1;padding:14px 18px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 26px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 26px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -1939,7 +1961,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-for list="{{ ekipYonetim.list }}" as="e" hint-placeholder-count="4">
 <div style="padding:14px 0;border-top:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:8px">
 <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-<span style="flex:1 1 200px;min-width:0;font:700 15px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ e.ad }}</span>
+<span style="flex:1 1 200px;min-width:0;font:600 15px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ e.ad }}</span>
 <span style="font:600 12px/1 var(--font-body);color:{{ e.yukFg }}">{{ e.yuk }}</span>
 </div>
 <div style="height:6px;background:{{ ui.surf2 }};width:100%">
@@ -2179,8 +2201,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div id="tesis-karti" style="padding:34px 38px">
 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid #201e1d;padding-bottom:14px">
 <div>
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:#ec3013;margin-bottom:7px">Kırşehir · Tesis kartı</div>
-<div style="font:700 32px/1 var(--font-heading)">{{ card.code }}</div>
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:7px">Kırşehir · Tesis kartı</div>
+<div style="font:600 32px/1 var(--font-heading);letter-spacing:-.022em">{{ card.code }}</div>
 <div style="font:400 14px/1.4 var(--font-body);color:#4a4644;margin-top:7px">{{ card.kind }} · {{ card.place }}</div>
 </div>
 <div style="text-align:right;font:400 12.5px/1.7 var(--font-body);color:#4a4644">
@@ -2224,7 +2246,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 <sc-if value="{{ card.hasNot }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:20px;border-radius:10px;border:1px solid #201e1d;padding:13px 15px">
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:#ec3013;margin-bottom:7px">Saha notu</div>
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:7px">Saha notu</div>
 <div style="font:400 12.5px/1.6 var(--font-body);white-space:pre-wrap">{{ card.notu }}</div>
 </div>
 </sc-if>
@@ -2239,7 +2261,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <sc-if value="{{ coordBar.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;left:0;right:0;bottom:0;z-index:72;background:{{ ui.fg }};color:{{ ui.bg }};padding:13px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);flex:none">Koordinat al</span>
+<span style="font:600 12px/1.3 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);flex:none">Seçilen nokta</span>
 <sc-if value="{{ coordBar.wgs }}" hint-placeholder-val="{{ true }}">
 <span style="display:flex;flex-direction:column;gap:2px">
 <span style="font:400 10px/1 var(--font-body);letter-spacing:-.01em;opacity:.6">WGS84</span>
@@ -2325,7 +2347,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="min-width:0">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">{{ detail.kind }}</div>
 <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
-<div style="font:700 23px/1.05 var(--font-heading);letter-spacing:-.01em">{{ detail.code }}</div>
+<div style="font:600 23px/1.05 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em">{{ detail.code }}</div>
 <span style="flex:none;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:5px 7px;border-radius:10px;border:1px solid {{ detail.aktif.kenar }};background:{{ detail.aktif.bg }};color:{{ detail.aktif.fg }}">{{ detail.aktif.etiket }}</span>
 <sc-if value="{{ detail.aktif.gorunur }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ detail.aktif.tik }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:6px 8px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ detail.aktif.dugme }}</button>
@@ -2698,9 +2720,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <sc-if value="{{ panel.isFault }}" hint-placeholder-val="{{ false }}">
-<div style="padding:16px 18px;border-bottom:1px solid var(--color-accent)">
+<div style="padding:16px 18px;border-bottom:1px solid {{ ui.rule }}">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Arıza personeli girişi</div>
-<div style="font:700 21px/1.05 var(--font-heading)">{{ faultForm.title }}</div>
+<div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">{{ faultForm.title }}</div>
 <div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">{{ faultForm.sub }}</div>
 <sc-if value="{{ faultForm.hasAsset }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;gap:8px;margin-top:11px;flex-wrap:wrap">
@@ -2871,15 +2893,15 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
 <div style="flex:1;padding:11px 12px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
 <span style="font:400 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Malzeme</span>
-<span style="font:700 15px/1 var(--font-heading);color:{{ ui.fg }}">{{ faultForm.maliyet.malzeme }}</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ faultForm.maliyet.malzeme }}</span>
 </div>
 <div style="flex:1;padding:11px 12px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
 <span style="font:400 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İşçilik</span>
-<span style="font:700 15px/1 var(--font-heading);color:{{ ui.fg }}">{{ faultForm.maliyet.iscilik }}</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ faultForm.maliyet.iscilik }}</span>
 </div>
 <div style="flex:1;padding:11px 12px;background:{{ ui.pend }};display:flex;flex-direction:column;gap:3px">
 <span style="font:400 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Toplam</span>
-<span style="font:700 15px/1 var(--font-heading);color:{{ ui.acc }}">{{ faultForm.maliyet.toplam }}</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ faultForm.maliyet.toplam }}</span>
 </div>
 </div>
 <span style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.maliyet.not }}</span>
@@ -2928,7 +2950,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="padding:16px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
 <div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Araç</div>
-<div style="font:700 21px/1.05 var(--font-heading)">Koordinat dönüşümü</div>
+<div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">Koordinat dönüşümü</div>
 <div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">ED50 ↔ ITRF96-3° ↔ WGS84 / Google</div>
 </div>
 <button onClick="{{ closeConv }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 13px/1 var(--font-body);padding:9px 11px">✕</button>
@@ -3019,12 +3041,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 </div>
 
-<sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;flex-direction:column;gap:8px;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
-<span style="font:600 22px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};width:100%">{{ sayfaBar.baslik }}</span>
-<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};flex:1;min-width:0">{{ sayfaBar.alt }}</span>
-</div>
+<sc-if value="{{ sayfaBar.telAcik }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;flex-direction:column;gap:7px;padding:9px 14px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<span style="font:600 20px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:3px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
 <sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
 <button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 8px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;text-align:center">
@@ -3039,9 +3058,12 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
-<div class="scroll" style="flex:none;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:8px 12px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<div class="scroll" style="position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:9px 12px">
+<sc-if value="{{ telGecis.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ telGecis.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 13px;border-radius:16px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 1px 5px rgba(0,0,0,.18)">{{ telGecis.label }}</button>
+</sc-if>
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;text-align:center;padding:7px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;text-align:center;padding:8px 13px;border-radius:16px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.telBg }};color:{{ f.telFg }};box-shadow:0 1px 5px rgba(0,0,0,.18)">{{ f.label }}</button>
 </sc-for>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
@@ -3094,7 +3116,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.ariza }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<span style="flex:1;font:700 17px/1.1 var(--font-heading)">Arızalar</span>
+<span style="flex:1;font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em">Arızalar</span>
 <button onClick="{{ newFault }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12px/1 var(--font-body);padding:10px 12px;justify-content:flex-start">Yeni kayıt</button>
 </div>
 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
@@ -3138,7 +3160,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
 <div style="flex:none;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1 var(--font-heading);margin-bottom:4px">Mesafe ve yol profili</div>
+<div style="font:600 17px/1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Mesafe ve yol profili</div>
 <div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ profil.note }}</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
 <button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
@@ -3152,7 +3174,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.yerlesim }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1.1 var(--font-heading);margin-bottom:4px">Yerleşimler</div>
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Yerleşimler</div>
 <div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">{{ province.line }}</div>
 </div>
 <sc-for list="{{ settlements }}" as="s" hint-placeholder-count="10">
@@ -3227,13 +3249,13 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.kuyruk }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1.1 var(--font-heading);margin-bottom:4px">Eşitleme kuyruğu</div>
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Eşitleme kuyruğu</div>
 <div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ queue.summary }}</div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ queue.stats }}" as="s" hint-placeholder-count="3">
 <div style="padding:12px;border-right:1px solid {{ ui.rule }}">
-<div style="font:700 22px/1 var(--font-heading);color:{{ s.color }}">{{ s.n }}</div>
+<div style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ s.color }}">{{ s.n }}</div>
 <div style="font:600 10px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-top:5px">{{ s.label }}</div>
 </div>
 </sc-for>
@@ -3257,7 +3279,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.gunluk }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1.1 var(--font-heading);margin-bottom:4px">Bugün</div>
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Bugün</div>
 <div style="font:600 12px/1.35 var(--font-body);color:{{ ui.fg }}">{{ isListesi.who }}</div>
 <div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ isListesi.date }}</div>
 </div>
@@ -3278,14 +3300,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.talep }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 18px/1.1 var(--font-heading);margin:0 0 5px">Dış talepler</h2>
+<h2 style="font:600 18px/1.1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Dış talepler</h2>
 <div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ talepEkran.not }}</div>
 <button onClick="{{ talepEkran.yeni }}" class="btn btn-primary" style="width:100%;margin-top:11px;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Talep al</button>
 </div>
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ talepEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -3414,14 +3436,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.arac }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 18px/1.1 var(--font-heading);margin:0 0 5px">Araç ve ekipman</h2>
+<h2 style="font:600 18px/1.1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Araç ve ekipman</h2>
 <div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ aracEkran.not }}</div>
 <button onClick="{{ aracEkran.yeni }}" class="btn btn-primary" style="width:100%;margin-top:11px;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Araç ekle</button>
 </div>
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ aracEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -3564,14 +3586,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.ambar }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<h2 style="font:700 18px/1.1 var(--font-heading);margin:0 0 5px">Ambar ve zimmet</h2>
+<h2 style="font:600 18px/1.1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Ambar ve zimmet</h2>
 <div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.not }}</div>
 <button onClick="{{ ambarEkran.yeni }}" class="btn btn-primary" style="width:100%;margin-top:11px;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Hareket gir</button>
 </div>
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ambarEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -3672,13 +3694,13 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.bakim }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1.1 var(--font-heading);margin-bottom:4px">Bakım takvimi</div>
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Bakım takvimi</div>
 <div style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">Kuyular 6 ayda bir, depo ve elektrik tesisleri 12 ayda bir.</div>
 </div>
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ bakim.stats }}" as="st" hint-placeholder-count="4">
 <div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -3743,13 +3765,13 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.ozet }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1.1 var(--font-heading);margin-bottom:4px">Özet</div>
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Özet</div>
 <div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy sayıları, eksik bilgiler, bu hafta, yakınımdaki tesisler.</div>
 </div>
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
 <div style="width:33.33%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ ui.fg }}">{{ st.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ st.n }}</span>
 <span style="font:600 10px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -3827,8 +3849,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-for>
 <div style="padding:11px 14px;display:flex;align-items:center;gap:10px;background:{{ ui.surf }}">
 <span style="flex:1;min-width:0;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.tur }} · {{ ozet.aktiflik.toplam.oran }} aktif</span>
-<span style="width:52px;text-align:right;font:700 15px/1 var(--font-heading);color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
-<span style="width:52px;text-align:right;font:700 15px/1 var(--font-heading);color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
+<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
+<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
 <span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ ozet.aktiflik.toplam.toplam }}</span>
 </div>
 </div>
@@ -3847,7 +3869,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ tab.islem }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:700 17px/1.1 var(--font-heading);margin-bottom:4px">İşlem başlat</div>
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">İşlem başlat</div>
 <div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Yeni tesis, mevcut tesis, bilgi güncelleme, fotoğraf.</div>
 </div>
 <sc-if value="{{ scen.picker }}" hint-placeholder-val="{{ true }}">
@@ -3855,7 +3877,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-for list="{{ scenarios }}" as="sc" hint-placeholder-count="4">
 <button onClick="{{ sc.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:5px;width:100%;padding:14px;border-bottom:1px solid {{ ui.rule }};border-left:4px solid {{ sc.border }};text-align:left">
 <span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ sc.badgeFg }}">{{ sc.badge }}</span>
-<span style="font:700 17px/1.1 var(--font-heading);color:{{ sc.fg }}">{{ sc.title }}</span>
+<span style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;color:{{ sc.fg }}">{{ sc.title }}</span>
 <span style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ sc.desc }}</span>
 </button>
 </sc-for>
@@ -3945,11 +3967,28 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
-<sc-if value="{{ ayar.bolumBar }}" hint-placeholder-val="{{ true }}">
-<div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<sc-for list="{{ ayarBolum }}" as="b" hint-placeholder-count="3">
-<button onClick="{{ b.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:left;padding:14px 12px;background:{{ b.bg }};color:{{ b.fg }};font:600 11.5px/1.25 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};min-height:52px;display:flex;align-items:center">{{ b.label }}</button>
+<sc-if value="{{ ayar.listeAcik }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 0 28px">
+<sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
+<div style="padding:20px 16px 7px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="margin:0 12px;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">
+<sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:12px;min-height:62px;padding:11px 15px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;text-align:left">
+<span style="font:500 16px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ r.alt }}</span>
+</span>
+<span style="flex:none;color:{{ ui.mut }};font:400 18px/1 var(--font-body);opacity:.5">›</span>
+</button>
 </sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ayar.detay }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};position:sticky;top:0;z-index:3">
+<button onClick="{{ ayar.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:4px;padding:8px 10px 8px 6px;border-radius:9px;color:{{ ui.acc }};font:500 15px/1 var(--font-body);letter-spacing:-.015em"><span style="font-size:20px;line-height:1">‹</span> Ayarlar</button>
+<span style="flex:1;min-width:0;font:600 16px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ayar.bolumAd }}</span>
 </div>
 </sc-if>
 <sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
@@ -3963,6 +4002,15 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 </sc-if>
 <sc-if value="{{ ayar.veri }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:8px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Program sürümü</span>
+<span style="font:600 13.5px/1.35 var(--font-body);color:{{ ui.fg }}">{{ surumBilgi.surum }}</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ surumBilgi.not }}</span>
+<button onClick="{{ surumBilgi.tazele }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:13px 14px;min-height:48px;text-align:center;justify-content:center;display:flex;align-items:center">Programı tazele</button>
+<sc-if value="{{ surumBilgi.yerelVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ surumBilgi.yereliSil }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:13px 14px;min-height:48px;text-align:center;justify-content:center;display:flex;align-items:center">{{ surumBilgi.yerelLabel }}</button>
+</sc-if>
+</div>
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Ortak veritabanı — modüller</span>
 <span style="font:400 12px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ modulEsitleme.not }}</span>
@@ -4300,7 +4348,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ kvkkEkran.durum }}" as="st" hint-placeholder-count="4">
 <div style="padding:12px 14px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
-<span style="font:700 22px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -4371,7 +4419,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ denetimEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:700 21px/1 var(--font-heading);color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 21px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
@@ -4751,7 +4799,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="min-width:0">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">{{ detail.kind }}</div>
 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-<div style="font:700 21px/1.05 var(--font-heading)">{{ detail.code }}</div>
+<div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">{{ detail.code }}</div>
 <span style="flex:none;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:5px 7px;border-radius:10px;border:1px solid {{ detail.aktif.kenar }};background:{{ detail.aktif.bg }};color:{{ detail.aktif.fg }}">{{ detail.aktif.etiket }}</span>
 </div>
 <sc-if value="{{ detail.aktif.gorunur }}" hint-placeholder-val="{{ true }}">
@@ -5117,7 +5165,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:{{ ui.surf }}">
 <div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Arıza personeli girişi</div>
-<div style="font:700 20px/1.05 var(--font-heading)">{{ faultForm.title }}</div>
+<div style="font:600 20px/1.05 var(--font-heading);letter-spacing:-.022em">{{ faultForm.title }}</div>
 <div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:4px">{{ faultForm.sub }}</div>
 </div>
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:700 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center;flex:none">×</button>
@@ -5306,7 +5354,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 
 <sc-if value="{{ panel.isConv }}" hint-placeholder-val="{{ false }}">
 <div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;justify-content:space-between;align-items:center;background:{{ ui.surf }}">
-<span style="font:700 19px/1.05 var(--font-heading)">Koordinat dönüşümü</span>
+<span style="font:600 19px/1.05 var(--font-heading);letter-spacing:-.022em">Koordinat dönüşümü</span>
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:700 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center">×</button>
 </div>
 <div style="padding:14px">
@@ -5456,8 +5504,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div id="tesis-karti" style="width:794px;padding:30px 34px;color:#201e1d">
 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid #201e1d;padding-bottom:14px">
 <div>
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:#ec3013;margin-bottom:7px">Kırşehir · Tesis kartı</div>
-<div style="font:700 32px/1 var(--font-heading)">{{ card.code }}</div>
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:7px">Kırşehir · Tesis kartı</div>
+<div style="font:600 32px/1 var(--font-heading);letter-spacing:-.022em">{{ card.code }}</div>
 <div style="font:400 14px/1.4 var(--font-body);color:#4a4644;margin-top:7px">{{ card.kind }} · {{ card.place }}</div>
 </div>
 <div style="text-align:right;font:400 12.5px/1.7 var(--font-body);color:#4a4644">
@@ -5501,7 +5549,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-if>
 <sc-if value="{{ card.hasNot }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:20px;border-radius:10px;border:1px solid #201e1d;padding:13px 15px">
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:#ec3013;margin-bottom:7px">Saha notu</div>
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:7px">Saha notu</div>
 <div style="font:400 12.5px/1.6 var(--font-body);white-space:pre-wrap">{{ card.notu }}</div>
 </div>
 </sc-if>
@@ -5523,7 +5571,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="flex:none;display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--color-accent);color:#fff">
 <div style="flex:1;min-width:0">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;opacity:.85;margin-bottom:6px">{{ alanDuzenle.baslik }}</div>
-<div style="font:700 21px/1.05 var(--font-heading)">{{ alanDuzenle.kod }}</div>
+<div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">{{ alanDuzenle.kod }}</div>
 </div>
 <button onClick="{{ alanDuzenle.iptal }}" aria-label="Kapat" title="Kapat — Esc" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.55);color:#fff">{{ ikonlar.kapat }}</button>
 </div>
@@ -5583,7 +5631,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="position:fixed;inset:0;z-index:97;background:{{ ui.bg }};display:flex;flex-direction:column">
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};flex:none">Hat çizimi</span>
-<span style="font:700 15px/1 var(--font-heading);color:{{ ui.fg }};flex:none">{{ hatCiz.kod }}</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};flex:none">{{ hatCiz.kod }}</span>
 <span style="flex:1;min-width:0;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ hatCiz.bilgi }}</span>
 <button onClick="{{ hatCiz.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 14px;min-height:44px;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Bitir ve kapat</button>
 </div>
@@ -5870,32 +5918,53 @@ const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
 // Menü grupları — on üç sayfa dört başlık altında toplanır.
 // Sıra kullanım sıklığına göre: günlük iş üstte, sistem işleri altta.
 const MENU_GRUP = [
-  ['Saha', ['isler', 'envanter']],
+  ['Saha', ['envanter', 'isler']],
   ['Kayıtlar', ['kaynaklar']],
   ['Çözümleme', ['ozet', 'kesit']],
   ['Sistem', ['ayarlar']]
 ];
 // Menüdeki sayfaların tam sırası — grup başlıkları bunun üstüne oturur
-const MENU_SIRA = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayarlar'];
-// Ayarlar bölümleri sekizden üçe indi; eski bölüm kimlikleri buraya düşer
-const AYAR_GRUP = {
-  kurum: ['yetki', 'ekip', 'kvkk'],
-  veri: ['veri'],
-  program: ['gorunum', 'modul']
-};
+const MENU_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet', 'kesit', 'ayarlar'];
+// Ayarlar tek liste: satıra dokununca o bölüm açılır, geri ile listeye dönülür.
+// Başlıklar listeyi üç kümeye ayırır ama her bölüm kendi ekranında durur.
+const AYAR_LISTE = [
+  ['Kurum', [
+    ['yetki', 'Yetkiler ve kullanıcılar', 'Kim neyi görebilir, kim değiştirebilir'],
+    ['ekip', 'Ekipler ve personel', 'Vardiya, yetkinlik ve ekip listesi'],
+    ['kvkk', 'KVKK ve saklama', 'Kişisel veri saklama süreleri']
+  ]],
+  ['Veri', [
+    ['veri', 'Ortak veritabanı ve eşitleme', 'Sunucu bağlantısı, yedek, içe ve dışa aktarım'],
+    ['denetim', 'Denetim izi', 'Kim neyi ne zaman değiştirdi'],
+    ['cop', 'Çöp kutusu', 'Silinen kayıtlar 30 gün burada bekler']
+  ]],
+  ['Program', [
+    ['gorunum', 'Harita ve görünüm', 'Zemin, tema, menü yerleşimi'],
+    ['modul', 'Modüller', 'Kullanılmayan bölümleri kapatın']
+  ]]
+];
+// Ayrı sekmesi olan bölümler listeden o sekmeye götürür
+const AYAR_TAB = { denetim: 'denetim', cop: 'cop' };
+// Eski kimlikler (bir önceki üç gruplu düzen ve daha eskisi) listeye düşer
 const AYAR_ESKI = {
-  yetki: 'kurum', ekip: 'kurum', kvkk: 'kurum',
-  veri: 'veri', bildirim: 'veri', denetim: 'veri', cop: 'veri',
-  gorunum: 'program', modul: 'program'
+  kurum: 'yetki', program: 'gorunum', bildirim: 'veri',
+  yetki: 'yetki', ekip: 'ekip', kvkk: 'kvkk', veri: 'veri',
+  gorunum: 'gorunum', modul: 'modul'
 };
-const ayarGrup = id => AYAR_GRUP[id] ? id : (AYAR_ESKI[id] || 'kurum');
+const AYAR_BOLUMLER = AYAR_LISTE.flatMap(([, r]) => r);
+const ayarBolumu = id => {
+  if (!id) return null;
+  const d = AYAR_ESKI[id] || id;
+  return AYAR_BOLUMLER.some(([bid]) => bid === d) ? d : null;
+};
+const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'])[1];
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {
   ekip: 'Ekip', personel: 'Personel', nobet: 'Nöbet takvimi',
   ambar: 'Ambar', arac: 'Araç', talep: 'Talep'
 };
 // Telefonun alt çubuğunda en çok dört sayfa durur; gerisi "Tümü" sayfasında.
-const TELEFON_SIRA = ['isler', 'envanter', 'kaynaklar', 'ozet'];
+const TELEFON_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet'];
 // Sol menüdeki sayfalar — kullanıcı bazında yetki verilebilen birimler
 const SAYFALAR = [['harita', 'Harita'], ['envanter', 'Envanter'], ['ariza', 'Arıza'],
   ['gunluk', 'Bugün'], ['talep', 'Talep'], ['bakim', 'Bakım'], ['ambar', 'Ambar'], ['arac', 'Araç'], ['ozet', 'Özet'], ['profil', 'Hat Kesiti'],
@@ -5910,11 +5979,11 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const SUZGEC_TANIM = {
   isler: [['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
-  envanter: [['liste', 'Liste', 'envanter'], ['harita', 'Harita', 'harita']],
+  envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter']],
   kaynaklar: [['malzeme', 'Malzeme', 'ambar'], ['arac', 'Araç', 'arac']],
   ozet: [['ozet', 'Özet', 'ozet'], ['denetim', 'Denetim izi', 'ayarlar', 'denetim'],
     ['cop', 'Çöp kutusu', 'ayarlar', 'cop']],
-  kesit: [['kesit', 'Hat kesiti', 'profil']],
+  kesit: [['kesit', 'Hat Kesiti', 'profil']],
   ayarlar: [['ayarlar', 'Ayarlar', 'ayarlar'], ['yerlesim', 'Köy konumları', 'yerlesim'],
     ['aktarim', 'İçe ve dışa aktarım', 'aktarim']]
 };
@@ -5939,7 +6008,7 @@ const SUZGEC_SAYFA_AD = {
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.12-50';
+const SURUM = '2026.09.13-68';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6211,7 +6280,7 @@ class Component extends DCLogic {
       } catch (e) { /* depolama kapalı */ }
       return {};
     })(),
-    ayarBolum: 'gorunum', alanForm: null,
+    ayarBolum: null, alanForm: null,
     users: [], userForm: null, pwForm: null,
     fotolar: {}, fotoYuk: null, kayitliSesler: {},
     coordMode: false, picked: null, duyuru: null, koyForm: null, buyut: null,
@@ -6335,11 +6404,15 @@ class Component extends DCLogic {
     };
     addEventListener('message', this._msg);
   }
-  componentDidUpdate(_, prev) {
+  componentDidUpdate(prevProps, prev) {
+    // Ayarlar'dan çıkıldığında bölüm seçimi sıfırlanır ki bir dahaki
+    // girişte kullanıcı yine listeyi görsün
+    if (prev.tab === 'ayarlar' && this.state.tab !== 'ayarlar' && this.state.ayarBolum)
+      this.setState({ ayarBolum: null });
     // runtime prevState vermeyebilir — kendi anlık görüntümüzle karşılaştırırız
     const s = this.state;
     if (s.session) {
-      const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.ayarBolum, s.hatKatman,
+      const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.hatKatman,
         s.bildirimKanal, s.bildirimEsik, s.conv.sys, s.conv.zone, s.tab, s.detailTab, s.session.user]);
       if (this._prefImza !== imza) { this._prefImza = imza; this.prefYaz(); }
     }
@@ -6560,7 +6633,7 @@ class Component extends DCLogic {
       geri + (on
         ? ' modülü açıldı — menüsü ve kayıt sekmesi geri geldi.'
         : ' modülü kapatıldı. Kayıtlar veritabanında duruyor, yeniden açtığınızda yerinde bulunur.'),
-      6000, on ? 'iyi' : 'bilgi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'program' })));
+      6000, on ? 'iyi' : 'bilgi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'modul' })));
   }
   // Ekip vardiyası / yetkinliği. Ad değişmez; kayıtlardaki ekip metni bozulmasın.
   // ── Modül deposu ─────────────────────────────────────────────
@@ -6806,7 +6879,7 @@ class Component extends DCLogic {
   personelYaz(liste, mesaj) {
     this.modulYaz('personel', liste);
     this.setState({ personel: liste, personelForm: null }, () => {
-      if (mesaj) this.duyur(mesaj, 6000, 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' }));
+      if (mesaj) this.duyur(mesaj, 6000, 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' }));
     });
   }
   personelBul(id) { return (this.state.personel || []).find(p => p.id === id) || null; }
@@ -6878,7 +6951,7 @@ class Component extends DCLogic {
   ekipKaydetHam(liste, mesaj, tur) {
     this.modulYaz('ekip', liste);
     this.setState({ ekipler: liste, ekipForm: null }, () => {
-      if (mesaj) this.duyur(mesaj, 6500, tur || 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' }));
+      if (mesaj) this.duyur(mesaj, 6500, tur || 'iyi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' }));
     });
   }
   // Ekip ekle / güncelle. Ad değişirse arıza, zimmet ve araç kayıtları da taşınır.
@@ -6964,7 +7037,7 @@ class Component extends DCLogic {
       + ((y.tel || '').trim() || 'telefon girilmedi') + ' · '
       + ((y.yetkinlik || []).join(', ') || 'yetkinlik girilmedi')
       + '. Arıza formunda ekip seçilirken görünür.', 5000, 'iyi',
-      () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' })));
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' })));
   }
   // Mükerrer kayıt: aynı tesiste açık kayıt ya da son yedi günde aynı türden
   // kapanmış kayıt varsa yeni kayıt açılmadan önce sorulur.
@@ -7059,7 +7132,7 @@ class Component extends DCLogic {
     try { localStorage.setItem('ks-kvkk', JSON.stringify(y)); } catch (e) { /* depolama kapalı */ }
     this.setState({ kvkk: y }, () => this.duyur(ad + ' saklama süresi ' + (sec ? sec.ad : gun + ' gün')
       + ' olarak ayarlandı. Süresi dolan kayıtlar Ayarlar > KVKK bölümünden temizlenir.', 6500, 'iyi',
-      () => this.setState({ tab: 'ayarlar', ayarBolum: 'kurum' })));
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' })));
   }
   // Bir tarihin kaç gün önce olduğunu döndürür (gg.aa.yyyy biçiminden)
   gunGecti(damga) {
@@ -8020,10 +8093,15 @@ class Component extends DCLogic {
     if (saved) {
       this.flyTo(saved.lat, saved.lon, 15);
       this.toMap({ ks: 'go', lat: saved.lat, lon: saved.lon, label: `${name} · ${d.name}` });
-      this.setState({ vFix: {
-        name, district: d.name, lat: saved.lat, lon: saved.lon,
-        from: this.vSrc(saved)
-      } });
+      // Konum daha önce onaylanmış ya da elle işaretlenmişse soru sorulmaz
+      if (saved.manual === false) {
+        this.setState({ vFix: {
+          name, district: d.name, lat: saved.lat, lon: saved.lon,
+          from: this.vSrc(saved)
+        } });
+      } else {
+        this.setState({ vFix: null });
+      }
       return;
     }
     // gömülü HGM listesi: internet gerekmez, kayıt ortalamasından daha kesindir
@@ -8120,8 +8198,8 @@ class Component extends DCLogic {
   }
   makeImport(source) {
     const m = this.state.data;
-    const names = ['KUYU 1', 'KUYU 2', 'Ahiler deposu', 'YENI KUYU', 'depo-3', 'Nokta 14', 'KUYU 7 (derin)',
-      'Köy girişi deposu', 'kuyu-9', 'Nokta 21', 'DEPO ÜST', 'sondaj 12'];
+    const names = ['KUYU 1', 'KUYU 2', 'Ahiler deposu', 'Yeni kuyu', 'depo-3', 'Nokta 14', 'KUYU 7 (derin)',
+      'Köy girişi deposu', 'kuyu-9', 'Nokta 21', 'Depo üst', 'sondaj 12'];
     const rows = names.map((name, i) => {
       const d = m.DISTRICTS[i % m.DISTRICTS.length];
       const vs = m.VILLAGES[d.id] || [];
@@ -8334,7 +8412,7 @@ class Component extends DCLogic {
         blob, url: URL.createObjectURL(blob),
         sure: `${Math.floor(sn / 60)}:${String(sn % 60).padStart(2, '0')}`,
         kb: Math.round(blob.size / 1024),
-        durum: this.state.offline ? 'CİHAZDA' : 'HAZIR'
+        durum: this.state.offline ? 'Cihazda' : 'Hazır'
       };
       this.setState(st => ({ faultForm: { ...st.faultForm, kayitta: false, kayitBas: null, sesler: [...(st.faultForm.sesler || []), kayit] } }));
       this.say(`Sesli not alındı · ${kayit.sure} · ${kayit.kb} KB. Oynat düğmesiyle dinleyebilirsiniz; arıza kaydını kaydettiğinizde yüklenir.`, true);
@@ -8359,7 +8437,7 @@ class Component extends DCLogic {
       const ek = list.map(f => ({
         file: f, url: URL.createObjectURL(f),
         kb: Math.round(f.size / 1024),
-        state: this.state.offline ? 'CİHAZDA' : 'HAZIR'
+        state: this.state.offline ? 'Cihazda' : 'Hazır'
       }));
       const ff = this.state.faultForm;
       this.setState({ faultForm: { ...ff, photos: [...(ff.photos || []), ...ek] } });
@@ -8388,7 +8466,7 @@ class Component extends DCLogic {
     if (!this.yazabilir(sel)) return this.kilitUyar(sel);
     if (!this._sb || !this._sb.tokenOku() || !sel.dbId) {
       this.say(!sel.dbId && this._sb && this._sb.tokenOku()
-        ? `${sel.code} henüz ortak veritabanında değil — fotoğraf oraya yazılamıyor. Üst şeritteki ${this.state.sunucu ? 'YENİLE' : 'BAĞLAN'} düğmesine basıp kayıtları veritabanından çekin, sonra tekrar deneyin.`
+        ? `${sel.code} henüz ortak veritabanında değil — fotoğraf oraya yazılamıyor. Üst şeritteki ${this.state.sunucu ? 'Yenile' : 'Bağlan'} düğmesine basıp kayıtları veritabanından çekin, sonra tekrar deneyin.`
         : 'Fotoğraf yüklemek için ortak veritabanı bağlantısı gerekiyor. Üst şeritteki BAĞLAN düğmesine basın; internet yoksa bağlantı gelince yeniden deneyin.', true);
       setTimeout(() => this.setState({ toast: null }), 9000);
       return;
@@ -8802,7 +8880,6 @@ class Component extends DCLogic {
         };
       }
       if (typeof p.hatKatman === 'boolean') out.hatKatman = p.hatKatman;
-      if (p.ayarBolum) out.ayarBolum = p.ayarBolum;
       if (p.bildirimKanal) out.bildirimKanal = p.bildirimKanal;
       if (p.bildirimEsik) out.bildirimEsik = p.bildirimEsik;
       if (p.convSys || p.convZone) out.conv = { ...this.state.conv, sys: p.convSys || this.state.conv.sys, zone: p.convZone || this.state.conv.zone };
@@ -8828,7 +8905,7 @@ class Component extends DCLogic {
         pasif: s.filter.pasif !== false
       };
       localStorage.setItem('ks-pref-' + s.session.user, JSON.stringify({
-        mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f, ayarBolum: s.ayarBolum,
+        mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f,
         hatKatman: s.hatKatman,
         bildirimKanal: s.bildirimKanal, bildirimEsik: s.bildirimEsik,
         convSys: s.conv.sys, convZone: s.conv.zone, tab: s.tab, detailTab: s.detailTab
@@ -9589,7 +9666,7 @@ class Component extends DCLogic {
         }
       }];
       if (nr && nr.km < 0.3) suggestions.push({
-        name: nr.a.code, kind: 'KAYIT', meta: `bu koordinatta · ${this.yer(nr.a)}`,
+        name: nr.a.code, kind: 'Kayıt', meta: `bu koordinatta · ${this.yer(nr.a)}`,
         go: () => { this.flyTo(nr.a.lat, nr.a.lon, 16); this.setState({ query: '', selected: nr.a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' }); }
       });
     } else if (wgs) {
@@ -9600,7 +9677,7 @@ class Component extends DCLogic {
         .sort((x, y) => x.km - y.km)[0];
       suggestions = [{
         name: `${wgs.lat.toFixed(5)} , ${wgs.lon.toFixed(5)}`,
-        kind: 'KOORDİNAT',
+        kind: 'Koordinat',
         meta: (wgs.swapped ? 'boylam-enlem sırası düzeltildi · ' : '') +
           (near ? `en yakın kayıt ${near.a.code}, ${near.km.toFixed(1)} km` : 'haritaya git'),
         go: () => {
@@ -9611,7 +9688,7 @@ class Component extends DCLogic {
         }
       }];
       if (near && near.km < 0.3) suggestions.push({
-        name: near.a.code, kind: 'KAYIT', meta: `bu koordinatta · ${this.yer(near.a)}`,
+        name: near.a.code, kind: 'Kayıt', meta: `bu koordinatta · ${this.yer(near.a)}`,
         go: () => { this.flyTo(near.a.lat, near.a.lon, 16); this.setState({ query: '', selected: near.a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' }); }
       });
     } else if (qn.length > 2 && s.assets.some(a => this.alanAra(a, qn))) {
@@ -9622,7 +9699,16 @@ class Component extends DCLogic {
         return {
           name: a.code, kind: TYPES[a.type].glyph,
           meta: `${nerede} · ${this.yer(a)}`,
-          go: () => { this.flyTo(a.lat, a.lon, 16); this.setState({ query: '', selected: a.id, panel: 'detay', detailTab: 'bilgi' }); }
+          // Liste görünümündeysek listede kalınır: arama kutusuna kod yazılır,
+          // kayıt tabloda süzülür. Haritadaysak haritada bulunur.
+          go: () => {
+            if (this.state.tab === 'envanter') {
+              this.setState({ query: '', envQ: a.code, selected: a.id, detailTab: 'bilgi' });
+              return;
+            }
+            this.flyTo(a.lat, a.lon, 16);
+            this.setState({ query: '', selected: a.id, panel: 'detay', detailTab: 'bilgi' });
+          }
         };
       });
     } else if (qn.length > 1 && m) {
@@ -9659,7 +9745,7 @@ class Component extends DCLogic {
         (norm(x.v).indexOf(qn) - norm(y.v).indexOf(qn)) ||
         x.v.localeCompare(y.v, 'tr'));
       suggestions = vill.slice(0, 8).map(({ v, d, hgm, n }) => ({
-        name: v, kind: 'KÖY',
+        name: v, kind: 'Köy',
         meta: `${d.name} · ` + (n ? `${n} kayıt` : (hgm ? 'HGM listesi' : 'yeri haritadan bulunur')),
         go: hgm
           ? () => {
@@ -9670,8 +9756,15 @@ class Component extends DCLogic {
             }
           : () => this.gotoVillage(v, d)
       })).concat(s.assets.filter(a => norm(a.code).includes(qn)).slice(0, 3).map(a => ({
-        name: a.code, kind: 'KAYIT', meta: `${a.village} · ${TYPES[a.type].kind}`,
-        go: () => { this.flyTo(a.lat, a.lon); this.setState({ query: '', selected: a.id, panel: 'detay', detailTab: 'bilgi' }); }
+        name: a.code, kind: 'Kayıt', meta: `${a.village} · ${TYPES[a.type].kind}`,
+        go: () => {
+          if (this.state.tab === 'envanter') {
+            this.setState({ query: '', envQ: a.code, selected: a.id, detailTab: 'bilgi' });
+            return;
+          }
+          this.flyTo(a.lat, a.lon);
+          this.setState({ query: '', selected: a.id, panel: 'detay', detailTab: 'bilgi' });
+        }
       })));
     }
 
@@ -9782,13 +9875,15 @@ class Component extends DCLogic {
     const acikAriza = myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length;
     const acikTalep = (s.talepler || []).filter(t => !TALEP_KAPALI.includes(t.durum)).length;
     // Modül anahtarı kapalıysa o süzgeç hiç çıkmaz
-    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn };
+    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn,
+      // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
+      gunluk: arizaOn || bakimOn };
     const suzgecSayi = { ariza: acikAriza, talep: acikTalep };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
       const zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
       gruplar[sayfa] = {
-        id: sayfa, ad: SUZGEC_SAYFA_AD[sayfa] || sayfa, suz: zs,
+        id: sayfa, ad: zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa), suz: zs,
         acik: zs.some(z => z.hedef === tabId),
         badge: zs.reduce((t, z) => t + (suzgecSayi[z.hedef] || 0), 0)
       };
@@ -9896,7 +9991,7 @@ class Component extends DCLogic {
           : 'Rol dağıtımını yalnızca Yönetici yapar. Hiyerarşi: Yönetici → Müdür → Mühendis → Arıza Şefi → Arıza Personeli. Kendi satırınız beyaz zeminde.',
         canEdit: can('admin'),
         cols: ROLE_ORDER.map(([id, label]) => ({
-          label, me: me && me.role === id ? 'SİZ' : '',
+          label, me: me && me.role === id ? 'Siz' : '',
           bg: me && me.role === id ? ui.sel : 'transparent'
         })),
         rows: PERMS.map(([, label, roles]) => ({
@@ -9911,7 +10006,7 @@ class Component extends DCLogic {
           rank: String(i + 1), label, desc,
           count: PERMS.filter(p => p[2].includes(id)).length + ' / ' + PERMS.length + ' yetki',
           bg: me && me.role === id ? ui.sel : 'transparent',
-          mark: me && me.role === id ? 'SİZ' : ''
+          mark: me && me.role === id ? 'Siz' : ''
         }))
       },
       kullanici: (() => {
@@ -9959,7 +10054,7 @@ class Component extends DCLogic {
             durum: u.aktif === false ? 'Donduruldu' : (u.mustChange ? 'Şifre bekliyor' : 'Etkin'),
             durumRenk: u.aktif === false ? ui.mut : (u.mustChange ? ui.acc : ui.fg),
             bg: u.aktif === false ? ui.surf2 : (me && me.id === u.id ? ui.sel : 'transparent'),
-            mark: me && me.id === u.id ? 'SİZ' : '',
+            mark: me && me.id === u.id ? 'Siz' : '',
             kendisi: !!me && me.id === u.id,
             duzenlenir: yonetici,
             silinebilir: yonetici && !(me && me.id === u.id)
@@ -10732,13 +10827,17 @@ class Component extends DCLogic {
           : 'Köy konumları programın içinde gömülü — elle işaretlenmiş ayrı bir konum yok.';
       })(),
       ayar: (() => {
-        const ic = AYAR_GRUP[ayarGrup(s.ayarBolum)];
         const a = tabId === 'ayarlar';
+        const sec = ayarBolumu(s.ayarBolum);
+        const v = id => a && sec === id;
         return {
-          bolumBar: a,
-          gorunum: a && ic.includes('gorunum'), veri: a && ic.includes('veri'),
-          yetki: a && ic.includes('yetki'), ekip: a && ic.includes('ekip'),
-          kvkk: a && ic.includes('kvkk'), modul: a && ic.includes('modul'),
+          // Liste yalnız hiçbir bölüm seçili değilken görünür
+          listeAcik: a && !sec,
+          detay: a && !!sec,
+          bolumAd: ayarAdi(sec),
+          geri: () => this.setState({ ayarBolum: null }),
+          gorunum: v('gorunum'), veri: v('veri'), yetki: v('yetki'),
+          ekip: v('ekip'), kvkk: v('kvkk'), modul: v('modul'),
           denetim: tabId === 'denetim', cop: tabId === 'cop'
         };
       })(),
@@ -11505,16 +11604,23 @@ class Component extends DCLogic {
           }
         ]
       },
-      // Ayarlar üç bölüm: Kurum (yetki, ekip, KVKK) · Veri · Program
-      ayarBolum: [
-        ['kurum', 'Kurum'], ['veri', 'Veri'],
-        ...(can('admin') ? [['program', 'Program']] : [['program', 'Görünüm']])
-      ].map(([id, label]) => ({
-        label,
-        bg: ayarGrup(s.ayarBolum) === id ? ui.bg : 'transparent',
-        fg: ayarGrup(s.ayarBolum) === id ? ui.acc : ui.mut,
-        pick: () => this.setState({ ayarBolum: id })
-      })),
+      // Ayarlar listesi — iOS Ayarlar gibi kümelenmiş satırlar
+      ayarListe: AYAR_LISTE.map(([baslik, satirlar]) => ({
+        baslik,
+        satirlar: satirlar
+          // Modüller yalnız yöneticide; ötekiler yetkiye göre
+          .filter(([id]) => (id !== 'modul' || can('admin'))
+            && (!AYAR_TAB[id] || yetki('ayarlar') !== 'yok'))
+          .map(([id, ad, alt]) => ({
+            ad,
+            alt: id === 'cop' && (s.trash.length + (s.cop || []).length)
+              ? (s.trash.length + (s.cop || []).length) + ' kayıt bekliyor'
+              : alt,
+            git: () => AYAR_TAB[id]
+              ? this.setState({ tab: AYAR_TAB[id] })
+              : this.setState({ ayarBolum: id })
+          }))
+      })).filter(g => g.satirlar.length),
       prefNote: (() => {
         const u = s.session;
         if (!u) return '';
@@ -11581,10 +11687,13 @@ class Component extends DCLogic {
           aktarim: 'Dosyadan içe alma ve dışa aktarma.'
         };
         const g = aktifGrup;
-        if (!g || g.suz.length < 2) return { acik: false, baslik: '', alt: '', suzgecler: [] };
+        if (!g || g.suz.length < 2) return { acik: false, telAcik: false, baslik: '', alt: '', suzgecler: [] };
         const z0 = g.suz.find(z => z.hedef === tabId);
         return {
-          acik: true, baslik: g.ad, alt: ALT[(z0 || {}).id] || '',
+          acik: true,
+          // Telefonda harita açıkken başlık gizlenir; ekran haritaya kalır
+          telAcik: !(s.device === 'phone' && tabId === 'harita'),
+          baslik: g.ad, alt: ALT[(z0 || {}).id] || '',
           suzgecler: g.suz.map(z => {
             const n = suzgecSayi[z.hedef] || 0;
             return {
@@ -11596,6 +11705,40 @@ class Component extends DCLogic {
             };
           })
         };
+      })(),
+      // Sürüm ve önbellek. Telefon eski kopyayı önbellekte tuttuğunda
+      // ekranda kaldırılmış kayıtlar görünmeye devam eder; tazeleme bunu çözer.
+      surumBilgi: (() => {
+        const yerel = this.yerelTesisOku();
+        return {
+          surum: SURUM,
+          not: 'Telefonda kaldırılmış kayıtlar görünüyorsa cihaz eski kopyayı önbellekte tutuyor olabilir. Tazeleme, programı sunucudan yeniden indirir; veritabanındaki kayıtlara dokunmaz.',
+          yerelVar: yerel.length > 0,
+          yerelLabel: 'Cihazda bekleyen ' + yerel.length + ' kaydı sil',
+          tazele: async () => {
+            try {
+              if (window.caches && caches.keys) {
+                const k = await caches.keys();
+                await Promise.all(k.map(x => caches.delete(x)));
+              }
+            } catch (e) { /* önbellek API'si yok */ }
+            location.reload();
+          },
+          yereliSil: () => {
+            const kodlar = this.yerelTesisOku().map(x => x.code).join(', ');
+            this.yerelTesisYaz([]);
+            this.setState({ assets: (this.state.assets || []).filter(x => x && x.dbId) },
+              () => this.duyur('Cihazda bekleyen kayıtlar silindi: ' + (kodlar || '—')
+                + '. Veritabanındaki kayıtlar yerinde duruyor.', 8000, 'bilgi'));
+          }
+        };
+      })(),
+      // Telefon haritasında sayfanın öbür görünümüne geçiş hapı
+      telGecis: (() => {
+        const g = aktifGrup;
+        const z = g && g.suz.find(x => x.hedef !== tabId);
+        return z ? { var: true, label: z.ad, go: () => this.setState({ tab: z.hedef }) }
+          : { var: false, label: '', go: () => {} };
       })(),
       // Kuyruk artık sayfa değil, üst çubukta gösterge
       kuyrukG: (() => {
@@ -11659,9 +11802,13 @@ class Component extends DCLogic {
           : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];
         return {
           label,
-          bg: on ? 'var(--color-accent)' : 'transparent',
-          fg: on ? '#fff' : ui.mut,
-          kenar: on ? 'var(--color-accent)' : ui.rule,
+          bg: on ? (dark ? 'rgba(10,132,255,.20)' : 'var(--color-accent-100)') : 'transparent',
+          fg: on ? ui.acc : ui.mut,
+          kenar: on ? (dark ? 'rgba(10,132,255,.42)' : 'var(--color-accent-300)') : ui.rule,
+          // telefonda haritanın üstünde yüzer: hepsi beyaz kalır,
+          // açık olan mavi yazar — haritanın okunurluğu bozulmaz
+          telBg: ui.surf,
+          telFg: on ? ui.acc : ui.mut,
           toggle: () => id === 'all'
             ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on } }, () => this.pushMap())
             : id === 'pasif'
@@ -11669,7 +11816,11 @@ class Component extends DCLogic {
               : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
         };
       }),
-      counts: { line1: `${vis.length} kayıt · ${vis.filter(a => aktifMi(a)).length} aktif · ${vis.filter(a => !aktifMi(a)).length} pasif`, line2: 'OpenStreetMap' },
+      counts: {
+        line1: `${vis.length} kayıt · ${vis.filter(a => aktifMi(a)).length} aktif · ${vis.filter(a => !aktifMi(a)).length} pasif`,
+        // Süzgeç çubuğunda yer az: kısa biçim yazılır, tamamı ipucunda durur
+        kisa: `${vis.length} kayıt`,
+        line2: 'OpenStreetMap' },
       map: {
         filtreBos: !['kuyu', 'depo', 'ag', 'ges'].some(k => s.filter[k]),
         hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true } }, () => this.pushMap()),
@@ -11793,7 +11944,7 @@ class Component extends DCLogic {
           indir: p.url ? () => this.medyaIndir(p.url, `ariza-foto-${i + 1}.jpg`) : null,
           indirilir: !!p.url,
           border: ff.isaret === i ? 'var(--color-accent)' : ui.rule,
-          mark: ff.isaret === i ? 'İŞARETLİ' : (p.kb ? p.kb + ' KB' : (p.state || '')),
+          mark: ff.isaret === i ? 'İşaretli' : (p.kb ? p.kb + ' KB' : (p.state || '')),
           markBg: ff.isaret === i ? 'var(--color-accent)' : 'rgba(32,30,29,.75)',
           markFg: '#fff',
           isaretle: () => this.setState({ faultForm: { ...this.state.faultForm, isaret: i } }),
@@ -11987,7 +12138,7 @@ class Component extends DCLogic {
           calinabilir: !!sn.url,
           player: sn.url ? this.audioEl(sn.url, true) : null,
           indir: sn.url ? () => this.medyaIndir(sn.url, `ariza-sesli-not-${i + 1}.webm`) : null,
-          durumFg: sn.durum === 'CİHAZDA' ? ui.acc : ui.mut,
+          durumFg: sn.durum === 'Cihazda' ? ui.acc : ui.mut,
           sil: () => this.setState(st => {
             const eski = st.faultForm.sesler[i];
             if (eski && eski.url) { try { URL.revokeObjectURL(eski.url); } catch (e) {} }
@@ -12292,7 +12443,7 @@ class Component extends DCLogic {
             statik: t.statik, dinamik: t.dinamik, dusum: t.dusum,
             debi: t.debi, sure: t.sure, ozgul: t.ozgul, toparlanma: t.toparlanma,
             note: t.note || '—',
-            pend: t.pend ? 'CİHAZDA' : '', pendC: t.pend ? 'var(--color-accent)' : 'transparent',
+            pend: t.pend ? 'Cihazda' : '', pendC: t.pend ? 'var(--color-accent)' : 'transparent',
             // yalnızca bu programdan girilen ölçüm silinebilir; sondaj kaydı yerinde kalır
             silinir: kendi >= 0 && canWrite,
             sil: () => {
@@ -12393,12 +12544,12 @@ class Component extends DCLogic {
               ? `${sel.district} ilçesi — fotoğraf ekleme yetkiniz yok, mevcut fotoğrafları görebilirsiniz.`
               : bagli
                 ? 'Fotoğraflar yüklenmeden önce küçültülür — uzun kenar 1600 piksel, dosya yaklaşık 200 KB. Telefonun çektiği kare ile ekranda görülen arasında fark olmaz.'
-                : `Bu kayıt henüz ortak veritabanında değil — fotoğraf seçebilirsiniz ama yükleme bağlantı kurulduktan sonra yapılır. Üst şeritteki ${s.sunucu ? 'YENİLE' : 'BAĞLAN'} düğmesi bağlantıyı dener.`
+                : `Bu kayıt henüz ortak veritabanında değil — fotoğraf seçebilirsiniz ama yükleme bağlantı kurulduktan sonra yapılır. Üst şeritteki ${s.sunucu ? 'Yenile' : 'Bağlan'} düğmesi bağlantıyı dener.`
           };
         })(),
         media: Array.from({ length: sel.photos }, (_, i) => {
           const up = sel.sync === 'pending' && i >= sel.photos - 1;
-          return { state: up ? (s.offline ? 'CİHAZDA' : 'YÜKLENİYOR') : 'YÜKLENDİ', bg: up ? 'var(--color-accent)' : ui.fg, fg: up ? '#fff' : ui.bg };
+          return { state: up ? (s.offline ? 'Cihazda' : 'Yükleniyor') : 'Yüklendi', bg: up ? 'var(--color-accent)' : ui.fg, fg: up ? '#fff' : ui.bg };
         }),
         mediaEmpty: sel.photos === 0,
         faults: (s.faults.filter(f => f.assetId === sel.id).length
@@ -12575,14 +12726,14 @@ class Component extends DCLogic {
           ...(arizaOn ? acik.slice(0, 8) : []).map(f => {
             const a = s.assets.find(x => x.id === f.assetId);
             return {
-              kind: 'ARIZA', kindFg: ui.acc,
+              kind: 'Arıza', kindFg: ui.acc,
               title: `${f.no} · ${f.type}`,
               meta: (a ? a.code + ' · ' + this.yer(a) + ' · ' : '') + (f.priority || 'Normal') + ' öncelik',
               open: a ? () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'ariza', tab: 'harita' }) : () => this.setState({ tab: 'arizalar' })
             };
           }),
           ...(bakimOn ? gecikmis : []).map(r => ({
-            kind: 'BAKIM', kindFg: ui.fg,
+            kind: 'Bakım', kindFg: ui.fg,
             title: r.a.code + ' — periyodik bakım',
             meta: this.yer(r.a) + ' · ' + r.b.label,
             open: () => this.setState({ tab: 'bakim' })

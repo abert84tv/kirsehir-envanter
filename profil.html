@@ -154,7 +154,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button id="tesBtn" class="on">Tesisler</button>
     <button id="lblBtn" class="on">Kayıt etiketleri</button>
     <button id="yenile">Profili yenile</button>
-    <span class="hint">Köy adını arayıp seçin, haritadaki tesis işaretine dokunun ya da boş yere tıklayarak nokta koyun — iki veya daha çok nokta arasındaki uzaklık, kot farkı ve yol profili kendiliğinden hesaplanır.</span>
+    <span class="hint">Köy adını arayıp seçin, haritadaki tesis işaretine dokunun ya da boş yere çift tıklayarak (telefonda basılı tutarak) nokta koyun — iki veya daha çok nokta arasındaki uzaklık, kot farkı ve yol profili kendiliğinden hesaplanır.</span>
   </div>
   <div id="uyari"></div>
   <div id="body">
@@ -183,7 +183,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
       </div>
       <div class="sec">
         <div class="kick">Noktalar</div>
-        <div id="pts"><div class="note">Henüz nokta yok. Haritaya tıklayın ya da aşağıya koordinat yazın.</div></div>
+        <div id="pts"><div class="note">Henüz nokta yok. Haritaya çift tıklayın (telefonda basılı tutun) ya da aşağıya koordinat yazın.</div></div>
         <div class="man">
           <input id="iLat" placeholder="Enlem 39.1509" inputmode="decimal">
           <input id="iLon" placeholder="Boylam 34.1595" inputmode="decimal">
@@ -282,7 +282,7 @@ function ciz() {
 function listele() {
   const k = el('pts');
   if (!noktalar.length) {
-    k.innerHTML = '<div class="note">Henüz nokta yok. Haritaya tıklayın ya da aşağıya koordinat yazın.</div>';
+    k.innerHTML = '<div class="note">Henüz nokta yok. Haritaya çift tıklayın (telefonda basılı tutun) ya da aşağıya koordinat yazın.</div>';
     return;
   }
   k.innerHTML = '';
@@ -490,11 +490,43 @@ function cizProfil() {
     const gz = svg.querySelector('#gz'); if (gz) gz.innerHTML = '';
   };
 }
-map.on('click', e => {
+// Nokta ekleme: masaüstünde ÇİFT tıklama, telefonda basılı tutma — ana
+// haritadaki (harita.html) davranışla aynı. Tek tıklama/dokunuş haritada
+// gezinmek için serbest kalır.
+function noktaEkle(latlng) {
   if (!ekleModu) return;
-  noktalar.push([e.latlng.lat, e.latlng.lng]);
+  noktalar.push([latlng.lat, latlng.lng]);
   ciz(); profilAl();
-});
+}
+map.doubleClickZoom.disable();
+map.on('dblclick', e => noktaEkle(e.latlng));
+(() => {
+  let t = null, x0 = 0, y0 = 0, ll = null;
+  const iptal = () => { if (t) { clearTimeout(t); t = null; } };
+  const el2 = map.getContainer();
+  el2.addEventListener('touchstart', ev => {
+    if (ev.touches.length !== 1 || !ekleModu) return iptal();
+    const tt = ev.touches[0];
+    x0 = tt.clientX; y0 = tt.clientY;
+    const r = el2.getBoundingClientRect();
+    ll = map.containerPointToLatLng([x0 - r.left, y0 - r.top]);
+    iptal();
+    t = setTimeout(() => {
+      t = null;
+      if (ll) {
+        noktaEkle(ll);
+        if (navigator.vibrate) try { navigator.vibrate(18); } catch (e) { /* titreşim yok */ }
+      }
+    }, 550);
+  }, { passive: true });
+  el2.addEventListener('touchmove', ev => {
+    if (!t || !ev.touches.length) return;
+    const tt = ev.touches[0];
+    if (Math.abs(tt.clientX - x0) > 14 || Math.abs(tt.clientY - y0) > 14) iptal();
+  }, { passive: true });
+  el2.addEventListener('touchend', iptal, { passive: true });
+  el2.addEventListener('touchcancel', iptal, { passive: true });
+})();
 el('mod').onclick = () => { ekleModu = !ekleModu; el('mod').classList.toggle('on', ekleModu); };
 el('geri').onclick = () => { noktalar.pop(); ciz(); profilAl(); };
 el('temiz').onclick = () => { noktalar = []; ornek = []; ciz(); cizProfil(); olcumYaz(); uyar(''); el('chartNote').textContent = 'Nokta koyunca profil çizilir.'; };

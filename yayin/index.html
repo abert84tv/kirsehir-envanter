@@ -6006,7 +6006,7 @@ const SUZGEC_SAYFA_AD = {
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.14-88';
+const SURUM = '2026.09.14-89';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -8892,7 +8892,10 @@ class Component extends DCLogic {
       const p = JSON.parse(localStorage.getItem('ks-pref-' + u.user) || '{}');
       const out = {};
       if (p.mapBase) out.mapBase = p.mapBase;
-      if (p.theme) { out.theme = p.theme; try { localStorage.setItem('ks-tema', p.theme); } catch (e) { /* depolama kapalı */ } }
+      const cihazTema = (() => { try { return localStorage.getItem('ks-tema'); } catch (e) { return null; } })();
+      out.theme = (cihazTema === 'dark' || cihazTema === 'light') ? cihazTema
+        : (p.theme === 'dark' ? 'dark' : 'light');
+      try { localStorage.setItem('ks-tema', out.theme); } catch (e) { /* depolama kapalı */ }
       if (typeof p.navMode === 'boolean') out.navMode = p.navMode;
       // Süzgeç olduğu gibi geri gelir — hepsi kapalı bırakıldıysa kapalı açılır
       if (p.filter && typeof p.filter === 'object') {
@@ -11672,6 +11675,7 @@ class Component extends DCLogic {
       prefReset: () => {
         const u = s.session;
         if (u) { try { localStorage.removeItem('ks-pref-' + u.user); } catch (e) { /* yok */ } }
+        try { localStorage.setItem('ks-tema', 'light'); } catch (e) { /* yok */ }
         this.setState({
           mapBase: 'street', theme: 'light', navMode: false,
           filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true },

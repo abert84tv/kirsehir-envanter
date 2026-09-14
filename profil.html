@@ -27,6 +27,8 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="harita-ortak.css">
+<script src="harita-ortak.js"></script>
 <style>
   html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg);color:var(--color-text)}
   #wrap{position:absolute;inset:0;display:flex;flex-direction:column}
@@ -150,8 +152,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     --color-accent-600:#409cff;--color-accent-800:#cfe6ff;
   }
   body.dark .leaflet-container{background:#1c1c1e}
-  body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
-  body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
+  /* .ks-tiles/.ks-sat karo kısma değerleri artık harita-ortak.css'te */
   body.dark .man input,body.dark .ks-pin,body.dark .ks-tlbl,
   body.dark #akt .chk,body.dark #akt select,body.dark #araIn,body.dark #araList{background:#1c1c1e}
   body.dark .ks-seg{background:#3a3a3c}
@@ -518,33 +519,8 @@ function noktaEkle(latlng) {
 }
 map.doubleClickZoom.disable();
 map.on('dblclick', e => noktaEkle(e.latlng));
-(() => {
-  let t = null, x0 = 0, y0 = 0, ll = null;
-  const iptal = () => { if (t) { clearTimeout(t); t = null; } };
-  const el2 = map.getContainer();
-  el2.addEventListener('touchstart', ev => {
-    if (ev.touches.length !== 1 || !ekleModu) return iptal();
-    const tt = ev.touches[0];
-    x0 = tt.clientX; y0 = tt.clientY;
-    const r = el2.getBoundingClientRect();
-    ll = map.containerPointToLatLng([x0 - r.left, y0 - r.top]);
-    iptal();
-    t = setTimeout(() => {
-      t = null;
-      if (ll) {
-        noktaEkle(ll);
-        if (navigator.vibrate) try { navigator.vibrate(18); } catch (e) { /* titreşim yok */ }
-      }
-    }, 550);
-  }, { passive: true });
-  el2.addEventListener('touchmove', ev => {
-    if (!t || !ev.touches.length) return;
-    const tt = ev.touches[0];
-    if (Math.abs(tt.clientX - x0) > 14 || Math.abs(tt.clientY - y0) > 14) iptal();
-  }, { passive: true });
-  el2.addEventListener('touchend', iptal, { passive: true });
-  el2.addEventListener('touchcancel', iptal, { passive: true });
-})();
+// Telefonda basılı tutmak çift tıklamanın karşılığı — bkz. harita-ortak.js
+ksUzunBasisKur(map, () => ekleModu, noktaEkle);
 el('mod').onclick = () => { ekleModu = !ekleModu; el('mod').classList.toggle('on', ekleModu); };
 el('geri').onclick = () => { noktalar.pop(); ciz(); profilAl(); };
 el('temiz').onclick = () => { noktalar = []; ornek = []; ciz(); cizProfil(); olcumYaz(); uyar(''); el('chartNote').textContent = 'Nokta koyunca profil çizilir.'; };

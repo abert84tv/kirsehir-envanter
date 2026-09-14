@@ -27,6 +27,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="harita-ortak.css">
 <style>
   html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg);color:var(--color-text)}
   #wrap{position:absolute;inset:0;display:flex;flex-direction:column}
@@ -94,8 +95,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     --color-accent:#0a84ff;--color-accent-600:#409cff;
   }
   body.dark .leaflet-container{background:#1c1c1e}
-  body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
-  body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
+  /* .ks-tiles/.ks-sat karo kısma değerleri artık harita-ortak.css'te */
   body.dark .ks-uc{background:#1c1c1e}
   body.dark .ks-uzun{background:#3a3a3c}
 </style>

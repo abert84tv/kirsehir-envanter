@@ -31,6 +31,9 @@ budur.**
 |---|---|
 | `index.html` | Ana program: bütün ekranlar, iş kuralları, yetki, eşitleme |
 | `harita.html` | Harita penceresi (Leaflet), ana pencereyle postMessage ile konuşur |
+| `profil.html` | Hat Kesiti — çok noktalı mesafe/yükseklik profili |
+| `hat.html` | Hat güzergâhı (boru) çizim aracı |
+| `harita-ortak.css`, `harita-ortak.js` | Üç harita dosyasının (harita/profil/hat) paylaştığı koyu tema karo kısması ve uzun-basış nokta ekleme mantığı — burada tek yerden değişir |
 | `envanter.js`, `koyler.js`, `kuyular.js`, `kirsehir-data.js` | Gömülü gerçek veri: 264 kuyu noktası, 1043 yerleşim, 260 köy-ilçe ataması, nüfus |
 | `supabase-baglanti.js` | Sunucu katmanı: oturum, `kurum_veri`, `denetim`, numara sayacı, sunucu saati |
 | `SQL-*.sql` | Veritabanı kurulum betikleri (sırası aşağıda) |
@@ -42,6 +45,14 @@ budur.**
 
 Depodaki HTML dosyaları maket değil, **çalışan programdır**. Tarayıcıda
 `index.html` açılınca çalışır; derleme adımı yoktur.
+
+**Push'tan önce:** `node duman-testi.js` — tarayıcı açmadan, birkaç saniyede
+biten hafif bir kontrol: gömülü script'lerin sözdizimi, yerel dosya
+referanslarının (src/href) gerçekten var olması, `vercel.json` rewrite
+hedeflerinin var olması, üç harita dosyasının `harita-ortak.css`'i yüklemesi.
+Hiçbir CI/otomatik test yok — bu, en azından "site hiç açılmaz" türünden
+hataları push'tan önce eler (bkz. `harita.html`/`profil.html`/`hat.html`
+paylaşılan kod tekrarı ve `vercel.json` 404 hataları, 2026.09.14–15).
 
 ## 3. Teknik yapı
 

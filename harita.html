@@ -26,6 +26,8 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="harita-ortak.css">
+<script src="harita-ortak.js"></script>
 <style>
   html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg)}
   #map{position:absolute;inset:0}
@@ -104,8 +106,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   body.dark #route .rt-title,body.dark #route .rt-acts button{color:#f5f5f7}
   body.dark .ks-lbl{background:rgba(28,28,30,.92);border-color:rgba(255,255,255,.13);color:#f5f5f7}
   body.dark .ks-pin{background:#1c1c1e;border-color:#f5f5f7;color:#f5f5f7}
-  body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
-  body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
+  /* .ks-tiles/.ks-sat karo kısma değerleri artık harita-ortak.css'te */
   body.dark #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
 </style>
 </head>
@@ -427,35 +428,8 @@ map.on('click', e => {
   if (coordMode) noktaBirak(e.latlng);
 });
 
-// Telefonda basılı tutmak çift tıklamanın karşılığı: 550 ms, parmak 14 px'den
-// az kaydıysa nokta bırakılır. Kaydırma ve iki parmakla yakınlaşma bozulmaz.
-(() => {
-  let t = null, x0 = 0, y0 = 0, ll = null;
-  const iptal = () => { if (t) { clearTimeout(t); t = null; } };
-  const el = map.getContainer();
-  el.addEventListener('touchstart', ev => {
-    if (ev.touches.length !== 1 || pickName || coordMode) return iptal();
-    const tt = ev.touches[0];
-    x0 = tt.clientX; y0 = tt.clientY;
-    const r = el.getBoundingClientRect();
-    ll = map.containerPointToLatLng([x0 - r.left, y0 - r.top]);
-    iptal();
-    t = setTimeout(() => {
-      t = null;
-      if (ll) {
-        noktaBirak(ll);
-        if (navigator.vibrate) try { navigator.vibrate(18); } catch (e) { /* titreşim yok */ }
-      }
-    }, 550);
-  }, { passive: true });
-  el.addEventListener('touchmove', ev => {
-    if (!t || !ev.touches.length) return;
-    const tt = ev.touches[0];
-    if (Math.abs(tt.clientX - x0) > 14 || Math.abs(tt.clientY - y0) > 14) iptal();
-  }, { passive: true });
-  el.addEventListener('touchend', iptal, { passive: true });
-  el.addEventListener('touchcancel', iptal, { passive: true });
-})();
+// Telefonda basılı tutmak çift tıklamanın karşılığı — bkz. harita-ortak.js
+ksUzunBasisKur(map, () => !pickName && !coordMode, noktaBirak);
 
 document.getElementById('t-coord').onclick = () => {
   if (coordMark) { coordMark.remove(); coordMark = null; }

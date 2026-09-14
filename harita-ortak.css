@@ -1,0 +1,5 @@
+/* Paylaşılan harita karo kısma değerleri — harita.html, profil.html,
+   hat.html'in üçünde de birebir aynıydı (elle kopyalanmıştı). Koyu temada
+   harita karolarının ne kadar kısılacağı artık tek yerden değişir. */
+body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
+body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}

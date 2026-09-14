@@ -2149,7 +2149,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="flex:1 1 100%;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px 12px;display:flex;flex-direction:column;gap:9px;margin-top:4px">
 <div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ u.yetkiBaslik }}</div>
 <div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};max-width:640px">{{ u.yetkiNot }}</div>
-<sc-for list="{{ u.sayfalar }}" as="p" hint-placeholder-count="11">
+<sc-for list="{{ u.sayfalar }}" as="grp" hint-placeholder-count="6">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.02em;text-transform:uppercase;color:{{ ui.mut }};margin-top:8px">{{ grp.ad }}</div>
+<sc-for list="{{ grp.suzgecler }}" as="p" hint-placeholder-count="2">
 <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid {{ ui.rule }}">
 <span style="flex:1;min-width:0;font:600 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ p.label }}</span>
 <div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};flex:none">
@@ -2158,6 +2160,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-for>
 </div>
 </div>
+</sc-for>
 </sc-for>
 <div style="border-top:1px solid {{ ui.rule }};padding-top:9px;display:flex;flex-direction:column;gap:7px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
@@ -4268,7 +4271,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;display:flex;flex-direction:column;gap:9px">
 <div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ u.yetkiBaslik }}</div>
 <div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ u.yetkiNot }}</div>
-<sc-for list="{{ u.sayfalar }}" as="p" hint-placeholder-count="11">
+<sc-for list="{{ u.sayfalar }}" as="grp" hint-placeholder-count="6">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.02em;text-transform:uppercase;color:{{ ui.mut }};margin-top:8px">{{ grp.ad }}</div>
+<sc-for list="{{ grp.suzgecler }}" as="p" hint-placeholder-count="2">
 <div style="display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid {{ ui.rule }}">
 <span style="flex:1;min-width:0;font:600 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ p.label }}</span>
 <div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};flex:none">
@@ -4277,6 +4282,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </sc-for>
 </div>
 </div>
+</sc-for>
 </sc-for>
 <div style="border-top:1px solid {{ ui.rule }};padding-top:9px;display:flex;flex-direction:column;gap:7px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
@@ -6002,6 +6008,23 @@ const SUZGEC_SAYFA_AD = {
   isler: 'İşler', envanter: 'Envanter', kaynaklar: 'Kaynaklar',
   ozet: 'Özet', kesit: 'Hat Kesiti', ayarlar: 'Ayarlar', gosterge: 'Üst çubuk'
 };
+// Eski sayfa kimliğinin bugünkü süzgeç adı — "Sayfa yetkileri" panelinde
+// kullanıcıya "talep"/"gunluk"/"bakim" gibi artık görünmeyen eski isimler
+// yerine menüde gördüğü gerçek süzgeç adı (Gelen/Bana atanan/Planlı...) gösterilsin diye.
+const SUZGEC_ESKI_AD = Object.fromEntries(SAYFALAR.map(([sid, label]) => {
+  const grp = SUZGEC_ESKI[sid];
+  if (!grp) return [sid, label];
+  const t = (SUZGEC_TANIM[grp.sayfa] || SUZGEC_GOSTERGE).find(x => x[0] === grp.suzgec);
+  return [sid, t ? t[1] : label];
+}));
+// "Sayfa yetkileri" panelini artık menüdeki altı grupla aynı sırada göstermek
+// için eski 14 sayfa kimliği, süzgeç haritasındaki grubuna göre toplanır.
+const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayarlar', 'gosterge']
+  .map(sayfa => ({
+    ad: SUZGEC_SAYFA_AD[sayfa],
+    uyeler: SAYFALAR.filter(([sid]) => SUZGEC_ESKI[sid] && SUZGEC_ESKI[sid].sayfa === sayfa)
+  }))
+  .filter(g => g.uyeler.length);
 // Kişiye özel istisna verilebilen yetkiler — silme ve kullanıcı yönetimi role bağlı kalır
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
@@ -8287,7 +8310,7 @@ class Component extends DCLogic {
     const u = list.find(x => x.id === uid);
     const me = this.state.session;
     if (me && me.id === uid) this.setState({ session: { ...me, sayfalar: u.sayfalar } });
-    const ad = (SAYFALAR.find(x => x[0] === sid) || [, sid])[1];
+    const ad = SUZGEC_ESKI_AD[sid] || (SAYFALAR.find(x => x[0] === sid) || [, sid])[1];
     const ne = v === 'yok' ? 'menüsünden kaldırıldı' : (v === 'gor' ? 'yalnızca görüntüleme oldu' : 'tam yetkili oldu');
     const sunucuya = this.yetkiGonder(u, yeniYetki, (u && u.istisna) || {});
     this.duyur(`${u ? u.name : ''} · ${ad} sayfası ${ne}.`
@@ -10146,18 +10169,23 @@ class Component extends DCLogic {
             yetkiNot: u.role === 'yonetici'
               ? 'Yönetici bütün sayfaları görür ve düzenler; kilitlenemez — sistem yönetimsiz kalmasın diye buradaki seçim ona uygulanmaz.'
               : 'Yok: sayfa sol menüde hiç çıkmaz. Görür: sayfayı açar, ekleme–düzenleme–silme düğmeleri kapalı olur ve üstte uyarı şeridi çıkar. Tam: girer ve kaydeder. Değişiklik kişinin bir sonraki ekran yenilemesinde geçerli olur.',
-            sayfalar: SAYFALAR.map(([sid, label]) => {
-              const mevcut = u.role === 'yonetici' ? 'tam' : (((u.sayfalar || {})[sid]) || 'tam');
-              return {
-                label,
-                secenekler: YETKI_SEC.map(([v, l]) => ({
-                  label: l,
-                  bg: mevcut === v ? (v === 'yok' ? ui.mut : 'var(--color-accent)') : 'transparent',
-                  fg: mevcut === v ? '#fff' : ui.fg,
-                  pick: () => this.sayfaYetkiYaz(u.id, sid, v)
-                }))
-              };
-            }),
+            // Eski 14 sayfa kimliği, bugünkü menüdeki altı gruba göre toplu gösterilir
+            // (bkz. SAYFA_GRUPLARI) — depolama anahtarı (sid) ve davranış değişmedi.
+            sayfalar: SAYFA_GRUPLARI.map(g => ({
+              ad: g.ad,
+              suzgecler: g.uyeler.map(([sid]) => {
+                const mevcut = u.role === 'yonetici' ? 'tam' : (((u.sayfalar || {})[sid]) || 'tam');
+                return {
+                  label: SUZGEC_ESKI_AD[sid] || sid,
+                  secenekler: YETKI_SEC.map(([v, l]) => ({
+                    label: l,
+                    bg: mevcut === v ? (v === 'yok' ? ui.mut : 'var(--color-accent)') : 'transparent',
+                    fg: mevcut === v ? '#fff' : ui.fg,
+                    pick: () => this.sayfaYetkiYaz(u.id, sid, v)
+                  }))
+                };
+              })
+            })),
             edit: () => this.setState({
               userForm: { id: u.id, name: u.name, user: u.user, role: u.role, tel: u.tel || '', unvan: u.unvan || '', bolge: u.bolge || '', pw: '', err: '' }
             }),

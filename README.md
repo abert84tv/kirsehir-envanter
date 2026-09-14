@@ -4,9 +4,15 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.14-89**. Sürüm damgası `yayin/index.html` içindeki
+Çalışan sürüm: **2026.09.14-89**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
+
+**Depo düzeni bu paketten farklı:** bu GitHub deposunda (`abert84tv/kirsehir-envanter`)
+yayına giden dosyalar `yayin/` alt klasörü olmadan doğrudan depo kökündedir —
+Vercel'in `cleanUrls` ile kök dizini otomatik sunması buna dayanıyor. Aşağıdaki
+tablo ve yollar buna göre güncellenmiştir; masaüstündeki devir paketi hâlâ
+`yayin/` alt klasörlü orijinal düzeni kullanır.
 
 ## 1. Program ne yapıyor
 
@@ -23,20 +29,19 @@ budur.**
 
 | Yol | Ne |
 |---|---|
-| `yayin/` | Yayına alınan programın tamamı — GitHub'a yüklenen klasör |
-| `yayin/index.html` | Ana program: bütün ekranlar, iş kuralları, yetki, eşitleme |
-| `yayin/harita.html` | Harita penceresi (Leaflet), ana pencereyle postMessage ile konuşur |
-| `yayin/envanter.js`, `koyler.js`, `kuyular.js`, `kirsehir-data.js` | Gömülü gerçek veri: 264 kuyu noktası, 1043 yerleşim, 260 köy-ilçe ataması, nüfus |
-| `yayin/supabase-baglanti.js` | Sunucu katmanı: oturum, `kurum_veri`, `denetim`, numara sayacı, sunucu saati |
-| `yayin/SQL-*.sql` | Veritabanı kurulum betikleri (sırası aşağıda) |
-| `yayin/_ds/` | Bağlı tasarım sistemi (Modernist) — token ve bileşen kaynağı |
+| `index.html` | Ana program: bütün ekranlar, iş kuralları, yetki, eşitleme |
+| `harita.html` | Harita penceresi (Leaflet), ana pencereyle postMessage ile konuşur |
+| `envanter.js`, `koyler.js`, `kuyular.js`, `kirsehir-data.js` | Gömülü gerçek veri: 264 kuyu noktası, 1043 yerleşim, 260 köy-ilçe ataması, nüfus |
+| `supabase-baglanti.js` | Sunucu katmanı: oturum, `kurum_veri`, `denetim`, numara sayacı, sunucu saati |
+| `SQL-*.sql` | Veritabanı kurulum betikleri (sırası aşağıda) |
+| `_ds/` | Bağlı tasarım sistemi (Modernist) — token ve bileşen kaynağı |
 | `DURUM.md` | Durum raporu + bütün oturum kayıtları (ana referans) |
 | `KURULUM.md` | Supabase / R2 / SMS kurulum adımları |
-| `YAYIN.md` | Yayınlama (GitHub + Vercel) notları |
-| `vercel.json` | Yayın ayarı |
+| `YAYIN.md` | Yayınlama (GitHub + Vercel) notları — `yayin/` alt klasörünü anlatıyor, bu depoda geçerli değil |
+| `vercel.json` | Yayın ayarı — kök dizin `cleanUrls` ile doğrudan sunulur |
 
-Paketteki HTML dosyaları maket değil, **çalışan programdır**. Tarayıcıda
-`yayin/index.html` açılınca çalışır; derleme adımı yoktur.
+Depodaki HTML dosyaları maket değil, **çalışan programdır**. Tarayıcıda
+`index.html` açılınca çalışır; derleme adımı yoktur.
 
 ## 3. Teknik yapı
 
@@ -92,11 +97,11 @@ olmadı — mevcut kurulum güncel programla uyumludur.
 
 ## 5. Yayınlama
 
-GitHub'a `yayin/` klasörünün tamamı yüklenir; Vercel (veya GitHub Pages) kök
-dizin olarak bu klasörü gösterir. Yükleme sonrası tarayıcıda bir kez sert
-yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa sürüm damgası
-2026.09.14-89 görünmez ve düzeltmeler uygulanmamış gibi durur. Program içinde
-Ayarlar > Veri > "Programı tazele" aynı işi yapar.
+Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
+depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
+bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
+sürüm damgası 2026.09.14-89 görünmez ve düzeltmeler uygulanmamış gibi durur.
+Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
 

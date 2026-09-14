@@ -2,10 +2,10 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/yayin/index.html" },
-    { "source": "/harita", "destination": "/yayin/harita.html" },
-    { "source": "/profil", "destination": "/yayin/profil.html" },
-    { "source": "/hat", "destination": "/yayin/hat.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/harita", "destination": "/harita.html" },
+    { "source": "/profil", "destination": "/profil.html" },
+    { "source": "/hat", "destination": "/hat.html" }
   ],
   "headers": [
     {

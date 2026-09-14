@@ -82,6 +82,22 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     #side{flex:1 1 auto;border-left:none;border-top:1px solid var(--color-divider)}
     button{min-height:44px}
   }
+  /* Koyu tema — ana pencereyle aynı gerçek-siyah palet (bkz. index.html th()).
+     Neredeyse her kural var(--color-*) kullandığı için yalnızca değişkenleri
+     devretmek yetiyor; sabit #fff kullanan .ks-uc ve var(--color-text) üstüne
+     beyaz yazı basan .ks-uzun ayrıca düzeltilir. */
+  body.dark{
+    --color-bg:#000000;--color-text:#f5f5f7;--color-divider:rgba(255,255,255,.13);--color-surface:#1c1c1e;
+    --color-neutral-100:#1c1c1e;--color-neutral-200:#2c2c2e;--color-neutral-300:#3a3a3c;
+    --color-neutral-400:#48484a;--color-neutral-500:#6e6e73;--color-neutral-600:rgba(235,235,245,.62);
+    --color-neutral-700:#aeaeb2;--color-neutral-800:#d1d1d6;--color-neutral-900:#f5f5f7;
+    --color-accent:#0a84ff;--color-accent-600:#409cff;
+  }
+  body.dark .leaflet-container{background:#1c1c1e}
+  body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
+  body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
+  body.dark .ks-uc{background:#1c1c1e}
+  body.dark .ks-uzun{background:#3a3a3c}
 </style>
 </head>
 <body>
@@ -128,9 +144,9 @@ const AD = Object.fromEntries(TURLER.map(t => [t[0], t[1]]));
 const el = id => document.getElementById(id);
 const map = L.map('map', { zoomControl: true }).setView([39.15091, 34.15952], 13);
 const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+  { maxZoom: 19, attribution: '© OpenStreetMap', className: 'ks-tiles' }).addTo(map);
 const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  { maxZoom: 19, attribution: 'Esri, Maxar' });
+  { maxZoom: 19, attribution: 'Esri, Maxar', className: 'ks-sat' });
 let uyduAcik = false;
 
 let tesis = null, hatlar = [], tur = 'terfi', cizim = null, yazma = true;
@@ -266,7 +282,9 @@ function gonder() {
 }
 window.addEventListener('message', ev => {
   const d = ev.data;
-  if (!d || d.ks !== 'hat') return;
+  if (!d) return;
+  if (d.ks === 'theme') { document.body.classList.toggle('dark', d.dark); return; }
+  if (d.ks !== 'hat') return;
   tesis = d.tesis || null;
   hatlar = Array.isArray(d.hatlar) ? d.hatlar.map(h => ({ ...h, noktalar: (h.noktalar || []).map(p => [+p[0], +p[1]]) })) : [];
   yazma = d.yazma !== false;

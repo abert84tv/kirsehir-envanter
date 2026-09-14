@@ -6439,6 +6439,12 @@ class Component extends DCLogic {
     }
     if (!prev) return;
     if (prev.theme !== this.state.theme || prev.filter !== this.state.filter) this.pushMap();
+    // Hat Kesiti ve hat çizim pencereleri açıkken tema değişirse onlara da haber verilir
+    if (prev.theme !== this.state.theme) {
+      const dark = this.state.theme === 'dark';
+      const pw = this.profilWin(); if (pw) try { pw.postMessage({ ks: 'theme', dark }, '*'); } catch (e) { /* çerçeve yok */ }
+      const hw = this.hatWin(); if (hw) try { hw.postMessage({ ks: 'theme', dark }, '*'); } catch (e) { /* çerçeve yok */ }
+    }
     // hat sekmesi: kayıt ya da sekme değişince çizim sayfasına yeni kayıt gönderilir
     if (this.state.hatTam && (!prev.hatTam || prev.selected !== this.state.selected)) {
       setTimeout(() => this.hatGonder(), 260);
@@ -6480,6 +6486,7 @@ class Component extends DCLogic {
     const a = this.state.assets.find(x => x.id === this.state.selected);
     if (!w || !a) return;
     try {
+      w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
       w.postMessage({
         ks: 'hat',
         tesis: { id: a.id, kod: a.code, lat: a.lat, lon: a.lon },
@@ -6624,7 +6631,10 @@ class Component extends DCLogic {
   profilTesis() {
     const w = this.profilWin();
     if (!w) return;
-    try { w.postMessage({ ks: 'profil', assets: this.profilAssets() }, '*'); } catch (e) { /* çerçeve hazır değil */ }
+    try {
+      w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
+      w.postMessage({ ks: 'profil', assets: this.profilAssets() }, '*');
+    } catch (e) { /* çerçeve hazır değil */ }
   }
   pushMap() {
     try { localStorage.setItem('ks-suzgec', JSON.stringify(this.state.filter)); } catch (e) { /* depolama kapalı */ }

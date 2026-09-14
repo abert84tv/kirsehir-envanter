@@ -137,6 +137,24 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     #araIn{min-height:44px}
     #araList button{min-height:46px;align-items:center}
   }
+  /* Koyu tema — ana pencereyle aynı gerçek-siyah palet (bkz. index.html th()).
+     Neredeyse her kural var(--color-*) kullandığı için burada yalnızca
+     değişkenleri devretmek yetiyor; sabit #fff kullanan birkaç öge ve
+     var(--color-text) üstüne beyaz yazı basan .ks-seg ayrıca düzeltilir. */
+  body.dark{
+    --color-bg:#000000;--color-text:#f5f5f7;--color-divider:rgba(255,255,255,.13);--color-surface:#1c1c1e;
+    --color-neutral-100:#1c1c1e;--color-neutral-200:#2c2c2e;--color-neutral-300:#3a3a3c;
+    --color-neutral-400:#48484a;--color-neutral-500:#6e6e73;--color-neutral-600:rgba(235,235,245,.62);
+    --color-neutral-700:#aeaeb2;--color-neutral-800:#d1d1d6;--color-neutral-900:#f5f5f7;
+    --color-accent:#0a84ff;--color-accent-100:#0a2540;--color-accent-200:#123a5c;
+    --color-accent-600:#409cff;--color-accent-800:#cfe6ff;
+  }
+  body.dark .leaflet-container{background:#1c1c1e}
+  body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
+  body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
+  body.dark .man input,body.dark .ks-pin,body.dark .ks-tlbl,
+  body.dark #akt .chk,body.dark #akt select,body.dark #araIn,body.dark #araList{background:#1c1c1e}
+  body.dark .ks-seg{background:#3a3a3c}
 </style>
 </head>
 <body>
@@ -228,9 +246,9 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 const KS = { lat: 39.15091, lon: 34.15952 };
 const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([KS.lat, KS.lon], 10);
 const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+  { maxZoom: 19, attribution: '© OpenStreetMap', className: 'ks-tiles' }).addTo(map);
 const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  { maxZoom: 19, attribution: 'Esri, Maxar, Earthstar Geographics' });
+  { maxZoom: 19, attribution: 'Esri, Maxar, Earthstar Geographics', className: 'ks-sat' });
 // Uydu görüntüsünde il, ilçe ve köy adları yok — adlar ayrı bir saydam
 // katmandan gelir, yoksa uyduda hiçbir yer adı okunmaz.
 const uyduAd = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
@@ -447,8 +465,8 @@ function cizProfil() {
   for (let k = 0; k <= 3; k++) {
     const h = lo + (hi - lo) * k / 3, y = Y(h);
     g += '<line x1="' + L1 + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1)
-      + '" stroke="#c9c5c0" stroke-width="1"/>'
-      + '<text x="4" y="' + (y + 3.5).toFixed(1) + '" font-family="Archivo" font-size="9" font-weight="600" fill="#6c6763">'
+      + '" stroke="var(--color-neutral-400)" stroke-width="1"/>'
+      + '<text x="4" y="' + (y + 3.5).toFixed(1) + '" font-family="Archivo" font-size="9" font-weight="600" fill="var(--color-neutral-600)">'
       + Math.round(h) + '</text>';
   }
   // köşe noktaları
@@ -457,8 +475,8 @@ function cizProfil() {
     if (i) cum += mesafe(noktalar[i - 1], noktalar[i]);
     const x = X(Math.min(cum, dmax));
     kose += '<line x1="' + x.toFixed(1) + '" y1="' + T + '" x2="' + x.toFixed(1) + '" y2="' + (H - B)
-      + '" stroke="#201e1d" stroke-width="1" stroke-dasharray="3 3"/>'
-      + '<text x="' + (x + 3).toFixed(1) + '" y="' + (T + 9) + '" font-family="Archivo" font-size="9" font-weight="700" fill="#201e1d">'
+      + '" stroke="var(--color-text)" stroke-width="1" stroke-dasharray="3 3"/>'
+      + '<text x="' + (x + 3).toFixed(1) + '" y="' + (T + 9) + '" font-family="Archivo" font-size="9" font-weight="700" fill="var(--color-text)">'
       + (i + 1) + '</text>';
   }
   svg.innerHTML = g + kose
@@ -466,10 +484,10 @@ function cizProfil() {
     + '<path d="' + cizgi + '" fill="none" stroke="var(--color-accent)" stroke-width="2.5"/>'
     + '<line x1="' + L1 + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="var(--color-neutral-400)" stroke-width="1"/>'
     + '<line x1="' + L1 + '" y1="' + T + '" x2="' + L1 + '" y2="' + (H - B) + '" stroke="var(--color-neutral-400)" stroke-width="1"/>'
-    + '<text x="' + L1 + '" y="' + (H - 8) + '" font-family="Archivo" font-size="9" font-weight="600" fill="#6c6763">0</text>'
-    + '<text x="' + (W - R) + '" y="' + (H - 8) + '" text-anchor="end" font-family="Archivo" font-size="9" font-weight="600" fill="#6c6763">'
+    + '<text x="' + L1 + '" y="' + (H - 8) + '" font-family="Archivo" font-size="9" font-weight="600" fill="var(--color-neutral-600)">0</text>'
+    + '<text x="' + (W - R) + '" y="' + (H - 8) + '" text-anchor="end" font-family="Archivo" font-size="9" font-weight="600" fill="var(--color-neutral-600)">'
     + (dmax / 1000).toFixed(dmax < 10000 ? 2 : 1) + ' km</text>'
-    + '<text x="4" y="' + (T + 8) + '" font-family="Archivo" font-size="8" font-weight="700" fill="#6c6763">m</text>'
+    + '<text x="4" y="' + (T + 8) + '" font-family="Archivo" font-size="8" font-weight="700" fill="var(--color-neutral-600)">m</text>'
     + '<g id="gz"></g>';
   svg.onmousemove = ev => {
     const b = svg.getBoundingClientRect();
@@ -479,8 +497,8 @@ function cizProfil() {
     for (const o of ornek) { const q = Math.abs(o.d - d); if (q < f) { f = q; en = o; } }
     const gz = svg.querySelector('#gz');
     if (gz) gz.innerHTML = '<line x1="' + X(en.d).toFixed(1) + '" y1="' + T + '" x2="' + X(en.d).toFixed(1)
-      + '" y2="' + (H - B) + '" stroke="#201e1d" stroke-width="1.5"/>'
-      + '<circle cx="' + X(en.d).toFixed(1) + '" cy="' + Y(en.h).toFixed(1) + '" r="4" fill="#201e1d"/>';
+      + '" y2="' + (H - B) + '" stroke="var(--color-text)" stroke-width="1.5"/>'
+      + '<circle cx="' + X(en.d).toFixed(1) + '" cy="' + Y(en.h).toFixed(1) + '" r="4" fill="var(--color-text)"/>';
     el('chartNote').textContent = (en.d / 1000).toFixed(2) + ' km · ' + Math.round(en.h) + ' m rakım';
     if (!imlec) imlec = L.marker([en.lat, en.lon], { icon: L.divIcon({ className: '', iconSize: [14, 14], iconAnchor: [7, 7], html: '<div class="ks-cur"></div>' }), interactive: false }).addTo(map);
     else imlec.setLatLng([en.lat, en.lon]);
@@ -559,7 +577,9 @@ el('iAdd').onclick = () => {
 // Uygulamadan gelen noktalar: iki kaydın arası ölçülmek istendiğinde
 window.addEventListener('message', ev => {
   const d = ev.data;
-  if (!d || d.ks !== 'profil') return;
+  if (!d) return;
+  if (d.ks === 'theme') { document.body.classList.toggle('dark', d.dark); return; }
+  if (d.ks !== 'profil') return;
   if (Array.isArray(d.assets)) tesisAl(d.assets);
   if (Array.isArray(d.noktalar)) {
     noktalar = d.noktalar.filter(p => isFinite(p[0]) && isFinite(p[1])).map(p => [+p[0], +p[1]]);

@@ -3021,7 +3021,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <span style="width:11px;height:11px;border-radius:10px;border:1px solid {{ ui.mut }};border-radius:50%;flex:none"></span>
 <input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 14px/1 var(--font-body);color:{{ ui.fg }}">
 </div>
-<button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;padding:0 16px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);font:600 13px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:7px;white-space:nowrap">↔ Koordinat</button>
+<button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);display:flex;align-items:center;justify-content:center">{{ ikonlar.donustur }}</button>
 <sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;min-width:46px;padding:0 10px;border-radius:11px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 13.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
 </sc-if>
@@ -5923,14 +5923,18 @@ const PERMS = [
 const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
 // Menü grupları — on üç sayfa dört başlık altında toplanır.
 // Sıra kullanım sıklığına göre: günlük iş üstte, sistem işleri altta.
+// Hat Kesiti (kesit) sahada kullanılan bir ölçüm aracı — "Çözümleme" (rapor/
+// analiz) altında değil, diğer saha araçlarıyla (Envanter, İşler) birlikte
+// durur. 2026.09.15'te taşındı: kullanıcı geri bildirimi, gruplamanın
+// kafa karıştırdığı yönündeydi.
 const MENU_GRUP = [
-  ['Saha', ['envanter', 'isler']],
+  ['Saha', ['envanter', 'isler', 'kesit']],
   ['Kayıtlar', ['kaynaklar']],
-  ['Çözümleme', ['ozet', 'kesit']],
+  ['Çözümleme', ['ozet']],
   ['Sistem', ['ayarlar']]
 ];
 // Menüdeki sayfaların tam sırası — grup başlıkları bunun üstüne oturur
-const MENU_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet', 'kesit', 'ayarlar'];
+const MENU_SIRA = ['envanter', 'isler', 'kesit', 'kaynaklar', 'ozet', 'ayarlar'];
 // Ayarlar tek liste: satıra dokununca o bölüm açılır, geri ile listeye dönülür.
 // Başlıklar listeyi üç kümeye ayırır ama her bölüm kendi ekranında durur.
 const AYAR_LISTE = [
@@ -5987,11 +5991,16 @@ const SUZGEC_TANIM = {
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
   envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter']],
   kaynaklar: [['malzeme', 'Malzeme', 'ambar'], ['arac', 'Araç', 'arac']],
-  ozet: [['ozet', 'Özet', 'ozet'], ['denetim', 'Denetim izi', 'ayarlar', 'denetim'],
-    ['cop', 'Çöp kutusu', 'ayarlar', 'cop']],
+  // Denetim izi ve Çöp kutusu buradan Ayarlar'a taşındı (2026.09.15) — ikisi
+  // de zaten Ayarlar > Veri bölümünde ayrıca listeleniyordu (AYAR_LISTE),
+  // Özet'in altında ikinci bir yoldan erişilebilir olmaları kafa karıştırıyordu
+  // ve "Özet" (rapor/gösterge) ile de konu olarak örtüşmüyordu. Yetkileri
+  // hâlâ Ayarlar yetkisinden miras alınıyor (üçüncü sütun) — bu hiç değişmedi.
+  ozet: [['ozet', 'Özet', 'ozet']],
   kesit: [['kesit', 'Hat Kesiti', 'profil']],
   ayarlar: [['ayarlar', 'Ayarlar', 'ayarlar'], ['yerlesim', 'Köy konumları', 'yerlesim'],
-    ['aktarim', 'İçe ve dışa aktarım', 'aktarim']]
+    ['aktarim', 'İçe ve dışa aktarım', 'aktarim'],
+    ['denetim', 'Denetim izi', 'ayarlar', 'denetim'], ['cop', 'Çöp kutusu', 'ayarlar', 'cop']]
 };
 // Kuyruk sayfa olmaktan çıkıp üst çubukta göstergeye dönüşür; yetkisi kalır.
 const SUZGEC_GOSTERGE = [['kuyruk', 'Bekleyen kayıt', 'kuyruk']];
@@ -9369,6 +9378,7 @@ class Component extends DCLogic {
       uyari: ['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3', 'M12 9v4', 'M12 17h.01'],
       buyut: ['M15 3h6v6', 'M9 21H3v-6', 'M21 3l-7 7', 'M3 21l7-7'],
       kalem: ['M12 20h9', 'M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z'],
+      donustur: ['M8 3 4 7l4 4', 'M4 7h16', 'm16 21 4-4-4-4', 'M20 17H4'],
       yenile: ['M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8', 'M21 3v5h-5', 'M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16', 'M8 16H3v5'],
       cikis: ['M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4', 'm16 17 5-5-5-5', 'M21 12H9'],
       ariza: ['M7 18v-6a5 5 0 0 1 10 0v6', 'M5 21a1 1 0 0 0 1-1v-1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a1 1 0 0 0 1 1', 'M12 2v1', 'M2 12h1', 'M21 12h1', 'M5.6 4.6 6.3 5.3', 'M18.4 4.6l-.7.7']
@@ -10464,7 +10474,8 @@ class Component extends DCLogic {
         kalem: this.ikon('kalem', 14),
         yenile: this.ikon('yenile', 14),
         cikis: this.ikon('cikis', 14), cikisBuyuk: this.ikon('cikis', 16),
-        ariza: this.ikon('ariza', 20), arizaBuyuk: this.ikon('ariza', 24)
+        ariza: this.ikon('ariza', 20), arizaBuyuk: this.ikon('ariza', 24),
+        donustur: this.ikon('donustur', 18)
       },
       duyuru: (() => {
         const d = s.duyuru;

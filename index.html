@@ -1032,6 +1032,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">İade</button>
 <button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="background:var(--color-accent);color:#fff">Sarf</button>
+<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="background:var(--color-uyari);color:#fff">Hurda</button>
 </sc-if>
 </div>
 </sc-for>
@@ -3668,9 +3669,10 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <span style="font:600 13.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ z.ekip }}</span>
 <span style="font:400 12px/1.4 var(--font-body);color:{{ z.ozetFg }}">{{ z.ozet }}</span>
 <sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:3px">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:3px">
 <button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em">İade</button>
 <button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);letter-spacing:-.01em">Sarf</button>
+<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 11px/1 var(--font-body);letter-spacing:-.01em">Hurda</button>
 </div>
 </sc-if>
 </div>
@@ -5815,7 +5817,7 @@ const ARAC_BASLANGIC = [
 const AMBARLAR = ['Merkez ambar', 'Kaman ambarı', 'Mucur ambarı', 'Çiçekdağı ambarı'];
 const HAREKET_AD = {
   giris: 'Ambar girişi', cikis: 'Ambar çıkışı', zimmet: 'Ekibe zimmet',
-  iade: 'Zimmet iadesi', sarf: 'Sahada sarf'
+  iade: 'Zimmet iadesi', sarf: 'Sahada sarf', hurda: 'Hurda'
 };
 // Kritik eşik: bu değerin altına düşen kalem kırmızı yazılır
 const KRITIK_ESIK = { adet: 2, boy: 4, metre: 50, kutu: 2 };
@@ -7123,8 +7125,8 @@ class Component extends DCLogic {
     const birim = kalem ? kalem[2] : 'adet';
     const n = Math.abs(parseFloat(String(g.adet || '').replace(',', '.')) || 0);
     if (!n) return this.duyur('Adet girin.', 4000, 'kotu');
-    if (g.tur !== 'sarf' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
-    if (['zimmet', 'iade', 'sarf'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
+    if (g.tur !== 'sarf' && g.tur !== 'hurda' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
+    if (['zimmet', 'iade', 'sarf', 'hurda'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
     const a = this.state.ambar || {};
     const stok = JSON.parse(JSON.stringify(a.stok || {}));
     const zim = JSON.parse(JSON.stringify(a.zimmet || {}));
@@ -7152,6 +7154,9 @@ class Component extends DCLogic {
       Z(g.ekip, g.malzeme, -n); S(g.ambar, g.malzeme, n);
     } else if (g.tur === 'sarf') {
       if (n > elde) return this.duyur(g.ekip + ' zimmetinde ' + elde + ' ' + birim + ' var — sarf bundan fazla olamaz.', 6000, 'kotu');
+      Z(g.ekip, g.malzeme, -n);
+    } else if (g.tur === 'hurda') {
+      if (n > elde) return this.duyur(g.ekip + ' zimmetinde ' + elde + ' ' + birim + ' var — hurdaya bundan fazlası çıkarılamaz.', 6000, 'kotu');
       Z(g.ekip, g.malzeme, -n);
     } else return this.duyur('Hareket türü seçin.', 4000, 'kotu');
     const kayit = {
@@ -10968,12 +10973,13 @@ class Component extends DCLogic {
               ozet: list.length ? list.map(k => k + ' × ' + t[k]).join(' · ') : 'zimmetinde malzeme yok',
               ozetFg: list.length ? ui.fg : ui.mut,
               iade: () => this.setState({ ambarForm: { tur: 'iade', malzeme: list[0] || STOK_KALEM[0][0], ambar: AMBARLAR[0], ekip: c, adet: '', not: '' } }),
-              sarf: () => this.setState({ ambarForm: { tur: 'sarf', malzeme: list[0] || STOK_KALEM[0][0], ambar: '', ekip: c, adet: '', not: '' } })
+              sarf: () => this.setState({ ambarForm: { tur: 'sarf', malzeme: list[0] || STOK_KALEM[0][0], ambar: '', ekip: c, adet: '', not: '' } }),
+              hurda: () => this.setState({ ambarForm: { tur: 'hurda', malzeme: list[0] || STOK_KALEM[0][0], ambar: '', ekip: c, adet: '', not: '' } })
             };
           }),
           hareketler: ((s.ambar && s.ambar.hareket) || []).slice(0, 40).map(x => ({
             tur: HAREKET_AD[x.tur] || x.tur,
-            turFg: x.tur === 'giris' || x.tur === 'iade' ? ui.fg : ui.acc,
+            turFg: x.tur === 'giris' || x.tur === 'iade' ? ui.fg : (x.tur === 'hurda' ? 'var(--color-uyari)' : ui.acc),
             malzeme: x.malzeme, adet: x.adet + ' ' + x.birim,
             meta: [[x.ambar, x.ekip].filter(Boolean).join(' → '), x.damga, x.kim, x.not]
               .filter(Boolean).join(' · ')
@@ -10990,10 +10996,10 @@ class Component extends DCLogic {
             malzeme: af ? af.malzeme : '', malzemeler: STOK_KALEM.map(m => m[0]),
             onMalzeme: e => this.setState({ ambarForm: { ...this.state.ambarForm, malzeme: e.target.value } }),
             ambar: af ? af.ambar : '', ambarlar: AMBARLAR,
-            ambarVar: !!af && af.tur !== 'sarf',
+            ambarVar: !!af && af.tur !== 'sarf' && af.tur !== 'hurda',
             onAmbar: e => this.setState({ ambarForm: { ...this.state.ambarForm, ambar: e.target.value } }),
             ekip: af ? af.ekip : '', ekipler: SAHA_EKIP,
-            ekipVar: !!af && ['zimmet', 'iade', 'sarf'].includes(af.tur),
+            ekipVar: !!af && ['zimmet', 'iade', 'sarf', 'hurda'].includes(af.tur),
             onEkip: e => this.setState({ ambarForm: { ...this.state.ambarForm, ekip: e.target.value } }),
             adet: af ? af.adet : '',
             onAdet: e => this.setState({ ambarForm: { ...this.state.ambarForm, adet: e.target.value } }),

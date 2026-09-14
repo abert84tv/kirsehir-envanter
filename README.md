@@ -91,9 +91,11 @@ Supabase SQL düzenleyicisinde bir kez, bu sırayla:
 2. `SQL-cop-kutusu.sql`
 3. `SQL-moduller-sunucu.sql`
 4. `SQL-veri-butunlugu.sql`
+5. `SQL-ambar-hurda.sql` — ambar hareketine "hurda" türü ekler (2026.09.15)
 
-Daha önce çalıştırılanlar tekrar edilmez. Son oturumlarda şema değişikliği
-olmadı — mevcut kurulum güncel programla uyumludur.
+Daha önce çalıştırılanlar tekrar edilmez; 4'ü daha önce çalıştırdıysanız
+yalnız 5'i çalıştırmanız yeterli (`ambar_hareket` fonksiyonunun güncellenmiş
+hâlidir, `create or replace` ile güvenli).
 
 ## 5. Yayınlama
 

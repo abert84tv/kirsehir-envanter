@@ -78,7 +78,7 @@ $$;
 -- sıraya girer, ikisi de tutar. Yetersiz bakiye reddedilir, kalanı işlenir.
 --
 -- p_islemler: [{ tur, malzeme, adet, birim, ambar, ekip, not, id, damga }]
---   tur: giris | cikis | zimmet | iade | sarf
+--   tur: giris | cikis | zimmet | iade | sarf | hurda
 create or replace function ambar_hareket(p_token uuid, p_islemler jsonb)
 returns jsonb
 language plpgsql security definer set search_path = public as $$
@@ -118,7 +118,7 @@ begin
         'malzeme', mal, 'neden', 'ambar mevcudu ' || eldeS));
       continue;
     end if;
-    if tur in ('iade', 'sarf') and adet > eldeZ then
+    if tur in ('iade', 'sarf', 'hurda') and adet > eldeZ then
       red := red || jsonb_build_array(jsonb_build_object(
         'malzeme', mal, 'neden', 'zimmette ' || eldeZ));
       continue;
@@ -139,6 +139,8 @@ begin
       a := jsonb_set(a, array['stok', amb, mal], to_jsonb(eldeS + adet), true);
     elsif tur = 'sarf' then
       a := jsonb_set(a, array['zimmet', ekp, mal], to_jsonb(eldeZ - adet), true);
+    elsif tur = 'hurda' then
+      a := jsonb_set(a, array['zimmet', ekp, mal], to_jsonb(eldeZ - adet), true);
     else
       continue;
     end if;
@@ -147,7 +149,7 @@ begin
     if tur in ('cikis', 'zimmet') and eldeS - adet <= 0 then
       a := a #- array['stok', amb, mal];
     end if;
-    if tur in ('iade', 'sarf') and eldeZ - adet <= 0 then
+    if tur in ('iade', 'sarf', 'hurda') and eldeZ - adet <= 0 then
       a := a #- array['zimmet', ekp, mal];
     end if;
 

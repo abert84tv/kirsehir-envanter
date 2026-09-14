@@ -10320,8 +10320,12 @@ class Component extends DCLogic {
           return this.koyList(m, d);
         })(),
         coordText: na && na.lat ? `${na.lat.toFixed(5)} , ${na.lon.toFixed(5)}` : 'Konum alınmadı',
-        coordNote: na && na.lat ? 'Cihaz GPS · ±4 m — kayıt “saha ölçümü” olarak işaretlenir.' : 'GİT düğmesi standart saha konumunu alır; telefonda cihaz GPS’i kullanılır.',
-        coordColor: na && na.lat ? ui.acc : ui.mut,
+        coordNote: na && na.lat
+          ? (na.coordAcc
+            ? `Cihaz GPS · ±${na.coordAcc} m — kayıt “saha ölçümü” olarak işaretlenir.`
+            : 'Yaklaşık konum — GPS alınamadı, köy/ilçe merkezi kondu. Sahada gerçek GPS ile düzeltilmeli.')
+          : 'GİT düğmesi cihaz GPS’ini ister; alınamazsa köy/ilçe merkezi yaklaşık konum olarak konur.',
+        coordColor: na && na.lat ? (na.coordAcc ? ui.acc : 'var(--color-uyari)') : ui.mut,
         photos: na ? Array.from({ length: na.photos }, () => ({})) : [],
         photoCount: na ? `${na.photos} fotoğraf` : '0 fotoğraf',
         code: na ? `KS-${TYPES[na.type].pre}-YENİ` : '',
@@ -10332,22 +10336,42 @@ class Component extends DCLogic {
       onNaYear: e => this.setState({ newAsset: { ...this.state.newAsset, year: e.target.value } }),
       onNaNote: e => this.setState({ newAsset: { ...this.state.newAsset, note: e.target.value } }),
       grabLocation: () => {
-        const na = this.state.newAsset;
-        const d = m && m.DISTRICTS.find(x => x.name === na.district);
-        const elle = d ? this.ekKoyKoord(d.id, na.village) : null;
-        const yer = !elle && na.village && this._yer
-          ? this._yer.find(r => nkey(r[0]) === nkey(na.village))
-          : null;
-        let lat, lon;
-        if (elle) { lat = elle.lat; lon = elle.lon; }
-        else if (yer) { lat = yer[1] + (Math.random() - .5) * .004; lon = yer[2] + (Math.random() - .5) * .004; }
-        else {
-          lat = (d ? d.lat : STD_LOC.lat) + (Math.random() - .5) * .03;
-          lon = (d ? d.lon : STD_LOC.lon) + (Math.random() - .5) * .04;
+        // Köy/ilçe merkezi yalnızca GPS hiç alınamazsa kullanılan, dürüstçe
+        // "yaklaşık" işaretlenen bir yedek — rastgele sapma eklenmez, çünkü
+        // rastgelelik daha sonra düzeltilemez ve konumu daha "gerçek" gösterip
+        // yanıltır.
+        const yaklasikMerkez = () => {
+          const na = this.state.newAsset;
+          const d = m && m.DISTRICTS.find(x => x.name === na.district);
+          const elle = d ? this.ekKoyKoord(d.id, na.village) : null;
+          if (elle) return { lat: elle.lat, lon: elle.lon };
+          const yer = na.village && this._yer ? this._yer.find(r => nkey(r[0]) === nkey(na.village)) : null;
+          if (yer) return { lat: yer[1], lon: yer[2] };
+          return { lat: d ? d.lat : STD_LOC.lat, lon: d ? d.lon : STD_LOC.lon };
+        };
+        if (!navigator.geolocation) {
+          const { lat, lon } = yaklasikMerkez();
+          this.setState({ newAsset: { ...this.state.newAsset, lat, lon, coordAcc: null } });
+          this.toMap({ ks: 'go', lat, lon, label: 'Yeni tesis konumu · yaklaşık (cihazda GPS yok)' });
+          return this.say('Bu cihazda GPS yok — köy/ilçe merkezi yaklaşık konum olarak kondu, sahada gerçek GPS ile düzeltin.', true);
         }
-        this.setState({ newAsset: { ...this.state.newAsset, lat, lon } });
-        this.toMap({ ks: 'go', lat, lon, label: 'Yeni tesis konumu · cihaz GPS' });
-        this.say('Konum alındı · ±4 m — haritada işaretlendi.');
+        this.say('Konum aranıyor…');
+        navigator.geolocation.getCurrentPosition(
+          p => {
+            const lat = p.coords.latitude, lon = p.coords.longitude, acc = Math.round(p.coords.accuracy);
+            this.setState({ newAsset: { ...this.state.newAsset, lat, lon, coordAcc: acc } });
+            this.toMap({ ks: 'go', lat, lon, label: 'Yeni tesis konumu · cihaz GPS ±' + acc + ' m' });
+            this.say('Konum alındı · cihaz GPS ±' + acc + ' m — haritada işaretlendi.');
+          },
+          err => {
+            const { lat, lon } = yaklasikMerkez();
+            this.setState({ newAsset: { ...this.state.newAsset, lat, lon, coordAcc: null } });
+            this.toMap({ ks: 'go', lat, lon, label: 'Yeni tesis konumu · yaklaşık (GPS alınamadı)' });
+            this.say('Konum alınamadı (' + (err.code === 1 ? 'izin verilmedi' : 'zaman aşımı ya da hata')
+              + ') — köy/ilçe merkezi yaklaşık kondu, sahada gerçek GPS ile düzeltin.', true);
+          },
+          { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+        );
       },
       addNaPhoto: () => this.setState({ newAsset: { ...this.state.newAsset, photos: this.state.newAsset.photos + 1 } }),
       saveNewAsset: () => {
@@ -10358,7 +10382,7 @@ class Component extends DCLogic {
         const d = m.DISTRICTS.find(x => x.name === n.district);
         const asset = {
           id: 'na' + Date.now(), type: n.type, village: n.village, district: n.district,
-          lat: n.lat, lon: n.lon, coordApprox: false,
+          lat: n.lat, lon: n.lon, coordApprox: !n.coordAcc,
           code: this.siradakiKod(n.type),
           status: n.status === 'pasif' ? 'pasif' : 'aktif', sync: s.offline ? 'pending' : 'synced', photos: n.photos,
           year: parseInt(n.year, 10) || 2026,
@@ -10408,9 +10432,13 @@ class Component extends DCLogic {
         this.say(s.offline ? 'Yeni tesis cihaza kaydedildi — bağlantı gelince kendiliğinden yüklenir.' : 'Yeni tesis kaydı eşitlendi. Detay alanlarını şimdi doldurabilirsiniz.');
       },
       goToMyLocation: () => {
+        // Harita cihaz GPS'ini ister (harita.html → konumBul); gerçek sonuç
+        // {ks:'konum'} mesajıyla asenkron gelir ve gerçek doğrulukla bildirilir
+        // (bkz. componentDidMount'taki mesaj dinleyicisi). Burada sabit bir
+        // "±4 m" iddiası göstermek yanlıştı — sonuç gelene kadar bekletilir.
         this.toMap({ ks: 'go' });
         this.setState({ tab: 'harita' });
-        this.say('Standart saha konumuna gidildi — Kırşehir merkez, ±4 m.');
+        this.say('Konumunuz aranıyor…');
       },
       routeToSel: () => {
         if (!sel) return;

@@ -325,7 +325,7 @@ function konumBul(sessiz) {
       post({ ks: 'konum', lat: p.coords.latitude, lon: p.coords.longitude, acc: Math.round(p.coords.accuracy) });
     },
     err => { goToMe(STD); if (!sessiz) post({ ks: 'konumYok', kod: err.code }); },
-    { enableHighAccuracy: true, timeout: 9000, maximumAge: 10000 }
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
   );
 }
 document.getElementById('t-go').onclick = () => konumBul();

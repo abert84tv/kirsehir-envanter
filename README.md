@@ -35,6 +35,7 @@ budur.**
 | `hat.html` | Hat güzergâhı (boru) çizim aracı |
 | `harita-ortak.css`, `harita-ortak.js` | Üç harita dosyasının (harita/profil/hat) paylaştığı koyu tema karo kısması ve uzun-basış nokta ekleme mantığı — burada tek yerden değişir |
 | `envanter.js`, `koyler.js`, `kuyular.js`, `kirsehir-data.js` | Gömülü gerçek veri: 264 kuyu noktası, 1043 yerleşim, 260 köy-ilçe ataması, nüfus |
+| `isu-katmanlar.js` | ISU kurumundan alınan referans nokta katmanları (kaynak, memba, depo) — harita.html'de seçmeli katman |
 | `supabase-baglanti.js` | Sunucu katmanı: oturum, `kurum_veri`, `denetim`, numara sayacı, sunucu saati |
 | `SQL-*.sql` | Veritabanı kurulum betikleri (sırası aşağıda) |
 | `_ds/` | Bağlı tasarım sistemi (Modernist) — token ve bileşen kaynağı |

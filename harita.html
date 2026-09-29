@@ -129,6 +129,10 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   <button id="t-hat" class="on">Hat güzergâhları</button>
   <button id="t-coord">Koordinat işaretini temizle</button>
   <button id="t-fit">İl sınırına sığdır</button>
+  <div class="sep"></div>
+  <button id="t-isu-kaynak">ISU Kaynak noktaları</button>
+  <button id="t-isu-memba">ISU Memba noktaları</button>
+  <button id="t-isu-depo">ISU Depo noktaları</button>
   </div>
 </div>
 <div class="panel" id="route">
@@ -150,6 +154,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 <script type="module">
 import * as DATA from './kirsehir-data.js';
 import { buildAssets, TYPES, STATUS_LABEL } from './envanter.js';
+import { ISU_KAYNAK, ISU_MEMBA, ISU_ISUDEPO } from './isu-katmanlar.js';
 
 let { assets, faults } = buildAssets(DATA);
 let openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
@@ -227,6 +232,43 @@ document.getElementById('t-hat').onclick = () => {
   // Tercih uygulamada saklanır: kullanıcı kapattıysa bir dahaki girişte kapalı gelir
   try { parent.postMessage({ ks: 'hatKatman', on: hatAcik }, '*'); } catch (e) { /* çerçeve yok */ }
 };
+
+// ── ISU referans katmanları: ad/açıklama taşımayan salt koordinat noktaları
+// (kaynak, memba, depo). Seçmeli — varsayılan kapalı, kim isterse açar.
+// Tıklama mevcut "nokta bırak" akışını kullanır: kart açılır, "yeni kayıt"
+// seçilirse o katmandaki nokta üzerinde çalışılmış olur.
+const ISU_KATMAN = {
+  kaynak: { veri: ISU_KAYNAK, renk: '#0891b2', ad: 'ISU Kaynak noktası', btn: 't-isu-kaynak', key: 'ks-isu-kaynak' },
+  memba: { veri: ISU_MEMBA, renk: '#15803d', ad: 'ISU Memba noktası', btn: 't-isu-memba', key: 'ks-isu-memba' },
+  depo: { veri: ISU_ISUDEPO, renk: '#b45309', ad: 'ISU Depo noktası', btn: 't-isu-depo', key: 'ks-isu-depo' }
+};
+for (const isu of Object.values(ISU_KATMAN)) {
+  isu.layer = L.layerGroup();
+  isu.acik = false;
+  try { isu.acik = localStorage.getItem(isu.key) === '1'; } catch (e) { /* depolama kapalı */ }
+  for (const [lat, lon] of isu.veri) {
+    L.circleMarker([lat, lon], { radius: 5, color: '#fff', weight: 1.5, fillColor: isu.renk, fillOpacity: .9 })
+      .bindTooltip(isu.ad, { direction: 'top' })
+      .on('click', () => {
+        if (pickName) {
+          const n = pickName;
+          setPick(null);
+          parent.postMessage({ ks: 'picked', name: n, lat: +lat.toFixed(6), lon: +lon.toFixed(6) }, '*');
+          return;
+        }
+        noktaBirak({ lat, lng: lon });
+      })
+      .addTo(isu.layer);
+  }
+  const b = document.getElementById(isu.btn);
+  const uygula = () => {
+    b.classList.toggle('on', isu.acik);
+    if (isu.acik) isu.layer.addTo(map); else isu.layer.remove();
+    try { localStorage.setItem(isu.key, isu.acik ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
+  };
+  uygula();
+  b.onclick = () => { isu.acik = !isu.acik; uygula(); };
+}
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);

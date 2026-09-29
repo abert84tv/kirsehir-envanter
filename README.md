@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.14-89**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.29-90**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -114,26 +114,29 @@ hâlidir, `create or replace` ile güvenli).
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.14-89 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.29-90 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
 
-`DURUM.md` sonundaki bekleyen maddeler:
+2026.09.14 listesindeki dört madde (uzun basış, çift tık, koyu tema, yetki
+sadeleştirme) 2026.09.15 oturumunda bitti — ayrıntı `DURUM.md`'de. Bekleyenler:
 
-1. Telefonda haritaya **uzun basışla nokta bırakma** — masaüstündeki çift
-   tıklama karşılığı; kart "yeni kayıt / köy konumu olarak işaretle / bu noktaya
-   git" seçeneklerini vermeli.
-2. **Hat kesitinde çift tıkla** nokta ekleme.
-3. **Koyu tema ince ayarı** — gerçek siyah üzerine kurulu palette kontrast ve
-   harita karo kısma değerleri gözden geçirilecek.
-4. **Yetki tablosunun sadeleştirilmesi** — on yetki kalemi altı sayfa/süzgeç
-   yapısına göre yeniden yazılacak (`SUZGEC_TANIM` haritası hazır).
-5. Kurulum bekleyenleri: Cloudflare R2 fotoğraf deposu, SMS/WhatsApp operatör
+1. **SVG grafik konsol gürültüsü** (2026.09.29) — Ayarlar dışı, kayıt kartı/
+   detay panelindeki deneme grafiği, ilk boyamada bir kerelik şablon metniyle
+   çiziliyor; DOM'da kalıcı etkisi yok ama tarayıcı konsoluna ~40 zararsız
+   hata basıyor. Kaynağı `support.js` (tasarım sisteminin üretilmiş çalışma
+   zamanı) — kökü bulmak gerçek bir hata ayıklayıcı/breakpoint erişimi ister,
+   şu an elde yok. Ayrıntı: DURUM.md, 2026.09.29 kaydı.
+2. Kurulum bekleyenleri: Cloudflare R2 fotoğraf deposu, SMS/WhatsApp operatör
    aboneliği ve `supabase-islev-mesaj-gonder.ts` Edge Function yayını, HGM
    ortofoto lisansı, gerçek personel hesapları.
-6. Veri eksikleri: depo / AG panosu / GES gerçek kayıtları, malzeme birim
-   fiyatları, hayvan varlığı ekstresi, 264 kuyunun teknik alanları.
+3. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
+   kayıtla başladı), malzeme birim fiyatları, hayvan varlığı ekstresi, 264
+   kuyunun teknik alanları.
+4. ALİSAY'dan gelen ek özellikler — kullanıcı açıkça erteledi, ayrı bir
+   aşamada ele alınacak (çok kanallı talep alma, SLA/eskalasyon, muhtar
+   portalı, çoklu araç takip entegrasyonu, opsiyonel SCADA/IoT).
 
 Yapı kararı: menü ve sayfa yapısı (Envanter, İşler, Kaynaklar, Özet, Hat
 Kesiti, Ayarlar) **sabittir**. Kapanan modüller sayfa değil süzgeç düşürür.

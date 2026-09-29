@@ -582,3 +582,79 @@ düzenini bozmuyor.
 
 ### Yükleme
 GitHub: `yayin` klasörünün tamamı. Veritabanı değişikliği yok.
+
+
+---
+
+## ISU referans katmanları ve doğrulama turu — sürüm 2026.09.29-90
+
+Kullanıcı üç ISU KML dosyası verdi (`ISU_KAYNAK.kml`, `ISU_MEMBA.kml`,
+`ISU_ISUDEPO.kml`, ISU kurumundan) — programa dahil edilmesi ve daha önceki
+verilerle karşılaştırılması istendi.
+
+**Veri karşılaştırması.** Placemark'larda ad/açıklama yok, yalnız koordinat
+var. 30 m eşikte karşılaştırıldı:
+- ISU_KAYNAK: 204 noktanın 137'si (%67) mevcut 264 kuyu noktasıyla aynı yerde.
+- ISU_MEMBA: 352'nin 48'i (%14) kuyularla ortak.
+- ISU_ISUDEPO: 264 kuyuyla yalnız %3 ortak, ama canlı veritabanındaki 24
+  gerçek depo kaydıyla %87 (21/24) ortak — gerçek depo kayıtlarımız büyük
+  olasılıkla bu ISU listesinden girilmiş. Bu karşılaştırmayı ilk turda "hiç
+  gerçek depo kaydı yok" diye yanlış yaptım (Supabase `list_tables`'ın eski/
+  önbellek satır sayısına güvenip doğrudan sorgulamamıştım) — kullanıcı
+  düzeltti, doğrudan `SELECT COUNT(*)` ile teyit edip düzelttim.
+
+**Harita katmanı — üç yeni referans türü, kendi düğmesi yok.** ISU_KAYNAK,
+ISU_MEMBA, ISU_ISUDEPO verisi `isu-katmanlar.js`'e gömüldü (her katmanın
+kendi içindeki 30 m altı tekrarlar elendi). harita.html'de var olan
+Kuyu/Depo/AG/GES süzgeç şeridine bağlandı — Depo süzgeci artık ISU_ISUDEPO'yu
+da kapsıyor, Kaynak ve Memba için şeride iki yeni buton eklendi (varsayılan
+kapalı). Noktalar gerçek kayıtlarla aynı `.ks-pin` harf-kutusu simgesiyle
+çiziliyor (kesikli çerçeve + kendi rengiyle "referans, henüz kayıt değil"
+ayrımı yapılıyor). **Statik değil:** `isuYenile()` her asset güncellemesinde
+yeniden hesaplanıyor — Kaynak/Memba kuyularla, Depo gerçek depo kayıtlarıyla
+30 m'den yakın noktaları eler, yalnız kaydı girilmemiş adaylar kalır (Depo
+307 → 286, Kaynak 197 → 66, Memba 344 → 296). Tıklama var olan "nokta bırak"
+akışını kullanıyor — istenirse doğrudan yeni kayda çevrilebiliyor.
+
+**Bulunan ve düzeltilen iki gerçek hata:**
+- `componentDidUpdate` (index.html), `prevState`'i kendi "boş olabilir"
+  kontrolünden ÖNCE okuyordu — bazı çağrılarda çöküyordu. Eski sürümde de
+  vardı (bugünkü işten kaynaklanmadığı doğrulandı), kontrol yukarı taşındı.
+- Girişten sonra "X tesis · Y arıza yüklendi" bildirimi her açılışta
+  çıkıyordu — gerçek bir otomatik giriş olmadığı için (her açılışta elle
+  "Giriş yap" gerekiyor) bu bildirim sürekli tekrarlıyordu; sessize alındı,
+  hata/çevrimdışı bildirimleri etkilenmedi.
+
+**Anlık çoklu kullanıcı senkronizasyonu.** Silme dahil hiçbir değişiklik
+başka bir kullanıcının ekranında kendiliğinden görünmüyordu (yalnız o
+kullanıcının kendi işlemi tetiklerse yenileniyordu). 30 saniyede bir sessiz
+arka plan yenilemesi eklendi (İşlem/yeni kayıt seçim ekranı açıkken atlanır).
+
+**Silme özelliği — zaten vardı, doğrulandı.** Kayıt kartının en altındaki
+sabit eylem şeridinde "Sil" düğmesi (Yönetici/Müdür), Çöp Kutusu'na taşıma,
+30 gün geri getirme penceresi, Denetim İzi'ne otomatik yazma — hepsi
+mevcuttu, yeniden yapılmadı.
+
+**Test turu.** Giriş ekranı, harita (yeni süzgeçlerle), Hat Kesiti, hat
+çizim sayfası — hem masaüstü hem gerçek 375px iframe genişliğinde (telefonun
+gördüğü gerçek boyut) test edildi, hepsi temiz. Giriş sonrası ekranlar
+(Envanter listesi, Ambar, Ayarlar, silme akışı) test edilemedi — canlı
+veritabanına test hesabı açma girişimi Claude Code'un kendi güvenlik
+sınıflandırıcısı tarafından engellendi; kullanıcı bu kısmı kendisi test edip
+bulduklarını bildirecek.
+
+**Çözülemeyen, bilinçli bırakılan bir konu.** Kayıt kartı/detay panelindeki
+deneme grafiği ilk boyamada bir kerelik `{{ b.x }}` gibi çözülmemiş şablon
+metniyle çiziliyor — DOM'da kalıcı iz bırakmıyor (yükleme bitince doğru
+haliyle değişiyor), yalnız tarayıcı konsoluna ~40 zararsız hata basıyor.
+Kök nedeni tasarım sisteminin üretilmiş çalışma zamanında (`support.js`);
+iki farklı düzeltme denendi (şablon yer tutucu sayısı, konsol süzgeci),
+ikisi de test edilip etkisiz bulundu ve geri alındı — bu hatalar tarayıcının
+kendi SVG doğrulayıcısından geliyor, JavaScript'ten susturulamıyor. Gerçek
+zamanlı hata ayıklayıcı erişimi olmadan kökü güvenle bulunamadı; ekranda
+görünmediği ve kalıcı etkisi olmadığı için olduğu gibi bırakıldı.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı değişikliği
+yok (yalnız okuma/karşılaştırma yapıldı, `SQL-ambar-hurda.sql` zaten
+uygulanmıştı).

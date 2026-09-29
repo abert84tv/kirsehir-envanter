@@ -1,11 +1,17 @@
 // ISU_KAYNAK.kml, ISU_MEMBA.kml, ISU_ISUDEPO.kml — ISU kurumundan alınan referans nokta katmanları (2026.09.29)
-// Placemark'larda ad/açıklama yok, yalnız koordinat var; harita.html'de seçmeli
-// referans katmanı olarak gösterilir, tıklanınca mevcut "yeni kayıt" kartını açar.
+// Placemark'larda ad/açıklama yok, yalnız koordinat var; harita.html'de referans
+// katmanı olarak gösterilir, tıklanınca mevcut "yeni kayıt" kartını açar.
+// Kendi düğmeleri yok — index.html'deki var olan tür süzgecine (Kuyu/Depo/AG/GES)
+// bağlıdır: Depo süzgeci ISU_ISUDEPO'yu da kapsar (gerçek depo kaydı henüz yok,
+// bu noktalar onun yerini dolduruyor), Kaynak ve Memba kendi süzgeç satırında.
 // Her katmanın kendi içindeki 30 m altındaki tekrarları elendi.
-// Çakışma notu (2026.09.29, KUYULAR ile 30 m eşikte karşılaştırma):
+// Çakışma notu (2026.09.29, KUYULAR — 264 kuyu — ile 30 m eşikte karşılaştırma):
 //   ISU_KAYNAK: 204 noktanın 137'si (%67) mevcut 264 kuyu noktasıyla aynı yerde —
 //   büyük olasılıkla aynı fiziksel kaynak. ISU_MEMBA: 352'nin 48'i (%14) ortak.
 //   ISU_ISUDEPO: 307'nin yalnız 8'i (%3) ortak — büyük çoğunluğu yeni veri.
+//   Not: canlı veritabanında henüz hiç "depo" tipi gerçek kayıt yok (tesis
+//   tablosu 0 satır), o yüzden ISU_ISUDEPO'yu karşılaştıracak ayrı bir depo
+//   listesi yok — tek karşılaştırma noktası yine 264 kuyu.
 
 export const ISU_KAYNAK = [
   [39.117918, 34.101737],

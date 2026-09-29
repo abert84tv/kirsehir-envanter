@@ -6121,7 +6121,9 @@ class Component extends DCLogic {
     panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false,
     hatKatman: (() => { try { return localStorage.getItem('ks-hat-katman') !== '0'; } catch (e) { return true; } })(),
     filter: (() => {
-      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true };
+      // kaynak/memba: ISU'dan gelen referans katmanları, varsayılan kapalı —
+      // depo süzgeci ise ISU depo referans noktalarını da kapsar (bkz. harita.html)
+      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: false, memba: false };
       try {
         const p = JSON.parse(localStorage.getItem('ks-suzgec') || 'null');
         if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;
@@ -11761,7 +11763,7 @@ class Component extends DCLogic {
         try { localStorage.setItem('ks-tema', 'light'); } catch (e) { /* yok */ }
         this.setState({
           mapBase: 'street', theme: 'light', navMode: false,
-          filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true },
+          filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: false, memba: false },
           bildirimKanal: 'SMS', bildirimEsik: 'Acil ve yüksek',
           conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' },
           tab: 'harita', detailTab: 'bilgi'
@@ -11922,7 +11924,7 @@ class Component extends DCLogic {
       otherScreens: navVisible.filter(g => !TELEFON_SIRA.includes(g.id)).map(navItem),
 
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
-      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['pasif', 'Pasifler']].map(([id, label]) => {
+      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
         const turler = ['kuyu', 'depo', 'ag', 'ges'];
         const on = id === 'all' ? turler.every(t => s.filter[t])
           : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];

@@ -43,6 +43,17 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     background:#eceaea;transform:rotate(-45deg)}
   body.dark .ks-pin.pasif{background:#8f9bb0;border-color:#000000;color:#000000}
   body.dark .ks-pin.pasif:after{background:#000000}
+  /* ISU referans noktaları (kaynak/memba/depo) — henüz kayıt değil, kesikli
+     çerçeveyle ayrılır; her katmanın kendi rengi var, tıklama gerçek kayda
+     çevirir (bkz. noktaBirak). */
+  .ks-pin.ref{background:#fff;border-style:dashed;border-width:2px}
+  .ks-pin.ref-kaynak{color:#0891b2;border-color:#0891b2}
+  .ks-pin.ref-memba{color:#15803d;border-color:#15803d}
+  .ks-pin.ref-depo{color:#b45309;border-color:#b45309}
+  body.dark .ks-pin.ref{background:#1c1c1e}
+  body.dark .ks-pin.ref-kaynak{color:#22d3ee;border-color:#22d3ee}
+  body.dark .ks-pin.ref-memba{color:#4ade80;border-color:#4ade80}
+  body.dark .ks-pin.ref-depo{color:#fbbf24;border-color:#fbbf24}
   .ks-pin{position:relative;transition:background-color .12s ease,border-color .12s ease,color .12s ease}
   .leaflet-marker-icon:hover .ks-pin{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-me{width:18px;height:18px;border:3px solid #fff;background:#1b6ef3;border-radius:50%;
@@ -129,10 +140,6 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   <button id="t-hat" class="on">Hat güzergâhları</button>
   <button id="t-coord">Koordinat işaretini temizle</button>
   <button id="t-fit">İl sınırına sığdır</button>
-  <div class="sep"></div>
-  <button id="t-isu-kaynak">ISU Kaynak noktaları</button>
-  <button id="t-isu-memba">ISU Memba noktaları</button>
-  <button id="t-isu-depo">ISU Depo noktaları</button>
   </div>
 </div>
 <div class="panel" id="route">
@@ -234,20 +241,25 @@ document.getElementById('t-hat').onclick = () => {
 };
 
 // ── ISU referans katmanları: ad/açıklama taşımayan salt koordinat noktaları
-// (kaynak, memba, depo). Seçmeli — varsayılan kapalı, kim isterse açar.
+// (kaynak, memba, depo — 2026.09.29). Kendi düğmeleri yok; envanterin var
+// olan tür süzgecine (Kuyu/Depo/AG/GES) bağlıdır — Depo süzgeci ISU_ISUDEPO'yu
+// da kapsar (gerçek depo kaydı henüz yok, bu noktalar onun yerini dolduruyor),
+// Kaynak ve Memba kendi süzgeç anahtarlarını kullanır (filtreUygula'ya bakın).
 // Tıklama mevcut "nokta bırak" akışını kullanır: kart açılır, "yeni kayıt"
 // seçilirse o katmandaki nokta üzerinde çalışılmış olur.
 const ISU_KATMAN = {
-  kaynak: { veri: ISU_KAYNAK, renk: '#0891b2', ad: 'ISU Kaynak noktası', btn: 't-isu-kaynak', key: 'ks-isu-kaynak' },
-  memba: { veri: ISU_MEMBA, renk: '#15803d', ad: 'ISU Memba noktası', btn: 't-isu-memba', key: 'ks-isu-memba' },
-  depo: { veri: ISU_ISUDEPO, renk: '#b45309', ad: 'ISU Depo noktası', btn: 't-isu-depo', key: 'ks-isu-depo' }
+  kaynak: { veri: ISU_KAYNAK, suzgec: 'kaynak', sinif: 'ref-kaynak', glyph: 'Kn', ad: 'ISU Kaynak noktası (referans)' },
+  memba: { veri: ISU_MEMBA, suzgec: 'memba', sinif: 'ref-memba', glyph: 'Mb', ad: 'ISU Memba noktası (referans)' },
+  depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)' }
 };
 for (const isu of Object.values(ISU_KATMAN)) {
   isu.layer = L.layerGroup();
-  isu.acik = false;
-  try { isu.acik = localStorage.getItem(isu.key) === '1'; } catch (e) { /* depolama kapalı */ }
   for (const [lat, lon] of isu.veri) {
-    L.circleMarker([lat, lon], { radius: 5, color: '#fff', weight: 1.5, fillColor: isu.renk, fillOpacity: .9 })
+    const icon = L.divIcon({
+      className: '', iconSize: [24, 24], iconAnchor: [12, 12],
+      html: `<div class="ks-pin ref ${isu.sinif}">${isu.glyph}</div>`
+    });
+    L.marker([lat, lon], { icon })
       .bindTooltip(isu.ad, { direction: 'top' })
       .on('click', () => {
         if (pickName) {
@@ -260,14 +272,6 @@ for (const isu of Object.values(ISU_KATMAN)) {
       })
       .addTo(isu.layer);
   }
-  const b = document.getElementById(isu.btn);
-  const uygula = () => {
-    b.classList.toggle('on', isu.acik);
-    if (isu.acik) isu.layer.addTo(map); else isu.layer.remove();
-    try { localStorage.setItem(isu.key, isu.acik ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
-  };
-  uygula();
-  b.onclick = () => { isu.acik = !isu.acik; uygula(); };
 }
 
 // ── envanter kayıtları
@@ -314,6 +318,12 @@ function filtreUygula(f) {
     const has = assetLayer.hasLayer(markers[i]);
     if (on && !has) assetLayer.addLayer(markers[i]);
     if (!on && has) assetLayer.removeLayer(markers[i]);
+  }
+  for (const isu of Object.values(ISU_KATMAN)) {
+    const on = !!f[isu.suzgec];
+    const has = map.hasLayer(isu.layer);
+    if (on && !has) isu.layer.addTo(map);
+    if (!on && has) isu.layer.remove();
   }
   applyLabels();
 }

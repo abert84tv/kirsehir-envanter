@@ -241,21 +241,22 @@ document.getElementById('t-hat').onclick = () => {
 };
 
 // ── ISU referans katmanları: ad/açıklama taşımayan salt koordinat noktaları
-// (kaynak, memba, depo — 2026.09.29). Kendi düğmeleri yok; envanterin var
-// olan tür süzgecine (Kuyu/Depo/AG/GES) bağlıdır — Depo süzgeci ISU_ISUDEPO'yu
-// da kapsar, Kaynak ve Memba kendi süzgeç anahtarlarını kullanır (bkz. filtreUygula).
+// (kaynak, memba, depo — 2026.09.29). Kendi düğmeleri yok; envanterin var olan
+// tür süzgecine (Kuyu/Depo/AG/GES) bağlıdır (bkz. filtreUygula): Depo süzgeci
+// ISU_ISUDEPO'yu, Kaynak/Memba süzgeçleri de ISU_KAYNAK/ISU_MEMBA'yı kapsar.
 // Tıklama mevcut "nokta bırak" akışını kullanır: kart açılır, "yeni kayıt"
 // seçilirse o katmandaki nokta üzerinde çalışılmış olur.
-// ISU_ISUDEPO'nun 24 gerçek depo kaydıyla %87 çakıştığı görüldü (2026.09.29) —
-// bu yüzden depo referans noktaları statik değil: her asset güncellemesinde
-// (isuDepoYenile) gerçek depo kayıtlarına 30 m'den yakın olanlar elenir, yalnız
-// henüz kaydı girilmemiş adaylar kalır. Kaynak/memba'nın karşılığı bir tür
-// olmadığı için onlar statik kalır.
+// Üçü de aynı kuralla kodlanır — statik değil, "eslesir" alanında verilen
+// gerçek tür(ler)e 30 m'den yakın ISU noktası elenir, yalnız aynı fiziksel
+// yerin ikinci bir işareti olmaz; kalan nokta kendi adı ve rengiyle durur.
+// ISU_KAYNAK kuyularla %67, ISU_MEMBA kuyularla %14, ISU_ISUDEPO gerçek depo
+// kayıtlarıyla %87 çakışıyordu (2026.09.29 ölçümü) — bu yüzden üçü de canlı
+// asset listesine göre isuYenile() ile her güncellemede yeniden hesaplanır.
 const ISU_ESIK_M = 30;
 const ISU_KATMAN = {
-  kaynak: { veri: ISU_KAYNAK, suzgec: 'kaynak', sinif: 'ref-kaynak', glyph: 'Kn', ad: 'ISU Kaynak noktası (referans)' },
-  memba: { veri: ISU_MEMBA, suzgec: 'memba', sinif: 'ref-memba', glyph: 'Mb', ad: 'ISU Memba noktası (referans)' },
-  depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)' }
+  kaynak: { veri: ISU_KAYNAK, suzgec: 'kaynak', sinif: 'ref-kaynak', glyph: 'Kn', ad: 'ISU Kaynak noktası (referans)', eslesir: ['kuyu'] },
+  memba: { veri: ISU_MEMBA, suzgec: 'memba', sinif: 'ref-memba', glyph: 'Mb', ad: 'ISU Memba noktası (referans)', eslesir: ['kuyu'] },
+  depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)', eslesir: ['depo'] }
 };
 function isuNoktaEkle(isu, lat, lon) {
   const icon = L.divIcon({
@@ -275,21 +276,18 @@ function isuNoktaEkle(isu, lat, lon) {
     })
     .addTo(isu.layer);
 }
-for (const isu of [ISU_KATMAN.kaynak, ISU_KATMAN.memba]) {
-  isu.layer = L.layerGroup();
-  for (const [lat, lon] of isu.veri) isuNoktaEkle(isu, lat, lon);
-}
-ISU_KATMAN.depo.layer = L.layerGroup();
-function isuDepoYenile() {
-  const isu = ISU_KATMAN.depo;
-  isu.layer.clearLayers();
-  const gercekDepo = assets.filter(a => a.type === 'depo').map(a => [a.lat, a.lon]);
-  for (const [lat, lon] of isu.veri) {
-    const eslesenVar = gercekDepo.some(([glat, glon]) => hatMesafe([lat, lon], [glat, glon]) < ISU_ESIK_M);
-    if (!eslesenVar) isuNoktaEkle(isu, lat, lon);
+for (const isu of Object.values(ISU_KATMAN)) isu.layer = L.layerGroup();
+function isuYenile() {
+  for (const isu of Object.values(ISU_KATMAN)) {
+    isu.layer.clearLayers();
+    const gercekler = assets.filter(a => isu.eslesir.includes(a.type)).map(a => [a.lat, a.lon]);
+    for (const [lat, lon] of isu.veri) {
+      const eslesenVar = gercekler.some(([glat, glon]) => hatMesafe([lat, lon], [glat, glon]) < ISU_ESIK_M);
+      if (!eslesenVar) isuNoktaEkle(isu, lat, lon);
+    }
   }
 }
-isuDepoYenile();
+isuYenile();
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);
@@ -324,7 +322,7 @@ for (const a of assets) {
   });
   markers.push(mk);
 }
-isuDepoYenile();
+isuYenile();
 applyLabels();
 if (sonFilter) filtreUygula(sonFilter);
 }

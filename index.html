@@ -6381,6 +6381,12 @@ class Component extends DCLogic {
     this._agGeldi = () => this.kuyrukGonder(true);
     window.addEventListener('online', this._agGeldi);
     this._kuyrukSaat = setInterval(() => this.kuyrukGonder(true), 60000);
+    // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
+    // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
+    // veriYenile ekranı altından değiştirmesin diye o an atlanır.
+    this._veriSaat = setInterval(() => {
+      if (this.state.session && !this.state.scenario) this.veriYenile(true);
+    }, 30000);
     // Esc: açık form ve panelleri kapatır
     this._esc = e => {
       if (e.key !== 'Escape') return;
@@ -6509,6 +6515,7 @@ class Component extends DCLogic {
     removeEventListener('message', this._msg);
     if (this._agGeldi) window.removeEventListener('online', this._agGeldi);
     clearInterval(this._kuyrukSaat);
+    clearInterval(this._veriSaat);
     clearTimeout(this._t); clearTimeout(this._f); clearTimeout(this._d);
   }
   mapWin() {

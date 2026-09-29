@@ -2,20 +2,22 @@
 // Placemark'larda ad/açıklama yok, yalnız koordinat var; harita.html'de referans
 // katmanı olarak gösterilir, tıklanınca mevcut "yeni kayıt" kartını açar.
 // Kendi düğmeleri yok — index.html'deki var olan tür süzgecine (Kuyu/Depo/AG/GES)
-// bağlıdır: Kaynak ve Memba kendi süzgeç satırında, Depo süzgeci ISU_ISUDEPO'yu
-// da kapsar ama ISU_ISUDEPO burada TÜM 307 noktayı değil, canlı depo kayıtlarına
-// 30 m'den yakın olmayan adayları içerir — gerçek eleme harita.html'deki
-// isuDepoYenile()'de her asset güncellemesinde yeniden hesaplanır (statik
-// olarak burada baked edilmedi, çünkü gerçek depo kayıt sayısı artacak).
+// bağlıdır: Kaynak/Memba süzgeçleri ISU_KAYNAK/ISU_MEMBA'yı, Depo süzgeci
+// ISU_ISUDEPO'yu kapsar. Buradaki dizilerin HİÇBİRİ ham/tam liste olarak
+// gösterilmez: üçü de harita.html'deki isuYenile()'de canlı asset listesine
+// göre elenir — Kaynak/Memba kuyularla, Depo gerçek depo kayıtlarıyla 30 m
+// eşiğinde karşılaştırılır, eşleşen nokta (aynı fiziksel yer) gösterilmez,
+// yalnız kaydı henüz girilmemiş adaylar kalır. Statik baked edilmedi çünkü
+// gerçek kayıt sayısı zamanla artacak — dedup her asset güncellemesinde
+// yeniden hesaplanır.
 // Her katmanın kendi içindeki 30 m altındaki tekrarları elendi.
 // Çakışma notu (2026.09.29, 30 m eşikte karşılaştırma):
-//   ISU_KAYNAK vs 264 kuyu: 204 noktanın 137'si (%67) aynı yerde — büyük
-//   olasılıkla aynı fiziksel kaynak. ISU_MEMBA vs 264 kuyu: 352'nin 48'i (%14).
-//   ISU_ISUDEPO vs 264 kuyu: 307'nin yalnız 8'i (%3).
-//   ISU_ISUDEPO vs canlı veritabanındaki 24 gerçek depo kaydı: 21'i (%87)
-//   ISU_ISUDEPO'da bir noktayla eşleşiyor — gerçek depolarımız büyük
-//   olasılıkla bu ISU listesinden girilmiş. Kalan 286 nokta henüz kaydı
-//   girilmemiş aday depo konumu.
+//   ISU_KAYNAK vs 264 kuyu: %67 aynı yerde (197 temiz noktanın 131'i elendi,
+//   66'sı kaldı) — büyük olasılıkla aynı fiziksel kaynak.
+//   ISU_MEMBA vs 264 kuyu: %14 aynı yerde (344'ün 48'i elendi, 296'sı kaldı).
+//   ISU_ISUDEPO vs canlı veritabanındaki 24 gerçek depo kaydı: %87 aynı yerde
+//   (307'nin 21'i elendi, 286'sı kaldı) — gerçek depolarımız büyük olasılıkla
+//   bu ISU listesinden girilmiş.
 
 export const ISU_KAYNAK = [
   [39.117918, 34.101737],

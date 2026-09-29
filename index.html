@@ -8409,7 +8409,12 @@ class Component extends DCLogic {
       this.prefUygula();
       if (sunucudan) {
         this.usersYenile();
-        this.veriYenile();
+        // "Giriş yap" her açılışta elle basılıyor (gerçek otomatik giriş yok —
+        // bkz. componentDidMount, yalnız alanları dolduruyor). Bu yüzden
+        // "X tesis yüklendi" bildirimi her açılışta tekrarlıyordu; sessiz
+        // yapıldı. Bağlantı/yükleme hatası olursa doLogin zaten loginErr ile
+        // ekranda gösteriyor, burada ayrıca uyarmaya gerek yok.
+        this.veriYenile(true);
         // Önce bekleyen değişiklikler gider, sonra sunucudan okunur:
         // tersi olursa cihazdaki yeni kayıt eski sunucu verisiyle ezilir.
         this.modulGirisEsitle();

@@ -2730,7 +2730,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;align-items:center;gap:8px;margin-top:11px;flex-wrap:wrap">
 <button onClick="{{ faultForm.haritada }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 12px">Haritada göster</button>
 <button onClick="{{ faultForm.yolTarifi }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 12px">Konuma git</button>
-<button onClick="{{ faultForm.isEmri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 12px">İş emri</button>
+<button onClick="{{ faultForm.isEmri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 12px">{{ faultForm.isEmriLabel }}</button>
 <span style="font:400 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.mut }}">{{ faultForm.koord }}</span>
 </div>
 </sc-if>
@@ -5180,7 +5180,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ faultForm.hasAsset }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:7px">
 <button onClick="{{ faultForm.yolTarifi }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:14px 8px">Konuma git</button>
-<button onClick="{{ faultForm.isEmri }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:14px 8px">İş emri</button>
+<button onClick="{{ faultForm.isEmri }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:14px 8px">{{ faultForm.isEmriLabel }}</button>
 </div>
 </sc-if>
 <label style="display:flex;flex-direction:column;gap:5px">
@@ -6040,7 +6040,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.29-90';
+const SURUM = '2026.09.30-91';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6117,7 +6117,7 @@ class Component extends DCLogic {
     envQ: '', envSort: { k: 'code', dir: 1 }, envF: {},
     arzQ: '', arzSort: { k: 'no', dir: 1 }, arzF: {},
     zoom: 11, center: null, fly: null,
-    assets: [], faults: [], selected: null, detailTab: 'bilgi',
+    assets: [], faults: [], isEmirleri: [], selected: null, detailTab: 'bilgi',
     panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false,
     hatKatman: (() => { try { return localStorage.getItem('ks-hat-katman') !== '0'; } catch (e) { return true; } })(),
     filter: (() => {
@@ -7661,6 +7661,55 @@ class Component extends DCLogic {
       + (eksik.length ? ' · zimmette olmayanlar: ' + eksik.join(', ') + '. Ambardan zimmet girip yeniden deneyin.' : '.'),
       { stok, zimmet: zim, hareket: hareket.slice(0, 400) });
   }
+  // İş emri: "İş emri" düğmesi artık gerçek, numaralı bir kayıt açıyor
+  // (madde 3-5/9/12-14, 2026.09.30 — daha önce yalnızca bir toast gösteriyordu).
+  isEmriTuru(tesisType, altSistem) {
+    if (altSistem === 'kolektor') return 'kanal';
+    if (tesisType === 'ag' || tesisType === 'ges') return 'elektrik';
+    return 'su';
+  }
+  async isEmriYenile() {
+    const M = this._sb;
+    if (!M || !M.tokenOku()) return;
+    const r = await M.isEmriListesi();
+    if (r.ok) this.setState({ isEmirleri: (r.data || []).map(M.isEmriSuret) });
+  }
+  isEmriBul(arizaDbId) {
+    return (this.state.isEmirleri || []).find(x => x.arizaDbId === arizaDbId);
+  }
+  async isEmriAc(f, a) {
+    const M = this._sb;
+    if (!M || !M.tokenOku()) return this.say('İş emri için ortak veritabanına bağlı olmanız gerekir.', true);
+    if (!f.dbId) return this.say('Önce arıza kaydını kaydedin — iş emri ondan sonra açılabilir.', true);
+    if (this.isEmriBul(f.dbId)) return this.say('Bu arıza için zaten bir iş emri var.', true);
+    this.say('İş emri hazırlanıyor…');
+    const noR = await M.numaraAl('isemri');
+    if (!noR.ok) return this.say(noR.err || 'İş emri numarası alınamadı.', true);
+    const r = await M.isEmriKaydet({
+      no: noR.data, arizaDbId: f.dbId, tesisDbId: a.dbId,
+      type: this.isEmriTuru(a.type, null), priority: f.priority || 'Normal',
+      desc: f.note || '', crew: f.crew && f.crew !== ATANMADI ? f.crew : null,
+      araclar: [], status: f.crew && f.crew !== ATANMADI ? 'atandi' : 'acik',
+      planlananMalzeme: (f.malzeme || []).map(mz => ({ malzeme: mz.ad, adet: mz.adet || 1, birim: mz.birim }))
+    });
+    if (!r.ok) return this.say(r.err || 'İş emri oluşturulamadı.', true);
+    await this.isEmriYenile();
+    this.denetimYaz('is_emri', 'İş emri oluşturuldu', noR.data + ' · ' + (f.crew || 'ekip atanmadı'), a.code);
+    this.duyur(`${noR.data} iş emri oluşturuldu` +
+      (f.crew && f.crew !== ATANMADI ? ` — ${f.crew} ekibine atandı.` : ' — ekip ataması bekliyor.'), 7000, 'iyi');
+  }
+  async isEmriKapatVer(baglIsEmri, f) {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || !baglIsEmri) return;
+    const saat = parseFloat(f.hours) || null;
+    const r = await M.isEmriKapat(baglIsEmri.dbId,
+      (f.malzeme || []).map(mz => ({ malzeme: mz.ad, adet: mz.adet || 1, birim: mz.birim })),
+      saat, f.note || null);
+    if (r.ok) {
+      await this.isEmriYenile();
+      this.denetimYaz('is_emri', 'İş emri kapatıldı', baglIsEmri.no, f.no || '');
+    }
+  }
   // Ambar hareketini sunucuya gönderir. Cihaz yeni bakiyeyi hesaplamaz;
   // yapılacak hareketi gönderir, toplama çıkarma sunucuda satır kilidi
   // altında yapılır. İki kişi aynı anda düşerse ikisi de tutar.
@@ -8750,6 +8799,7 @@ class Component extends DCLogic {
       if (!this._gonderiyor) setTimeout(() => this.kuyrukGonder(true), 500);
     }
     this.copYenile().then(() => this.kodDenetle());
+    this.isEmriYenile();
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider
     this.toMap({ ks: 'assets', assets: birlesik, faults });
     if (!sessiz) {
@@ -12072,10 +12122,23 @@ class Component extends DCLogic {
           if (!ffAsset) return;
           if (this.yolTarifiVer(ffAsset)) this.say(`${ffAsset.code} için yol tarifi çizildi. Telefon navigasyonuna aktarmak için haritadaki “Telefonda aç” düğmesini kullanın.`);
         },
+        isEmriLabel: (() => {
+          if (!ff || !ff.dbId) return 'İş emri';
+          const ie = this.isEmriBul(ff.dbId);
+          if (!ie) return 'İş emri oluştur';
+          return 'İş Emri: ' + ie.no + (ie.status === 'kapatildi' ? ' ✓' : ' · ' + (ie.crew || 'ekip bekliyor'));
+        })(),
         isEmri: () => {
           if (!ffAsset || !ff) return;
-          this.say(`İş emri hazırlanıyor — ${ff.no || 'yeni kayıt'} · ${ffAsset.code}: arıza türü, öncelik, atanan ekip, konum ve koordinat, kullanılan malzeme listesi ve maliyet dökümü tek sayfada. Yazdırılabilir ya da ekibe gönderilebilir.`, true);
-          setTimeout(() => this.setState({ toast: null }), 6000);
+          if (!CAN.assign.includes(s.session.role)) return this.say('İş emri oluşturma yetkiniz yok.');
+          const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
+          if (ie) {
+            return this.duyur(`${ie.no} · ${ie.status} · ${ie.crew || 'ekip bekliyor'}` +
+              (ie.kullanilanMalzeme && ie.kullanilanMalzeme.length
+                ? ' · malzeme: ' + ie.kullanilanMalzeme.map(m => m.malzeme + ' ×' + m.adet).join(', ')
+                : ''), 7000);
+          }
+          this.isEmriAc(ff, ffAsset);
         },
         assetId: ff ? ff.assetId : '', type: ff ? ff.type : '',
         typeOptions: FAULT_TYPES[ffAsset ? ffAsset.type : 'kuyu'],
@@ -12362,6 +12425,14 @@ class Component extends DCLogic {
           const dus = window.confirm('Kullanılan malzeme ' + f.crew + ' zimmetinden düşülsün mü?\n\n'
             + (f.malzeme || []).map(mz => '• ' + mz.ad + ' × ' + (mz.adet || 1) + ' ' + mz.birim).join('\n'));
           if (dus) setTimeout(() => this.arizaStokDus({ ...f, no: arizaNo }), 0);
+        }
+        // Arızaya bağlı açık bir iş emri varsa arıza kapanınca o da kapanır —
+        // kullanılan malzeme + toplam saat + not tesis geçmişine ayrıntılı yazılır.
+        if (f.status === 'cozuldu' && f.dbId) {
+          const baglIsEmri = this.isEmriBul(f.dbId);
+          if (baglIsEmri && baglIsEmri.status !== 'kapatildi') {
+            setTimeout(() => this.isEmriKapatVer(baglIsEmri, { ...f, no: arizaNo }), 300);
+          }
         }
         if (!f.id && f.talepId) {
           const tl = [...(this.state.talepler || [])];

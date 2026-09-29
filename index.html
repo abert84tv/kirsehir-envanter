@@ -6462,7 +6462,10 @@ class Component extends DCLogic {
     if (this._olcKat) requestAnimationFrame(this._olcKat);
     // Ayarlar'dan çıkıldığında bölüm seçimi sıfırlanır ki bir dahaki
     // girişte kullanıcı yine listeyi görsün
-    if (prev.tab === 'ayarlar' && this.state.tab !== 'ayarlar' && this.state.ayarBolum)
+    // runtime bazı çağrılarda prevState vermiyor (bkz. aşağıdaki not) — burada
+    // erken kullanıldığı için ayrıca korunması gerekiyor, aşağıdaki genel
+    // "if (!prev) return" bu satırdan sonra geliyor.
+    if (prev && prev.tab === 'ayarlar' && this.state.tab !== 'ayarlar' && this.state.ayarBolum)
       this.setState({ ayarBolum: null });
     // runtime prevState vermeyebilir — kendi anlık görüntümüzle karşılaştırırız
     const s = this.state;

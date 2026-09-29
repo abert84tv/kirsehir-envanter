@@ -243,36 +243,53 @@ document.getElementById('t-hat').onclick = () => {
 // ── ISU referans katmanları: ad/açıklama taşımayan salt koordinat noktaları
 // (kaynak, memba, depo — 2026.09.29). Kendi düğmeleri yok; envanterin var
 // olan tür süzgecine (Kuyu/Depo/AG/GES) bağlıdır — Depo süzgeci ISU_ISUDEPO'yu
-// da kapsar (gerçek depo kaydı henüz yok, bu noktalar onun yerini dolduruyor),
-// Kaynak ve Memba kendi süzgeç anahtarlarını kullanır (filtreUygula'ya bakın).
+// da kapsar, Kaynak ve Memba kendi süzgeç anahtarlarını kullanır (bkz. filtreUygula).
 // Tıklama mevcut "nokta bırak" akışını kullanır: kart açılır, "yeni kayıt"
 // seçilirse o katmandaki nokta üzerinde çalışılmış olur.
+// ISU_ISUDEPO'nun 24 gerçek depo kaydıyla %87 çakıştığı görüldü (2026.09.29) —
+// bu yüzden depo referans noktaları statik değil: her asset güncellemesinde
+// (isuDepoYenile) gerçek depo kayıtlarına 30 m'den yakın olanlar elenir, yalnız
+// henüz kaydı girilmemiş adaylar kalır. Kaynak/memba'nın karşılığı bir tür
+// olmadığı için onlar statik kalır.
+const ISU_ESIK_M = 30;
 const ISU_KATMAN = {
   kaynak: { veri: ISU_KAYNAK, suzgec: 'kaynak', sinif: 'ref-kaynak', glyph: 'Kn', ad: 'ISU Kaynak noktası (referans)' },
   memba: { veri: ISU_MEMBA, suzgec: 'memba', sinif: 'ref-memba', glyph: 'Mb', ad: 'ISU Memba noktası (referans)' },
   depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)' }
 };
-for (const isu of Object.values(ISU_KATMAN)) {
+function isuNoktaEkle(isu, lat, lon) {
+  const icon = L.divIcon({
+    className: '', iconSize: [24, 24], iconAnchor: [12, 12],
+    html: `<div class="ks-pin ref ${isu.sinif}">${isu.glyph}</div>`
+  });
+  L.marker([lat, lon], { icon })
+    .bindTooltip(isu.ad, { direction: 'top' })
+    .on('click', () => {
+      if (pickName) {
+        const n = pickName;
+        setPick(null);
+        parent.postMessage({ ks: 'picked', name: n, lat: +lat.toFixed(6), lon: +lon.toFixed(6) }, '*');
+        return;
+      }
+      noktaBirak({ lat, lng: lon });
+    })
+    .addTo(isu.layer);
+}
+for (const isu of [ISU_KATMAN.kaynak, ISU_KATMAN.memba]) {
   isu.layer = L.layerGroup();
+  for (const [lat, lon] of isu.veri) isuNoktaEkle(isu, lat, lon);
+}
+ISU_KATMAN.depo.layer = L.layerGroup();
+function isuDepoYenile() {
+  const isu = ISU_KATMAN.depo;
+  isu.layer.clearLayers();
+  const gercekDepo = assets.filter(a => a.type === 'depo').map(a => [a.lat, a.lon]);
   for (const [lat, lon] of isu.veri) {
-    const icon = L.divIcon({
-      className: '', iconSize: [24, 24], iconAnchor: [12, 12],
-      html: `<div class="ks-pin ref ${isu.sinif}">${isu.glyph}</div>`
-    });
-    L.marker([lat, lon], { icon })
-      .bindTooltip(isu.ad, { direction: 'top' })
-      .on('click', () => {
-        if (pickName) {
-          const n = pickName;
-          setPick(null);
-          parent.postMessage({ ks: 'picked', name: n, lat: +lat.toFixed(6), lon: +lon.toFixed(6) }, '*');
-          return;
-        }
-        noktaBirak({ lat, lng: lon });
-      })
-      .addTo(isu.layer);
+    const eslesenVar = gercekDepo.some(([glat, glon]) => hatMesafe([lat, lon], [glat, glon]) < ISU_ESIK_M);
+    if (!eslesenVar) isuNoktaEkle(isu, lat, lon);
   }
 }
+isuDepoYenile();
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);
@@ -307,6 +324,7 @@ for (const a of assets) {
   });
   markers.push(mk);
 }
+isuDepoYenile();
 applyLabels();
 if (sonFilter) filtreUygula(sonFilter);
 }

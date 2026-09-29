@@ -2,16 +2,20 @@
 // Placemark'larda ad/açıklama yok, yalnız koordinat var; harita.html'de referans
 // katmanı olarak gösterilir, tıklanınca mevcut "yeni kayıt" kartını açar.
 // Kendi düğmeleri yok — index.html'deki var olan tür süzgecine (Kuyu/Depo/AG/GES)
-// bağlıdır: Depo süzgeci ISU_ISUDEPO'yu da kapsar (gerçek depo kaydı henüz yok,
-// bu noktalar onun yerini dolduruyor), Kaynak ve Memba kendi süzgeç satırında.
+// bağlıdır: Kaynak ve Memba kendi süzgeç satırında, Depo süzgeci ISU_ISUDEPO'yu
+// da kapsar ama ISU_ISUDEPO burada TÜM 307 noktayı değil, canlı depo kayıtlarına
+// 30 m'den yakın olmayan adayları içerir — gerçek eleme harita.html'deki
+// isuDepoYenile()'de her asset güncellemesinde yeniden hesaplanır (statik
+// olarak burada baked edilmedi, çünkü gerçek depo kayıt sayısı artacak).
 // Her katmanın kendi içindeki 30 m altındaki tekrarları elendi.
-// Çakışma notu (2026.09.29, KUYULAR — 264 kuyu — ile 30 m eşikte karşılaştırma):
-//   ISU_KAYNAK: 204 noktanın 137'si (%67) mevcut 264 kuyu noktasıyla aynı yerde —
-//   büyük olasılıkla aynı fiziksel kaynak. ISU_MEMBA: 352'nin 48'i (%14) ortak.
-//   ISU_ISUDEPO: 307'nin yalnız 8'i (%3) ortak — büyük çoğunluğu yeni veri.
-//   Not: canlı veritabanında henüz hiç "depo" tipi gerçek kayıt yok (tesis
-//   tablosu 0 satır), o yüzden ISU_ISUDEPO'yu karşılaştıracak ayrı bir depo
-//   listesi yok — tek karşılaştırma noktası yine 264 kuyu.
+// Çakışma notu (2026.09.29, 30 m eşikte karşılaştırma):
+//   ISU_KAYNAK vs 264 kuyu: 204 noktanın 137'si (%67) aynı yerde — büyük
+//   olasılıkla aynı fiziksel kaynak. ISU_MEMBA vs 264 kuyu: 352'nin 48'i (%14).
+//   ISU_ISUDEPO vs 264 kuyu: 307'nin yalnız 8'i (%3).
+//   ISU_ISUDEPO vs canlı veritabanındaki 24 gerçek depo kaydı: 21'i (%87)
+//   ISU_ISUDEPO'da bir noktayla eşleşiyor — gerçek depolarımız büyük
+//   olasılıkla bu ISU listesinden girilmiş. Kalan 286 nokta henüz kaydı
+//   girilmemiş aday depo konumu.
 
 export const ISU_KAYNAK = [
   [39.117918, 34.101737],

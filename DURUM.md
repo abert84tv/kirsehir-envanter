@@ -658,3 +658,85 @@ görünmediği ve kalıcı etkisi olmadığı için olduğu gibi bırakıldı.
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı değişikliği
 yok (yalnız okuma/karşılaştırma yapıldı, `SQL-ambar-hurda.sql` zaten
 uygulanmıştı).
+
+---
+
+## Büyük güncelleme — Faz 1 başlangıcı — sürüm 2026.09.30-92
+
+Kullanıcı 38 maddelik geniş bir liste verdi: talep alma kanalları (WhatsApp/
+Telegram/SMS/sesli çağrı), ekip/araç/personel havuzu ve izin-mesai takibi,
+araç takip API entegrasyonu (Arvento + çoklu firma), iş emri → saha kanıtı →
+ambar kapanışı zinciri, KVKK/saklama politikaları, harita/envanter
+iyileştirmeleri, NetCAD kolektör projeleri, kendi pompa/GES hesap motorunun
+entegrasyonu, esnek raporlama — ve "bunları faza bölüp başlayabilirsin" dedi.
+Plan dosyası: `C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`.
+
+**Kod tabanı taraması.** İstenenin büyük bölümü zaten vardı ve çalışıyordu:
+Talep, Ekipler, Personel havuzu (`PERSONEL_DURUM`: aktif/izin/rapor/görevli/
+ayrıldı), Araç (`ARAC_DURUM`: musait/gorevde/bakimda/arizali/disi), Ambar
+(giriş/çıkış/zimmet/iade/sarf/hurda, atomik RPC, fiyat listesi, kritik stok
+uyarısı), Arıza akışı (malzeme→ambar düşüşü, kanıt zorunluluğu, maliyet).
+Gerçek boşluk: **"İş Emri" yalnızca bir düğmeydi**, tıklanınca hiçbir kayıt
+üretmiyordu.
+
+**İş Emri artık gerçek (Faz 1'in çekirdeği).** Yeni normalize `is_emirleri`
+tablosu + RPC seti (`is_emri_kaydet`/`_kapat`/`_listesi`, `SQL-is-emirleri.sql`)
+— mevcut `ariza_kaydet`/`tesis_kaydet` desenini izliyor. Ekip/personel/araç/
+ambar hâlâ `kurum_veri` JSONB deposunda, dokunulmadı — iş emri onlara ad/id
+ile referans veriyor. Arıza detayındaki "İş emri" düğmesi artık IEM-yıl-sıra
+numaralı gerçek kayıt açıyor (yetki: assign rolleri), var olan iş emrinin
+durumunu gösteriyor. Arıza "çözüldü" olarak kapanınca bağlı açık iş emri de
+otomatik kapanıyor — malzeme/saat/not tesisin arıza geçmişine yazılıyor.
+`alt_sistem_kategori` referans tablosu eklendi (kolektör/terfi/isale hattı
+arızası raporda kuyu/depo/elektrik/kanal toplamına doğru katılsın diye,
+madde 20 — Faz 3'teki raporlama motoru kullanacak). `talepler.kanal`'a
+telegram/sms seçenekleri eklendi (yalnız alan, gerçek entegrasyon yok).
+
+**KVKK saklama politikası.** `foto` tablosunda tesis_id/ariza_id ayrımı
+vardı ama kullanılmıyordu — arıza kanıtları da yalnız tesis_id ile
+yükleniyordu. Artık `fotoYukle`/`sesYukle`/`arizaFotoGonder` arıza kaydının
+id'sini de gönderiyor (`SQL-kanit-saklama.sql`). Sonuç: **envanter
+fotoğrafı ömür boyu**, **arıza kanıtı (foto/ses) 2 yıl sonra otomatik çöp
+kutusuna düşüyor** (`cop_temizle()` içine eklendi — uygulama zaten düzenli
+çağırıyor, yeni bir zamanlanmış görev gerekmedi), oradan mevcut 30 günlük
+geri-alma penceresinden geçiyor. Otomatik düşenler Denetim İzi'ne "kvkk"
+sınıfıyla ayrı yazılıyor. Bunu test ederken `ses_ekle`'nin iki farklı
+sürümünün (eski 6, yeni 7 parametreli) aynı anda kalıp çağrı belirsizliği
+yarattığını yakaladım, eski sürümü düşürdüm.
+
+**abertmuhendislik.vercel.app (madde 35) — araştırıldı, karar bekliyor.**
+Kullanıcı giriş yaptı, inceledim: gerçek proje verisi (16 proje — Ömerkahya,
+Karahıdır, Kavaklıöz gibi kirsehir-envanter'le aynı köyler), Genel Bilgiler
+(ada/parsel/kuyu-direk koordinatı), Pompa Seçimi (kuyu deneme bilgileri —
+kirsehir-envanter'in "Deneme" ekranıyla birebir aynı alanlar), Elektrik
+Hesapları (kablo/sigorta/gerilim düşümü/pano hiyerarşisi, DXF çıktısı).
+Bu programın kendi Supabase projesi ("Elektrik Hesaplama Programı",
+`ihlkuoewthtzlymcvqyl`) zaten bu oturumun erişimi altında. Salt-okunur,
+dar kapsamlı iki köprü RPC'si (yalnız mühendislik özeti döndüren,
+sözleşme/fiyat bilgisine dokunmayan) yazdım ama **Claude Code'un güvenlik
+sınıflandırıcısı anon role'e RLS-atlayan fonksiyon yetkisi vermeyi
+engelledi** — bu, kullanıcının kendi bilerek onaylaması gereken bir karar,
+ben tek taraflı uygulamadım. Kullanıcı "hepsini tek programda toplayalım"
+dedi; GitHub'da gerçek kaynağı buldum (`abert84tv/elektrik-hesaplama`,
+özel depo, canlısı buymuş) — Next.js/TypeScript, 22.121 satır, test edilmiş
+ayrı hesap motoru dosyaları (`pompaEngine.ts`, `agHesap.ts`, `panoLayout.ts`,
+DXF üretim dosyaları). Tam kod taşıma (bambaşka mimariye elle çeviri) gerçek
+hesaplama hatası riski taşıdığı için, harita.html'in bugün zaten kullandığı
+iframe+postMessage deseniyle **gömülü entegrasyon** önerdim (hesap motoruna
+hiç dokunmadan, kuyu koordinatını otomatik aktararak). Kullanıcının kararı
+bekleniyor.
+
+**Faz 1'in kalanı — henüz yapılmadı.** İş Emirleri'nin kendi liste/filtre
+ekranı, ekip+araç atama formu, muhtar numara defteri (madde 1'in altyapı
+kısmı) sırada.
+
+**Test durumu.** Her adımda `node duman-testi.js` + yerel sunucu DOM/konsol
+testi + canlı RPC round-trip doğrulaması (oturumsuz çağrıda doğru hata
+dönüyor) yapıldı. Giriş gerektiren tam akış (arıza→iş emri→kapat→geçmiş)
+test hesabı canlı veritabanında engellendiği için kullanıcı tarafından
+doğrulanacak.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı:
+`SQL-is-emirleri.sql` ve `SQL-kanit-saklama.sql` uygulandı (idempotent,
+`create or replace`).

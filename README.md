@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.29-90**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.30-92**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -117,29 +117,38 @@ yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.29-90 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.30-92 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
 
 2026.09.14 listesindeki dört madde (uzun basış, çift tık, koyu tema, yetki
-sadeleştirme) 2026.09.15 oturumunda bitti — ayrıntı `DURUM.md`'de. Bekleyenler:
+sadeleştirme) 2026.09.15 oturumunda bitti. 2026.09.30'da "büyük güncelleme"
+(38 maddelik istek listesi) başladı, fazlara bölündü — plan dosyası:
+`C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`, ayrıntılı
+kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
 
-1. **SVG grafik konsol gürültüsü** (2026.09.29) — Ayarlar dışı, kayıt kartı/
-   detay panelindeki deneme grafiği, ilk boyamada bir kerelik şablon metniyle
+1. **Faz 1'in kalanı** — İş Emirleri'nin kendi liste/filtre ekranı, ekip+araç
+   atama formu, muhtar numara defteri (İş Emri'nin çekirdeği zaten canlıda,
+   2026.09.30-92).
+2. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
+   bekleniyor.** Gerçek kaynağı bulundu (`abert84tv/elektrik-hesaplama`,
+   Next.js/TypeScript, 22.121 satır, test edilmiş hesap motorları). Tam kod
+   taşıma yerine harita.html deseniyle (iframe+postMessage) gömülü
+   entegrasyon önerildi — hesap motoruna dokunmadan. Karar bekleniyor.
+3. **SVG grafik konsol gürültüsü** (2026.09.29) — kayıt kartı/detay
+   panelindeki deneme grafiği ilk boyamada bir kerelik şablon metniyle
    çiziliyor; DOM'da kalıcı etkisi yok ama tarayıcı konsoluna ~40 zararsız
-   hata basıyor. Kaynağı `support.js` (tasarım sisteminin üretilmiş çalışma
-   zamanı) — kökü bulmak gerçek bir hata ayıklayıcı/breakpoint erişimi ister,
-   şu an elde yok. Ayrıntı: DURUM.md, 2026.09.29 kaydı.
-2. Kurulum bekleyenleri: Cloudflare R2 fotoğraf deposu, SMS/WhatsApp operatör
-   aboneliği ve `supabase-islev-mesaj-gonder.ts` Edge Function yayını, HGM
-   ortofoto lisansı, gerçek personel hesapları.
-3. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
+   hata basıyor. Kaynağı `support.js` — kökü bulmak gerçek bir hata
+   ayıklayıcı/breakpoint erişimi ister, şu an elde yok.
+4. Kurulum bekleyenleri: Cloudflare R2 fotoğraf deposu, SMS/WhatsApp/Telegram
+   operatör aboneliği (Arvento API anahtarı dahil), HGM ortofoto lisansı,
+   gerçek personel hesapları.
+5. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
    kayıtla başladı), malzeme birim fiyatları, hayvan varlığı ekstresi, 264
    kuyunun teknik alanları.
-4. ALİSAY'dan gelen ek özellikler — kullanıcı açıkça erteledi, ayrı bir
-   aşamada ele alınacak (çok kanallı talep alma, SLA/eskalasyon, muhtar
-   portalı, çoklu araç takip entegrasyonu, opsiyonel SCADA/IoT).
+6. NetCAD kolektör projeleri (madde 34) — .ncz doğrudan okunamaz, kml/kmz
+   çıktısı istenecek (bu oturumdaki ISU KML altyapısıyla aynı yöntem).
 
 Yapı kararı: menü ve sayfa yapısı (Envanter, İşler, Kaynaklar, Özet, Hat
 Kesiti, Ayarlar) **sabittir**. Kapanan modüller sayfa değil süzgeç düşürür.

@@ -1184,3 +1184,65 @@ dokunulmadığı) güvence altına alındı, kullanıcı giriş yapıp görecek.
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok.
+
+## Gerçek oturum kalıcılığı — sürüm 2026.09.30-101
+
+Kullanıcı "sayfa yenilemede neden programdan atıp giriş ekranına
+geliyor" diye sordu. Kod incelemesinde kesin cevap bulundu: bu bir hata
+değil, bilinçli bir karardı — `componentDidMount` açılışta kayıtlı giriş
+bilgisini yalnızca form alanlarına dolduruyordu, oturumu kendiliğinden
+açmıyordu (kod içinde satırbaşı not: "'Giriş yap' her açılışta elle
+basılıyor — gerçek otomatik giriş yok"). Kullanıcıya bunu anlattım ve
+"kurumsal firmaların üyelikli girişlerindeki gibi mi olsun, yoksa şimdiki
+gibi mi kalsın" diye sordum — cevap: "burada güvenlik olsun ama farklı
+davranmasın, her kurumsal/büyük firmanın üyelikli girişindeki mantık
+gibi çalışsın." Yani: gerçek oturum kalıcılığı istendi.
+
+**Bulgu — altyapı zaten vardı, bağlı değildi.** `supabase-baglanti.js`
+her başarılı girişte (`giris()` fonksiyonu, "Beni hatırla" işaretli olsun
+olmasın) sunucudan gelen bir **oturum anahtarını** (`ks-oturum` anahtarı
+altında, `tokenYaz`) zaten `localStorage`'a yazıyordu — bu şifre değil,
+sunucunun `oturum_ac` RPC'siyle doğrulanabilen ayrı bir jeton. index.html
+içinde bu jetonu kullanıp oturumu gerçekten geri yükleyen bir fonksiyon
+(`anahtarlaGir`) da zaten YAZILMIŞTI — ama hiçbir yerden çağrılmıyordu,
+ölü koddu. Eksik olan tek şey açılışta bunu devreye sokmaktı.
+
+**Ne yapıldı.**
+- `componentDidMount`'a yeni bir IIFE eklendi: `supabase-baglanti.js`
+  yüklenince `anahtarlaGir(M)` çağrılıyor — jeton varsa sunucuda
+  doğrulanıyor, geçerliyse `oturumKur()` ile tam oturum kuruluyor.
+- Yeni state alanı `oturumKontrol` (başlangıçta `true`) — bu kontrol
+  bitene kadar ne giriş ekranı ne program gösterilir, bunun yerine kısa
+  bir yükleniyor ekranı (ortada nefes alır gibi büyüyüp küçülen mavi
+  kare — yeni `@keyframes nefes`) gösterilir. Kontrol bitince: jeton
+  geçerliyse doğrudan programın içi, geçersiz/yoksa normal giriş ekranı.
+- `isLogin` süzgecine `!s.oturumKontrol` şartı eklendi ki kontrol
+  sürerken giriş ekranı bir an görünüp kaybolmasın (flaş etkisi olmasın).
+
+**Test — gerçek canlı veritabanına karşı.** Üç senaryo da tarayıcıda
+gerçekten çalıştırılıp ekran görüntüsüyle doğrulandı (mock değil, gerçek
+Supabase projesine karşı):
+1. Jeton yok (`localStorage` boş) → yükleniyor ekranı anlık geçer,
+   normal giriş ekranı gelir.
+2. Sahte/geçersiz jeton (`localStorage.setItem('ks-oturum', 'sahte...')`)
+   → yükleniyor ekranı görünür (ekran görüntüsüyle yakalandı, hem
+   masaüstü hem 375×812 mobilde), sunucu jetonu reddeder, jeton
+   `localStorage`'dan silinir (doğrulandı: `getItem` sonrasında `null`),
+   normal giriş ekranına düşülür.
+3. Giriş formunun kendisi de gerçek sahte kullanıcı adı/şifreyle
+   denendi: sunucuya gidip "Kullanıcı adı veya şifre hatalı" hatasını
+   doğru gösterdi, "Beni hatırla" kutucuğunun iki durumu da doğru
+   çalıştı.
+Gerçek geçerli bir jetonla (başarılı girişten sonra) tam otomatik girişi
+test edemedim — test hesabı canlı veritabanında oluşturulamıyor (bu
+oturum boyunca hep aynı sınırlama); ama kod yolu (`anahtarlaGir` →
+`oturumAc` RPC → `oturumKur`) daha önceki oturumlarda zaten yazılıp
+kullanılan, bu turda yalnızca çağrı noktası eklenen bir yol — yeni/riskli
+bir mantık değil.
+
+`duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları dengeli
+(374/374, 321/321), konsolda yeni hata tipi çıkmadı.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok (sunucu tarafı `oturum_ac` RPC'si zaten hazırdı).

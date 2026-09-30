@@ -1246,3 +1246,100 @@ bir mantık değil.
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok (sunucu tarafı `oturum_ac` RPC'si zaten hazırdı).
+
+## Ayarlar ekranı yeniden düzenlendi — sürüm 2026.09.30-102
+
+Kullanıcı bir önceki arayüz sadeleştirme turunun yetersiz kaldığını
+söyledi: "ayarlar sayfasına gelince sağ üstünde içindeki menüleri oraya
+da konumlandırmışsın... o kısma değil başka kullanışlı bir kısma
+konumlandır. bu ayarlar menüsünde de bir sürü açıklama var ve bir sürü
+iç içe menü var... bence menüleri düzenlememişsin... bu işe yeni bakan
+bu işin uzmanı olarak düşün ve tekrardan bütün menüleri bölümleri tekrar
+tasarla." Bu haklı bir eleştiriydi — önceki tur yalnız giriş ekranını ve
+üst menü ETİKETLERİNİ değiştirmişti, Ayarlar ekranının kendi İÇERİĞİNE
+hiç dokunmamıştı.
+
+**Yöntem.** Giriş yapılamadığı için (test hesabı hâlâ açılamıyor) Ayarlar
+ekranını bir Explore ajanına tam satır numaralarıyla haritalattım: hangi
+AYAR_LISTE bölümünde kaç ayrı konu birikmiş, "sağ üst" şikâyetinin kod
+kökeni ne, hangi ekranlar gerçekten birbirini tekrarlıyor. Bu rapor
+olmadan kör tahminle değişiklik yapmak riskliydi.
+
+**1) "Sağ üstteki menü" — kök neden bulundu ve düzeltildi.**
+Üst çubuktaki `sayfaBar` hap listesi (masaüstünde sağa yaslı duruyordu),
+Ayarlar'da 5 hap gösteriyordu: Ayarlar · Köy konumları · İçe-dışa aktarım
+· Denetim izi · Çöp kutusu — bunların DÖRDÜ zaten AYAR_LISTE'de ayrıca
+satır olarak duruyordu (ya da `ayar.veri` içinde gömülü bir düğmeydi).
+İki ayrı menü gibi görünmesinin sebebi buydu.
+
+Düzeltme öncesi kritik bir bulgu: `SUZGEC_TANIM.ayarlar`'dan bu girdileri
+silmek güvenlik açığı açardı. `SUZGEC_ESKI` haritası (tabId → {sayfa,
+suzgec}) "aktif" sayfanın yazma yetkisini oradan okuyor; bir girdi
+kaldırılırsa `yetki('denetim')` gibi hiç var olmayan bir izin anahtarına
+düşülüyor ve varsayılan olarak **tam yetki** dönüyordu — yani rolü ne
+olursa olsun herkes Denetim/Çöp'te tam yetkiliymiş gibi davranılırdı. Bu
+yüzden `SUZGEC_TANIM`'a hiç dokunulmadı. Bunun yerine yalnızca `sayfaBar`
+render prop'unun GÖRÜNEN hap listesi Ayarlar sayfasında kendi tek girdisine
+süzüldü (`gorunenSuz`) — izin okuma mantığı tamamen ayrı kaldı.
+
+**2) "Süzgeç haritası" — silindi.** `ayar.yetki` içinde, 2026.09.15'teki
+menü birleşmesinden kalma, hangi eski yetkinin hangi yeni süzgece gittiğini
+gösteren salt teknik bir tablo vardı (kendi yorumunda "bu tablo... yetkinin
+nereye gittiğini gösterir" diyordu — geliştirici/geçiş dönemi aracı, son
+kullanıcı için anlamsız). Hem masaüstü hem mobil kopyası, render prop'u
+(`suzgecHarita`) dahil tamamen kaldırıldı.
+
+**3) "Ortak veritabanı ve eşitleme" — asıl karmaşa kaynağı, dört bölüme
+ayrıldı.** Bu TEK AYAR_LISTE satırı altı ayrı konuyu barındırıyordu:
+sürüm bilgisi, modül senkronizasyonu, köy adı otomatik eşleştirme (vFill),
+arıza bildirimi/SMS kurulumu (kanal+eşik+örnek mesaj+gerçek gönderim URL/
+telefon/kuyruk — üç seviye iç içe, "Köy konumları" kartının İÇİNDE
+duruyordu), yeni tesis kurma kısayolu, dışa aktarım kısayolu. Yeniden
+dağıtım:
+- `veri` (Senkronizasyon ve sürüm) — yalnız sürüm + modül senkron durumu.
+- `bildirim` (Arıza bildirimleri) — YENİ bölüm, tüm SMS/webhook kurulumu
+  buraya taşındı, iç içe geçme kaldırıldı (artık tek seviye).
+- `koyeslestir` (Kayıt araçları) — YENİ bölüm, köy adı eşleştirme (vFill/
+  vClear/vSaved) + yeni tesis kurma bir arada.
+- `yerlesim` ve `aktarim` — artık AYAR_LISTE'de kendi satırları var
+  (`AYAR_TAB`/`AYAR_TAB_YETKI` genişletildi), eskiden yalnız üst çubuk
+  hapından ya da gömülü bir düğmeden erişilebiliyordu.
+Yeni "Saha araçları" grubu bu dört bölümü topluyor. `ayar.veri` içindeki
+eski "Dış veri aktarımı" kısayol kartı kaldırıldı (artık gereksiz —
+doğrudan liste satırı var); "aktarim" satırının kendi `git` davranışı
+özel bırakıldı (eski `goImport` ile birebir aynı: yetkisiz kullanıcıyı
+uyarır, telefonda "bilgisayardan girin" mesajı gösterir) çünkü bu ikisi
+generic `AYAR_TAB` yönlendirmesinden farklı davranıyordu.
+
+**Kenar durumlar yakalandı.**
+- `AYAR_ESKI` haritasında `bildirim: 'veri'` diye eski bir yönlendirme
+  vardı (çok daha eski bir menü düzeninden kalma) — yeni `bildirim` gerçek
+  bir bölüm olduğu için bu satır kaldırılmazsa eski kayıtlı durumu olan
+  biri yanlışlıkla `veri`ye düşerdi. Kaldırıldı.
+- `ayarListe`'nin izin süzgeci öncesinde `yetki('ayarlar')` diye SABİT bir
+  izin kontrolü vardı — `yerlesim`/`aktarim` eklenince bu yanlış olurdu
+  (onların kendi ayrı izni var, SUZGEC_TANIM'ın üçüncü sütununda
+  'yerlesim'/'aktarim' yazıyor, 'ayarlar' değil). Yeni `AYAR_TAB_YETKI`
+  haritası her id için DOĞRU izin anahtarını okuyor — bu, yazılmasa
+  fark edilmeyecek gerçek bir yetki hatasıydı, kontrol ederken yakalandı.
+- Mobil düzenlemede ilk denemede iki `</div>`'den birini yanlışlıkla
+  sildim (kapanmayan etiket) — manuel div-denge kontrolüyle yakalayıp
+  düzelttim. `sc-if`/`sc-for` dengesi otomatik script ile kontrol
+  ediliyor ama düz `<div>` dengesi için böyle bir araç yok, elle
+  saymak gerekti.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (378/378, 315/315). Yerel sunucuda hem masaüstü hem 375×812 mobil
+görünümde konsol JS hatası (TypeError/ReferenceError/"is not a function")
+YOK — bu önemli, çünkü `renderVals()` her render'da TAM render-prop
+nesnesini kurduğu için (aktif sekme ne olursa olsun) yeni kodumdaki bir
+sözdizimi/referans hatası giriş ekranında bile anında patlardı; patlamadı.
+Ayarlar ekranının GÖRSEL hâlini (gerçek düzen, gerçek kırılma noktaları)
+doğrulayamadım — giriş yapılamıyor. Çalışan bir örneğe (`__dcRegistry`,
+`getDC()`) ulaşıp sahte oturumla ekranı zorla render etmeyi denedim,
+çalışan bir örnek bulamadım — bu yol tükendi, koddan-doğrulama ile
+yetinildi. Kullanıcı giriş yapıp gerçek görünümü kontrol edecek.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok, yalnızca istemci tarafı.

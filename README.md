@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.30-101**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.30-102**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -119,7 +119,7 @@ yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.30-101 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.30-102 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
@@ -130,7 +130,27 @@ sadeleştirme) 2026.09.15 oturumunda bitti. 2026.09.30'da "büyük güncelleme"
 `C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`, ayrıntılı
 kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
 
-1. **Gerçek oturum kalıcılığı (2026.09.30-101).** Sayfa yenilendiğinde ya
+1. **Ayarlar ekranı yeniden düzenlendi (2026.09.30-102).** Kullanıcı geri
+   bildirimi: "sağ üstte menüleri tekrar konumlandırmışsın, Ayarlar'da bir
+   sürü açıklama ve iç içe menü var, menüleri gerçekten düzenlememişsin."
+   Kod incelemesiyle üç somut sorun bulundu ve düzeltildi:
+   - Üst çubuktaki hap listesi (sayfaBar), Ayarlar'da sayfa içindeki listeyle
+     aynı yerlere giden 4 tekrar eden bağlantı gösteriyordu ("iki ayrı menü
+     gibi"). Yetki sistemine dokunmadan (SUZGEC_TANIM hâlâ aynı, izin
+     kontrolü bozulmadı — bu noktada dikkatli davranmak gerekti, kör
+     silme gerçek bir izin açığı yaratabilirdi) yalnızca görünen hap
+     listesi Ayarlar'da tek girdiye (kendisi) süzüldü.
+   - "Süzgeç haritası" adlı, 2026.09.15'teki menü birleşmesinden kalma,
+     kullanıcıya hiçbir işe yaramayan teknik bir tablo tamamen silindi.
+   - "Ortak veritabanı ve eşitleme" tek satırda altı ayrı konuyu (sürüm,
+     senkronizasyon, köy adı eşleştirme, arıza bildirimi/SMS kurulumu üç
+     seviye iç içe, yeni tesis kısayolu, dışa aktarım kısayolu) topluyordu
+     — dört ayrı, tek konulu bölüme ayrıldı, yeni "Saha araçları" grubu
+     altında. Ayrıntı ve kapsam kararları DURUM.md'de.
+   Giriş yapılamadığı için Ayarlar ekranının kendisi görsel olarak
+   doğrulanamadı — kod incelemesi ve regresyon taramasıyla güvence altına
+   alındı, kullanıcı giriş yapıp görecek.
+2. **Gerçek oturum kalıcılığı (2026.09.30-101).** Sayfa yenilendiğinde ya
    da program yeniden açıldığında artık her seferinde giriş ekranına
    dönmüyor — kurumsal uygulamalardaki gibi kayıtlı oturum sunucuda
    doğrulanıyor ve geçerliyse doğrudan içeri giriliyor, giriş ekranı hiç
@@ -141,7 +161,7 @@ kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
    yükleniyor ekranından sonra normal giriş ekranına düşülüyor. Çıkış
    yapmak hem sunucudaki hem cihazdaki anahtarı siler — yenilemeyle geri
    gelmez.
-2. **Arayüz sadeleştirme (2026.09.30-100).** Giriş ekranındaki dört
+3. **Arayüz sadeleştirme (2026.09.30-100).** Giriş ekranındaki dört
    açıklama bloğu bire indi (rol/cihaz açıklaması, "beni hatırla"nın
    çift anlatımı kaldırıldı). Hat güzergâhı renkleri artık birbirinden
    açıkça ayırt edilebiliyor (terfi/AG ikisi de maviydi, DC/kolektör
@@ -154,9 +174,9 @@ kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
    belli. Ayrıca birkaç ekranda gerçeğe uymayan "bu cihazda saklanır"
    notu (ambar/araç/denetim/hat artık sunucuya yazıyor, not eskiydi)
    düzeltildi. Kapsam bilerek sınırlı tutuldu — ayrıntı DURUM.md'de.
-3. **Faz 1-2-3-4 tamamlandı — yapılabilecek her şeyiyle.**
+4. **Faz 1-2-3-4 tamamlandı — yapılabilecek her şeyiyle.**
    Yalnızca gerçek dış bilgi/hesap gerektiren iki nokta bilerek açık
-   bırakıldı, ayrıntı madde 6'da:
+   bırakıldı, ayrıntı madde 7'de:
    - Faz 3'ün tamamlanan kısmı: Özet ekranındaki esnek rapora ek olarak
      **İş Emirleri panelinde de** aynı Bugün/Hafta/Ay/Yıl/Özel + ilçe
      süzgeci var artık; ambar ekranındaki sarf/hurda işlemine **isteğe
@@ -166,29 +186,29 @@ kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
      çalışıyor (`hat.html`). Araç takip tarafında **altyapı tamam**
      (`sonKonum`, elle giriş, haritada gösterme) ama **canlı Arvento
      bağlantısı yazılmadı** — API anahtarı/uç nokta bilgisi olmadan
-     tahmine dayalı bir istemci üretmek yanlış olur, bkz. madde 6.
+     tahmine dayalı bir istemci üretmek yanlış olur, bkz. madde 7.
    - Faz 5'in yapılabilecek kısmı da bitti: talep kanalına Telegram ve
      SMS seçeneği eklendi (`TALEP_KANAL`, DB tarafında zaten hazırdı).
      Kalan her şey (WhatsApp/Telegram/SMS bot webhook'ları, gerçek talep
-     alma) sağlayıcı hesabı/anahtarı gerektiriyor — madde 6'da.
-4. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
+     alma) sağlayıcı hesabı/anahtarı gerektiriyor — madde 7'de.
+5. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
    bekleniyor.** Gerçek kaynağı bulundu (`abert84tv/elektrik-hesaplama`,
    Next.js/TypeScript, 22.121 satır, test edilmiş hesap motorları). Tam kod
    taşıma yerine harita.html deseniyle (iframe+postMessage) gömülü
    entegrasyon önerildi — hesap motoruna dokunmadan. Karar bekleniyor.
-5. **SVG grafik konsol gürültüsü** (2026.09.29) — kayıt kartı/detay
+6. **SVG grafik konsol gürültüsü** (2026.09.29) — kayıt kartı/detay
    panelindeki deneme grafiği ilk boyamada bir kerelik şablon metniyle
    çiziliyor; DOM'da kalıcı etkisi yok ama tarayıcı konsoluna ~40 zararsız
    hata basıyor. Kaynağı `support.js` — kökü bulmak gerçek bir hata
    ayıklayıcı/breakpoint erişimi ister, şu an elde yok.
-6. **Gerçek dış hesap/anahtar bekleyen tek kalemler:** Arvento (ya da
+7. **Gerçek dış hesap/anahtar bekleyen tek kalemler:** Arvento (ya da
    başka bir firma) araç-takip API anahtarı (madde 7-9'un canlı tarafı),
    WhatsApp Business / Telegram Bot / SMS gateway hesapları (madde 1,
    Faz 5'in bot tarafı), Cloudflare R2 fotoğraf deposu, HGM ortofoto
    lisansı, gerçek personel hesapları. Bunların hiçbiri kod eksikliği
    değil — hesap/anahtar geldiğinde bağlanacak yerler belli ve hazır
    (bkz. DURUM.md'deki ilgili oturum kayıtları).
-7. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
+8. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
    kayıtla başladı), malzeme birim fiyatları, hayvan varlığı ekstresi, 264
    kuyunun teknik alanları.
 

@@ -104,10 +104,13 @@ Supabase SQL düzenleyicisinde bir kez, bu sırayla:
 3. `SQL-moduller-sunucu.sql`
 4. `SQL-veri-butunlugu.sql`
 5. `SQL-ambar-hurda.sql` — ambar hareketine "hurda" türü ekler (2026.09.15)
+6. `SQL-is-emirleri.sql` — İş Emri tablosu + RPC seti (2026.09.30)
+7. `SQL-kanit-saklama.sql` — arıza kanıtı 2 yıl / envanter fotoğrafı ömür
+   boyu saklama politikası, KVKK (2026.09.30)
 
-Daha önce çalıştırılanlar tekrar edilmez; 4'ü daha önce çalıştırdıysanız
-yalnız 5'i çalıştırmanız yeterli (`ambar_hareket` fonksiyonunun güncellenmiş
-hâlidir, `create or replace` ile güvenli).
+Daha önce çalıştırılanlar tekrar edilmez; hepsi `create or replace` ile
+yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
+çalıştırdıysanız yalnız 5-6-7'yi çalıştırmanız yeterli.
 
 ## 5. Yayınlama
 

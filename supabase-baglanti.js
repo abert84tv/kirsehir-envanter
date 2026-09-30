@@ -268,7 +268,10 @@ export function fotoAdres(anahtar) {
   return `${URL_}/storage/v1/object/public/${BUCKET}/${anahtar}`;
 }
 
-export async function fotoYukle(file, tesisDbId, kod, aciklama) {
+// arizaDbId verilirse fotoğraf "arıza kanıtı" sayılır — saklama süresi
+// (min. 2 yıl) buna göre işler; envanter fotoğrafı (arizaDbId yok) ömür
+// boyu saklanır. bkz. cop_temizle() — KVKK saklama politikası, 2026.09.30.
+export async function fotoYukle(file, tesisDbId, kod, aciklama, arizaDbId) {
   const c = await istemci();
   if (!c) return { ok: false, cevrimdisi: true, err: 'Bağlantı kurulamadı.' };
   let k;
@@ -286,14 +289,14 @@ export async function fotoYukle(file, tesisDbId, kod, aciklama) {
   } catch (e) { return { ok: false, cevrimdisi: true, err: 'Yükleme kesildi.' }; }
   const r = await cagir('foto_ekle', {
     p_token: tokenOku(), p_tesis_id: tesisDbId, p_adres: anahtar,
-    p_boyut: k.boyut, p_aciklama: aciklama || null, p_ariza_id: null
+    p_boyut: k.boyut, p_aciklama: aciklama || null, p_ariza_id: arizaDbId || null
   });
   if (!r.ok) { try { await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
   return { ok: true, data: { id: r.data, anahtar, url: fotoAdres(anahtar), boyut: k.boyut, w: k.w, h: k.h } };
 }
 
 // Sesli notlar fotoğraflarla aynı depoda; ayıran tek şey tur sütunu
-export async function sesYukle(blob, tesisDbId, kod, saniye, aciklama) {
+export async function sesYukle(blob, tesisDbId, kod, saniye, aciklama, arizaDbId) {
   const c = await istemci();
   if (!c) return { ok: false, cevrimdisi: true, err: 'Bağlantı kurulamadı.' };
   const uzanti = /mp4/.test(blob.type) ? 'm4a' : /ogg/.test(blob.type) ? 'ogg' : 'webm';
@@ -309,7 +312,8 @@ export async function sesYukle(blob, tesisDbId, kod, saniye, aciklama) {
   } catch (e) { return { ok: false, cevrimdisi: true, err: 'Yükleme kesildi.' }; }
   const r = await cagir('ses_ekle', {
     p_token: tokenOku(), p_tesis_id: tesisDbId, p_adres: anahtar,
-    p_boyut: blob.size, p_sure: saniye || null, p_aciklama: aciklama || null
+    p_boyut: blob.size, p_sure: saniye || null, p_aciklama: aciklama || null,
+    p_ariza_id: arizaDbId || null
   });
   if (!r.ok) { try { await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
   return { ok: true, data: { id: r.data, anahtar, url: fotoAdres(anahtar) } };

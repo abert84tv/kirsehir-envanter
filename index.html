@@ -6040,7 +6040,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.30-91';
+const SURUM = '2026.09.30-92';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -8576,13 +8576,15 @@ class Component extends DCLogic {
     document.body.appendChild(inp);
     inp.click();
   }
-  async arizaFotoGonder(photos, tesisDbId, kod) {
+  async arizaFotoGonder(photos, tesisDbId, kod, arizaDbId) {
     const M = this._sb;
     const gercek = (photos || []).filter(p => p.file);
     if (!M || !M.tokenOku() || !tesisDbId || !gercek.length) return 0;
     let ok = 0;
     for (const p of gercek) {
-      const r = await M.fotoYukle(p.file, tesisDbId, kod, 'Arıza kaydı');
+      // arizaDbId verilince "arıza kanıtı" sayılır — saklama süresi min 2 yıl,
+      // envanter fotoğrafından ayrı işler (bkz. cop_temizle, KVKK politikası).
+      const r = await M.fotoYukle(p.file, tesisDbId, kod, 'Arıza kaydı', arizaDbId);
       if (r.ok) ok++;
       try { URL.revokeObjectURL(p.url); } catch (e) {}
     }
@@ -12454,7 +12456,7 @@ class Component extends DCLogic {
             let n = 0;
             for (const sn of sesler) {
               const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
-              const r = await this._sb.sesYukle(sn.blob, a.dbId, a.code, sec, 'Arıza sesli notu');
+              const r = await this._sb.sesYukle(sn.blob, a.dbId, a.code, sec, 'Arıza sesli notu', f.dbId);
               if (r.ok) n++;
             }
             if (n) {
@@ -12466,7 +12468,7 @@ class Component extends DCLogic {
         // seçilen fotoğraflar kaydın kendisiyle birlikte veritabanına yüklenir
         const bekleyen = (f.photos || []).filter(p => p.file);
         if (bekleyen.length && a && a.dbId && !s.offline) {
-          this.arizaFotoGonder(bekleyen, a.dbId, a.code).then(n => {
+          this.arizaFotoGonder(bekleyen, a.dbId, a.code, f.dbId).then(n => {
             if (n) {
               this.veriYenile(true);
               this.say(`${n} arıza fotoğrafı ${a.code} kaydına yüklendi — herkes görebilir.`, true);

@@ -1032,3 +1032,62 @@ bloklanmamış kalan iş yok — kullanıcıya soruldu.
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok (hat tablosunda CHECK kısıtı olmadığı için yeni tür
 migration gerektirmedi).
+
+## Faz 1-2-3-4 tamamlandı, Faz 5'in yapılabilecek kısmı bitti — sürüm 2026.09.30-99
+
+Kullanıcı önceki turda "faz 3 ve 4 neden kısmen bitti" diye sordu; cevapta
+iki eksiği ayrı ayrı anlattım (Faz 3: raporlama yalnız Özet'te, ambar
+manuel sarfın tesis bağlantısı yok; Faz 4: Arvento canlı bağlantısı yok).
+Kullanıcı "yarım kalanları tamamla, API gibi bir bilgi eksikse diğer faza
+geç, bütün fazları bitir, mobil ve masaüstünde dene" dedi. Bu turda
+yapılan:
+
+**Faz 3 — kalan iki eksik kapatıldı.**
+1. İş Emirleri paneline (Faz 1'den) Özet'teki ile aynı desenle zaman
+   aralığı (Bugün/Hafta/Ay/Yıl/Tümü/Özel) + ilçe süzgeci eklendi. Liste
+   artık `x.acildi` (sunucudan ISO zaman damgası gelir, `tarihParse`'ın
+   beklediği DD.MM.YYYY'den farklı — doğrudan `new Date(iso)` kullanıldı)
+   ve `x.district`'e göre süzülüyor. `isEmriPanel` state'ini sıfırdan
+   kuran üç yer (`geri`, durum filtre `sec`, liste `ac`) `...ip` ile
+   birleştirmeye çevrildi — yoksa zaman/ilçe seçimi her tıklamada
+   sıfırlanırdı (küçük ama gerçek bir hataydı, yazarken yakalandı).
+2. Ambar ekranında sarf/hurda işlemine **isteğe bağlı** "Tesis" seçici
+   eklendi (`ambarEkran.form.tesisVar`, tüm envanter kayıtları listelenir,
+   varsayılan "Tesis belirtilmedi"). Seçilirse `assetId` hem yerel
+   `hareket` kaydına hem sunucuya giden `islemler`'e gidiyor — bir önceki
+   turda uygulanan `ambar_hareket` migration'ı (assetId alanı) zaten
+   buna hazırdı, yeni migration gerekmedi.
+
+**Faz 4 — NetCAD/KML tarafı zaten tamdı, araç takip altyapısı da tamam
+sayılıyor (canlı Arvento hariç, bilerek).** Bu turda ek değişiklik yok,
+önceki turun çıktısı yeterliydi.
+
+**Faz 5 — yapılabilecek tek parça bitti.** `TALEP_KANAL`'a Telegram ve
+SMS eklendi. DB tarafında `talepler_kanal_check` kısıtı zaten bu ikisini
+kabul ediyordu (önceki bir oturumda hazırlanmış, hiç kullanılmamış) —
+yalnızca istemci sözlüğü eksikti, DB migration gerekmedi. Gerçek
+WhatsApp/Telegram/SMS bot bağlantısı hâlâ gerçek sağlayıcı hesabı
+bekliyor, bu turda yapılmadı (madde 4, README).
+
+**Mobil + masaüstü test.** Yerel sunucuda hem masaüstü hem `resize_window`
+ile 375×812 (mobil) görünümde açıldı, konsol hata deseni ikisinde de
+sabit kaldı (bilinen SVG gürültüsü, yeni hata tipi yok), "[dc-runtime]
+template compile FAILED" hiç çıkmadı, mobil giriş ekranı ekran görüntüsüyle
+görsel olarak da doğrulandı. Yeni eklenen ekranlar (İş Emirleri zaman
+süzgeci, ambar tesis seçici) giriş gerektirdiği için gerçek tıklama testi
+yapılamadı — kod incelemesi + regresyon taramasıyla doğrulandı, kullanıcı
+giriş yapıp deneyecek.
+
+`duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları dengeli
+(373/373, 321/321).
+
+**Sonuç — bütün fazların durumu.** Faz 1, 2, 3, 4 kod tarafında
+tamamlandı. Faz 5'in yapılabilecek kısmı (kanal seçenekleri) bitti,
+geri kalanı (gerçek bot/webhook) dış hesap bekliyor. Geriye yalnız
+dış bilgi/hesap/anahtar bekleyen kalemler kaldı (README madde 4) —
+bunlar kod eksikliği değil, kullanıcıdan bilgi geldiğinde bağlanacak
+noktalar zaten hazır.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok (her iki DB kısıtı da önceden hazırdı).

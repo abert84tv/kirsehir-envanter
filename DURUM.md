@@ -1091,3 +1091,96 @@ noktalar zaten hazır.
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok (her iki DB kısıtı da önceden hazırdı).
+
+## Arayüz sadeleştirme — sürüm 2026.09.30-100
+
+Kullanıcı "faz 1-4'ü bitir" turundan sonra iki yeni istek verdi: (1) hat
+güzergâhı renkleri birbirine çok yakın, ayırt edilsin; (2) programın
+arayüzü sadeleştirilsin — giriş ekranındaki gereksiz bilgi silinsin,
+gereksiz düğme/tekrar eden kısımlar sadeleştirilsin, stok/envanter
+bölümlerinin nerede olduğu net olsun, menüler kullanıcının tarif ettiği
+iki iş zincirine göre yeniden düzenlensin (zincir 1: talep→triyaj→iş
+emri→ekip/araç atama→saha→kanıt→stok; zincir 2: envanter yönetimi→yeni
+kayıt→koordinat→hat güzergâhı), mobil ve masaüstünde test edilip
+hatasız verilsin.
+
+**Kapsam kararı.** Bu, önceki fazlardan farklı bir iş türü — "yeni özellik
+ekle" değil "var olanı yeniden düzenle" — ve gerçek kullanıcılara açık
+canlı bir program. Baştan sona menü mimarisini sıfırdan kurmak yerine
+(bu, 2026.09.15'te zaten bir kez yapılmış ve README'de "menü ve sayfa
+yapısı sabittir" diye belgelenmiş bir karardı) somut, doğrulanabilir,
+düşük riskli değişiklikler seçildi: görsel/metin düzeltmeleri + menü
+GRUPLAMA ve ETİKET değişikliği (sayfa kimlikleri, SUZGEC_TANIM, hangi
+ekranın hangi işlevi yaptığı hiç değişmedi — yalnız hangi başlık altında
+göründüğü ve nasıl adlandırıldığı değişti). Giriş yapılamadığı için
+oturum-sonrası ekranların TAMAMINI görsel olarak tarayıp genel bir
+"gereksiz metin avı" yapmak yerine, koddan doğrulanabilir somut hatalar
+(bkz. aşağı) düzeltildi.
+
+**1) Hat güzergâhı renkleri (`hat.html`).** Terfi (mavi) ile AG enerji
+hattı (da mavi) ayırt edilemiyordu; GES DC (kahverengi-amber) ile
+Kolektör (kahverengi) de öyle. Yedi tür renk çemberine yeniden yayıldı:
+terfi mavi, isale neredeyse-siyah, şebeke gri, **AG turuncu** (eskiden
+mavi), OG mor, DC koyu altın-sarı, kolektör **yeşil** (eskiden
+kahverengi). Tarayıcıda gerçek ekran görüntüsüyle yedi rengin de birbirinden
+net ayrıldığı doğrulandı.
+
+**2) Giriş ekranı.** Dört ayrı metin bloğu bire indi:
+- Silindi: başlığın altındaki "Kullanıcı adı ve şifre ile girilir. Rol
+  seçilmez..." paragrafı (kimse formu görmeden bunu bilmek istemiyor).
+- Silindi: alt çubuktaki cihaz satırı ("Telefondan giriliyor — aynı
+  hesap her cihazda çalışır...") — kullanıcı zaten hangi cihazdan
+  girdiğini biliyor, bilgi vermiyor.
+- Silindi: en alttaki, "Beni hatırla"nın hemen yanındaki notla neredeyse
+  birebir aynı şeyi tekrar eden kapanış paragrafı ("Doğrulama
+  veritabanının içinde yapılır...").
+- Kısaltıldı: "Beni hatırla" notu iki cümleden bire indi.
+Sonuç: kart üç bölümden (başlık, alanlar, "Beni hatırla") oluşan, tek
+satırlık bir alt notla biten sade bir form. Masaüstü ve 375×812 mobilde
+ekran görüntüsüyle doğrulandı.
+
+**3) Menü grupları ve etiketler.** `MENU_GRUP` kullanıcının tarif ettiği
+iki zincire göre yeniden gruplandı:
+- **"Saha işleri"** = İşler + Ambar ve Araç (eski adıyla "Kaynaklar") —
+  talep/triyaj/arıza/iş emri zincirinin doğal uzantısı olan stok/araç
+  buraya taşındı, önceden ayrı bir üst grupta ("Kayıtlar") duruyordu.
+- **"Envanter"** = Envanter + Hat Kesiti — kayıt ve koordinat işleri.
+"Kaynaklar" sayfa adı "Ambar ve Araç" oldu, içindeki "Malzeme" süzgeci
+"Stok" oldu — kullanıcının sorduğu "stok bölümü nerede envanter bölümü
+nerede" sorusunun cevabı artık menüde açıkça yazıyor. Bu değişiklik
+yalnızca `MENU_GRUP` (nav gruplama) ve iki görünen ad string'i — sayfa
+kimlikleri, süzgeç mantığı, yetki miras zinciri (SUZGEC_TANIM) hiç
+dokunulmadı, risk düşük. Not: hat.html (güzergâh çizim aracı) zaten bir
+tesis kaydının içinden açılıyordu (panel, ayrı sayfa değil) — yani
+zincir 2'nin "hat güzergâhı" adımı zaten doğru yerdeydi, taşımaya gerek
+yoktu.
+
+**4) Yanlış/eskimiş bilgi düzeltmeleri.** Kod incelemesinde dört ekranda
+artık doğru olmayan "bu cihazda saklanır" notu bulundu — hepsi aslında
+sunucuya yazıyor (ambar `ambarIslem`→`M.ambarHareket`, araç `aracYaz`→
+`modulYaz`, denetim izi `denetimYaz`→`M.denetimEkle`, hat güzergâhı
+`hatKaydet`→`M.hatKaydet`), ama not hâlâ eski/yerel-only günlerden
+kalmaydı. Dördü de düzeltildi/silindi; hat notuna ayrıca yeni kolektör
+türü ve KML/KMZ içe aktarma da eklendi (liste eskiydi).
+
+**Bilerek yapılmayan.** Talep ekranındaki üç düğme (Muhtarlar/İş
+Emirleri/Talep al), her ekrandaki uzun "not:" açıklama metinleri (bu
+program boyunca bilinçli bir tasarım deseni — teknik olmayan saha
+personeli için kendi kendini açıklayan ekranlar), İş Emirleri'nin ayrı
+bir sayfa/sekme değil panel olması — bunların hiçbiri "gereksiz" olduğu
+KESİN olarak koddan doğrulanamadığı ya da kasıtlı bir tasarım kararı
+olduğu için dokunulmadı. Kullanıcı canlıda gezip somut örnek verirse
+(“şu ekrandaki şu metin/düğme gereksiz”) ayrıca düzeltilir.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (373/373, 321/321), yerel sunucuda hem masaüstü hem 375×812
+mobil görünümde konsol hata deseni sabit kaldı, "[dc-runtime] template
+compile FAILED" hiç çıkmadı. Giriş ekranı her iki görünümde ekran
+görüntüsüyle doğrulandı. Menü gruplaması ve süzgeç adları giriş
+gerektirdiği için görsel doğrulama yapılamadı — kod incelemesiyle
+(MENU_GRUP'un yalnızca nav render'ında kullanıldığı, SUZGEC_TANIM'a hiç
+dokunulmadığı) güvence altına alındı, kullanıcı giriş yapıp görecek.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok.

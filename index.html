@@ -111,9 +111,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="padding:26px 24px 22px">
 <div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:9px">Kullanıcı girişi</div>
-<h1 style="font:600 25px/1.06 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em;margin:0 0 6px">Kırsal Altyapı ve Su Şebekesi Envanteri</h1>
-<p style="font:400 12.5px/1.5 var(--font-body);color:var(--color-neutral-700);margin:0 0 20px">Kullanıcı adı ve şifre ile girilir. Rol seçilmez — yetki hesaba bağlıdır. Aynı hesap telefonda da bilgisayarda da çalışır.</p>
-<div style="display:flex;flex-direction:column;gap:13px;border-top:1px solid var(--color-divider);padding-top:18px">
+<h1 style="font:600 25px/1.06 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em;margin:0 0 18px">Kırsal Altyapı ve Su Şebekesi Envanteri</h1>
+<div style="display:flex;flex-direction:column;gap:13px">
 <label style="display:flex;flex-direction:column;gap:6px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-neutral-600)">Kullanıcı adı</span>
 <input value="{{ loginForm.user }}" onChange="{{ loginForm.onUser }}" onKeyDown="{{ loginForm.onKey }}" autocomplete="username" placeholder="ad.soyad" style="all:unset;border-radius:10px;border:1px solid var(--color-text);padding:13px 12px;font:600 15px/1 var(--font-body);color:var(--color-text);background:#fff">
@@ -140,11 +139,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </button>
 </div>
 </div>
-<div style="border-top:1px solid var(--color-text);background:var(--color-neutral-200);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px">
-<span style="font:600 12px/1.4 var(--font-body);color:var(--color-neutral-700);max-width:230px">{{ loginForm.deviceLine }}</span>
+<div style="border-top:1px solid var(--color-text);background:var(--color-neutral-200);padding:14px 24px;display:flex;align-items:center;justify-content:flex-end">
 <button onClick="{{ login }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 14px/1 var(--font-body);padding:15px 22px;justify-content:center;flex:none">Giriş yap</button>
 </div>
-<div style="padding:12px 24px 18px;font:400 12px/1.5 var(--font-body);color:var(--color-neutral-600)">{{ loginForm.hint }} Doğrulama veritabanının içinde yapılır; “Beni hatırla” işaretliyse kullanıcı adı ve şifre yalnızca bu cihazda saklanır. Oturumun hangi cihazdan açıldığı yalnızca kayıt geçmişi için loglanır.</div>
 </div>
 </div>
 </sc-if>
@@ -6461,9 +6458,13 @@ const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
 // analiz) altında değil, diğer saha araçlarıyla (Envanter, İşler) birlikte
 // durur. 2026.09.15'te taşındı: kullanıcı geri bildirimi, gruplamanın
 // kafa karıştırdığı yönündeydi.
+// İki ayrı iş zincirine göre gruplanır: "Saha işleri" talepten malzeme
+// düşümüne kadar birbirine bağlı zincir (talep→triyaj→iş emri→ekip/araç
+// atama→saha→kanıt→stok); "Envanter" tesis kaydı + hat güzergâhı zinciri.
+// Böylece "stok nerede, envanter nerede" ayrımı menüde de net olur.
 const MENU_GRUP = [
-  ['Saha', ['envanter', 'isler', 'kesit']],
-  ['Kayıtlar', ['kaynaklar']],
+  ['Saha işleri', ['isler', 'kaynaklar']],
+  ['Envanter', ['envanter', 'kesit']],
   ['Çözümleme', ['ozet']],
   ['Sistem', ['ayarlar']]
 ];
@@ -6524,7 +6525,7 @@ const SUZGEC_TANIM = {
   isler: [['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
   envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter']],
-  kaynaklar: [['malzeme', 'Malzeme', 'ambar'], ['arac', 'Araç', 'arac']],
+  kaynaklar: [['malzeme', 'Stok', 'ambar'], ['arac', 'Araç', 'arac']],
   // Denetim izi ve Çöp kutusu buradan Ayarlar'a taşındı (2026.09.15) — ikisi
   // de zaten Ayarlar > Veri bölümünde ayrıca listeleniyordu (AYAR_LISTE),
   // Özet'in altında ikinci bir yoldan erişilebilir olmaları kafa karıştırıyordu
@@ -6550,7 +6551,7 @@ const SUZGEC_ESKI = (() => {
 })();
 // Birleşmeden sonraki sayfa adları
 const SUZGEC_SAYFA_AD = {
-  isler: 'İşler', envanter: 'Envanter', kaynaklar: 'Kaynaklar',
+  isler: 'İşler', envanter: 'Envanter', kaynaklar: 'Ambar ve Araç',
   ozet: 'Özet', kesit: 'Hat Kesiti', ayarlar: 'Ayarlar', gosterge: 'Üst çubuk'
 };
 // Eski sayfa kimliğinin bugünkü süzgeç adı — "Sayfa yetkileri" panelinde
@@ -6574,7 +6575,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.30-99';
+const SURUM = '2026.09.30-100';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10840,16 +10841,12 @@ class Component extends DCLogic {
         onUser: e => this.setState({ loginUser: e.target.value, loginErr: '' }),
         onPw: e => this.setState({ loginPw: e.target.value, loginErr: '' }),
         onKey: e => { if (e.key === 'Enter') this.doLogin(); },
-        deviceLine: (s.device === 'phone' ? 'Telefondan giriliyor' : 'Bilgisayardan giriliyor') + ' — aynı hesap her cihazda çalışır, oturum hangi cihazdan açıldığıysa onunla loglanır.',
         remember: s.remember,
         rememberMark: s.remember ? '■' : '□',
         toggleRemember: () => this.setState({ remember: !this.state.remember }),
-        rememberNote: s.remember
-          ? 'Kullanıcı adı ve şifreniz yalnızca bu cihazda saklanır: program açılışta alanları dolu getirir, “Giriş yap”a basmanız yeter. Kendiliğinden içeri girmez.'
-          : 'Hiçbir şey saklanmaz; her açılışta kullanıcı adı ve şifre yazılır.',
+        rememberNote: s.remember ? 'Bu cihazda saklanır, tekrar yazmanıza gerek kalmaz.' : 'Hiçbir şey saklanmaz.',
         dolu: false,
-        temizle: () => this.setState({ loginUser: '', loginPw: '', loginErr: '', remember: false }),
-        hint: 'Rol hesaba bağlıdır, ekranda seçilmez. Hesabı olmayan personeli Yönetici, Ayarlar > Yetkiler ve kullanıcılar ekranından ekler.'
+        temizle: () => this.setState({ loginUser: '', loginPw: '', loginErr: '', remember: false })
       },
       login: () => this.doLogin(),
       hasSavedLogin: (() => {
@@ -11818,7 +11815,7 @@ class Component extends DCLogic {
         const kritikSayi = kalemler.filter(k => k.kritik).length;
         const zimKalem = SAHA_EKIP.reduce((t, c) => t + Object.keys(zimTablo[c] || {}).length, 0);
         return {
-          not: 'Ambar mevcudu elle girilir: her kalem için önce “Giriş” yapılır, sahaya çıkacak malzeme ekibe zimmet edilir, iş bitince kalanı iade edilir ya da sarf olarak düşülür. Kritik eşiğin altına düşen kalem kırmızı yazılır. Kayıtlar bu cihazda saklanır — sunucuya taşınması sonraki adımda.',
+          not: 'Önce “Giriş” ile mevcut girilir, sahaya çıkacak malzeme ekibe zimmet edilir, iş bitince iade edilir ya da sarf düşülür. Kritik eşiğin altına düşen kalem kırmızı yazılır.',
           stats: [
             { n: String(kalemler.filter(k => k.girilmis).length), label: 'Ambarda kalem', fg: ui.fg },
             { n: String(kritikSayi), label: 'Kritik seviye', fg: kritikSayi ? 'var(--color-uyari)' : ui.fg },
@@ -12172,7 +12169,7 @@ class Component extends DCLogic {
         const secArac = ag ? (A.list || []).find(x => x.id === ag.id) : null;
         const secTur = secArac ? (ARAC_TUR[secArac.tur] || ARAC_TUR.kamyonet) : null;
         return {
-          not: 'Araç ve ekipman listesi, kimde olduğu ve sayaç okumaları. Görev verirken çıkış, teslim alırken dönüş okuması girilir; aradaki fark o görevin km ya da motor saati olarak dökümde kalır. Muayenesine 45 günden az kalan araç kırmızı yazılır. Kayıtlar bu cihazda saklanır.',
+          not: 'Araç ve ekipman listesi, kimde olduğu ve sayaç okumaları. Görev verirken çıkış, teslim alırken dönüş okuması girilir; aradaki fark o görevin km ya da motor saati olarak dökümde kalır. Muayenesine 45 günden az kalan araç kırmızı yazılır.',
           stats: [
             { n: String(list.length), label: 'Araç ve ekipman', fg: ui.fg },
             { n: String(list.filter(v => v.gorevdeMi).length), label: 'Görevde', fg: ui.fg },
@@ -12401,7 +12398,7 @@ class Component extends DCLogic {
           (!q || [x.ne, x.detay, x.kapsam, x.kim, x.t].join(' ').toLocaleLowerCase('tr').includes(q)));
         const bugun = this.damga().split(' ')[0];
         return {
-          not: 'Programda yapılan her işlem buraya kim, ne zaman, hangi cihazdan diye yazılır: kayıt açma ve silme, arıza, ambar hareketi, ayar değişikliği, giriş ve çıkış. Liste silinemez, yalnızca son ' + DENETIM_SINIR + ' satır tutulur. Bu cihazda saklanır — sunucuya taşınması sonraki adım.',
+          not: 'Programda yapılan her işlem buraya kim, ne zaman, hangi cihazdan diye yazılır: kayıt açma ve silme, arıza, ambar hareketi, ayar değişikliği, giriş ve çıkış. Liste silinemez, yalnızca son ' + DENETIM_SINIR + ' satır tutulur.',
           stats: [
             { n: String(hepsi.length), label: 'Toplam kayıt', fg: ui.fg },
             { n: String(hepsi.filter(x => x.t.startsWith(bugun)).length), label: 'Bugün', fg: ui.fg },
@@ -13592,7 +13589,7 @@ class Component extends DCLogic {
             varMi: liste.length > 0,
             sayi: liste.length + ' hat · ' + this.hatMetin(toplam) + ' toplam',
             note: canWrite
-              ? 'Bu kayda bağlı terfi, isale, şebeke ve enerji hatlarını haritada çizin. Her tür ayrı renkte görünür, uzunluklar kendiliğinden hesaplanır. Çizim bittiğinde kayıt bu cihazda saklanır.'
+              ? 'Bu kayda bağlı su, enerji ve kolektör hatlarını haritada çizin ya da KML/KMZ ile içe aktarın. Her tür ayrı renkte görünür, uzunluklar kendiliğinden hesaplanır.'
               : 'Bu kayıtta değişiklik yetkiniz yok — hatlar yalnızca görüntülenir.',
             rows: liste.map(x => ({
               ad: TUR_AD[x.tur] || x.tur,

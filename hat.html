@@ -131,14 +131,17 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   </div>
 </div>
 <script>
+// Renkler bilerek renk çemberine yayıldı — birbirine yakın iki hat türü
+// karışmasın diye (önceki sürümde terfi/AG ikisi de mavi, DC/kolektör
+// ikisi de kahverengiydi, haritada ayırt edilemiyordu).
 const TURLER = [
-  ['terfi', 'Terfi hattı', 'var(--color-accent)', 'Kuyu → depo, pompayla basılan'],
+  ['terfi', 'Terfi hattı', '#0071e3', 'Kuyu → depo, pompayla basılan'],
   ['isale', 'İsale hattı', '#201e1d', 'Depo → köy, cazibeli'],
-  ['sebeke', 'Şebeke hattı', '#6c6763', 'Köy içi dağıtım'],
-  ['ag', 'AG enerji hattı', '#1b6ef3', 'Trafo → pano, alçak gerilim'],
+  ['sebeke', 'Şebeke hattı', '#8a8580', 'Köy içi dağıtım'],
+  ['ag', 'AG enerji hattı', '#e2711d', 'Trafo → pano, alçak gerilim'],
   ['og', 'OG enerji hattı', '#7b3fbf', 'Orta gerilim, direkli'],
-  ['dc', 'GES DC hattı', '#c08a00', 'Panel → invertör'],
-  ['kolektor', 'Kolektör hattı', '#8b5a2b', 'Kanalizasyon toplayıcı, NetCAD projesinden']
+  ['dc', 'GES DC hattı', '#b6a000', 'Panel → invertör'],
+  ['kolektor', 'Kolektör hattı', '#1f8a5f', 'Kanalizasyon toplayıcı, NetCAD projesinden']
 ];
 const REN = Object.fromEntries(TURLER.map(t => [t[0], t[2]]));
 const AD = Object.fromEntries(TURLER.map(t => [t[0], t[1]]));

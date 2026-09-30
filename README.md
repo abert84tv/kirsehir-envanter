@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.30-99**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.30-100**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -119,7 +119,7 @@ yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.30-99 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.30-100 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
@@ -130,7 +130,20 @@ sadeleştirme) 2026.09.15 oturumunda bitti. 2026.09.30'da "büyük güncelleme"
 `C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`, ayrıntılı
 kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
 
-1. **Faz 1-2-3-4 tamamlandı (2026.09.30-99) — yapılabilecek her şeyiyle.**
+1. **Arayüz sadeleştirme (2026.09.30-100).** Giriş ekranındaki dört
+   açıklama bloğu bire indi (rol/cihaz açıklaması, "beni hatırla"nın
+   çift anlatımı kaldırıldı). Hat güzergâhı renkleri artık birbirinden
+   açıkça ayırt edilebiliyor (terfi/AG ikisi de maviydi, DC/kolektör
+   ikisi de kahverengiydi — düzeltildi). Sol menü artık kullanıcının
+   tarif ettiği iki iş zincirine göre gruplanıyor: **"Saha işleri"**
+   (İşler + Ambar ve Araç — talep→triyaj→iş emri→atama→saha→kanıt→stok
+   zinciri) ve **"Envanter"** (Envanter + Hat Kesiti — kayıt→koordinat→
+   hat güzergâhı zinciri); "Kaynaklar" adı "Ambar ve Araç", "Malzeme"
+   süzgeci "Stok" oldu — stokla envanterin nerede olduğu artık menüden
+   belli. Ayrıca birkaç ekranda gerçeğe uymayan "bu cihazda saklanır"
+   notu (ambar/araç/denetim/hat artık sunucuya yazıyor, not eskiydi)
+   düzeltildi. Kapsam bilerek sınırlı tutuldu — ayrıntı DURUM.md'de.
+2. **Faz 1-2-3-4 tamamlandı — yapılabilecek her şeyiyle.**
    Yalnızca gerçek dış bilgi/hesap gerektiren iki nokta bilerek açık
    bırakıldı, ayrıntı madde 4'te:
    - Faz 3'ün tamamlanan kısmı: Özet ekranındaki esnek rapora ek olarak
@@ -147,30 +160,32 @@ kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
      SMS seçeneği eklendi (`TALEP_KANAL`, DB tarafında zaten hazırdı).
      Kalan her şey (WhatsApp/Telegram/SMS bot webhook'ları, gerçek talep
      alma) sağlayıcı hesabı/anahtarı gerektiriyor — madde 4'te.
-2. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
+3. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
    bekleniyor.** Gerçek kaynağı bulundu (`abert84tv/elektrik-hesaplama`,
    Next.js/TypeScript, 22.121 satır, test edilmiş hesap motorları). Tam kod
    taşıma yerine harita.html deseniyle (iframe+postMessage) gömülü
    entegrasyon önerildi — hesap motoruna dokunmadan. Karar bekleniyor.
-3. **SVG grafik konsol gürültüsü** (2026.09.29) — kayıt kartı/detay
+4. **SVG grafik konsol gürültüsü** (2026.09.29) — kayıt kartı/detay
    panelindeki deneme grafiği ilk boyamada bir kerelik şablon metniyle
    çiziliyor; DOM'da kalıcı etkisi yok ama tarayıcı konsoluna ~40 zararsız
    hata basıyor. Kaynağı `support.js` — kökü bulmak gerçek bir hata
    ayıklayıcı/breakpoint erişimi ister, şu an elde yok.
-4. **Gerçek dış hesap/anahtar bekleyen tek kalemler:** Arvento (ya da
+5. **Gerçek dış hesap/anahtar bekleyen tek kalemler:** Arvento (ya da
    başka bir firma) araç-takip API anahtarı (madde 7-9'un canlı tarafı),
    WhatsApp Business / Telegram Bot / SMS gateway hesapları (madde 1,
    Faz 5'in bot tarafı), Cloudflare R2 fotoğraf deposu, HGM ortofoto
    lisansı, gerçek personel hesapları. Bunların hiçbiri kod eksikliği
    değil — hesap/anahtar geldiğinde bağlanacak yerler belli ve hazır
    (bkz. DURUM.md'deki ilgili oturum kayıtları).
-5. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
+6. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
    kayıtla başladı), malzeme birim fiyatları, hayvan varlığı ekstresi, 264
    kuyunun teknik alanları.
 
-Yapı kararı: menü ve sayfa yapısı (Envanter, İşler, Kaynaklar, Özet, Hat
-Kesiti, Ayarlar) **sabittir**. Kapanan modüller sayfa değil süzgeç düşürür.
-Yeni iş bu yapının üstüne oturur.
+Yapı kararı: sayfa kimlikleri (Envanter, İşler, Kaynaklar, Özet, Hat
+Kesiti, Ayarlar) **sabittir** — yeni iş bunların üstüne oturur, kapanan
+modüller sayfa değil süzgeç düşürür. Sol menüdeki grup başlıkları ve
+etiketler (2026.09.30'da "Saha işleri" / "Envanter" olarak ikiye
+ayrıldı) buna dahil değil, kullanılabilirlik için değişebilir.
 
 ## 7. Modernist tasarım sistemi
 

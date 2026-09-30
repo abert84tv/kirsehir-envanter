@@ -740,3 +740,53 @@ doğrulanacak.
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı:
 `SQL-is-emirleri.sql` ve `SQL-kanit-saklama.sql` uygulandı (idempotent,
 `create or replace`).
+
+---
+
+## Faz 1 tamamlandı — sürüm 2026.09.30-94
+
+**İş Emirleri liste/filtre ekranı + ekip/araç atama (sürüm -93).** İş Emri
+artık yalnızca arıza detayından görülebilen bir kayıt değil, kendi açılır
+penceresi var — İşler > Dış talepler ekranındaki "İş Emirleri" düğmesiyle
+açılıyor. Mevcut "Tesis kartı" panelinin (sabit perde + ortalanmış kutu)
+aynı, kanıtlı desenini kullandım — yeni bir sayfa/menü grubu açmadan
+(`SUZGEC_TANIM`/`MENU_GRUP`'a dokunmadan) tek bir kendi kendine yeten
+pencere, hem masaüstü hem mobil şablonuna eklendi. Liste: Açık/Atandı/
+Sahada/Tamamlandı/Kapatıldı süzgeci. Detay: tam bilgi + kapatılmışsa
+kullanılan malzeme/toplam saat/kapatan. Atama formu (assign yetkisi
+olanlara): ekip seçimi + çoklu araç seçimi — müsait olmayan araçlar soluk
+ama yine de seçilebilir (madde 4-5-9, tam kilitlemedim, acil durum için).
+Arıza detayındaki "İş Emri: IEM-xxx" etiketi artık bu paneli açıyor.
+
+**Muhtar numara defteri (sürüm -94, madde 1'in altyapı kısmı).** Aynı
+"Tesis kartı" deseniyle ikinci bir küçük pencere — İşler ekranındaki
+"Muhtarlar" düğmesiyle açılıyor. Ad/köy/ilçe/telefon kaydı (basit tutuldu:
+köy/ilçe serbest metin, dropdown değil — cascading köy listesini
+tekrarlamak yerine). Veri `kurum_veri` blob'una yeni bir `muhtar` anahtarıyla
+yazılıyor (ekip/personel/arac/talep ile aynı mekanizma — `modulYaz`,
+sunucu/cihaz eşitleme, çakışma birleştirme hepsi hazırdan geldi). Talep
+formunda telefon girilince bu listeyle eşleşme aranıyor; bulunursa köy/ilçe
+otomatik dolduruluyor, sıfat "muhtar" işaretleniyor, operatöre bir bildirim
+gösteriliyor. Eşleştirme yalnız telefon numarası üzerinden (son 10 hane
+normalize edilip karşılaştırılıyor) — köy adı serbest metin olduğu için
+resmi köy listesindeki adla birebir örtüşmeyebilir, o durumda yalnız
+bildirim metninden operatör köyü elle seçer.
+
+**Faz 1 burada tamamlandı.** Kapsam: talep→iş emri→ekip/araç ataması→
+kapanış→ambar+arıza geçmişi zinciri (çekirdek), KVKK saklama politikası
+(envanter fotoğrafı ömür boyu, arıza kanıtı 2 yıl), muhtar numara defteri.
+Faz 2 (personel/araç günlük izin-mesai kaydı, saha kanıtı öncesi/sonrası
+aşaması) ve sonraki fazlar için onay bekleniyor — plan dosyası:
+`C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (353/353, 302/302), yerel sunucuda giriş ekranı konsol hata sayısı
+sabit kaldı (44 — bilinen SVG gürültüsü, yeni hata yok), "[dc-runtime]
+template compile FAILED" hiç çıkmadı. Muhtar eşleştirme ve ekip/araç atama
+akışlarının uçtan uca gerçek testi giriş gerektiriyor, kullanıcı
+doğrulayacak.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok (muhtar verisi var olan `kurum_veri` mekanizmasını
+kullanıyor, yeni tablo/RPC gerekmedi).

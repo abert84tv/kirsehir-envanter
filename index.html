@@ -1296,11 +1296,31 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr">
 <div style="border-right:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Bu hafta yapılanlar</div>
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:9px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ ozet.weekBaslik }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
+<sc-for list="{{ ozet.zamanSec }}" as="z" hint-placeholder-count="6">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:32px;display:flex;align-items:center;justify-content:center;padding:0 10px;background:{{ z.bg }};color:{{ z.fg }};font:600 10.5px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">{{ z.label }}</button>
+</sc-for>
+</div>
+<select value="{{ ozet.ilce }}" onChange="{{ ozet.onIlce }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:7px 10px;font:600 11.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ozet.ilceler }}" as="il" hint-placeholder-count="7">
+<option value="{{ il.deger }}">{{ il.ad }}</option>
+</sc-for>
+</select>
+</div>
+<sc-if value="{{ ozet.ozelVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input value="{{ ozet.ozelBas }}" onChange="{{ ozet.onOzelBas }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:7px 10px;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<input value="{{ ozet.ozelBit }}" onChange="{{ ozet.onOzelBit }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:7px 10px;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</div>
+</sc-if>
+</div>
 <div style="display:flex;flex-wrap:wrap">
-<sc-for list="{{ ozet.week }}" as="w" hint-placeholder-count="5">
+<sc-for list="{{ ozet.week }}" as="w" hint-placeholder-count="6">
 <div style="width:50%;padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ w.n }}</span>
+<span style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ w.fg }}">{{ w.n }}</span>
 <span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ w.label }}</span>
 </div>
 </sc-for>
@@ -1318,6 +1338,20 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 </sc-for>
 </div>
+</div>
+<div style="border-top:1px solid {{ ui.rule }}">
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Köy bazlı malzeme kullanımı ve maliyeti</div>
+<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ ozet.malzemeKoyNot }}</div>
+<sc-for list="{{ ozet.malzemeKoy }}" as="mk" hint-placeholder-count="0">
+<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<span style="flex:1 1 220px;font:600 13px/1.3 var(--font-body);color:{{ ui.fg }}">{{ mk.name }}</span>
+<span style="flex:2 1 300px;font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ mk.ozet }}</span>
+<span style="flex:none;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ mk.tutar }}</span>
+</div>
+</sc-for>
+<sc-if value="{{ !ozet.malzemeKoyVar }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 18px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Seçili aralıkta ve ilçede tesise bağlı malzeme sarfı yok.</div>
+</sc-if>
 </div>
 <div style="height:16px"></div>
 </div>
@@ -6444,7 +6478,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.30-96';
+const SURUM = '2026.09.30-97';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6535,6 +6569,7 @@ class Component extends DCLogic {
       return v;
     })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
+    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '',
     log: {}, trash: [], cop: [], card: null,
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
@@ -7623,6 +7658,28 @@ class Component extends DCLogic {
   ambarZimmet(malzeme, ekip) {
     return Number((((this.state.ambar || {}).zimmet || {})[ekip] || {})[malzeme]) || 0;
   }
+  // Stoğu azaltan hareketten sonra kritik eşiğin altındaki kalemler için
+  // uyarı verir (madde 19). ambarObj işlemin uygulandığı güncel veri —
+  // this.state.ambar setState sonrası hemen güncel olmayabileceği için
+  // çağıran yer elindeki güncel nesneyi (yerelVeri ya da sunucu yanıtı) verir.
+  ambarKritikMesaj(islemler, ambarObj) {
+    const dusuren = ['zimmet', 'sarf', 'hurda'];
+    const dus = [...new Set((islemler || []).filter(i => dusuren.includes(i.tur)).map(i => i.malzeme))];
+    if (!dus.length || !ambarObj) return;
+    const kritikler = [];
+    for (const ad of dus) {
+      const kalem = STOK_KALEM.find(m => m[0] === ad);
+      if (!kalem) continue;
+      const toplam = AMBARLAR.reduce((t, A) => t + (Number(((ambarObj.stok || {})[A] || {})[ad]) || 0), 0);
+      const zim = SAHA_EKIP.reduce((t, c) => t + (Number(((ambarObj.zimmet || {})[c] || {})[ad]) || 0), 0);
+      const esik = KRITIK_ESIK[kalem[2]] || 2;
+      if (toplam + zim > 0 && toplam <= esik) kritikler.push(ad + ' ' + toplam + ' ' + kalem[2]);
+    }
+    if (kritikler.length) {
+      setTimeout(() => this.duyur('Kritik stok seviyesi: ' + kritikler.join(', ')
+        + '. Ambara giriş girilmesi gerekiyor.', 9000, 'kotu'), 600);
+    }
+  }
   // Tek hareket: giriş, çıkış, zimmet, iade, sarf. Eksi mevcuda düşürmez.
   ambarHareket(g) {
     if (!g || !g.malzeme) return this.duyur('Malzeme seçin.', 4000, 'kotu');
@@ -8159,10 +8216,11 @@ class Component extends DCLogic {
       hareket.unshift({
         id: hid, damga: this.damga(), tur: 'sarf', malzeme: mz.ad,
         adet, birim: kalem[2], ambar: '', ekip: f.crew, kim,
-        not: (f.no || 'arıza') + ' kapanışı'
+        not: (f.no || 'arıza') + ' kapanışı',
+        assetId: f.assetId || null // köy/ilçe bazlı malzeme raporu için (madde 18)
       });
       islemler.push({ id: hid, tur: 'sarf', malzeme: mz.ad, adet, birim: kalem[2],
-        ambar: '', ekip: f.crew, not: (f.no || 'arıza') + ' kapanışı' });
+        ambar: '', ekip: f.crew, not: (f.no || 'arıza') + ' kapanışı', assetId: f.assetId || null });
       n++;
     }
     if (n) this.denetimYaz('ambar', 'Arıza kapanışında sarf', n + ' kalem ' + f.crew
@@ -8261,6 +8319,7 @@ class Component extends DCLogic {
     if (!M || !this.state.sunucu || this.state.offline) {
       this.ambarKuyrukEkle(islemler);
       if (mesaj) this.duyur(mesaj + ' Bağlantı gelince ambar sunucuda da düşülecek.', 7000);
+      if (yerelVeri) this.ambarKritikMesaj(islemler, yerelVeri);
       return;
     }
     const r = await M.ambarHareket(islemler);
@@ -8275,10 +8334,12 @@ class Component extends DCLogic {
       } else if (mesaj) {
         this.duyur(mesaj, 6000, 'iyi', () => this.setState({ tab: 'ambar' }));
       }
+      this.ambarKritikMesaj(islemler, r.data.veri);
       return;
     }
     this.ambarKuyrukEkle(islemler);
     if (mesaj) this.duyur(mesaj + ' Sunucuya yazılamadı, kuyrukta bekliyor.', 8000, 'kotu');
+    if (yerelVeri) this.ambarKritikMesaj(islemler, yerelVeri);
   }
   ambarKuyrukEkle(islemler) {
     const k = [...(this.state.ambarKuyruk || []), ...(islemler || [])];
@@ -8302,6 +8363,7 @@ class Component extends DCLogic {
     this.duyur(bekleyen.length + ' bekleyen ambar hareketi sunucuya işlendi'
       + (red.length ? ' · bakiye yetmeyen ' + red.length + ' kalem işlenmedi' : '') + '.',
       7000, red.length ? 'kotu' : 'iyi');
+    this.ambarKritikMesaj(bekleyen, r.data.veri);
     return true;
   }
   bakimPeriyot(t) { return t === 'kuyu' ? 6 : 12; }
@@ -8558,6 +8620,36 @@ class Component extends DCLogic {
     const d = new Date(Date.now() + (this._saatFarki || 0));
     const p = n => String(n).padStart(2, '0');
     return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  // "DD.MM.YYYY" ya da "DD.MM.YYYY HH:MM" damgasını Date'e çevirir — arıza
+  // (f.opened), ambar hareketi (h.damga) ve deneme (t.date) hep bu biçimde.
+  // Okunamayan damga null döner, raporlarda sessizce dışarıda bırakılır.
+  tarihParse(str) {
+    const p = String(str || '').split(' ')[0].split('.');
+    if (p.length !== 3) return null;
+    const d = new Date(+p[2], +p[1] - 1, +p[0]);
+    return isNaN(d) ? null : d;
+  }
+  // Esnek raporlama aralığı — Bugün/Hafta/Ay/Yıl/Tümü/Özel (madde 37).
+  // bit her zaman ÜST SINIR HARİÇ (bir sonraki günün 00:00'ı) döner.
+  zamanAraligi(mod, ozelBas, ozelBit) {
+    const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+    const yarin = new Date(bugun.getTime() + 86400000);
+    if (mod === 'bugun') return { bas: bugun, bit: yarin, ad: 'Bugün' };
+    if (mod === 'hafta') {
+      const gun = (bugun.getDay() + 6) % 7; // Pazartesi = 0
+      const bas = new Date(bugun.getTime() - gun * 86400000);
+      return { bas, bit: yarin, ad: 'Bu hafta' };
+    }
+    if (mod === 'ay') return { bas: new Date(bugun.getFullYear(), bugun.getMonth(), 1), bit: yarin, ad: 'Bu ay' };
+    if (mod === 'yil') return { bas: new Date(bugun.getFullYear(), 0, 1), bit: yarin, ad: 'Bu yıl' };
+    if (mod === 'ozel') {
+      const bas = this.tarihParse((ozelBas || '').split('-').reverse().join('.')) || new Date(2000, 0, 1);
+      const bitH = this.tarihParse((ozelBit || '').split('-').reverse().join('.'));
+      const bit = bitH ? new Date(bitH.getTime() + 86400000) : yarin;
+      return { bas, bit, ad: 'Özel aralık' };
+    }
+    return { bas: new Date(2000, 0, 1), bit: yarin, ad: 'Tümü' };
   }
   // Sunucu saatiyle cihaz saati arasındaki farkı ölçer.
   // Bir dakikadan küçük fark yok sayılır — her açılışta uyarı vermenin anlamı yok.
@@ -13748,6 +13840,55 @@ class Component extends DCLogic {
               s.faults.filter(f => f.crew === x.ad).length))) * 100) + '%'
           };
         }).filter(x => x.toplam > 0).sort((a, b) => b.toplam - a.toplam);
+        // Esnek raporlama — gün/hafta/ay/yıl/özel aralık + il/ilçe süzgeci
+        // (madde 37). Daha önce "Bu hafta yapılanlar" oturum içindeki
+        // kayıtları sayıyordu; artık gerçek tarih damgasından hesaplanıyor.
+        const assetOf = id => s.assets.find(x => x.id === id);
+        const aralik = this.zamanAraligi(s.ozetZaman || 'hafta', s.ozetBas, s.ozetBit);
+        const ilceF = s.ozetIlce || '';
+        const ilceUyar = a => !ilceF || (a && a.district === ilceF);
+        const faultsF = s.faults.filter(f => {
+          const d = this.tarihParse(f.opened);
+          return d && d >= aralik.bas && d < aralik.bit && ilceUyar(assetOf(f.assetId));
+        });
+        const cozulenF = faultsF.filter(f => f.status === 'cozuldu');
+        let testSay = 0;
+        for (const [aid, list] of Object.entries(s.tests || {})) {
+          if (!ilceUyar(assetOf(aid))) continue;
+          for (const t of list) {
+            const d = this.tarihParse(t.date);
+            if (d && d >= aralik.bas && d < aralik.bit) testSay++;
+          }
+        }
+        const hareketF = ((s.ambar && s.ambar.hareket) || []).filter(h => {
+          const d = this.tarihParse(h.damga);
+          if (!d || d < aralik.bas || d >= aralik.bit) return false;
+          if (!ilceF) return true;
+          const a = h.assetId ? assetOf(h.assetId) : null;
+          return !!a && a.district === ilceF;
+        });
+        const sarfF = hareketF.filter(h => h.tur === 'sarf' || h.tur === 'hurda');
+        const tutarOf = h => { const kalem = STOK_KALEM.find(m => m[0] === h.malzeme); return kalem ? kalem[1] * (Number(h.adet) || 0) : 0; };
+        const malzemeMaliyet = sarfF.reduce((t, h) => t + tutarOf(h), 0);
+        const kritikStokSayi = STOK_KALEM.filter(m => {
+          const toplam = AMBARLAR.reduce((t, A) => t + this.ambarMevcut(m[0], A), 0);
+          const zim = SAHA_EKIP.reduce((t, c) => t + this.ambarZimmet(m[0], c), 0);
+          const esik = KRITIK_ESIK[m[2]] || 2;
+          return toplam + zim > 0 && toplam <= esik;
+        }).length;
+        const koyG = {};
+        for (const h of sarfF) {
+          const a = h.assetId ? assetOf(h.assetId) : null;
+          const key = a ? this.yer(a) : 'Tesis belirtilmemiş';
+          const o = (koyG[key] = koyG[key] || { tutar: 0, kalemler: {} });
+          o.tutar += tutarOf(h);
+          o.kalemler[h.malzeme] = (o.kalemler[h.malzeme] || 0) + (Number(h.adet) || 0);
+        }
+        const malzemeKoy = Object.entries(koyG).sort((x, y) => y[1].tutar - x[1].tutar).slice(0, 20)
+          .map(([name, o]) => ({
+            name, ozet: Object.entries(o.kalemler).map(([k, n]) => k + ' × ' + n).join(' · '),
+            tutar: this.tl(o.tutar)
+          }));
         return {
           ekipPerf,
           ekipPerfYok: ekipPerf.length === 0,
@@ -13812,14 +13953,28 @@ class Component extends DCLogic {
             kind: TYPES[a.type].kind,
             route: () => this.yolTarifiVer(a)
           })),
+          zamanSec: [['bugun', 'Bugün'], ['hafta', 'Hafta'], ['ay', 'Ay'], ['yil', 'Yıl'], ['tum', 'Tümü'], ['ozel', 'Özel']]
+            .map(([k, ad]) => ({
+              label: ad, ...seg((s.ozetZaman || 'hafta') === k, () => this.setState({ ozetZaman: k }))
+            })),
+          ozelVar: s.ozetZaman === 'ozel',
+          ozelBas: s.ozetBas, onOzelBas: e => this.setState({ ozetBas: e.target.value }),
+          ozelBit: s.ozetBit, onOzelBit: e => this.setState({ ozetBit: e.target.value }),
+          ilceler: [{ ad: 'Tüm ilçeler', deger: '' }, ...Object.keys(byD).sort().map(d => ({ ad: d, deger: d }))],
+          ilce: s.ozetIlce || '', onIlce: e => this.setState({ ozetIlce: e.target.value }),
           week: [
-            { n: String(s.faults.filter(f => f.status === 'cozuldu').length), label: 'Çözülen arıza' },
-            { n: String(openF.length), label: 'Açılan / açık arıza' },
-            { n: String(Object.keys(s.tests).length), label: 'Girilen deneme' },
-            { n: String(Object.keys(s.notes).length), label: 'Yazılan not' },
-            { n: String(s.queue.length), label: 'Kuyruk hareketi' }
+            { n: String(faultsF.length), label: 'Açılan arıza', fg: ui.fg },
+            { n: String(cozulenF.length), label: 'Çözülen arıza', fg: ui.fg },
+            { n: String(testSay), label: 'Girilen deneme', fg: ui.fg },
+            { n: String(sarfF.length), label: 'Malzeme hareketi', fg: ui.fg },
+            { n: this.tl(malzemeMaliyet), label: 'Malzeme maliyeti', fg: ui.fg },
+            { n: String(kritikStokSayi), label: 'Kritik stok', fg: kritikStokSayi ? 'var(--color-uyari)' : ui.fg }
           ],
-          weekNote: 'Bu hafta girilen kayıtlar. Gerçek kurulumda tarih damgasından hesaplanır; şimdilik oturum içinde yaptıklarınızı sayıyor.'
+          weekBaslik: aralik.ad + (ilceF ? ' · ' + ilceF : '') + ' yapılanlar',
+          weekNote: 'Gün/hafta/ay/yıl ya da özel bir aralık ve isterseniz tek bir ilçe seçin — arıza, deneme ve ambar hareketi kayıtlarının gerçek tarih damgasına göre süzülür.',
+          malzemeKoy,
+          malzemeKoyVar: malzemeKoy.length > 0,
+          malzemeKoyNot: 'Seçili aralıkta arıza kapanışında ekip zimmetinden düşülen (sarf/hurda) malzemenin köy · ilçe kırılımı ve tutarı. Ambar ekranından elle girilen sarf işlemleri bir tesise bağlı olmadığı için "Tesis belirtilmemiş" altında toplanır.'
         };
       })(),
       exportReport: kind => () => kind === 'excel' ? this.excelVer() : this.pdfVer(),

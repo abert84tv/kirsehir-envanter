@@ -895,3 +895,69 @@ fiyat sütunu geliştirme (madde 18-19). Kullanıcı onayı bekleniyor.
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok.
+
+## Faz 3 (kısmen) — esnek raporlama + köy bazlı malzeme + kritik stok uyarısı — sürüm 2026.09.30-97
+
+Kullanıcı "faz 2'ye başla" sonrası "devam edelim" dedi — Faz 2 tamamlandıktan
+sonra Faz 3'e geçildi. Plan dosyasındaki Faz 3 kapsamı: "esnek gün/hafta/
+ay/yıl + il/ilçe/köy raporlama motoru (madde 37), ambar düşük-stok
+bildirimi ve fiyat sütunu geliştirme (madde 18-19)".
+
+**Keşif bulgusu.** Ambar ekranı zaten olgun: `fiyat` sütunu, kritik eşiğin
+altına düşen kalem kırmızı, "Kritik seviye" sayaç kutusu hep vardı (madde
+18-19'un büyük kısmı zaten yapılmış). Özet ekranı da zaten il/ilçe/köy
+kırılımlı tablolara sahipti — ama "Bu hafta yapılanlar" paneli GERÇEK tarih
+filtrelemiyordu, `weekNote` bunu açıkça itiraf ediyordu ("gerçek kurulumda
+tarih damgasından hesaplanır; şimdilik oturum içinde yaptıklarınızı
+sayıyor"). Asıl boşluk buradaydı.
+
+**Ne eklendi.**
+- İki yeni yardımcı metod: `tarihParse` (DD.MM.YYYY damgasını Date'e
+  çevirir — arıza/ambar/deneme hep bu biçimde), `zamanAraligi` (Bugün/
+  Hafta/Ay/Yıl/Tümü/Özel aralık hesaplar).
+- Özet ekranındaki "Bu hafta yapılanlar" paneli gerçek bir rapora
+  dönüştürüldü: zaman aralığı seçici (segmented buton) + ilçe seçici
+  (`<select>`, "Tümü" dahil, mevcut ilçe listesinden türetilir) + özel
+  aralıkta iki tarih girişi. Kutucuklar artık gerçek sayı veriyor: açılan
+  arıza, çözülen arıza, girilen deneme, malzeme hareketi, malzeme
+  maliyeti, kritik stok sayısı — hepsi seçili aralık+ilçeye göre süzülü.
+- Yeni bölüm: "Köy bazlı malzeme kullanımı ve maliyeti" — seçili aralıkta
+  arıza kapanışında sarf/hurda edilen malzemenin köy · ilçe kırılımı ve
+  TL tutarı.
+- Ambar tarafında proaktif uyarı: `ambarKritikMesaj` — zimmet/sarf/hurda
+  işleminden sonra kritik seviyeye düşen kalem için 600ms gecikmeli bir
+  toast çıkıyor ("Kritik stok seviyesi: ... Ambara giriş girilmesi
+  gerekiyor."). `ambarIslem`'in üç dönüş yolunda da (çevrimdışı/kuyruk,
+  sunucu başarılı, kuyruk gönderme) çağrılıyor.
+
+**DB değişikliği.** `SQL-ambar-koy-raporu.sql` — `ambar_hareket` RPC'sine
+`assetId` alanı eklendi (yalnız katma, aynı imza — `ses_ekle`'deki
+overload hatası burada tekrarlanmadı, `pg_proc` sorgusuyla tek satır
+doğrulandı). Arıza kapanışında sarf edilen malzeme artık hangi tesisten
+geldiğini taşıyor; ambar ekranından elle girilen hareketlerde (operatör
+tesis seçmiyor) boş kalıyor — bilinçli v1 sınırı, "Tesis belirtilmemiş"
+altında toplanıyor.
+
+**Bilinçli kapsam sınırı.** Madde 37 "her ekrandan" diyordu — bu turda
+yalnız Özet ekranına uygulandı (en yoğun raporlama ekranı). İş Emirleri
+listesi gibi diğer ekranlara aynı tarih süzgecinin taşınması ayrı bir iş
+olarak bırakıldı, istenirse yapılır.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (365/365, 315/315), yerel sunucuda konsol hata deseni sabit kaldı
+(bilinen SVG gürültüsü, yeni hata tipi yok), "[dc-runtime] template
+compile FAILED" hiç çıkmadı. `ambar_hareket` migration'ı canlı veritabanına
+uygulandı ve `pg_proc` ile tek fonksiyon olduğu doğrulandı. Giriş
+gerektiren uçtan uca test (gerçek arıza kapatıp malzeme düşürme, Özet'te
+raporu süzme) kullanıcı tarafından yapılacak.
+
+**Sıradaki iş — Faz 4.** Plan dosyasına göre: çoklu-sağlayıcı araç-takip
+adaptörü (Arvento önce, madde 7-8, API anahtarı bekleniyor), NetCAD
+kolektör projeleri KML/KMZ içe aktarma (madde 34). Kullanıcı onayı
+bekleniyor.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği var — `SQL-ambar-koy-raporu.sql` Supabase MCP ile canlıya
+zaten uygulandı, tekrar çalıştırmaya gerek yok (`create or replace`,
+zararsız da olurdu).

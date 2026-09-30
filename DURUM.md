@@ -849,3 +849,49 @@ oluşturulamıyor (bkz. önceki oturum notu).
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok.
+
+## Faz 2 tamamlandı — saha kanıtı öncesi/sonrası aşaması — sürüm 2026.09.30-96
+
+Faz 2'nin kalan maddesi (madde 10 — ekip sahaya çıkmadan önce ve işi
+bitirdikten sonra ayrı ayrı fotoğraf/ses kanıtı) bitirildi. **Faz 2 burada
+tamamlandı.**
+
+**Ne eklendi.** Yeni DB sütunu açılmadı — aşama bilgisi `foto`/`ses`
+tablosunun zaten var olan `aciklama` metnine ekleniyor: `'Arıza kaydı ·
+Öncesi'` / `'... · Sonrası'`, sesli notta `'Arıza sesli notu · Öncesi/
+Sonrası'`. Arıza formunda fotoğraf/ses eklemeden hemen önce bir "Aşama"
+seçici (Öncesi/Sonrası, segmented buton) duruyor; hangisi seçiliyse bir
+sonraki eklenen fotoğraf/ses onunla damgalanır. Kanıt kartlarındaki rozet
+(daha önce yalnızca dosya boyutunu gösteriyordu) artık aşamayı da
+gösteriyor: "Öncesi · 240 KB" gibi. Varsayılan "Öncesi" — ekip formu
+açtığında henüz sahaya gitmemiş sayılır, işi bitirince "Sonrası"na
+geçilir.
+
+Yeni sabit: `ASAMA_AD = { once: 'Öncesi', sonra: 'Sonrası' }`
+(GUN_TUR_ARAC'ın hemen altında). Değişen metodlar: `arizaFotoSec`
+(seçilen her fotoğrafa `asama` damgası basıyor), `arizaFotoGonder`
+(aciklama'yı `p.asama`'ya göre kuruyor), sesli not kaydı (`kayit` nesnesine
+`asama` eklendi) ve kaydetme akışındaki `sesYukle` çağrısı. Yeni render
+prop: `asamaSec` (top-level, `faultForm` gibi diğer sahne düzeyi
+proplarla aynı yerde — segmented buton için `seg()` yardımcı fonksiyonu
+kullanıldı, personel/araç gün kaydında olduğu gibi).
+
+Kenar durum: mobil şablonda araç fotoğrafı bölümünün üstünde masaüstündeki
+gibi bir "Arıza fotoğrafı · sayı" satırı yok — Aşama seçici oraya, ekip
+durumu kutusunun hemen altına, buton satırından önce eklendi.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (363/363, 312/312), yerel sunucuda konsol hata deseni sabit kaldı
+(bilinen SVG gürültüsü + gün kaydı tarih alanları için beklenen uyarı —
+yeni hata tipi yok), "[dc-runtime] template compile FAILED" hiç çıkmadı.
+Uçtan uca gerçek test (arıza formunda aşama seçip fotoğraf/ses ekleyip
+kaydetme) giriş gerektiriyor — kullanıcı doğrulayacak, test hesabı canlı
+veritabanında oluşturulamıyor.
+
+**Sıradaki iş — Faz 3.** Plan dosyasına göre: esnek gün/hafta/ay/yıl +
+il/ilçe/köy raporlama motoru (madde 37), ambar düşük-stok bildirimi ve
+fiyat sütunu geliştirme (madde 18-19). Kullanıcı onayı bekleniyor.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok.

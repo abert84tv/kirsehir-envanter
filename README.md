@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.30-95**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.30-96**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -117,7 +117,7 @@ yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.30-95 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.30-96 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
@@ -128,12 +128,14 @@ sadeleştirme) 2026.09.15 oturumunda bitti. 2026.09.30'da "büyük güncelleme"
 `C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`, ayrıntılı
 kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
 
-1. **Faz 1 tamamlandı (2026.09.30-94).** **Faz 2 kısmen tamamlandı
-   (2026.09.30-95)** — personel ve araç günlük kaydı (Ayarlar > Ekipler ve
-   personel'de kişi düzenleme formu, araç ekranında araç düzenleme formu:
-   izin/rapor/fazla mesai ya da bakım/arıza/görev/muayene günleri tarih+not
-   ile eklenir/silinir, kişi/araç kartının kendi içinde tutulur). Kalan:
-   saha kanıtı öncesi/sonrası aşaması (madde 10) — sıradaki iş.
+1. **Faz 1 tamamlandı (2026.09.30-94). Faz 2 tamamlandı (2026.09.30-96).**
+   Personel ve araç günlük kaydı (Ayarlar > Ekipler ve personel / araç
+   ekranındaki düzenleme formlarında izin/rapor/fazla mesai ya da
+   bakım/arıza/görev/muayene günleri tarih+not ile eklenir/silinir) +
+   saha kanıtı öncesi/sonrası aşaması (arıza formunda fotoğraf/ses eklemeden
+   önce "Aşama: Öncesi/Sonrası" seçilir, kanıt kartında rozet olarak görünür).
+   Faz 3'e (esnek raporlama motoru, ambar düşük-stok bildirimi/fiyat
+   geliştirme) geçilebilir — kullanıcı onayı bekliyor.
 2. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
    bekleniyor.** Gerçek kaynağı bulundu (`abert84tv/elektrik-hesaplama`,
    Next.js/TypeScript, 22.121 satır, test edilmiş hesap motorları). Tam kod

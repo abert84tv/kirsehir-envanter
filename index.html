@@ -833,6 +833,39 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <input value="{{ aracEkran.form.muayene }}" onChange="{{ aracEkran.form.onMuayene }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
 </div>
+<sc-if value="{{ aracEkran.form.gunlukVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-direction:column;gap:8px;max-width:560px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Gün kaydı — bakım, arıza, görev, muayene</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+<label style="display:flex;flex-direction:column;gap:4px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Tarih</span>
+<input value="{{ aracEkran.form.gunluk.tarih }}" onChange="{{ aracEkran.form.gunluk.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ aracEkran.form.gunluk.turSec }}" as="gt" hint-placeholder-count="4">
+<button onClick="{{ gt.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 10px;background:{{ gt.bg }};color:{{ gt.fg }};font:600 11px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">{{ gt.label }}</button>
+</sc-for>
+</div>
+<label style="display:flex;flex-direction:column;gap:4px;width:90px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Saat/km</span>
+<input value="{{ aracEkran.form.gunluk.saat }}" onChange="{{ aracEkran.form.gunluk.onSaat }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<input value="{{ aracEkran.form.gunluk.not }}" onChange="{{ aracEkran.form.gunluk.onNot }}" placeholder="Not (isteğe bağlı)" style="all:unset;box-sizing:border-box;flex:1;min-width:140px;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<button onClick="{{ aracEkran.form.gunluk.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 11.5px/1 var(--font-body)">Ekle</button>
+</div>
+<sc-for list="{{ aracEkran.form.gunluk.liste }}" as="gn" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ gn.tarih }}</span>
+<span style="flex:none;font:600 11px/1 var(--font-body);color:{{ ui.acc }}">{{ gn.tur }}</span>
+<span style="flex:1;font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ gn.ek }}</span>
+<button onClick="{{ gn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:5px 8px">Sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ aracEkran.form.gunluk.bos }}" hint-placeholder-val="{{ true }}">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Henüz gün kaydı yok.</span>
+</sc-if>
+</div>
+</sc-if>
 <div style="display:flex;gap:9px">
 <button onClick="{{ aracEkran.form.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 16px;justify-content:flex-start">Kaydet</button>
 <button onClick="{{ aracEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 16px">Vazgeç</button>
@@ -1816,6 +1849,41 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </select>
 <span style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ personelHavuz.form.kullaniciNot }}</span>
 </label>
+<sc-if value="{{ personelHavuz.form.gunlukVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-direction:column;gap:8px;max-width:560px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Gün kaydı — izin, rapor, fazla mesai</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+<label style="display:flex;flex-direction:column;gap:4px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Tarih</span>
+<input value="{{ personelHavuz.form.gunluk.tarih }}" onChange="{{ personelHavuz.form.gunluk.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ personelHavuz.form.gunluk.turSec }}" as="gt" hint-placeholder-count="4">
+<button onClick="{{ gt.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 10px;background:{{ gt.bg }};color:{{ gt.fg }};font:600 11px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">{{ gt.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ personelHavuz.form.gunluk.saatVar }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:4px;width:90px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Saat</span>
+<input value="{{ personelHavuz.form.gunluk.saat }}" onChange="{{ personelHavuz.form.gunluk.onSaat }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+</sc-if>
+<input value="{{ personelHavuz.form.gunluk.not }}" onChange="{{ personelHavuz.form.gunluk.onNot }}" placeholder="Not (isteğe bağlı)" style="all:unset;box-sizing:border-box;flex:1;min-width:140px;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:600 12px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<button onClick="{{ personelHavuz.form.gunluk.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 11.5px/1 var(--font-body)">Ekle</button>
+</div>
+<sc-for list="{{ personelHavuz.form.gunluk.liste }}" as="gn" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ gn.tarih }}</span>
+<span style="flex:none;font:600 11px/1 var(--font-body);color:{{ ui.acc }}">{{ gn.tur }}</span>
+<span style="flex:1;font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ gn.ek }}</span>
+<button onClick="{{ gn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:5px 8px">Sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ personelHavuz.form.gunluk.bos }}" hint-placeholder-val="{{ true }}">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Henüz gün kaydı yok.</span>
+</sc-if>
+</div>
+</sc-if>
 <div style="display:flex;gap:9px">
 <button onClick="{{ personelHavuz.form.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 16px;justify-content:flex-start">Kaydet</button>
 <button onClick="{{ personelHavuz.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 16px">Vazgeç</button>
@@ -3611,6 +3679,37 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <input value="{{ aracEkran.form.muayene }}" onChange="{{ aracEkran.form.onMuayene }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
 </label>
 </div>
+<sc-if value="{{ aracEkran.form.gunlukVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-direction:column;gap:8px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Gün kaydı — bakım, arıza, görev, muayene</span>
+<label style="display:flex;flex-direction:column;gap:4px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Tarih</span>
+<input value="{{ aracEkran.form.gunluk.tarih }}" onChange="{{ aracEkran.form.gunluk.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
+<sc-for list="{{ aracEkran.form.gunluk.turSec }}" as="gt" hint-placeholder-count="4">
+<button onClick="{{ gt.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 8px;background:{{ gt.bg }};color:{{ gt.fg }};font:600 11px/1 var(--font-body);border-bottom:1px solid {{ ui.rule }}">{{ gt.label }}</button>
+</sc-for>
+</div>
+<label style="display:flex;flex-direction:column;gap:4px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Saat/km</span>
+<input value="{{ aracEkran.form.gunluk.saat }}" onChange="{{ aracEkran.form.gunluk.onSaat }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<input value="{{ aracEkran.form.gunluk.not }}" onChange="{{ aracEkran.form.gunluk.onNot }}" placeholder="Not (isteğe bağlı)" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+<button onClick="{{ aracEkran.form.gunluk.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;min-height:46px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12px/1 var(--font-body)">Ekle</button>
+<sc-for list="{{ aracEkran.form.gunluk.liste }}" as="gn" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ gn.tarih }}</span>
+<span style="flex:none;font:600 11px/1 var(--font-body);color:{{ ui.acc }}">{{ gn.tur }}</span>
+<span style="flex:1;font:400 11px/1.4 var(--font-body);color:{{ ui.mut }}">{{ gn.ek }}</span>
+<button onClick="{{ gn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:6px 8px">Sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ aracEkran.form.gunluk.bos }}" hint-placeholder-val="{{ true }}">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Henüz gün kaydı yok.</span>
+</sc-if>
+</div>
+</sc-if>
 <button onClick="{{ aracEkran.form.kaydet }}" class="btn btn-primary" style="width:100%;border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Kaydet</button>
 <button onClick="{{ aracEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:48px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Vazgeç</button>
 </div>
@@ -4661,6 +4760,39 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </select>
 <span style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ personelHavuz.form.kullaniciNot }}</span>
 </label>
+<sc-if value="{{ personelHavuz.form.gunlukVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-direction:column;gap:8px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Gün kaydı — izin, rapor, fazla mesai</span>
+<label style="display:flex;flex-direction:column;gap:4px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Tarih</span>
+<input value="{{ personelHavuz.form.gunluk.tarih }}" onChange="{{ personelHavuz.form.gunluk.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
+<sc-for list="{{ personelHavuz.form.gunluk.turSec }}" as="gt" hint-placeholder-count="4">
+<button onClick="{{ gt.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 8px;background:{{ gt.bg }};color:{{ gt.fg }};font:600 11px/1 var(--font-body);border-bottom:1px solid {{ ui.rule }}">{{ gt.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ personelHavuz.form.gunluk.saatVar }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:4px">
+<span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Saat</span>
+<input value="{{ personelHavuz.form.gunluk.saat }}" onChange="{{ personelHavuz.form.gunluk.onSaat }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+</sc-if>
+<input value="{{ personelHavuz.form.gunluk.not }}" onChange="{{ personelHavuz.form.gunluk.onNot }}" placeholder="Not (isteğe bağlı)" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+<button onClick="{{ personelHavuz.form.gunluk.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;min-height:46px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12px/1 var(--font-body)">Ekle</button>
+<sc-for list="{{ personelHavuz.form.gunluk.liste }}" as="gn" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;font:600 11.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ gn.tarih }}</span>
+<span style="flex:none;font:600 11px/1 var(--font-body);color:{{ ui.acc }}">{{ gn.tur }}</span>
+<span style="flex:1;font:400 11px/1.4 var(--font-body);color:{{ ui.mut }}">{{ gn.ek }}</span>
+<button onClick="{{ gn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:6px 8px">Sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ personelHavuz.form.gunluk.bos }}" hint-placeholder-val="{{ true }}">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Henüz gün kaydı yok.</span>
+</sc-if>
+</div>
+</sc-if>
 <div style="display:grid;gap:9px">
 <button onClick="{{ personelHavuz.form.kaydet }}" class="btn btn-primary" style="width:100%;justify-content:center;display:flex;align-items:center;min-height:48px;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 16px;justify-content:flex-start">Kaydet</button>
 <button onClick="{{ personelHavuz.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;min-height:48px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 16px">Vazgeç</button>
@@ -6085,6 +6217,9 @@ const PERSONEL_DURUM = {
   aktif: 'Görevde', izin: 'İzinli', rapor: 'Raporlu', gorevli: 'Başka görevde', ayrildi: 'Ayrıldı'
 };
 const PERSONEL_YOK = ['izin', 'rapor', 'gorevli', 'ayrildi'];
+// Günlük kayıt türleri — personel ve araç günlük defterinde ortak kullanılır (Faz 2)
+const GUN_TUR_PERSONEL = { izin: 'İzin', rapor: 'Rapor', fazla_mesai: 'Fazla mesai', gorevli: 'Başka görevde' };
+const GUN_TUR_ARAC = { bakim: 'Bakım', ariza: 'Arıza/tamir', gorevde: 'Sahada görevde', muayene: 'Muayene/belge' };
 // Vardiya takvimi: haftanın günlerinde hangi ekip nöbetçi
 const GUNLER = [
   { k: 1, ad: 'Pazartesi', kisa: 'Pzt' }, { k: 2, ad: 'Salı', kisa: 'Sal' },
@@ -6289,7 +6424,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.30-94';
+const SURUM = '2026.09.30-95';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -6419,6 +6554,7 @@ class Component extends DCLogic {
       return v;
     })(),
     aracForm: null, aracGorev: null,
+    aracGunTaslak: { tarih: '', tur: 'bakim', saat: '', not: '' },
     // Dış talepler — cihazda saklanır
     talepler: (() => {
       try {
@@ -6524,6 +6660,7 @@ class Component extends DCLogic {
       return [];
     })(),
     personelForm: null, personelQ: '',
+    personelGunTaslak: { tarih: '', tur: 'izin', saat: '', not: '' },
     // Muhtar numara defteri — madde 1: talep formunda telefon eşleşince köy otomatik önerilir
     muhtarlar: (() => {
       try {
@@ -7230,7 +7367,8 @@ class Component extends DCLogic {
       ad, meslek: meslekEsle(g.meslek), tel: (g.tel || '').trim(), not: (g.not || '').trim(),
       durum: PERSONEL_DURUM[g.durum] ? g.durum : 'aktif',
       donus: g.donus || '',
-      kullanici: (g.kullanici || '').trim()
+      kullanici: (g.kullanici || '').trim(),
+      gunler: Array.isArray(g.gunler) ? g.gunler : []
     };
     // Bir kullanıcı hesabı yalnız tek kişiye bağlanabilir
     if (kart.kullanici) {
@@ -7255,6 +7393,33 @@ class Component extends DCLogic {
     if (!window.confirm(p.ad + ' havuzdan silinecek. Onaylıyor musunuz?')) return;
     this.denetimYaz('veri', 'Personel silindi', p.meslek, p.ad);
     this.personelYaz((this.state.personel || []).filter(x => x.id !== id), p.ad + ' havuzdan silindi.');
+  }
+  // Günlük izin/mesai kaydı — personelForm açıkken alt bölümde eklenir/silinir,
+  // panel kapanmaz (Faz 2, madde 6). Kayıt personel kartının kendi içinde tutulur.
+  personelGunEkle() {
+    const pf = this.state.personelForm;
+    if (!pf || !pf.id) return;
+    const t = this.state.personelGunTaslak || {};
+    if (!t.tarih) return this.duyur('Tarih seçin.', 4000, 'kotu');
+    if (!GUN_TUR_PERSONEL[t.tur]) return this.duyur('Kayıt türü seçin.', 4000, 'kotu');
+    const kayit = { id: 'gn' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      tarih: t.tarih, tur: t.tur, saat: (t.saat || '').trim(), not: (t.not || '').trim() };
+    const liste = (this.state.personel || []).map(p => p.id !== pf.id ? p
+      : { ...p, gunler: [kayit, ...(p.gunler || [])].sort((a, b) => b.tarih.localeCompare(a.tarih)) });
+    const guncel = liste.find(p => p.id === pf.id);
+    this.modulYaz('personel', liste);
+    this.denetimYaz('veri', 'Personel gün kaydı eklendi', GUN_TUR_PERSONEL[t.tur] + ' · ' + t.tarih, pf.ad);
+    this.setState({ personel: liste, personelForm: { ...pf, gunler: guncel.gunler },
+      personelGunTaslak: { tarih: '', tur: 'izin', saat: '', not: '' } });
+  }
+  personelGunSil(gunId) {
+    const pf = this.state.personelForm;
+    if (!pf || !pf.id) return;
+    const liste = (this.state.personel || []).map(p => p.id !== pf.id ? p
+      : { ...p, gunler: (p.gunler || []).filter(g => g.id !== gunId) });
+    const guncel = liste.find(p => p.id === pf.id);
+    this.modulYaz('personel', liste);
+    this.setState({ personel: liste, personelForm: { ...pf, gunler: guncel.gunler } });
   }
   // Muhtar numara defteri — madde 1: talep formunda telefon girilince köy
   // otomatik önerilir. Basit tutuldu: köy/ilçe serbest metin, listeye göre
@@ -7882,6 +8047,34 @@ class Component extends DCLogic {
     if (!window.confirm(kart.ad + ' listeden kalkacak. Görev dökümü kalır. Onaylıyor musunuz?')) return;
     this.denetimYaz('veri', 'Araç listeden kaldırıldı', ARAC_TUR[kart.tur].ad, kart.ad);
     this.aracYaz({ ...a, list: (a.list || []).filter(x => x.id !== id) }, kart.ad + ' listeden kaldırıldı.');
+  }
+  // Araç günlük kaydı — bakım/arıza/muayene/görev günleri, form kapanmadan eklenir (Faz 2)
+  aracGunEkle() {
+    const af = this.state.aracForm;
+    if (!af || !af.id) return;
+    const t = this.state.aracGunTaslak || {};
+    if (!t.tarih) return this.duyur('Tarih seçin.', 4000, 'kotu');
+    if (!GUN_TUR_ARAC[t.tur]) return this.duyur('Kayıt türü seçin.', 4000, 'kotu');
+    const kayit = { id: 'gn' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      tarih: t.tarih, tur: t.tur, saat: (t.saat || '').trim(), not: (t.not || '').trim() };
+    const a = this.state.arac || { list: [], hareket: [] };
+    const list = (a.list || []).map(v => v.id !== af.id ? v
+      : { ...v, gunler: [kayit, ...(v.gunler || [])].sort((x, y) => y.tarih.localeCompare(x.tarih)) });
+    const guncel = list.find(v => v.id === af.id);
+    this.modulYaz('arac', { ...a, list });
+    this.denetimYaz('veri', 'Araç gün kaydı eklendi', GUN_TUR_ARAC[t.tur] + ' · ' + t.tarih, af.ad);
+    this.setState({ arac: { ...a, list }, aracForm: { ...af, gunler: guncel.gunler },
+      aracGunTaslak: { tarih: '', tur: 'bakim', saat: '', not: '' } });
+  }
+  aracGunSil(gunId) {
+    const af = this.state.aracForm;
+    if (!af || !af.id) return;
+    const a = this.state.arac || { list: [], hareket: [] };
+    const list = (a.list || []).map(v => v.id !== af.id ? v
+      : { ...v, gunler: (v.gunler || []).filter(g => g.id !== gunId) });
+    const guncel = list.find(v => v.id === af.id);
+    this.modulYaz('arac', { ...a, list });
+    this.setState({ arac: { ...a, list }, aracForm: { ...af, gunler: guncel.gunler } });
   }
   // Görev ver / teslim al: sayaç okuması her iki uçta da kayda geçer
   aracGorevIsle(g) {
@@ -11741,6 +11934,31 @@ class Component extends DCLogic {
             onSayac: e => this.setState({ aracForm: { ...this.state.aracForm, sayac: e.target.value } }),
             muayene: af ? af.muayene : '',
             onMuayene: e => this.setState({ aracForm: { ...this.state.aracForm, muayene: e.target.value } }),
+            gunlukVar: !!af && !!af.id,
+            gunluk: (!af || !af.id) ? null : (() => {
+              const taslak = s.aracGunTaslak || { tarih: '', tur: 'bakim', saat: '', not: '' };
+              const gunler = af.gunler || [];
+              return {
+                tarih: taslak.tarih,
+                onTarih: e => this.setState({ aracGunTaslak: { ...this.state.aracGunTaslak, tarih: e.target.value } }),
+                turSec: Object.entries(GUN_TUR_ARAC).map(([k, ad]) => ({
+                  label: ad, ...seg(taslak.tur === k, () => this.setState({ aracGunTaslak: { ...this.state.aracGunTaslak, tur: k } }))
+                })),
+                saat: taslak.saat,
+                onSaat: e => this.setState({ aracGunTaslak: { ...this.state.aracGunTaslak, saat: e.target.value } }),
+                not: taslak.not,
+                onNot: e => this.setState({ aracGunTaslak: { ...this.state.aracGunTaslak, not: e.target.value } }),
+                ekle: () => this.aracGunEkle(),
+                liste: gunler.slice(0, 12).map(g => ({
+                  id: g.id,
+                  tarih: (g.tarih || '').split('-').reverse().join('.'),
+                  tur: GUN_TUR_ARAC[g.tur] || g.tur,
+                  ek: [g.saat ? g.saat + ' sa' : '', g.not || ''].filter(Boolean).join(' · '),
+                  sil: () => this.aracGunSil(g.id)
+                })),
+                bos: gunler.length === 0
+              };
+            })(),
             kaydet: () => this.aracKaydet(this.state.aracForm),
             kapat: () => this.setState({ aracForm: null })
           },
@@ -11987,6 +12205,33 @@ class Component extends DCLogic {
             kullanicilar: (s.users || []).map(u => ({ user: u.user, ad: u.name + ' · ' + u.user })),
             onKullanici: e => this.setState({ personelForm: { ...this.state.personelForm, kullanici: e.target.value } }),
             kullaniciNot: 'Bağlanırsa bu kişi programa girdiğinde açtığı kayıtlar kendi adına yazılır. Aynı hesap tek kişiye bağlanabilir.',
+            gunlukVar: !!pf && !!pf.id,
+            gunluk: (!pf || !pf.id) ? null : (() => {
+              const taslak = s.personelGunTaslak || { tarih: '', tur: 'izin', saat: '', not: '' };
+              const gunler = pf.gunler || [];
+              return {
+                tarih: taslak.tarih,
+                onTarih: e => this.setState({ personelGunTaslak: { ...this.state.personelGunTaslak, tarih: e.target.value } }),
+                turSec: Object.entries(GUN_TUR_PERSONEL).map(([k, ad]) => ({
+                  label: ad, ...seg(taslak.tur === k, () => this.setState({ personelGunTaslak: { ...this.state.personelGunTaslak, tur: k } }))
+                })),
+                saatVar: taslak.tur === 'fazla_mesai',
+                saat: taslak.saat,
+                onSaat: e => this.setState({ personelGunTaslak: { ...this.state.personelGunTaslak, saat: e.target.value } }),
+                not: taslak.not,
+                onNot: e => this.setState({ personelGunTaslak: { ...this.state.personelGunTaslak, not: e.target.value } }),
+                ekle: () => this.personelGunEkle(),
+                liste: gunler.slice(0, 12).map(g => ({
+                  id: g.id,
+                  tarih: (g.tarih || '').split('-').reverse().join('.'),
+                  tur: GUN_TUR_PERSONEL[g.tur] || g.tur,
+                  ek: [g.saat ? g.saat + ' sa' : '', g.not || ''].filter(Boolean).join(' · '),
+                  sil: () => this.personelGunSil(g.id)
+                })),
+                bos: gunler.length === 0,
+                sayi: gunler.length
+              };
+            })(),
             kaydet: () => this.personelKaydet(this.state.personelForm),
             kapat: () => this.setState({ personelForm: null })
           },

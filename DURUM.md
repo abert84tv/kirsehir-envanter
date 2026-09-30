@@ -790,3 +790,62 @@ doğrulayacak.
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok (muhtar verisi var olan `kurum_veri` mekanizmasını
 kullanıyor, yeni tablo/RPC gerekmedi).
+
+
+## Faz 2 — personel/araç günlük kaydı — sürüm 2026.09.30-95
+
+Faz 1'in ardından kullanıcı "faz 2'ye başla" dedi. Plan dosyasındaki Faz 2
+kapsamının ilk maddesi (personel/araç günlük izin-mesai kaydı) bitirildi;
+ikinci maddesi (saha kanıtı öncesi/sonrası aşaması) henüz başlanmadı.
+
+**Ne eklendi.** Personel havuzu ve araç ekranındaki mevcut düzenleme
+formları (yeni ekran/panel açılmadı — Faz 1'de kurulan "var olan paneli
+genişlet" ilkesi burada da izlendi) bir "Gün kaydı" alt bölümüyle
+genişletildi:
+
+- **Personel** — kişi düzenlenirken (yeni kişi eklenirken değil, `id`si
+  olan kayıtlı kişide) tarih + tür (İzin/Rapor/Fazla mesai/Başka görevde)
+  + (fazla mesaideyse) saat + not girilip eklenir; liste kişi kartının
+  altında en yeni üstte görünür, tek tek silinebilir.
+- **Araç** — aynı desen, tür seçenekleri Bakım/Arıza-tamir/Sahada
+  görevde/Muayene-belge, saat alanı "Saat/km" olarak km sayacı ya da
+  motor saati de kapsayacak şekilde etiketlendi.
+
+Kayıtlar ayrı bir tabloya gitmiyor — personel/araç kartının kendi
+`gunler` dizisinde tutuluyor, mevcut `modulYaz('personel', …)` /
+`modulYaz('arac', …)` eşitleme mekanizmasını kullanıyor. Yeni SQL/RPC
+gerekmedi. Ekleme/silme, formu kapatmadan aynı panelde çalışıyor —
+personelKaydet/aracKaydet'in "kaydedince paneli kapat" davranışını
+tetiklemeden state'i tazeliyor (`personelGunEkle`/`personelGunSil`,
+`aracGunEkle`/`aracGunSil`).
+
+Bir kenar durum canlı test sırasında değil, kod incelemesinde yakalandı:
+`personelKaydet` düzenlemede kart nesnesini SIFIRDAN kuruyor (araç
+tarafındaki gibi var olanla birleştirmiyor) — bu yüzden `gunler` alanı
+`kart` nesnesine açıkça eklendi, yoksa personel kaydı her düzenlemede
+gün kaydını sıfırlardı. Araç tarafında `aracKaydet` zaten
+`{ ...list[i], ...kart }` ile birleştirdiği için `gunler` otomatik
+korunuyor, orada değişiklik gerekmedi.
+
+Yeni sabitler: `GUN_TUR_PERSONEL`, `GUN_TUR_ARAC` (ARAC_DURUM'un hemen
+altında). Yeni state alanları: `personelGunTaslak`, `aracGunTaslak`
+(eklenecek kaydın taslağı — kaydedilince sıfırlanır).
+
+**Sıradaki iş — saha kanıtı öncesi/sonrası aşaması (madde 10).** Tasarım
+kararı verildi ama uygulanmadı: yeni DB sütunu açmak yerine mevcut
+`foto.aciklama` metnine aşama etiketi eklenecek (ör. "Arıza kaydı ·
+Öncesi" / "Arıza kaydı · Sonrası"), arıza fotoğraf yükleme arayüzünde
+iki ayrı buton ya da bir seçim anahtarıyla.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (363/363, 310/310), yerel sunucuda konsol hata deseni sabit kaldı
+(bilinen SVG gürültüsü + yeni tarih alanları için beklenen
+"yyyy-MM-dd" uyarısı — donus/muayene alanlarındakiyle aynı türden,
+zararsız), "[dc-runtime] template compile FAILED" hiç çıkmadı. Giriş
+gerektiren uçtan uca test (gerçek kişi/araçta gün kaydı ekle-sil)
+kullanıcı tarafından yapılacak — test hesabı canlı veritabanında
+oluşturulamıyor (bkz. önceki oturum notu).
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok.

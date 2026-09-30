@@ -1343,3 +1343,76 @@ yetinildi. Kullanıcı giriş yapıp gerçek görünümü kontrol edecek.
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok, yalnızca istemci tarafı.
+
+## Sol menü denetimi + Özet ekranı sekmelere ayrıldı — sürüm 2026.09.30-103
+
+Kullanıcı: "sol menüyüde düzenle baştan sona / özet bölümünün içeriği çok
+karmaşık bu kısmı düzenle." İki ayrı Explore taraması yapıldı (biri sol
+menü + üst çubuk + telefon navigasyonu, biri Özet ekranının tam içeriği)
+— giriş yapılamadığı için yine kör tahmin yerine tam satır numaralı
+haritalama istendi.
+
+**Sol menü — bulgu: gerçek bir karmaşa yoktu, küçük iki temizlik
+yapıldı.** Masaüstü kenar çubuğu (`navGruplu`) yalnız grup başlığı +
+öge listesi + alttaki kullanıcı kartından oluşuyor, tek başka kontrol
+yok (tema/senkron/arama gibi şeyler ayrı bir üst çubukta duruyor, kenar
+çubuğun kendisi zaten sadeydi). Önceki turda zaten iki zincire göre
+yeniden gruplanmıştı (Saha işleri/Envanter/Çözümleme/Sistem), o
+gruplama hâlâ doğru. Bulunan iki gerçek, küçük sorun düzeltildi:
+- `nav` ve `goOzet` render prop'ları hiçbir şablonda çağrılmıyordu (grep
+  ile doğrulandı) — ölü kod, silindi.
+- Telefonda Ayarlar > Görünüm içindeki "Diğer ekranlar" kısayol listesi
+  (`otherScreens`), o an zaten açık olan Ayarlar'a kendine dönen bir
+  düğme gösteriyordu. `navVisible.filter(...&& !g.acik)` ile düzeltildi
+  — artık hangi sayfadan açılırsa açılsın o an açık olan sayfa kendi
+  kısayol listesinde çıkmıyor (yalnız Ayarlar'a özel bir yama değil,
+  genel kural).
+Kuyruk (Kuyruk ekranı) kasıtlı olarak menüde değil, yalnız üst çubuk
+göstergesinde — bu, 2026.09.15'te bilinçli alınmış bir karar (kod
+yorumuyla doğrulandı), dokunulmadı.
+
+**Özet ekranı — asıl karmaşa burada, üç sekmeye bölündü.** Tarama tam
+9 ayrı bölümü tek, sürekli kayan bir sayfada üst üste buldu: istatistik
+kutuları, aktif/pasif dağılımı, ilçe bazında, köy bazında, ekip
+performansı, tekrarlayan arızalar, eksik bilgi listesi, esnek tarih/ilçe
+raporu (6 kutu — arıza+deneme+stok üç farklı alanı tek şeritte
+karıştırıyordu), köy bazlı malzeme maliyeti. Hiç alt sekme/katlama
+yoktu — kullanıcı sayfaya girince 9 farklı konuyu art arda kaydırmak
+zorunda kalıyordu. Üçe bölündü (istatistik kutuları ve dışa aktarım
+düğmeleri her sekmede sabit kalıyor):
+- **Envanter**: aktiflik + ilçe/köy dağılımı + eksik bilgi + yakınımdaki
+  tesisler — envanterin durumu/dağılımı.
+- **Ekip ve arıza**: ekip performansı + tekrarlayan arızalar.
+- **Rapor**: tarih/ilçe filtreli özet (6 istatistik kutusu) + köy bazlı
+  malzeme maliyeti — ikisi zaten aynı zaman/ilçe süzgecini paylaşıyordu,
+  birlikte anlamlı.
+Uygulama tekniği: hiçbir veri/hesaplama TAŞINMADI, yalnız var olan
+bölümler `ozet.envanterSekmesi`/`ekipSekmesi`/`raporSekmesi` bayraklarıyla
+sarıldı (aynı bayrak birden fazla yerde tekrar kullanılabildiği için
+bölümleri fiziksel olarak yeniden sıralamaya gerek kalmadı — düşük risk).
+Telefonda zaten olmayan bölümler (köy bazında, esnek rapor, malzeme
+maliyeti — masaüstüne özgüydü, bu turda da taşınmadı) olduğu için
+telefonun kendi sekme listesi (`sekmeSecTel`) yalnız iki sekme
+gösteriyor: Envanter, Ekip ve arıza.
+
+**Yan bulgu — gerçek bir görüntüleme hatası, düzeltildi.** Tarama
+telefon tarafında somut bir kusur buldu: "Eksik bilgisi olan kayıtlar"
+başlığı boş görünüyordu, gerçek liste (`ozet.missing`) yanlış yerde,
+"Tekrarlayan arızalar"dan SONRA, kendi başlığı olmadan çıkıyordu — kod
+değişmeden önceki hâliyle birebir doğrulandı (satır numaralarıyla),
+yeniden düzenleme sırasında doğru yerine (kendi başlığının hemen altına,
+Envanter sekmesinde) taşındı.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (383/383, 317/317). Yerel sunucuda hem masaüstü hem 375×812
+mobil görünümde konsol JS hatası (TypeError/ReferenceError/"is not a
+function") yok — `renderVals()` her render'da tüm bu yeni kodu
+(sekmeSec/sekmeSecTel/otherScreens filtre değişikliği) aktif sekmeden
+bağımsız çalıştırdığı için bir hata olsaydı giriş ekranında bile
+patlardı. Sekmelerin GÖRSEL hâlini (gerçek geçiş, gerçek veri ile
+kırılma noktaları) doğrulayamadım — giriş yapılamıyor, kullanıcı
+giriş yapıp görecek.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok.

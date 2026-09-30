@@ -961,3 +961,74 @@ bekleniyor.
 değişikliği var — `SQL-ambar-koy-raporu.sql` Supabase MCP ile canlıya
 zaten uygulandı, tekrar çalıştırmaya gerek yok (`create or replace`,
 zararsız da olurdu).
+
+## Faz 4 (kısmen) — NetCAD kolektör KML/KMZ içe aktarma, araç konum altyapısı — sürüm 2026.09.30-98
+
+Kullanıcı "devam edelim, faz 4'e başla" dedi. Plan dosyasındaki Faz 4
+kapsamı: "çoklu-sağlayıcı araç-takip adaptörü (Arvento önce, madde 7-8),
+NetCAD kolektör projeleri KML/KMZ içe aktarma (madde 34)".
+
+**Önemli karar — Arvento için sahte istemci yazılmadı.** Kullanıcı madde
+7-8'de "hem Arvento hem diğer firmalardan alıp çalışacak şekilde sistemi
+tasarla" dedi ve API anahtarını ileride vereceğini söyledi. Arvento'nun
+(ya da başka bir araç-takip firmasının) gerçek REST API'sinin kimlik
+doğrulama yöntemini, uç nokta adreslerini ve yanıt biçimini bilmiyorum —
+bunu tahmin ederek bir istemci yazmak, anahtar geldiğinde çalışmayan ama
+"bitti" görünen bir kod üretirdi. Bunun yerine yalnız gerçekten inşa
+edilebilecek kısımlar yapıldı: veri modeli (`sonKonum`), elle giriş
+düğmesi, haritada gösterme. Anahtar/uç nokta bilgisi geldiğinde doğal
+bağlantı noktası bir Supabase Edge Function'dır (anahtar yalnız sunucuda
+durur — `kurum_veri` gibi tüm kullanıcılara giden bir JSONB'ye yazılırsa
+herkesin cihazına sızar, bu yüzden bilinçli olarak oraya konmadı).
+
+**Ne eklendi — NetCAD kolektör (madde 34).**
+- `hat.html`'in `TURLER` listesine "Kolektör hattı" eklendi (kanalizasyon
+  toplayıcı, `#8b5a2b`) — `hat` tablosunda `tur` sütununda CHECK kısıtı
+  olmadığı canlı veritabanından doğrulandı (`pg_constraint` sorgusu),
+  yeni tür için SQL migration gerekmedi.
+- Yeni "KML/KMZ içe aktar" düğmesi: `.kml` doğrudan `DOMParser` ile,
+  `.kmz` (ZIP arşivi) kütüphane eklemeden — merkezi dizin elle okunuyor,
+  deflate akışı tarayıcının kendi `DecompressionStream('deflate-raw')`'ıyla
+  açılıyor (proje boyunca dışarıdan bağımlılık eklenmeme kuralına uyar).
+  Her iki yol da (stored + deflate sıkıştırma) elle inşa edilmiş test ZIP
+  dosyalarıyla tarayıcı konsolunda gerçekten çalıştırılıp doğrulandı,
+  yalnız kod incelemesiyle bırakılmadı.
+- İçe aktarılan her `<LineString>` soldan seçili hat türüyle güzergâh
+  olarak eklenir, uçlarından elle düzeltilebilir — NetCAD'den .ncz yerine
+  kml/kmz çıktısı alınarak kullanılır (madde 34'te kullanıcının kendisi
+  "dxf dwg kml kmz de verebiliyor" demişti, .ncz'yi programın doğrudan
+  okuması istenmedi).
+
+**Ne eklendi — araç konum altyapısı (madde 7-9, canlı bağlantı hariç).**
+- Araç kartına `sonKonum: {lat, lon, zaman, not, kaynak}` alanı eklendi.
+  `aracKaydet`'in güncelleme birleştirmesi (`{...list[i], ...kart}`)
+  zaten var olan alanları koruduğu için ayrı bir taşıma kodu gerekmedi
+  (Faz 2'deki personel/gün kaydı farkının tersine — orada `personelKaydet`
+  kartı sıfırdan kuruyordu, burada gerek yoktu).
+  Yeni metod `aracKonumKaydet` — panel kapanmadan konumu kaydeder.
+  Araç düzenleme formunda yeni "Son konum" alt bölümü: mevcut konum
+  (varsa) + "Haritada göster" (`flyTo` ile ana haritayı oraya uçurur) +
+  enlem/boylam/not girip kaydetme.
+- Bu, canlı API bağlanana kadar "hangi araç nerede" sorusuna elle de olsa
+  cevap verir ve gerçek entegrasyon geldiğinde UI tarafı değişmeden kalır
+  — yalnız `kaynak: 'elle'` yerine `'arvento'` yazan bir sunucu işi eklenir.
+
+**Test durumu.** `duman-testi.js` temiz, `sc-if`/`sc-for` etiket sayıları
+dengeli (369/369, 315/315), yerel sunucuda konsol hata deseni sabit kaldı,
+"[dc-runtime] template compile FAILED" hiç çıkmadı. KML/KMZ ayrıştırma
+tarayıcı konsolunda gerçek (elle inşa edilmiş) dosyalarla test edildi —
+bu oturumdaki tek "gerçekten çalıştırıp doğrulanan" JS mantığı, geri kalan
+her şey statik inceleme + regresyon taramasıyla doğrulandı. Giriş
+gerektiren uçtan uca test (araç konumu kaydet, haritada göster; gerçek bir
+NetCAD KML dosyasıyla içe aktarma) kullanıcı tarafından yapılacak.
+
+**Sıradaki iş.** Faz 4'ün kalanı (gerçek Arvento bağlantısı) kullanıcıdan
+API anahtarı/uç nokta bilgisi gelince yapılabilir. Plan dosyasına göre
+sıradaki faz: Faz 5 — talep alma kanalları (WhatsApp/Telegram/SMS/sesli
+çağrı), o da gerçek sağlayıcı hesapları bekliyor. Onun dışında henüz
+bloklanmamış kalan iş yok — kullanıcıya soruldu.
+
+### Yükleme
+`git push origin main` — Vercel otomatik yayına alır. Veritabanı
+değişikliği yok (hat tablosunda CHECK kısıtı olmadığı için yeni tür
+migration gerektirmedi).

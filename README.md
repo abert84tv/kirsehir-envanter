@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.30-97**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.30-98**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -119,7 +119,7 @@ yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.30-97 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.30-98 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
@@ -130,22 +130,24 @@ sadeleştirme) 2026.09.15 oturumunda bitti. 2026.09.30'da "büyük güncelleme"
 `C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`, ayrıntılı
 kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
 
-1. **Faz 1 (2026.09.30-94), Faz 2 (2026.09.30-96) tamamlandı. Faz 3 kısmen
-   tamamlandı (2026.09.30-97).** Özet ekranında esnek raporlama: Bugün/
-   Hafta/Ay/Yıl/Özel aralık + ilçe süzgeci ile açılan/çözülen arıza, deneme,
-   ambar hareketi ve malzeme maliyeti gerçek tarih damgasından hesaplanıyor
-   (eskiden oturum içindeki kaydı sayan bir yer tutucuydu); köy bazlı
-   malzeme kullanımı/maliyeti tablosu eklendi (`SQL-ambar-koy-raporu.sql` —
-   ambar hareketine tesis referansı ekler, yalnız arıza kapanışından gelen
-   sarfta dolar). Ambar ekranından elle girilen sarf/zimmet/hurda bir
-   tesise bağlanmadığı için raporda "Tesis belirtilmemiş" altında kalır —
-   bilinçli v1 sınırı. Düşük stok uyarısı bitti: kritik stoğa düşen kalem
-   için ambar hareketinden hemen sonra bildirim (toast) çıkıyor, Özet'te
-   "Kritik stok" sayacı var; ambar fiyat sütunu zaten vardı. Madde 37'nin
-   "her ekrandan" kısmı yalnız Özet'te uygulandı — İş Emirleri/diğer
-   ekranlara aynı tarih süzgecinin taşınması istenirse ayrıca yapılabilir.
-   Faz 4'e (Arvento/çoklu araç takip, NetCAD KML/KMZ) geçilebilir —
-   kullanıcı onayı bekliyor.
+1. **Faz 1 (2026.09.30-94), Faz 2 (2026.09.30-96), Faz 3 (2026.09.30-97,
+   kısmen) tamamlandı. Faz 4 kısmen tamamlandı (2026.09.30-98).**
+   - NetCAD kolektör projeleri (madde 34) — `hat.html`'e "Kolektör hattı"
+     türü + "KML/KMZ içe aktar" düğmesi eklendi. .kml doğrudan, .kmz
+     (ZIP+deflate) kütüphanesiz, tarayıcının `DecompressionStream`'iyle
+     açılıyor — her iki yol da gerçek dosyayla test edildi (bkz. DURUM.md).
+     Elle çizmeden güzergâhı içe aktarır, sonra uçlardan düzeltilebilir.
+   - Araç takip (madde 7-9) — **altyapı hazır, canlı bağlantı yok.** Araç
+     kartına `sonKonum` (enlem/boylam/zaman/not/kaynak) eklendi; araç
+     düzenleme formunda elle girilir, "Haritada göster" ana haritayı oraya
+     uçurur. Gerçek Arvento (veya başka sağlayıcı) API anahtarı ve uç nokta
+     bilgisi gelmeden canlı sorgulama yazılamaz — yanlış varsayımla sahte
+     bir istemci yazmak yerine bu nokta açıkça bekletildi. Anahtar
+     geldiğinde doğal bağlantı noktası: bir Supabase Edge Function (anahtar
+     yalnız sunucuda durur, hiçbir kullanıcının cihazına gitmez) periyodik
+     olarak aynı `sonKonum` alanını doldurur — istemci tarafı zaten hazır.
+   Faz 4'ün kalanı (çoklu-sağlayıcı adaptör, gerçek API) kullanıcıdan
+   Arvento anahtarı gelince yapılabilir.
 2. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
    bekleniyor.** Gerçek kaynağı bulundu (`abert84tv/elektrik-hesaplama`,
    Next.js/TypeScript, 22.121 satır, test edilmiş hesap motorları). Tam kod
@@ -157,13 +159,11 @@ kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
    hata basıyor. Kaynağı `support.js` — kökü bulmak gerçek bir hata
    ayıklayıcı/breakpoint erişimi ister, şu an elde yok.
 4. Kurulum bekleyenleri: Cloudflare R2 fotoğraf deposu, SMS/WhatsApp/Telegram
-   operatör aboneliği (Arvento API anahtarı dahil), HGM ortofoto lisansı,
-   gerçek personel hesapları.
+   operatör aboneliği, **Arvento API anahtarı** (madde 7-9'un canlı tarafı
+   bunu bekliyor), HGM ortofoto lisansı, gerçek personel hesapları.
 5. Veri eksikleri: AG panosu / GES gerçek kayıtları (depo artık 24 gerçek
    kayıtla başladı), malzeme birim fiyatları, hayvan varlığı ekstresi, 264
    kuyunun teknik alanları.
-6. NetCAD kolektör projeleri (madde 34) — .ncz doğrudan okunamaz, kml/kmz
-   çıktısı istenecek (bu oturumdaki ISU KML altyapısıyla aynı yöntem).
 
 Yapı kararı: menü ve sayfa yapısı (Envanter, İşler, Kaynaklar, Özet, Hat
 Kesiti, Ayarlar) **sabittir**. Kapanan modüller sayfa değil süzgeç düşürür.

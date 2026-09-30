@@ -108,6 +108,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button id="bitir" disabled>Hattı bitir</button>
     <button id="geri" disabled>Son noktayı sil</button>
     <button id="vaz" disabled>Vazgeç</button>
+    <button id="disaAl">KML/KMZ içe aktar</button>
     <button id="zemin">Uydu zemin</button>
   </div>
   <div id="durum">Hat çizmek için “Yeni hat çiz”e basın, soldan tür seçin, haritaya tıklayarak güzergâhı geçin ve “Hattı bitir”e basın.</div>
@@ -124,7 +125,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
         <div class="toplam"><span>Toplam uzunluk</span><b id="toplam">—</b></div>
       </div>
       <div class="sec">
-        <div class="note">Uzunluklar WGS84 üzerinde haversine ile hesaplanır — kuş uçuşu değil, çizdiğiniz kırıklı güzergâhın gerçek uzunluğudur. Hat uçlarını sürükleyerek düzeltebilirsiniz. Çizimler kaydın kendi kaydında saklanır ve envanterde bu kayıtla birlikte görünür.</div>
+        <div class="note">Uzunluklar WGS84 üzerinde haversine ile hesaplanır — kuş uçuşu değil, çizdiğiniz kırıklı güzergâhın gerçek uzunluğudur. Hat uçlarını sürükleyerek düzeltebilirsiniz. Çizimler kaydın kendi kaydında saklanır ve envanterde bu kayıtla birlikte görünür. "KML/KMZ içe aktar" ile NetCAD gibi bir CAD programından dışa aktarılmış güzergâhı elle çizmeden yükleyebilirsiniz — soldan seçili hat türüyle eklenir.</div>
       </div>
     </div>
   </div>
@@ -136,7 +137,8 @@ const TURLER = [
   ['sebeke', 'Şebeke hattı', '#6c6763', 'Köy içi dağıtım'],
   ['ag', 'AG enerji hattı', '#1b6ef3', 'Trafo → pano, alçak gerilim'],
   ['og', 'OG enerji hattı', '#7b3fbf', 'Orta gerilim, direkli'],
-  ['dc', 'GES DC hattı', '#c08a00', 'Panel → invertör']
+  ['dc', 'GES DC hattı', '#c08a00', 'Panel → invertör'],
+  ['kolektor', 'Kolektör hattı', '#8b5a2b', 'Kanalizasyon toplayıcı, NetCAD projesinden']
 ];
 const REN = Object.fromEntries(TURLER.map(t => [t[0], t[2]]));
 const AD = Object.fromEntries(TURLER.map(t => [t[0], t[1]]));
@@ -244,7 +246,89 @@ function dugmeler() {
   el('geri').disabled = !c || !cizim.length;
   el('vaz').disabled = !c;
   el('ciz').disabled = !yazma;
+  el('disaAl').disabled = !yazma;
 }
+// .kmz bir ZIP arşividir (genelde tek bir doc.kml içerir). Kütüphane
+// eklemeden, merkezi dizini elle okuyup deflate akışını tarayıcının
+// kendi DecompressionStream'iyle açıyoruz — proje boyunca dışarıdan
+// bağımlılık eklenmemesi kuralına uyar (bkz. README "Teknik yapı").
+async function kmzAc(dosya) {
+  const buf = new Uint8Array(await dosya.arrayBuffer());
+  const dv = new DataView(buf.buffer);
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 22 - 65536); i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) throw new Error('ZIP sonu bulunamadı — bozuk .kmz dosyası.');
+  const girisSayisi = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true);
+  for (let i = 0; i < girisSayisi; i++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const sikistirma = dv.getUint16(p + 10, true);
+    const sikBoyut = dv.getUint32(p + 20, true);
+    const adUzunluk = dv.getUint16(p + 28, true);
+    const ekUzunluk = dv.getUint16(p + 30, true);
+    const yorumUzunluk = dv.getUint16(p + 32, true);
+    const yerelOfset = dv.getUint32(p + 42, true);
+    const ad = new TextDecoder().decode(buf.subarray(p + 46, p + 46 + adUzunluk));
+    if (/\.kml$/i.test(ad)) {
+      const lAdUzunluk = dv.getUint16(yerelOfset + 26, true);
+      const lEkUzunluk = dv.getUint16(yerelOfset + 28, true);
+      const veriOfset = yerelOfset + 30 + lAdUzunluk + lEkUzunluk;
+      const veri = buf.subarray(veriOfset, veriOfset + sikBoyut);
+      let acik;
+      if (sikistirma === 0) acik = veri;
+      else if (sikistirma === 8) {
+        const ds = new DecompressionStream('deflate-raw');
+        const yazici = ds.writable.getWriter();
+        yazici.write(veri); yazici.close();
+        acik = new Uint8Array(await new Response(ds.readable).arrayBuffer());
+      } else throw new Error('Desteklenmeyen sıkıştırma yöntemi (' + sikistirma + ') — .kmz standart dışı.');
+      return new TextDecoder('utf-8').decode(acik);
+    }
+    p += 46 + adUzunluk + ekUzunluk + yorumUzunluk;
+  }
+  throw new Error('.kmz içinde .kml dosyası bulunamadı.');
+}
+// KML'deki <coordinates> sırası lon,lat,yükseklik — Leaflet [lat,lon] bekler
+function kmlIsle(metin) {
+  const doc = new DOMParser().parseFromString(metin, 'text/xml');
+  if (doc.querySelector('parsererror')) throw new Error('KML dosyası okunamadı — biçim bozuk.');
+  const cizgiler = [];
+  doc.querySelectorAll('LineString > coordinates, LinearRing > coordinates').forEach(c => {
+    const noktalar = (c.textContent || '').trim().split(/\s+/).map(t => {
+      const parca = t.split(',');
+      const lon = parseFloat(parca[0]), lat = parseFloat(parca[1]);
+      return [lat, lon];
+    }).filter(pt => isFinite(pt[0]) && isFinite(pt[1]));
+    if (noktalar.length >= 2) cizgiler.push(noktalar);
+  });
+  return cizgiler;
+}
+el('disaAl').onclick = () => {
+  if (!yazma) return;
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.kml,.kmz';
+  inp.style.display = 'none';
+  inp.onchange = async () => {
+    const f = inp.files && inp.files[0];
+    inp.remove();
+    if (!f) return;
+    el('durum').textContent = f.name + ' okunuyor…';
+    try {
+      const metin = /\.kmz$/i.test(f.name) ? await kmzAc(f) : await f.text();
+      const cizgiler = kmlIsle(metin);
+      if (!cizgiler.length) { el('durum').textContent = f.name + ' içinde çizgi (LineString) bulunamadı.'; return; }
+      cizgiler.forEach((noktalar, i) => hatlar.push({ id: 'h' + Date.now() + i, tur, noktalar }));
+      ciz(); dugmeler(); gonder();
+      el('durum').textContent = cizgiler.length + ' güzergâh ' + AD[tur] + ' olarak içe aktarıldı — kontrol edip gerekirse uçlardan düzeltin.';
+    } catch (e) {
+      el('durum').textContent = f.name + ' içe aktarılamadı: ' + e.message;
+    }
+  };
+  document.body.appendChild(inp);
+  inp.click();
+};
 map.on('click', e => {
   if (!cizim || !yazma) return;
   cizim.push([e.latlng.lat, e.latlng.lng]);

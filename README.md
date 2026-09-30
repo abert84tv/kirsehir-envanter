@@ -4,7 +4,7 @@ Bu paket, çalışmayı **Claude Code** tarafında sürdürmek için hazırland�
 programı yeniden tasarlamak değil, çalışan bu sürümü gerçek bir kod deposunda
 sürdürülebilir hâle getirmek.
 
-Çalışan sürüm: **2026.09.30-92**. Sürüm damgası `index.html` içindeki
+Çalışan sürüm: **2026.09.30-93**. Sürüm damgası `index.html` içindeki
 `const SURUM` satırında ve programın Ayarlar > Veri > "Program sürümü"
 kartında görünür.
 
@@ -117,7 +117,7 @@ yazıldığı için tekrar çalıştırmak da zarar vermez. 4'ü daha önce
 Depo kökü doğrudan yayındır — `git push origin main` yeterli, Vercel bu
 depoya bağlı, otomatik yayına alır (1-2 dakika). Yükleme sonrası tarayıcıda
 bir kez sert yenileme (Ctrl+F5) gerekir — eski kopya önbellekte kalırsa
-sürüm damgası 2026.09.30-92 görünmez ve düzeltmeler uygulanmamış gibi durur.
+sürüm damgası 2026.09.30-93 görünmez ve düzeltmeler uygulanmamış gibi durur.
 Program içinde Ayarlar > Veri > "Programı tazele" aynı işi yapar.
 
 ## 6. Claude Code'da sıradaki işler
@@ -128,9 +128,9 @@ sadeleştirme) 2026.09.15 oturumunda bitti. 2026.09.30'da "büyük güncelleme"
 `C:\Users\abert\.claude\plans\glistening-sauteeing-spindle.md`, ayrıntılı
 kayıt `DURUM.md`. Şu an en öncelikli, aktif bekleyenler:
 
-1. **Faz 1'in kalanı** — İş Emirleri'nin kendi liste/filtre ekranı, ekip+araç
-   atama formu, muhtar numara defteri (İş Emri'nin çekirdeği zaten canlıda,
-   2026.09.30-92).
+1. **Faz 1'in kalanı** — muhtar numara defteri (madde 1'in altyapı kısmı).
+   İş Emirleri'nin liste/filtre ekranı ve ekip+araç atama formu 2026.09.30-93
+   ile canlıda (İşler > Dış talepler'de "İş Emirleri" düğmesi).
 2. **abertmuhendislik.vercel.app entegrasyonu (madde 35) — kullanıcı kararı
    bekleniyor.** Gerçek kaynağı bulundu (`abert84tv/elektrik-hesaplama`,
    Next.js/TypeScript, 22.121 satır, test edilmiş hesap motorları). Tam kod

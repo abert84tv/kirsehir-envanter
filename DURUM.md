@@ -1683,7 +1683,7 @@ kayboluyordu. Fotoğraflar da arıza kimliği olmadan yükleniyordu. Şimdi:
 ambar, araç, talep (ve muhtar) yalnız cihazlarda kalmıştı; program hatayı
 sessizce kuyruğa alıp tekrar deniyordu. Karşılaştırma `k.rol::text` yapıldı.
 Cihazlarda kuyrukta bekleyen veriler artık bir sonraki bağlantıda gider.
-DİKKAT: SQL-moduller-sunucu.sql / SQL-veri-butunlugu.sql / SQL-ambar-hurda.sql
+DİKKAT: SQL-moduller-sunucu.sql / SQL-veri-butunlugu.sql / SQL-ambar-hurda.sql / SQL-ambar-koy-raporu.sql
 yeniden çalıştırılırsa hata geri gelir — ardından SQL-ariza-sunucu-duzeltme.sql
 çalıştırılmalı.
 

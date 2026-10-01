@@ -1515,3 +1515,24 @@ ekranlardaki eski kopya üzerine yazamasın. Özgün hâli API'ye kapalı
 Test: önizleme oturumunda (sunucu kapalı) sihirbazın her yolu ve kartın
 dört eylemi tarayıcıda çalıştırıldı, konsol temiz; duman testi temiz,
 etiket dengesi tamam.
+
+### Gerçek girişle uçtan uca test — 1 Ekim 2026
+Kullanıcı (a.bertan) şifresini Supabase'den sıfırlayıp yerel sunucuda giriş
+yaptı; testler gerçek veritabanına karşı yapıldı.
+- Oturum kalıcılığı: sayfa yenilenince doğrudan programa döndü.
+- Görüntüleme: 291 tesis sunucudan geldi; temizlenen depolar "— eksik",
+  GES'in gerçek değerleri yerinde.
+- **Bulunan hata — kod çakışması:** program sıradaki kodu yalnız görünen
+  kayıtlardan hesaplıyordu; KS-KUY-0265 çöp kutusundaki bir kayıtta
+  olduğundan sunucu yeni kaydı reddetti ve form, bilgiler kayboldu.
+  Düzeltme: `tesis_kaydet` artık kilit altında kodu denetliyor, çakışırsa
+  sıradaki boş kodu veriyor (çöptekiler ve eşzamanlı kayıtlar dahil);
+  program mesajı ve denetim izi sunucunun verdiği kodu yazıyor; kayıt
+  başarısız olursa form ve fotoğraflar açık kalıyor.
+- Yeni sihirbazla test kaydı: önerilen KS-KUY-0265 → sunucu KS-KUY-0266
+  verdi; yapım yılı boş, `veri.d` boş, 1 gerçek fotoğraf (4,5 KB) ve not
+  yazıldı. Ardından programın kendi akışıyla çöpe, fotoğraf (Storage dosyası
+  dahil) ve kayıt kalıcı silindi; veritabanında iz kalmadı (denetim izi
+  hariç, o silinemez).
+- Birim tekrarı ("21,450kw kW") düzeltildi; dar pencerede üst çubuk
+  düğmeleri ikona iniyor, başlık kaybolmuyor.

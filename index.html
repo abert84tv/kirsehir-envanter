@@ -80,6 +80,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-nabiz{display:inline-block;animation:ksNabiz 2.1s ease-in-out infinite}
 .ks-gir{animation:ksGir .35s ease both}
 @media (prefers-reduced-motion:reduce){.ks-canli::after,.ks-nabiz,.ks-gir{animation:none}}
+/* Dar masaüstü penceresinde üst çubuk düğmeleri yalnız ikona iner, başlık kaybolmaz */
+@media (max-width:1180px){.ks-ust-etiket{display:none}}
 </style>
 </helmet>
 
@@ -213,7 +215,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <!-- main -->
 <div style="flex:1;min-width:0;display:flex;flex-direction:column">
 <div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
-<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="flex:1 1 140px;min-width:110px;display:flex;flex-direction:column;gap:3px">
 <span style="font:700 17px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.baslik }}</span>
 <span style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.alt }}</span>
 </div>
@@ -224,11 +226,11 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;background:var(--color-uyari);color:#fff;font:600 12px/34px var(--font-body);letter-spacing:-.01em" style-hover="opacity:.88">{{ kuyrukG.label }}</button>
 </sc-if>
 <button onClick="{{ toggleNet }}" title="{{ net.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:8px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ net.yazi }};background:{{ net.zemin }}"><span class="ks-canli {{ net.nokta }}"></span>{{ net.badge }}</button>
-<button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.yenile }} {{ esitle.label }}</button>
-<button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ convBtn.border }};background:{{ convBtn.bg }};color:{{ convBtn.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
+<button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.yenile }}<span class="ks-ust-etiket">{{ esitle.label }}</span></button>
+<button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" aria-label="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ convBtn.border }};background:{{ convBtn.bg }};color:{{ convBtn.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔<span class="ks-ust-etiket">Koordinat</span></button>
 <button onClick="{{ toggleTheme }}" title="Açık / koyu tema" aria-label="Tema" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 <sc-if value="{{ naAcVar }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ naAc }}" title="Yeni tesis kaydı aç" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/34px var(--font-body);letter-spacing:-.01em" style-hover="background:var(--color-accent-600)">+ Yeni tesis</button>
+<button onClick="{{ naAc }}" title="Yeni tesis kaydı aç" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/34px var(--font-body);letter-spacing:-.01em" style-hover="background:var(--color-accent-600)">+<span class="ks-ust-etiket"> Yeni tesis</span></button>
 </sc-if>
 </div>
 
@@ -10547,7 +10549,8 @@ class Component extends DCLogic {
     // bunlar gerçek değer değil, eksik sayılır.
     const bos = v => v === '' || v === undefined || v === null || v === '—' || v === 'Yeni kayıt';
     const f = v => bos(v) ? '— eksik' : v;
-    const u = (v, unit) => bos(v) ? '— eksik' : v + ' ' + unit;
+    // Değer harfle bitiyorsa (ör. "21,450kw") birim zaten yazılmış — tekrar eklenmez
+    const u = (v, unit) => bos(v) ? '— eksik' : (/[A-Za-zÇĞİÖŞÜçğıöşü²³]$/.test(String(v).trim()) ? v : v + ' ' + unit);
     const var_ = v => v === true || v === 'true' || v === 'Var' ? 'Var' : (v === false || v === 'false' || v === 'Yok' ? 'Yok' : '— eksik');
     const hd = t => [t, '', 2];
     let out;
@@ -11617,21 +11620,28 @@ class Component extends DCLogic {
         // Elle açılan kayıt damgası: yalnızca bu damgayı taşıyanlar
         // çevrimdışı kuyruktan sunucuya gönderilir.
         asset.elle = true;
-        this.denetimYaz('kayit', 'Yeni tesis kaydı açıldı',
-          TYPES[asset.type].kind + ' · ' + asset.village + ' · ' + asset.district, asset.code);
+        const denetle = kod => this.denetimYaz('kayit', 'Yeni tesis kaydı açıldı',
+          TYPES[asset.type].kind + ' · ' + asset.village + ' · ' + asset.district, kod);
         if (this._sb && this._sb.tokenOku() && !s.offline) {
           if (!this.yazabilir(asset)) return this.kilitUyar(asset);
+          const eskiForm = { newAsset: n, naSz: s.naSz, scenario: s.scenario, tab: s.tab };
           this.setState({ scenario: null, newAsset: null, naSz: null, tab: 'harita' });
           this._sb.tesisKaydet(asset).then(async r => {
             if (!r.ok) {
-              this.say(r.cevrimdisi
+              // Form ve fotoğraflar kaybolmasın: kullanıcı düzeltip yeniden kaydedebilir
+              this._naFiles = dosyalar;
+              this.setState({ ...eskiForm, naSz: eskiForm.naSz ? { ...eskiForm.naSz, adim: 3, haritada: false } : null });
+              this.say((r.cevrimdisi
                 ? 'Bağlantı kesildi — kayıt gönderilemedi. Çevrimdışı kipe geçip yeniden deneyin, kayıt cihazda beklesin.'
-                : r.err, true);
-              setTimeout(() => this.setState({ toast: null }), 9000);
+                : r.err) + ' Form açık kaldı, bilgileriniz kaybolmadı.', true);
+              setTimeout(() => this.setState({ toast: null }), 12000);
               return;
             }
             await this.veriYenile(true);
             const yeni = this.state.assets.find(x => x.dbId === r.data);
+            // Kod çakışırsa sunucu sıradaki boş kodu verir; mesaj ve iz gerçek kodu yazar
+            asset.code = yeni ? yeni.code : asset.code;
+            denetle(asset.code);
             if (naNot) {
               if (yeni) this.setState(st => ({ notes: { ...st.notes, [yeni.id]: naNot } }));
               if (yeni) this.iz(yeni.id, 'Saha notu eklendi', naNot.slice(0, 90));
@@ -11653,6 +11663,7 @@ class Component extends DCLogic {
           selected: asset.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita',
           queue: [{ id: 'q' + Date.now(), title: asset.code + ' · yeni tesis', meta: `${asset.village} · ${TYPES[asset.type].kind}`, state: 'pending', dotPend: true }, ...s.queue]
         });
+        denetle(asset.code);
         if (this._bekleyenHat) { this.hatKaydet(asset.id, this._bekleyenHat); this._bekleyenHat = null; }
         this.yerelTesisYaz([asset, ...this.yerelTesisOku().filter(x => x.code !== asset.code)]);
         this.flyTo(asset.lat, asset.lon, 15);

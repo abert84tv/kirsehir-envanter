@@ -1313,46 +1313,216 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 </sc-if>
 
-<!-- ambar ve zimmet -->
+<!-- ambar ve stok -->
 <sc-if value="{{ tab.ambar }}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
-<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap">
-<div style="flex:1;min-width:280px">
-<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Ambar ve zimmet</h2>
-<div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ ambarEkran.not }}</div>
-</div>
-<button onClick="{{ ambarEkran.yeni }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Hareket gir</button>
-</div>
-<div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
-<sc-for list="{{ ambarEkran.stats }}" as="st" hint-placeholder-count="4">
-<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
-<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
-<span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
-</div>
-</sc-for>
-</div>
-<sc-if value="{{ ambarEkran.form.on }}" hint-placeholder-val="{{ false }}">
-<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:12px">
-<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-<span style="flex:1;min-width:160px;font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ ambarEkran.form.baslik }}</span>
-<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
-<sc-for list="{{ ambarEkran.form.turler }}" as="t" hint-placeholder-count="5">
-<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:10px 13px;background:{{ t.bg }};color:{{ t.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">{{ t.label }}</button>
-</sc-for>
-</div>
-</div>
-<div style="display:flex;gap:12px;flex-wrap:wrap">
-<label style="flex:2 1 260px;display:flex;flex-direction:column;gap:5px;min-width:0">
-<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Malzeme</span>
-<select value="{{ ambarEkran.form.malzeme }}" onChange="{{ ambarEkran.form.onMalzeme }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
-<sc-for list="{{ ambarEkran.form.malzemeler }}" as="m" hint-placeholder-count="6">
-<option value="{{ m }}">{{ m }}</option>
-</sc-for>
-</select>
+<div style="flex:1;min-height:0;position:relative;display:flex;flex-direction:column;background:{{ ui.bg }}">
+<div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;padding:16px 22px 22px;display:flex;flex-direction:column;gap:14px">
+
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<div style="flex:1 1 220px;min-width:0;font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.baslikAlt }}</div>
+<label style="position:relative;display:block;flex:0 1 300px;min-width:200px">
+<span style="position:absolute;left:11px;top:10px;color:{{ ui.mut }};display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></span>
+<input type="search" aria-label="Malzeme ara" placeholder="Malzeme adı, kodu ya da kategori…" value="{{ ambarEkran.q }}" onChange="{{ ambarEkran.onQ }}" style="all:unset;box-sizing:border-box;width:100%;height:36px;border:1px solid {{ ui.rule }};border-radius:10px;padding:0 12px 0 34px;font:400 13px/1 var(--font-body);background:{{ ui.surf }};color:{{ ui.fg }}">
 </label>
+<button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"></path><path d="M6 6 5 3H2"></path><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg>
+Sipariş listesi
+<sc-if value="{{ ambarEkran.sipVar }}" hint-placeholder-val="{{ false }}"><span class="ks-nabiz" style="display:inline-block;min-width:20px;height:20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 11px/20px var(--font-body);text-align:center;padding:0 5px;box-sizing:border-box">{{ ambarEkran.sipN }}</span></sc-if>
+</button>
+<sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ ambarEkran.malzemeYeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/36px var(--font-body)">Malzeme tanımla</button>
+</sc-if>
+<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ ambarEkran.yeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/1 var(--font-body)">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+Hareket gir
+</button>
+</sc-if>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+<sc-for list="{{ ambarEkran.kpis }}" as="k" hint-placeholder-count="4">
+<button onClick="{{ k.git }}" style="all:unset;box-sizing:border-box;cursor:{{ k.imlec }};border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;align-items:flex-end;gap:10px;min-width:0">
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:7px;font:500 12px/1.2 var(--font-body);color:{{ ui.mut }}">
+<sc-if value="{{ k.alarm }}" hint-placeholder-val="{{ false }}"><span class="ks-canli ks-kapali"></span></sc-if>
+<span>{{ k.label }}</span>
+</div>
+<div style="font:700 26px/1.15 var(--font-heading);letter-spacing:-.02em;margin-top:5px;white-space:nowrap;color:{{ k.valC }}">{{ k.val }}</div>
+<div style="font:600 11px/1.3 var(--font-body);color:{{ k.altC }};margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.alt }}</div>
+</div>
+{{ k.el }}
+</button>
+</sc-for>
+</div>
+
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start">
+<section style="min-width:0;border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};overflow:hidden">
+<div style="display:flex;align-items:center;gap:6px;padding:12px 16px 8px;flex-wrap:wrap">
+<sc-for list="{{ ambarEkran.kategoriler }}" as="c" hint-placeholder-count="7">
+<button onClick="{{ c.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 12px/1 var(--font-body);padding:6px 10px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }}">{{ c.l }} <span style="opacity:.65">{{ c.n }}</span></button>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:0 16px 10px;flex-wrap:wrap">
+<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">Sırala:</span>
+<div style="display:flex;background:{{ ui.surf2 }};border-radius:8px;padding:2px">
+<sc-for list="{{ ambarEkran.siralar }}" as="o" hint-placeholder-count="3">
+<button onClick="{{ o.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 12px/1 var(--font-body);padding:5px 10px;border-radius:6px;background:{{ o.bg }};color:{{ ui.fg }};box-shadow:{{ o.golge }}">{{ o.l }}</button>
+</sc-for>
+</div>
+<sc-for list="{{ ambarEkran.suzgecler }}" as="c" hint-placeholder-count="3">
+<button onClick="{{ c.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 11.5px/1 var(--font-body);padding:6px 9px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }}">{{ c.l }} <span style="opacity:.65">{{ c.n }}</span></button>
+</sc-for>
+<div style="flex:1"></div>
+<div style="display:flex;align-items:center;gap:10px;font:400 11px/1 var(--font-body);color:{{ ui.mut }}">
+<sc-for list="{{ ambarEkran.ambarAd }}" as="a" hint-placeholder-count="4">
+<span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:{{ a.c }}"></span>{{ a.ad }}</span>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 120px 160px 76px 100px 140px;align-items:center;gap:12px;padding:7px 16px;background:{{ ui.surf2 }};border-top:1px solid {{ ui.rule }};font:600 11px/1.2 var(--font-body);color:{{ ui.mut }}">
+<div>Malzeme</div><div>Kategori</div><div>Ambarlardaki mevcut</div><div>Ekiplerde</div><div>Son 14 gün</div><div>Kaç gün yeter</div>
+</div>
+<sc-if value="{{ ambarEkran.satirVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<sc-for list="{{ ambarEkran.satirlar }}" as="m" hint-placeholder-count="10">
+<button onClick="{{ m.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:minmax(0,1fr) 120px 160px 76px 100px 140px;align-items:center;gap:12px;padding:0 16px;min-height:50px;border-top:1px solid {{ ui.rule }};background:{{ m.zemin }}" style-hover="background:{{ ui.surf2 }}">
+<div style="min-width:0;padding:7px 0">
+<div style="display:flex;align-items:center;gap:6px;font:600 13px/1.25 var(--font-body);min-width:0"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.ad }}</span><sc-if value="{{ m.sipVar }}" hint-placeholder-val="{{ false }}"><span style="flex:none;font:700 10px/1 var(--font-body);padding:3px 5px;border-radius:5px;background:rgba(52,199,89,.15);color:#1b7a36">siparişte</span></sc-if></div>
+<div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};margin-top:2px">{{ m.kod }} · {{ m.birim }}</div>
+</div>
+<div style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.katL }}</div>
+<div style="display:flex;align-items:center;gap:8px">
+<div style="flex:1;height:8px;border-radius:4px;background:{{ ui.surf2 }};overflow:hidden;display:flex">
+<div style="height:8px;width:{{ m.w0 }};background:var(--color-accent)"></div>
+<div style="height:8px;width:{{ m.w1 }};background:#5e5ce6"></div>
+<div style="height:8px;width:{{ m.w2 }};background:#ff9f0a"></div>
+<div style="height:8px;width:{{ m.w3 }};background:#34c759"></div>
+</div>
+<div style="font:700 12.5px/1 var(--font-body);min-width:38px;text-align:right;color:{{ m.toplamFg }}">{{ m.toplamN }}</div>
+</div>
+<div style="font:400 12.5px/1.2 var(--font-body)">{{ m.ekipte }}</div>
+<div title="{{ m.tukYazi }}">{{ m.tukEl }}</div>
+<div>
+<div style="display:flex;align-items:baseline;gap:5px;white-space:nowrap"><span style="font:700 13px/1 var(--font-body);color:{{ m.gunC }}">{{ m.gun }}</span><span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }}">{{ m.hiz }}</span></div>
+<div style="height:4px;border-radius:2px;background:{{ ui.surf2 }};margin-top:5px;overflow:hidden"><div style="height:4px;width:{{ m.gunW }};background:{{ m.gunC }};border-radius:2px;transition:width .6s ease"></div></div>
+</div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ambarEkran.satirYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:36px 16px;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.bosYazi }}</div>
+</sc-if>
+<div style="display:flex;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid {{ ui.rule }};font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">
+<span style="flex:1;min-width:0">{{ ambarEkran.sonuc }} · “Kaç gün yeter” son 30 günün ambar çıkışından (zimmet + çıkış − iade) hesaplanır; ambar mevcudunu sayar, ekiplerdeki zimmeti saymaz.</span>
+<sc-if value="{{ ambarEkran.dahaVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ambarEkran.hepsiniGoster }}" style="all:unset;cursor:pointer;flex:none;font:600 12px/1 var(--font-body);color:{{ ui.acc }}">Tümünü göster</button>
+</sc-if>
+</div>
+</section>
+
+<div style="min-width:0;display:flex;flex-direction:column;gap:14px">
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 10px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+<span class="ks-canli ks-kapali"></span>
+<span style="font:700 14px/1 var(--font-heading)">Tükenmek üzere</span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">eşikte ya da 7 günden az</span>
+</div>
+<sc-if value="{{ ambarEkran.tukenenVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<sc-for list="{{ ambarEkran.tukenen }}" as="x" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:1px solid {{ ui.rule }}">
+<button onClick="{{ x.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0">
+<div style="font:600 12.5px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ x.ad }}</div>
+<div style="display:flex;align-items:center;gap:7px;margin-top:4px">
+<div style="flex:1;height:4px;border-radius:2px;background:{{ ui.surf2 }};overflow:hidden"><div style="height:4px;width:{{ x.w }};background:{{ x.c }};border-radius:2px"></div></div>
+<span style="font:700 11px/1 var(--font-body);color:{{ x.c }};white-space:nowrap">{{ x.gun }}</span>
+</div>
+</button>
+<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ x.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-width:94px;text-align:center;font:600 11.5px/1 var(--font-body);padding:7px 10px;border-radius:8px;background:{{ x.bBg }};color:{{ x.bFg }}">{{ x.bL }}</button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ambarEkran.tukenenYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:10px 2px;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Kritik kalem yok.</div>
+</sc-if>
+</section>
+
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 8px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+<span class="ks-canli"></span>
+<span style="font:700 14px/1 var(--font-heading)">Bugünkü hareketler</span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.bugunSay }}</span>
+</div>
+<sc-if value="{{ ambarEkran.bugunVar }}" hint-placeholder-val="{{ false }}">
+<div>
+<sc-for list="{{ ambarEkran.bugunH }}" as="h" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:10px;padding:7px 2px;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;width:54px;text-align:center;font:700 10.5px/1 var(--font-body);padding:4px 0;border-radius:6px;background:{{ h.bg }};color:{{ h.fg }}">{{ h.tur }}</span>
+<div style="flex:1;min-width:0">
+<div style="font:600 12px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.ne }}</div>
+<div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.alt }}</div>
+</div>
+<span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }}">{{ h.saat }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ambarEkran.bugunYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:10px 2px;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bugün ambar hareketi yok.</div>
+</sc-if>
+</section>
+
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 8px">
+<div style="font:700 14px/1 var(--font-heading);margin-bottom:6px">Ekip zimmeti</div>
+<sc-for list="{{ ambarEkran.zimmetler }}" as="z" hint-placeholder-count="4">
+<div style="padding:8px 2px;border-top:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="flex:1;min-width:0;font:600 12.5px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ z.ekip }}</span><span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }};white-space:nowrap">{{ z.kalem }}</span></div>
+<div style="font:400 11.5px/1.4 var(--font-body);color:{{ z.ozetFg }};margin-top:2px">{{ z.ozet }}</div>
+<sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:6px;margin-top:6px">
+<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);padding:6px 9px">İade</button>
+<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);padding:6px 9px">Sarf</button>
+<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 11px/1 var(--font-body);padding:6px 9px">Hurda</button>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</section>
+</div>
+</div>
+</div>
+
+<!-- ambar: hareket formu -->
+<sc-if value="{{ ambarEkran.form.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+<div class="ks-gir" role="dialog" aria-label="Ambar hareketi" style="width:620px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">{{ ambarEkran.form.baslik }}</span><button onClick="{{ ambarEkran.form.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
+<div style="display:flex;flex-wrap:wrap;gap:4px;background:{{ ui.surf2 }};border-radius:10px;padding:3px">
+<sc-for list="{{ ambarEkran.form.turler }}" as="t" hint-placeholder-count="6">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font:600 11.5px/1 var(--font-body)">{{ t.label }}</button>
+</sc-for>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Malzeme — yazmaya başlayın, listeden seçin</span>
+<input list="ks-mlz-liste" value="{{ ambarEkran.form.malzeme }}" onChange="{{ ambarEkran.form.onMalzeme }}" placeholder="ör. kablo, MLZ-0005, vana…" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<datalist id="ks-mlz-liste">
+<sc-for list="{{ ambarEkran.form.malzemeSecenek }}" as="o" hint-placeholder-count="6">
+<option value="{{ o.v }}">{{ o.l }}</option>
+</sc-for>
+</datalist>
+<span style="font:600 11.5px/1.3 var(--font-body);color:var(--color-uyari)">{{ ambarEkran.form.malzemeUyari }}</span>
+</label>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
 <sc-if value="{{ ambarEkran.form.ambarVar }}" hint-placeholder-val="{{ true }}">
-<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
-<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ambar</span>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Ambar</span>
 <select value="{{ ambarEkran.form.ambar }}" onChange="{{ ambarEkran.form.onAmbar }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
 <sc-for list="{{ ambarEkran.form.ambarlar }}" as="a" hint-placeholder-count="4">
 <option value="{{ a }}">{{ a }}</option>
@@ -1361,8 +1531,8 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </label>
 </sc-if>
 <sc-if value="{{ ambarEkran.form.ekipVar }}" hint-placeholder-val="{{ false }}">
-<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
-<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ekip</span>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Ekip</span>
 <select value="{{ ambarEkran.form.ekip }}" onChange="{{ ambarEkran.form.onEkip }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
 <sc-for list="{{ ambarEkran.form.ekipler }}" as="c" hint-placeholder-count="4">
 <option value="{{ c }}">{{ c }}</option>
@@ -1370,9 +1540,14 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </select>
 </label>
 </sc-if>
+<label style="width:120px;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Miktar</span>
+<input value="{{ ambarEkran.form.adet }}" onChange="{{ ambarEkran.form.onAdet }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+</div>
 <sc-if value="{{ ambarEkran.form.tesisVar }}" hint-placeholder-val="{{ false }}">
-<label style="flex:1 1 220px;display:flex;flex-direction:column;gap:5px;min-width:0">
-<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tesis (isteğe bağlı)</span>
+<label style="display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Tesis (isteğe bağlı — köy bazlı malzeme raporu için)</span>
 <select value="{{ ambarEkran.form.tesis }}" onChange="{{ ambarEkran.form.onTesis }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
 <sc-for list="{{ ambarEkran.form.tesisler }}" as="ts" hint-placeholder-count="4">
 <option value="{{ ts.id }}">{{ ts.kod }}</option>
@@ -1380,62 +1555,167 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </select>
 </label>
 </sc-if>
-<label style="width:120px;display:flex;flex-direction:column;gap:5px">
-<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Adet</span>
-<input value="{{ ambarEkran.form.adet }}" onChange="{{ ambarEkran.form.onAdet }}" inputmode="decimal" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
-</label>
-</div>
 <label style="display:flex;flex-direction:column;gap:5px">
-<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Not (isteğe bağlı)</span>
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Not (isteğe bağlı — irsaliye no, iş emri…)</span>
 <input value="{{ ambarEkran.form.not }}" onChange="{{ ambarEkran.form.onNot }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
-<span style="font:600 12px/1.45 var(--font-body);color:{{ ui.mut }}">Mevcut: {{ ambarEkran.form.durum }}</span>
+<div style="font:600 12px/1.45 var(--font-body);color:{{ ui.mut }};background:{{ ui.surf2 }};border-radius:9px;padding:9px 11px">Mevcut: {{ ambarEkran.form.durum }}</div>
+<div style="display:flex;gap:9px;justify-content:flex-end">
+<button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:12px 16px">Vazgeç</button>
+<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">Hareketi işle</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ambar: malzeme kartı -->
+<sc-if value="{{ ambarEkran.kart.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+<div class="ks-gir" role="dialog" aria-label="Malzeme kartı" style="width:640px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:flex-start;gap:10px">
+<div style="flex:1;min-width:0">
+<div style="font:700 18px/1.25 var(--font-heading);letter-spacing:-.02em">{{ ambarEkran.kart.ad }}</div>
+<div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ ambarEkran.kart.kod }} · {{ ambarEkran.kart.katL }} · {{ ambarEkran.kart.fiyat }} · kritik eşik {{ ambarEkran.kart.esik }}</div>
+<sc-if value="{{ ambarEkran.kart.pasif }}" hint-placeholder-val="{{ false }}"><div style="font:600 12px/1.4 var(--font-body);color:var(--color-uyari);margin-top:4px">Pasif — listelerde görünmez, eski kayıtlar korunur.</div></sc-if>
+</div>
+<button onClick="{{ ambarEkran.kart.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button>
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<div style="flex:1 1 150px;border-radius:12px;background:{{ ui.surf2 }};padding:11px 13px"><div style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">Ambarlarda toplam</div><div style="font:700 22px/1.2 var(--font-heading);margin-top:5px;color:{{ ambarEkran.kart.toplamFg }}">{{ ambarEkran.kart.toplam }}</div></div>
+<div style="flex:1 1 150px;border-radius:12px;background:{{ ui.surf2 }};padding:11px 13px"><div style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">Kaç gün yeter</div><div style="font:700 22px/1.2 var(--font-heading);margin-top:5px;color:{{ ambarEkran.kart.gunC }}">{{ ambarEkran.kart.gun }}</div><div style="font:400 11px/1.2 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.kart.hiz }}</div></div>
+<div style="flex:2 1 230px;border-radius:12px;background:{{ ui.surf2 }};padding:11px 13px"><div style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.kart.tuk }}</div><div style="margin-top:4px">{{ ambarEkran.kart.tukEl }}</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+<div>
+<div style="font:700 13px/1 var(--font-heading);margin-bottom:6px">Ambarlar</div>
+<sc-for list="{{ ambarEkran.kart.ambarlar }}" as="a" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.2 var(--font-body)"><span style="width:8px;height:8px;border-radius:2px;background:{{ a.c }}"></span><span style="flex:1">{{ a.ad }}</span><b style="color:{{ a.fg }}">{{ a.n }}</b></div>
+</sc-for>
+</div>
+<div>
+<div style="font:700 13px/1 var(--font-heading);margin-bottom:6px">Ekiplerde</div>
+<sc-for list="{{ ambarEkran.kart.ekipler }}" as="e" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.2 var(--font-body)"><span style="flex:1">{{ e.ad }}</span><b>{{ e.n }}</b></div>
+</sc-for>
+<sc-if value="{{ ambarEkran.kart.ekipYok }}" hint-placeholder-val="{{ true }}"><div style="padding:6px 0;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Zimmette yok.</div></sc-if>
+</div>
+</div>
+<div>
+<div style="font:700 13px/1 var(--font-heading);margin-bottom:6px">Son hareketler</div>
+<sc-for list="{{ ambarEkran.kart.hareket }}" as="h" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;width:54px;text-align:center;font:700 10.5px/1 var(--font-body);padding:4px 0;border-radius:6px;background:{{ h.bg }};color:{{ h.fg }}">{{ h.tur }}</span>
+<div style="flex:1;min-width:0"><div style="font:600 12px/1.3 var(--font-body)">{{ h.ne }}</div><div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.alt }}</div></div>
+<span style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};text-align:right">{{ h.gun }}<br>{{ h.saat }}</span>
+</div>
+</sc-for>
+<sc-if value="{{ ambarEkran.kart.hareketYok }}" hint-placeholder-val="{{ true }}"><div style="padding:6px 0;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Bu malzemenin hareketi yok.</div></sc-if>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid {{ ui.rule }};padding-top:14px">
+<sc-if value="{{ ambarEkran.kart.yazabilir }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button>
+<button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button>
+<button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button>
+</div>
+</sc-if>
+<span style="flex:1"></span>
+<sc-if value="{{ ambarEkran.kart.katYetki }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px">
+<button onClick="{{ ambarEkran.kart.pasifYap }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;color:{{ ui.mut }};font:600 12px/1 var(--font-body);padding:10px 8px">{{ ambarEkran.kart.pasifL }}</button>
+<button onClick="{{ ambarEkran.kart.duzenle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Düzenle</button>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ambar: malzeme tanım formu -->
+<sc-if value="{{ ambarEkran.malzemeForm.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:61;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+<div class="ks-gir" role="dialog" aria-label="Malzeme tanımı" style="width:560px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">{{ ambarEkran.malzemeForm.baslik }}</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">Kod: <b style="color:{{ ui.fg }}">{{ ambarEkran.malzemeForm.kod }}</b></span></div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Malzeme adı</span>
+<input value="{{ ambarEkran.malzemeForm.ad }}" onChange="{{ ambarEkran.malzemeForm.onAd }}" disabled="{{ ambarEkran.malzemeForm.adKilit }}" placeholder="ör. PE100 boru Ø110 PN16" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<span style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.malzemeForm.benzer }}</span>
+</label>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<label style="flex:2 1 200px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Kategori</span>
+<select value="{{ ambarEkran.malzemeForm.kat }}" onChange="{{ ambarEkran.malzemeForm.onKat }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.malzemeForm.katlar }}" as="o" hint-placeholder-count="7">
+<option value="{{ o.v }}">{{ o.l }}</option>
+</sc-for>
+</select>
+</label>
+<label style="flex:1 1 110px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Birim</span>
+<select value="{{ ambarEkran.malzemeForm.birim }}" onChange="{{ ambarEkran.malzemeForm.onBirim }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ ambarEkran.malzemeForm.birimler }}" as="b" hint-placeholder-count="6">
+<option value="{{ b }}">{{ b }}</option>
+</sc-for>
+</select>
+</label>
+</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<label style="flex:1 1 150px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Birim fiyat (₺)</span>
+<input value="{{ ambarEkran.malzemeForm.fiyat }}" onChange="{{ ambarEkran.malzemeForm.onFiyat }}" inputmode="decimal" placeholder="ör. 1.250,00" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="flex:1 1 150px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Kritik eşik</span>
+<input value="{{ ambarEkran.malzemeForm.esik }}" onChange="{{ ambarEkran.malzemeForm.onEsik }}" inputmode="decimal" placeholder="{{ ambarEkran.malzemeForm.esikIpucu }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+</div>
+<div style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">Ambar mevcudu bu eşiğe inince ya da son 30 günün hızıyla 7 günden az yetecekse kalem “Tükenmek üzere” listesine düşer. Hareketi olan malzemenin adı ve birimi değiştirilemez.</div>
+<div style="display:flex;gap:9px;justify-content:flex-end">
+<button onClick="{{ ambarEkran.malzemeForm.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:12px 16px">Vazgeç</button>
+<button onClick="{{ ambarEkran.malzemeForm.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">Kaydet</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ambar: sipariş listesi -->
+<sc-if value="{{ ambarEkran.siparisPanel.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+<div class="ks-gir" role="dialog" aria-label="Sipariş listesi" style="width:680px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Sipariş listesi</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
+<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Liste herkes için ortaktır. Önerilen miktar 30 günlük tüketimi karşılayacak kadardır; ambara giriş yapılınca kalem listeden kendiliğinden düşer.</div>
+<sc-for list="{{ ambarEkran.siparisPanel.kalemler }}" as="x" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0">
+<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }}</div>
+<div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ x.kod }} · {{ x.durum }} · {{ x.ekleyen }}</div>
+</div>
+<label style="display:flex;align-items:center;gap:6px;font:400 12px/1 var(--font-body);color:{{ ui.mut }}">
+<input value="{{ x.adet }}" onChange="{{ x.onAdet }}" inputmode="decimal" disabled="{{ ambarEkran.siparisPanel.salt }}" style="all:unset;box-sizing:border-box;width:72px;text-align:right;border-radius:8px;border:1px solid {{ ui.rule }};padding:8px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+{{ x.birim }}
+</label>
+<span style="width:84px;text-align:right;font:600 12px/1 var(--font-body)">{{ x.tutar }}</span>
+<sc-if value="{{ ambarEkran.siparisPanel.yazabilir }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ x.cikar }}" aria-label="Listeden çıkar" style="all:unset;cursor:pointer;font:400 18px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ ambarEkran.siparisPanel.bos }}" hint-placeholder-val="{{ false }}">
+<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Siparişe ekle” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
+</sc-if>
+<div style="display:flex;gap:9px;flex-wrap:wrap;border-top:1px solid {{ ui.rule }};padding-top:12px">
+<sc-if value="{{ ambarEkran.siparisPanel.yazabilir }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:9px">
-<button onClick="{{ ambarEkran.form.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 16px;justify-content:flex-start">Hareketi işle</button>
-<button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 16px">Vazgeç</button>
+<button onClick="{{ ambarEkran.siparisPanel.kritikEkle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 14px">Kritik kalemlerin hepsini ekle</button>
+<button onClick="{{ ambarEkran.siparisPanel.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;color:var(--color-uyari);font:600 12.5px/1 var(--font-body);padding:11px 8px">Listeyi temizle</button>
+</div>
+</sc-if>
+<span style="flex:1"></span>
+<button onClick="{{ ambarEkran.siparisPanel.kopyala }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 16px">Metin olarak kopyala</button>
+</div>
 </div>
 </div>
 </sc-if>
-<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Stok mevcudu</div>
-<sc-for list="{{ ambarEkran.kalemler }}" as="k" hint-placeholder-count="10">
-<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }};flex-wrap:wrap">
-<div style="flex:1 1 260px;min-width:180px;display:flex;flex-direction:column;gap:3px">
-<span style="font:600 13px/1.25 var(--font-heading);color:{{ ui.fg }};text-wrap:pretty">{{ k.ad }}</span>
-<span style="font:400 12px/1.35 var(--font-body);color:{{ ui.mut }};text-wrap:pretty">{{ k.meta }}</span>
-</div>
-<span style="flex:0 1 auto;min-width:70px;text-align:right;font:600 13.5px/1 var(--font-body);color:{{ k.toplamFg }}">{{ k.toplam }}</span>
-<div style="flex:none;display:flex;gap:8px">
-<button onClick="{{ k.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Giriş</button>
-<button onClick="{{ k.zimmetVer }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="background:var(--color-accent);color:#fff">Zimmet</button>
-</div>
-</div>
-</sc-for>
-<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Ekip zimmeti</div>
-<sc-for list="{{ ambarEkran.zimmetler }}" as="z" hint-placeholder-count="4">
-<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }};flex-wrap:wrap">
-<span style="flex:0 1 auto;min-width:140px;font:600 13px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ z.ekip }}</span>
-<span style="flex:1 1 220px;min-width:0;font:400 12.5px/1.4 var(--font-body);color:{{ z.ozetFg }};text-wrap:pretty">{{ z.ozet }}</span>
-<sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">İade</button>
-<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="background:var(--color-accent);color:#fff">Sarf</button>
-<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="background:var(--color-uyari);color:#fff">Hurda</button>
-</sc-if>
-</div>
-</sc-for>
-<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Son hareketler</div>
-<sc-if value="{{ ambarEkran.hareketYok }}" hint-placeholder-val="{{ true }}">
-<div style="padding:14px 20px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:700px">{{ ambarEkran.hareketBos }}</div>
-</sc-if>
-<sc-for list="{{ ambarEkran.hareketler }}" as="x" hint-placeholder-count="0">
-<div style="padding:10px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
-<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
-<span style="flex:0 1 auto;min-width:104px;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ x.turFg }}">{{ x.tur }}</span>
-<span style="flex:1 1 200px;min-width:0;font:600 12.5px/1.3 var(--font-body);color:{{ ui.fg }};text-wrap:pretty">{{ x.malzeme }}</span>
-<span style="flex:none;font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ x.adet }}</span>
-</div>
-<span style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};text-wrap:pretty">{{ x.meta }}</span>
-</div>
-</sc-for>
 </div>
 </sc-if>
 
@@ -3475,6 +3755,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <button onClick="{{ mz.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Sil</button>
 </div>
 </sc-for>
+<input type="search" value="{{ faultForm.malzemeQ }}" onChange="{{ faultForm.onMalzemeQ }}" placeholder="Malzeme ara — ad ya da kod" aria-label="Malzeme ara" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 11px;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 <div style="display:flex;flex-wrap:wrap;gap:6px">
 <sc-for list="{{ faultForm.malzemeSecenek }}" as="mz" hint-placeholder-count="8">
 <button onClick="{{ mz.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};padding:7px 9px;display:flex;flex-direction:column;gap:2px" style-hover="border-color:var(--color-accent)">
@@ -3483,6 +3764,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </button>
 </sc-for>
 </div>
+<span style="font:400 11px/1.35 var(--font-body);color:{{ ui.mut }}">{{ faultForm.malzemeNot }}</span>
 </div>
 
 <div style="border-top:1px solid {{ ui.rule }};padding-top:13px;display:flex;flex-direction:column;gap:9px">
@@ -4268,6 +4550,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Malzeme</span>
 <select value="{{ ambarEkran.form.malzeme }}" onChange="{{ ambarEkran.form.onMalzeme }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<option value="">Malzeme seçin…</option>
 <sc-for list="{{ ambarEkran.form.malzemeler }}" as="m" hint-placeholder-count="6">
 <option value="{{ m }}">{{ m }}</option>
 </sc-for>
@@ -6000,6 +6283,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <button onClick="{{ mz.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Sil</button>
 </div>
 </sc-for>
+<input type="search" value="{{ faultForm.malzemeQ }}" onChange="{{ faultForm.onMalzemeQ }}" placeholder="Malzeme ara — ad ya da kod" aria-label="Malzeme ara" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:400 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 <div class="scroll" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:3px">
 <sc-for list="{{ faultForm.malzemeSecenek }}" as="mz" hint-placeholder-count="6">
 <button onClick="{{ mz.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;display:flex;flex-direction:column;gap:2px;max-width:150px">
@@ -6547,25 +6831,44 @@ const FAULT_TYPES = {
   ag: ['Elektrik kesintisi', 'Sigorta attı', 'Kontaktör / röle arızası', 'Kablo arızası', 'Pano su aldı', 'Diğer'],
   ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer']
 };
-// sahada en sık kullanılan malzemeler — [ad, birim fiyat ₺, birim]
-const MALZEME = [
-  ['Dalgıç pompa (kademe değişimi)', 18500, 'adet'],
-  ['Dalgıç motor', 24000, 'adet'],
-  ['Kolon borusu Ø75 (6 m)', 2150, 'boy'],
-  ['Kolon borusu Ø90 (6 m)', 2900, 'boy'],
-  ['Motor kablosu 4×6 mm²', 285, 'metre'],
-  ['Motor kablosu 4×10 mm²', 430, 'metre'],
-  ['Termik röle', 1450, 'adet'],
-  ['Kontaktör', 1180, 'adet'],
-  ['Pano sigortası', 240, 'adet'],
-  ['Çekvalf', 890, 'adet'],
-  ['Küresel vana Ø75', 640, 'adet'],
-  ['Manometre', 320, 'adet'],
-  ['Klor tableti (10 kg)', 1250, 'kutu'],
-  ['Şamandıra', 480, 'adet'],
-  ['Vinç / kamyon (kuyu çekme)', 6500, 'gün'],
-  ['İşçilik (ekip yevmiyesi)', 2800, 'gün']
+// Malzeme kataloğu ilk kurulumda bu listeyle başlar — [ad, birim fiyat ₺,
+// birim, kategori]. Liste sabit değil: Ambar ekranındaki "Malzeme tanımla"
+// ile eklenir, fiyatı ve kritik eşiği değişir; sunucuda "malzeme"
+// anahtarında durur. Ambar mevcudu ve zimmet malzeme ADINA göre tutulur,
+// bu yüzden hareketi olan malzemenin adı değiştirilemez.
+const MALZEME_BASLANGIC = [
+  ['Dalgıç pompa (kademe değişimi)', 18500, 'adet', 'pompa'],
+  ['Dalgıç motor', 24000, 'adet', 'pompa'],
+  ['Kolon borusu Ø75 (6 m)', 2150, 'boy', 'boru'],
+  ['Kolon borusu Ø90 (6 m)', 2900, 'boy', 'boru'],
+  ['Motor kablosu 4×6 mm²', 285, 'metre', 'kablo'],
+  ['Motor kablosu 4×10 mm²', 430, 'metre', 'kablo'],
+  ['Termik röle', 1450, 'adet', 'pano'],
+  ['Kontaktör', 1180, 'adet', 'pano'],
+  ['Pano sigortası', 240, 'adet', 'pano'],
+  ['Çekvalf', 890, 'adet', 'vana'],
+  ['Küresel vana Ø75', 640, 'adet', 'vana'],
+  ['Manometre', 320, 'adet', 'vana'],
+  ['Klor tableti (10 kg)', 1250, 'kutu', 'sarf'],
+  ['Şamandıra', 480, 'adet', 'vana'],
+  ['Vinç / kamyon (kuyu çekme)', 6500, 'gün', 'hizmet'],
+  ['İşçilik (ekip yevmiyesi)', 2800, 'gün', 'hizmet']
 ];
+const MALZEME_KAT = {
+  pompa: 'Pompa ve motor', boru: 'Boru ve bağlantı', kablo: 'Kablo ve elektrik',
+  pano: 'Pano ve sigorta', vana: 'Vana ve armatür', sarf: 'Sarf ve diğer',
+  hizmet: 'Hizmet (stokta tutulmaz)'
+};
+const MALZEME_BIRIM = ['adet', 'metre', 'boy', 'kutu', 'kg', 'litre', 'set', 'takım', 'rulo', 'gün'];
+// Katalog kaydı: { kod, ad, kat, birim, fiyat, esik, pasif }
+function katalogBaslangic() {
+  return MALZEME_BASLANGIC.map(([ad, fiyat, birim, kat], i) => ({
+    kod: 'MLZ-' + String(i + 1).padStart(4, '0'), ad, kat, birim, fiyat,
+    esik: KRITIK_ESIK[birim] || 2, pasif: false
+  }));
+}
+// Hizmet (gün birimli) kalemi stokta tutulmaz
+const stoktaMi = k => k.kat !== 'hizmet' && k.birim !== 'gün';
 // Ekip adı kayıtlarda metin olarak durur, bu yüzden sabittir. Vardiya ve
 // yetkinlik Ayarlar > Ekipler bölümünden değişir, cihazda saklanır.
 // Ambar: stok kalemleri malzeme listesinden gelir. Gün birimli kalemler
@@ -6735,7 +7038,6 @@ const YETKINLIK_ESLEME = [
   [/motor|akım|elektrik|sigorta|kontaktör|kablo|pano|invert|panel|şalt|rf|sensör|klorlama|üretim/i, 'Elektrik'],
   [/pompa|kolon|kaçak|çatlak|debi|vana|kapak/i, 'Mekanik']
 ];
-const STOK_KALEM = MALZEME.filter(m => m[2] !== 'gün');
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
   ['mudur', 'Müdür', 'Onay, silme, rapor; kullanıcı yönetimi hariç'],
@@ -6831,7 +7133,15 @@ const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {
   ekip: 'Ekip', personel: 'Personel', nobet: 'Nöbet takvimi',
-  ambar: 'Ambar', arac: 'Araç', talep: 'Talep', muhtar: 'Muhtarlar'
+  ambar: 'Ambar', arac: 'Araç', talep: 'Talep', muhtar: 'Muhtarlar',
+  malzeme: 'Malzeme kataloğu', siparis: 'Sipariş listesi'
+};
+// Sunucudaki modül anahtarı → programdaki durum alanı. Yükleme, yazma ve
+// kuyruk gönderme aynı eşlemeyi kullanır (önceden üç ayrı yerde elle
+// yazılıydı; muhtar bunlardan ikisinde unutulmuştu).
+const MODUL_ALAN = {
+  ekip: 'ekipler', personel: 'personel', nobet: 'nobet', ambar: 'ambar', arac: 'arac',
+  talep: 'talepler', muhtar: 'muhtarlar', malzeme: 'malzemeKatalog', siparis: 'siparis'
 };
 // Telefonun alt çubuğunda en çok dört sayfa durur; gerisi "Tümü" sayfasında.
 const TELEFON_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet'];
@@ -7038,11 +7348,28 @@ class Component extends DCLogic {
           if (p.stok && typeof p.stok === 'object') v.stok = p.stok;
           if (p.zimmet && typeof p.zimmet === 'object') v.zimmet = p.zimmet;
           if (Array.isArray(p.hareket)) v.hareket = p.hareket;
+          if (p.gun && typeof p.gun === 'object') v.gun = p.gun;
         }
       } catch (e) { /* depolama kapalı */ }
       return v;
     })(),
     ambarForm: null,
+    // Malzeme kataloğu ve sipariş listesi — sunucuda "malzeme"/"siparis"
+    malzemeKatalog: (() => {
+      try {
+        const k = JSON.parse(localStorage.getItem('ks-malzeme') || 'null');
+        if (Array.isArray(k) && k.length) return k.filter(x => x && x.ad && x.kod);
+      } catch (e) { /* depolama kapalı */ }
+      return katalogBaslangic();
+    })(),
+    siparis: (() => {
+      try {
+        const k = JSON.parse(localStorage.getItem('ks-siparis') || 'null');
+        return Array.isArray(k) ? k.filter(x => x && x.malzeme) : [];
+      } catch (e) { return []; }
+    })(),
+    ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
+    ambarKart: null, malzemeForm: null, siparisPanel: false,
     // Araç ve ekipman — liste, görev durumu ve hareket dökümü
     arac: (() => {
       const v = { list: ARAC_BASLANGIC.map(a => ({ ...a, durum: 'musait', ekip: '', surucu: '', is: '' })), hareket: [] };
@@ -7639,7 +7966,7 @@ class Component extends DCLogic {
   // kuyruğa girer ve bağlantı gelince gönderilir.
   // Bir modülün kayıtlarını hangi alandan tanıdığımız. Birleştirme buna bakar.
   modulKimlik(anahtar) {
-    return { ekip: 'ad', personel: 'id', talep: 'id' }[anahtar] || null;
+    return { ekip: 'ad', personel: 'id', talep: 'id', muhtar: 'id', malzeme: 'kod', siparis: 'id' }[anahtar] || null;
   }
   // Çakışma birleştirmesi: sunucudaki liste temel alınır, benim
   // kayıtlarım üstüne yazılır, sunucuda olup bende olmayanlar KORUNUR.
@@ -7719,8 +8046,7 @@ class Component extends DCLogic {
   }
   // Sunucudan gelen veriyi programın kendi alan adlarına yazar
   modulDurumYaz(anahtar, veri) {
-    const alan = { ekip: 'ekipler', personel: 'personel', nobet: 'nobet',
-      ambar: 'ambar', arac: 'arac', talep: 'talepler' }[anahtar];
+    const alan = MODUL_ALAN[anahtar];
     if (!alan) return;
     try { localStorage.setItem('ks-' + anahtar, JSON.stringify(veri)); } catch (e) { /* depolama kapalı */ }
     this.setState({ [alan]: veri });
@@ -7766,15 +8092,19 @@ class Component extends DCLogic {
     if (!bekleyen.arac && d.arac && typeof d.arac === 'object' && !Array.isArray(d.arac)) yama.arac = d.arac;
     if (!bekleyen.talep && Array.isArray(d.talep)) yama.talepler = d.talep;
     if (!bekleyen.muhtar && Array.isArray(d.muhtar)) yama.muhtarlar = d.muhtar;
+    if (!bekleyen.malzeme && Array.isArray(d.malzeme)) yama.malzemeKatalog = d.malzeme;
+    if (!bekleyen.siparis && Array.isArray(d.siparis)) yama.siparis = d.siparis;
     // Sunucu bomboşsa cihazdaki kopya korunur: ilk kurulumda veri kaybolmasın
+    // (Sipariş listesi bundan muaf: boşalmış liste geçerli bir durumdur,
+    // yoksa başka cihazda boşaltılan liste burada eski hâliyle kalırdı.)
     for (const k of Object.keys(yama)) {
-      const bos = Array.isArray(yama[k]) ? yama[k].length === 0 : Object.keys(yama[k]).length === 0;
+      if (k === 'siparis') continue;
+      const bos =Array.isArray(yama[k]) ? yama[k].length === 0 : Object.keys(yama[k]).length === 0;
       if (bos) delete yama[k];
     }
     if (Object.keys(yama).length) {
       // Cihaz kopyası da tazelenir, çevrimdışı açılışta aynı veri gelsin
-      const eslesme = { ekipler: 'ekip', personel: 'personel', nobet: 'nobet',
-        ambar: 'ambar', arac: 'arac', talepler: 'talep' };
+      const eslesme = Object.fromEntries(Object.entries(MODUL_ALAN).map(([a, b]) => [b, a]));
       try {
         for (const k in yama) localStorage.setItem('ks-' + eslesme[k], JSON.stringify(yama[k]));
       } catch (e) { /* depolama kapalı */ }
@@ -7844,10 +8174,7 @@ class Component extends DCLogic {
       if (!sessiz) this.duyur('Ortak veritabanına bağlı değilsiniz.', 5000, 'kotu');
       return;
     }
-    const veri = {
-      ekip: this.state.ekipler, personel: this.state.personel, nobet: this.state.nobet,
-      ambar: this.state.ambar, arac: this.state.arac, talep: this.state.talepler
-    };
+    const veri = Object.fromEntries(Object.entries(MODUL_ALAN).map(([a, alan]) => [a, this.state[alan]]));
     let giden = 0;
     const kalan = {};
     for (const a of anahtarlar) {
@@ -8129,6 +8456,188 @@ class Component extends DCLogic {
   ambarZimmet(malzeme, ekip) {
     return Number((((this.state.ambar || {}).zimmet || {})[ekip] || {})[malzeme]) || 0;
   }
+  // Bütün ekiplerdeki zimmet. Ekip listesine değil zimmet tablosuna bakar:
+  // adı değişmiş ya da silinmiş ekibin üstündeki malzeme de sayılır.
+  ambarZimmetToplam(malzeme, ambarObj) {
+    const z = (ambarObj || this.state.ambar || {}).zimmet || {};
+    return Object.keys(z).reduce((t, c) => t + (Number((z[c] || {})[malzeme]) || 0), 0);
+  }
+  ambarToplam(malzeme, ambarObj) {
+    const st = (ambarObj || this.state.ambar || {}).stok || {};
+    return Object.keys(st).reduce((t, A) => t + (Number((st[A] || {})[malzeme]) || 0), 0);
+  }
+  katalog() {
+    const k = this.state.malzemeKatalog;
+    return Array.isArray(k) && k.length ? k : katalogBaslangic();
+  }
+  katalogBul(ad) { return this.katalog().find(k => k.ad === ad) || null; }
+  // Bir kalemin ambar durumu. Kritik: ambara girilmiş (ya da zimmette)
+  // kalemin ambar mevcudu eşiğe inmiş ya da son 30 günün hızıyla 7 günden
+  // az yetecek. Hiç girilmemiş kalem "azaldı" sayılmaz, ambarda yok demektir.
+  ambarDurum(ad) {
+    const k = this.katalogBul(ad) || {};
+    const toplam = this.ambarToplam(ad);
+    const zim = this.ambarZimmetToplam(ad);
+    const esik = Number(k.esik) || KRITIK_ESIK[k.birim] || 2;
+    const tuk = this.ambarTuketim(ad);
+    const kacGun = tuk.ort > 0 ? toplam / tuk.ort : null;
+    // Son 30 günde çıkışı olup tamamen biten kalem de kritiktir (tükendi)
+    const girilmis = toplam + zim > 0 || tuk.toplam > 0;
+    const kritik = girilmis && (toplam <= esik || (kacGun != null && kacGun < 7));
+    return { toplam, zim, esik, tuk, kacGun, girilmis, kritik };
+  }
+  // Eski kodun beklediği [ad, fiyat, birim] dizisi — arıza malzeme listesi,
+  // maliyet ve raporlar bunu kullanır
+  stokKalem() {
+    return this.katalog().filter(k => !k.pasif && stoktaMi(k)).map(k => [k.ad, Number(k.fiyat) || 0, k.birim, k.kod, k.kat, k.esik]);
+  }
+  // Son 30 günün net ambar çıkışı (zimmet + çıkış − iade). Sunucu her
+  // hareketi gün gün "gun" altında toplar. Sistem 30 günden yeniyse ortalama
+  // geçen gün sayısına bölünür, yoksa ilk haftalarda tüketim olduğundan az
+  // görünürdü.
+  ambarTuketim(malzeme) {
+    const g = (this.state.ambar || {}).gun || {};
+    const gunler = Object.keys(g).sort();
+    const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+    const anahtar = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const seri = [];
+    let toplam = 0;
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(bugun.getTime() - i * 86400000);
+      const v = Number((g[anahtar(d)] || {})[malzeme]) || 0;
+      toplam += v;
+      if (i < 14) seri.push(Math.max(0, v));
+    }
+    toplam = Math.max(0, toplam);
+    let gunSayi = 30;
+    if (gunler.length) {
+      const ilk = new Date(gunler[0] + 'T00:00:00');
+      const gecen = Math.floor((bugun - ilk) / 86400000) + 1;
+      if (gecen > 0 && gecen < 30) gunSayi = gecen;
+    }
+    // İlk hafta tek bir büyük zimmet ortalamayı şişirmesin: en az 7 güne böl
+    gunSayi = Math.max(7, gunSayi);
+    return { toplam, ort: toplam / gunSayi, seri };
+  }
+  // Malzeme kataloğu: yeni kalem ya da düzenleme
+  malzemeKaydet(f) {
+    if (!f) return;
+    const ad = String(f.ad || '').trim().replace(/\s+/g, ' ');
+    if (ad.length < 2) return this.duyur('Malzeme adını yazın.', 4000, 'kotu');
+    // "18.500,50" ve "18.500" Türkçe yazımdır (nokta binlik ayırıcı); "18500.5" de kabul
+    const fh = String(f.fiyat ?? '').trim().replace(/\s|₺/g, '');
+    const fiyat = parseFloat(fh.includes(',') || /^\d{1,3}(\.\d{3})+$/.test(fh)
+      ? fh.replace(/\./g, '').replace(',', '.') : fh);
+    if (f.fiyat !== '' && f.fiyat != null && (!isFinite(fiyat) || fiyat < 0)) return this.duyur('Fiyat sayı olmalı.', 4000, 'kotu');
+    const esik = parseFloat(String(f.esik || '').replace(',', '.'));
+    if (f.esik !== '' && f.esik != null && (!isFinite(esik) || esik < 0)) return this.duyur('Kritik eşik sayı olmalı.', 4000, 'kotu');
+    const liste = this.katalog().map(k => ({ ...k }));
+    const ayni = liste.find(k => sadeMetin(k.ad) === sadeMetin(ad) && k.kod !== f.kod);
+    if (ayni) return this.duyur('“' + ayni.ad + '” zaten katalogda (' + ayni.kod + ').', 6000, 'kotu');
+    const eski = f.kod ? liste.find(k => k.kod === f.kod) : null;
+    if (eski && eski.ad !== ad && this.malzemeHareketli(eski.ad)) {
+      return this.duyur('“' + eski.ad + '” için ambar hareketi var; adı değiştirilemez (mevcut ve zimmet ada göre tutulur). Yeni ad için yeni malzeme tanımlayın.', 9000, 'kotu');
+    }
+    const kayit = {
+      kod: eski ? eski.kod : this.malzemeKodSira(liste),
+      ad, kat: MALZEME_KAT[f.kat] ? f.kat : 'sarf',
+      birim: MALZEME_BIRIM.includes(f.birim) ? f.birim : 'adet',
+      fiyat: isFinite(fiyat) ? Math.round(fiyat * 100) / 100 : 0,
+      esik: isFinite(esik) ? esik : (KRITIK_ESIK[f.birim] || 2),
+      pasif: false
+    };
+    if (eski) {
+      if (eski.birim !== kayit.birim && this.malzemeHareketli(eski.ad)) {
+        return this.duyur('Hareketi olan malzemenin birimi değiştirilemez — miktarlar yanlış okunur.', 7000, 'kotu');
+      }
+      Object.assign(eski, kayit);
+    } else liste.push(kayit);
+    this.modulYaz('malzeme', liste);
+    this.denetimYaz('ambar', eski ? 'Malzeme düzenlendi' : 'Malzeme tanımlandı',
+      kayit.kod + ' · ' + kayit.ad + ' · ' + this.tl(kayit.fiyat) + ' / ' + kayit.birim, 'Katalog');
+    this.setState({ malzemeKatalog: liste, malzemeForm: null, ambarKart: kayit.ad },
+      () => this.duyur(kayit.kod + ' · ' + kayit.ad + (eski ? ' güncellendi.' : ' kataloğa eklendi.'), 5000, 'iyi'));
+  }
+  malzemeHareketli(ad) {
+    const a = this.state.ambar || {};
+    return this.ambarToplam(ad) > 0 || this.ambarZimmetToplam(ad) > 0
+      || (a.hareket || []).some(h => h.malzeme === ad)
+      || (this.state.ambarKuyruk || []).some(h => h.malzeme === ad);
+  }
+  malzemeKodSira(liste) {
+    const n = liste.map(k => +(String(k.kod).match(/^MLZ-(\d+)$/) || [])[1] || 0);
+    return 'MLZ-' + String((n.length ? Math.max(...n) : 0) + 1).padStart(4, '0');
+  }
+  // Pasife alınan kalem listelerden düşer ama silinmez: eski hareket ve
+  // raporlar onu adıyla göstermeye devam eder.
+  malzemePasif(kod, pasif) {
+    const liste = this.katalog().map(k => ({ ...k }));
+    const k = liste.find(x => x.kod === kod);
+    if (!k) return;
+    if (pasif && (this.ambarToplam(k.ad) > 0 || this.ambarZimmetToplam(k.ad) > 0)) {
+      return this.duyur(k.ad + ' ambarda ya da zimmette duruyor — önce çıkış/iade yapın.', 7000, 'kotu');
+    }
+    k.pasif = !!pasif;
+    this.modulYaz('malzeme', liste);
+    this.denetimYaz('ambar', pasif ? 'Malzeme pasife alındı' : 'Malzeme yeniden etkin', k.kod + ' · ' + k.ad, 'Katalog');
+    this.setState({ malzemeKatalog: liste, ambarKart: pasif ? null : k.ad },
+      () => this.duyur(k.ad + (pasif ? ' pasife alındı; listelerde görünmez, eski kayıtlar korunur.' : ' yeniden etkin.'), 6000, 'iyi'));
+  }
+  // Sipariş listesi — tükenmek üzere olan kalemler buraya eklenir, ambar
+  // girişi yapılınca kendiliğinden düşer
+  siparisYaz(liste, mesaj) {
+    this.modulYaz('siparis', liste);
+    this.setState({ siparis: liste }, () => { if (mesaj) this.duyur(mesaj, 4500, 'iyi'); });
+  }
+  siparisOneri(ad) {
+    const k = this.katalogBul(ad);
+    const t = this.ambarTuketim(ad);
+    const toplam = this.ambarToplam(ad);
+    // 30 günlük ihtiyaç, yoksa kritik eşiğin iki katı
+    const hedef = t.ort > 0 ? Math.ceil(t.ort * 30) : Math.ceil(((k && k.esik) || 2) * 2);
+    return Math.max(1, hedef - toplam);
+  }
+  siparisEkle(ad) {
+    const liste = this.state.siparis || [];
+    const var_ = liste.find(x => x.malzeme === ad);
+    if (var_) return this.siparisYaz(liste.filter(x => x.id !== var_.id), ad + ' sipariş listesinden çıkarıldı.');
+    const k = this.katalogBul(ad);
+    this.siparisYaz([...liste, {
+      id: 's' + Date.now() + Math.random().toString(36).slice(2, 5), malzeme: ad,
+      adet: this.siparisOneri(ad), birim: k ? k.birim : 'adet',
+      ekleyen: (this.state.session && this.state.session.name) || '', damga: this.damga()
+    }], ad + ' sipariş listesine eklendi.');
+  }
+  // Miktar kutusu her tuşta sunucuya yazmasın: ekran hemen güncellenir,
+  // yazma yazmayı bitirdikten bir süre sonra tek sefer yapılır
+  siparisAdet(id, deger) {
+    const ham = String(deger).replace(',', '.');
+    const n = parseFloat(ham);
+    const liste = (this.state.siparis || []).map(x => x.id === id
+      ? { ...x, adet: ham === '' ? '' : (isFinite(n) && n > 0 ? n : x.adet) } : x);
+    this.setState({ siparis: liste });
+    clearTimeout(this._sipZaman);
+    this._sipZaman = setTimeout(() => {
+      const temiz = (this.state.siparis || []).map(x => x.adet === '' ? { ...x, adet: 1 } : x);
+      this.siparisYaz(temiz);
+    }, 900);
+  }
+  siparisMetin() {
+    const liste = this.state.siparis || [];
+    return 'Malzeme sipariş listesi — ' + this.damga() + '\n'
+      + liste.map((x, i) => {
+        const k = this.katalogBul(x.malzeme);
+        return (i + 1) + '. ' + (k ? k.kod + ' ' : '') + x.malzeme + ' — ' + x.adet + ' ' + x.birim;
+      }).join('\n');
+  }
+  siparisKopyala() {
+    const t = this.siparisMetin();
+    const bitti = () => this.duyur('Sipariş listesi panoya kopyalandı — e-posta ya da yazışmaya yapıştırabilirsiniz.', 5000, 'iyi');
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t).then(bitti, () => this.duyur('Kopyalanamadı — tarayıcı izin vermedi.', 5000, 'kotu'));
+    } catch (e) { /* aşağıda bildirilir */ }
+    this.duyur('Kopyalanamadı — tarayıcı izin vermedi.', 5000, 'kotu');
+  }
   // Stoğu azaltan hareketten sonra kritik eşiğin altındaki kalemler için
   // uyarı verir (madde 19). ambarObj işlemin uygulandığı güncel veri —
   // this.state.ambar setState sonrası hemen güncel olmayabileceği için
@@ -8138,13 +8647,15 @@ class Component extends DCLogic {
     const dus = [...new Set((islemler || []).filter(i => dusuren.includes(i.tur)).map(i => i.malzeme))];
     if (!dus.length || !ambarObj) return;
     const kritikler = [];
+    // (Önceden burada ekran koduna ait SAHA_EKIP kullanılıyordu; metotta
+    // tanımsız olduğu için uyarı hiç çıkmıyor, işlem sonu hata veriyordu.)
     for (const ad of dus) {
-      const kalem = STOK_KALEM.find(m => m[0] === ad);
+      const kalem = this.katalogBul(ad);
       if (!kalem) continue;
-      const toplam = AMBARLAR.reduce((t, A) => t + (Number(((ambarObj.stok || {})[A] || {})[ad]) || 0), 0);
-      const zim = SAHA_EKIP.reduce((t, c) => t + (Number(((ambarObj.zimmet || {})[c] || {})[ad]) || 0), 0);
-      const esik = KRITIK_ESIK[kalem[2]] || 2;
-      if (toplam + zim > 0 && toplam <= esik) kritikler.push(ad + ' ' + toplam + ' ' + kalem[2]);
+      const toplam = this.ambarToplam(ad, ambarObj);
+      const zim = this.ambarZimmetToplam(ad, ambarObj);
+      const esik = Number(kalem.esik) || KRITIK_ESIK[kalem.birim] || 2;
+      if (toplam + zim > 0 && toplam <= esik) kritikler.push(ad + ' ' + toplam + ' ' + kalem.birim);
     }
     if (kritikler.length) {
       setTimeout(() => this.duyur('Kritik stok seviyesi: ' + kritikler.join(', ')
@@ -8154,8 +8665,12 @@ class Component extends DCLogic {
   // Tek hareket: giriş, çıkış, zimmet, iade, sarf. Eksi mevcuda düşürmez.
   ambarHareket(g) {
     if (!g || !g.malzeme) return this.duyur('Malzeme seçin.', 4000, 'kotu');
-    const kalem = STOK_KALEM.find(m => m[0] === g.malzeme);
-    const birim = kalem ? kalem[2] : 'adet';
+    const kalem = this.katalogBul(g.malzeme);
+    // Elle yazılan ad katalogda yoksa stok açılmaz — yoksa her yazım
+    // farkı ayrı bir malzeme gibi ambara girerdi
+    if (!kalem || !stoktaMi(kalem)) return this.duyur('“' + g.malzeme + '” katalogda yok. Listeden seçin ya da önce “Malzeme tanımla” ile ekleyin.', 7000, 'kotu');
+    if (kalem.pasif) return this.duyur(g.malzeme + ' pasif — önce malzeme kartından yeniden etkinleştirin.', 6000, 'kotu');
+    const birim = kalem.birim;
     const n = Math.abs(parseFloat(String(g.adet || '').replace(',', '.')) || 0);
     if (!n) return this.duyur('Adet girin.', 4000, 'kotu');
     if (g.tur !== 'sarf' && g.tur !== 'hurda' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
@@ -8205,6 +8720,15 @@ class Component extends DCLogic {
     this.denetimYaz('ambar', HAREKET_AD[g.tur], g.malzeme + ' × ' + n + ' ' + birim
       + [g.ambar, g.ekip, tesisAd].filter(Boolean).map(x => ' · ' + x).join('')
       + (kayit.not ? ' · ' + kayit.not : ''), g.ambar || g.ekip);
+    // Günlük tüketim özeti — sunucudaki ambar_hareket ile aynı kural
+    const gun = JSON.parse(JSON.stringify(a.gun || {}));
+    const fark = ['cikis', 'zimmet'].includes(g.tur) ? n : (g.tur === 'iade' ? -n : 0);
+    if (fark) {
+      const d = new Date(Date.now() + (this._saatFarki || 0));
+      const gk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      gun[gk] = gun[gk] || {};
+      gun[gk][g.malzeme] = (Number(gun[gk][g.malzeme]) || 0) + fark;
+    }
     // Bakiye hesabı sunucuda yapılır; buradaki stok/zim yalnızca ekranın
     // hemen güncellenmesi için. Sunucudan gelen sonuç bunun üstüne yazar.
     this.ambarIslem([{
@@ -8212,8 +8736,14 @@ class Component extends DCLogic {
       ambar: g.ambar || '', ekip: g.ekip || '', not: kayit.not, assetId: kayit.assetId
     }], HAREKET_AD[g.tur] + ' · ' + g.malzeme + ' × ' + n + ' ' + birim
       + (g.ekip ? ' · ' + g.ekip : '') + (g.ambar ? ' · ' + g.ambar : ''),
-      { stok, zimmet: zim, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) });
+      { stok, zimmet: zim, gun, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) });
     this.setState({ ambarForm: null });
+    // Siparişteki kalem ambara girince listeden düşer
+    if (g.tur === 'giris') {
+      const sp = (this.state.siparis || []).find(x => x.malzeme === g.malzeme);
+      if (sp) setTimeout(() => this.siparisYaz((this.state.siparis || []).filter(x => x.id !== sp.id),
+        g.malzeme + ' ambara girdi, sipariş listesinden düşüldü.'), 1800);
+    }
   }
   kvkkYaz(yama) {
     const y = { ...(this.state.kvkk || {}), ...yama };
@@ -8699,8 +9229,8 @@ class Component extends DCLogic {
     const eksik = [];
     const islemler = [];
     for (const mz of (f.malzeme || [])) {
-      const kalem = STOK_KALEM.find(m => m[0] === mz.ad);
-      if (!kalem) continue;
+      const kalem = this.katalogBul(mz.ad);
+      if (!kalem || !stoktaMi(kalem)) continue;
       const adet = Math.abs(Number(mz.adet) || 1);
       const elde = Number((zim[f.crew] || {})[mz.ad]) || 0;
       if (elde < adet) { eksik.push(mz.ad); continue; }
@@ -8709,11 +9239,11 @@ class Component extends DCLogic {
       const hid = 'h' + Date.now() + n;
       hareket.unshift({
         id: hid, damga: this.damga(), tur: 'sarf', malzeme: mz.ad,
-        adet, birim: kalem[2], ambar: '', ekip: f.crew, kim,
+        adet, birim: kalem.birim, ambar: '', ekip: f.crew, kim,
         not: (f.no || 'arıza') + ' kapanışı',
         assetId: f.assetId || null // köy/ilçe bazlı malzeme raporu için (madde 18)
       });
-      islemler.push({ id: hid, tur: 'sarf', malzeme: mz.ad, adet, birim: kalem[2],
+      islemler.push({ id: hid, tur: 'sarf', malzeme: mz.ad, adet, birim: kalem.birim,
         ambar: '', ekip: f.crew, not: (f.no || 'arıza') + ' kapanışı', assetId: f.assetId || null });
       n++;
     }
@@ -8723,7 +9253,7 @@ class Component extends DCLogic {
     this.ambarIslem(islemler,
       (n ? n + ' kalem ' + f.crew + ' zimmetinden düşüldü' : 'Zimmetten düşülecek kalem bulunamadı')
       + (eksik.length ? ' · zimmette olmayanlar: ' + eksik.join(', ') + '. Ambardan zimmet girip yeniden deneyin.' : '.'),
-      { stok, zimmet: zim, hareket: hareket.slice(0, 400) });
+      { stok, zimmet: zim, gun: a.gun || {}, hareket: hareket.slice(0, 400) });
   }
   // İş emri: "İş emri" düğmesi artık gerçek, numaralı bir kayıt açıyor
   // (madde 3-5/9/12-14, 2026.09.30 — daha önce yalnızca bir toast gösteriyordu).
@@ -10885,6 +11415,11 @@ class Component extends DCLogic {
     // Ekip listesi artık durumdan gelir (Ayarlar > Ekipler'den düzenlenir)
     const SAHA_EKIP = (s.ekipler || []).map(e => e.ad);
     const CREWS = [ATANMADI, ...SAHA_EKIP];
+    // Malzeme listesi artık katalogdan gelir (Ambar > Malzeme tanımla).
+    // MALZEME: arıza formundaki seçenekler (hizmetler dâhil), STOK_KALEM:
+    // ambarda tutulanlar — ikisi de [ad, fiyat, birim, …] dizisi.
+    const MALZEME = this.katalog().filter(k => !k.pasif).map(k => [k.ad, Number(k.fiyat) || 0, k.birim]);
+    const STOK_KALEM = this.stokKalem();
     const ekipAyarBul = ad => (s.ekipler || []).find(e => e.ad === ad) || null;
     const nobetciEkip = (s.nobet || {})[new Date().getDay()] || '';
     const yerlesimOn = this.props.yerlesimSekmesi ?? true;
@@ -12475,74 +13010,316 @@ class Component extends DCLogic {
         };
       })(),
       ambarEkran: (() => {
+        // Ağır hesap (katalog × 30 gün tüketim) yalnız Ambar açıkken yapılır
+        if (tabId !== 'ambar') return { acik: false, form: { on: false } };
         const af = s.ambarForm;
+        const yazabilir = yetki('ambar') === 'tam' && (me || {}).role !== 'izleyici';
+        const katYetki = CAN.assign.includes((me || {}).role);
         const zimTablo = (s.ambar && s.ambar.zimmet) || {};
         const kisa = A => A.replace(' ambarı', '').replace(' ambar', '');
-        const kalemler = STOK_KALEM.map(m => {
-          const dag = AMBARLAR.map(A => ({ A, n: this.ambarMevcut(m[0], A) })).filter(x => x.n > 0);
-          const toplam = dag.reduce((t, x) => t + x.n, 0);
-          const zim = SAHA_EKIP.reduce((t, c) => t + this.ambarZimmet(m[0], c), 0);
-          const esik = KRITIK_ESIK[m[2]] || 2;
-          // Kritik uyarısı yalnızca girilmiş kalem için: hiç girilmemiş
-          // malzeme “azaldı” sayılmaz, ambar boş demektir.
-          const girilmis = toplam + zim > 0;
-          const kritik = girilmis && toplam <= esik;
+        const AMB_RENK = ['var(--color-accent)', '#5e5ce6', '#ff9f0a', '#34c759'];
+        const kirmizi = 'var(--color-uyari)', turuncu = '#e07b00', yesil = '#1f9d4c';
+        const sayi = n => (Math.round(n * 10) / 10).toLocaleString('tr-TR');
+        const birimK = b => b === 'metre' ? 'm' : b;
+        const tlKisa = n => n >= 1e6 ? '₺' + (n / 1e6).toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + ' M'
+          : (n >= 1e4 ? '₺' + Math.round(n / 1000).toLocaleString('tr-TR') + ' B' : this.tl(n));
+        const katalog = this.katalog();
+        const stokta = katalog.filter(k => !k.pasif && stoktaMi(k));
+        const sip = s.siparis || [];
+        const sipSet = new Set(sip.map(x => x.malzeme));
+        const tum = stokta.map(k => ({ k, d: this.ambarDurum(k.ad), dag: AMBARLAR.map(A => this.ambarMevcut(k.ad, A)) }));
+        const gunC = g => g == null ? ui.mut : (g < 7 ? kirmizi : (g < 15 ? turuncu : yesil));
+        const gunYazi = x => {
+          if (!x.d.girilmis) return 'girilmedi';
+          if (x.d.toplam <= 0) return 'Tükendi';
+          if (x.d.kacGun == null) return 'çıkış yok';
+          return x.d.kacGun < 1 ? '1 günden az' : Math.round(x.d.kacGun) + ' gün';
+        };
+        const formAc = (tur, malzeme, ek) => this.setState({ ambarKart: null, ambarForm: {
+          tur, malzeme: malzeme || '', ambar: tur === 'sarf' || tur === 'hurda' ? '' : AMBARLAR[0],
+          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(tur) ? (SAHA_EKIP[0] || '') : '', adet: '', not: '', ...(ek || {}) } });
+
+        // — göstergeler
+        const kritikler = tum.filter(x => x.d.kritik);
+        const az7 = kritikler.filter(x => x.d.toplam <= 0 || (x.d.kacGun != null && x.d.kacGun < 7)).length;
+        const hareketler = (s.ambar && s.ambar.hareket) || [];
+        const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+        const gunMs = 86400000;
+        // Son 7 gün: günlük özetten (hareket listesi 400 satırla sınırlı,
+        // günde 50+ işte bir haftayı tutmaz). Gün başına ambardan net çıkan
+        // kalem sayısı; birimler farklı olduğu için miktar toplanmaz.
+        const gunOzet = (s.ambar && s.ambar.gun) || {};
+        const gk = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        const yediGun = [6, 5, 4, 3, 2, 1, 0].map(i => {
+          const g = gunOzet[gk(new Date(bugun.getTime() - i * gunMs))] || {};
+          return Object.keys(g).filter(m => Number(g[m]) > 0).length;
+        });
+        const yediCesit = new Set([0, 1, 2, 3, 4, 5, 6].flatMap(i => {
+          const g = gunOzet[gk(new Date(bugun.getTime() - i * gunMs))] || {};
+          return Object.keys(g).filter(m => Number(g[m]) > 0);
+        })).size;
+        const ambarDeger = tum.reduce((t, x) => t + x.d.toplam * (Number(x.k.fiyat) || 0), 0);
+        const ekipDeger = tum.reduce((t, x) => t + x.d.zim * (Number(x.k.fiyat) || 0), 0);
+        const ambardaN = tum.filter(x => x.d.toplam > 0).length;
+        const katSayi = new Set(stokta.map(k => k.kat)).size;
+        const kpis = [
+          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda · ' + katSayi + ' kategori', altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
+          { label: 'Kritik seviyede', val: String(kritikler.length), alt: kritikler.length ? az7 + ' tanesi 7 günden az yeter' : 'kritik kalem yok', altC: kritikler.length ? kirmizi : yesil, alarm: kritikler.length > 0, valC: kritikler.length ? kirmizi : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'kritik' ? '' : 'kritik' }) },
+          { label: 'Son 7 gün ambar çıkışı', val: yediGun.reduce((a, b) => a + b, 0) + ' kalem', alt: yediCesit + ' çeşit malzeme · bugün ' + yediGun[6], altC: ui.mut, alarm: false, el: this.kivilcim(yediGun, '#ff9f0a'), git: () => this.setState({ ambarSira: 'tuketim' }) },
+          { label: 'Ambar stok değeri', val: tlKisa(ambarDeger), alt: ekipDeger ? 'ekiplerde ' + tlKisa(ekipDeger) + ' daha' : 'katalog fiyatıyla', altC: ui.mut, alarm: false, el: '', git: null }
+        ].map(k => ({ valC: ui.fg, ...k, imlec: k.git ? 'pointer' : 'default', git: k.git || (() => {}) }));
+
+        // — süzgeç, kategori, sıralama
+        const q = sadeMetin(s.ambarQ || '');
+        const katF = s.ambarKat || '';
+        const suz = s.ambarSuz || '';
+        const sira = s.ambarSira || 'gun';
+        let liste = tum.filter(x =>
+          (!katF || x.k.kat === katF) &&
+          (!suz || (suz === 'kritik' ? x.d.kritik : suz === 'var' ? x.d.toplam > 0 : suz === 'siparis' ? sipSet.has(x.k.ad) : true)) &&
+          (!q || sadeMetin(x.k.ad + ' ' + x.k.kod + ' ' + (MALZEME_KAT[x.k.kat] || '')).includes(q)));
+        const gunAnahtar = x => !x.d.girilmis ? 3e9 : (x.d.toplam <= 0 ? -1 : (x.d.kacGun == null ? 2e9 + (x.d.kritik ? 0 : 1) : x.d.kacGun));
+        if (sira === 'gun') liste.sort((a, b) => gunAnahtar(a) - gunAnahtar(b) || a.k.ad.localeCompare(b.k.ad, 'tr'));
+        else if (sira === 'tuketim') liste.sort((a, b) => b.d.tuk.toplam - a.d.tuk.toplam || a.k.ad.localeCompare(b.k.ad, 'tr'));
+        else liste.sort((a, b) => a.k.ad.localeCompare(b.k.ad, 'tr'));
+        const SINIR = 120;
+        const gorunen = s.ambarHepsi ? liste : liste.slice(0, SINIR);
+        const katSay = {};
+        for (const k of stokta) katSay[k.kat] = (katSay[k.kat] || 0) + 1;
+        const cip = (on, sec) => ({ bg: on ? 'var(--color-accent)' : ui.surf2, fg: on ? '#fff' : ui.fg, sec });
+        const kategoriler = [['', 'Tümü', stokta.length], ...Object.keys(MALZEME_KAT).filter(k => katSay[k] || k === katF).map(k => [k, MALZEME_KAT[k], katSay[k] || 0])]
+          .map(([id, l, n]) => ({ l, n: String(n), ...cip(katF === id, () => this.setState({ ambarKat: id })) }));
+        const suzgecler = [['kritik', 'Kritik', kritikler.length], ['var', 'Ambarda olan', ambardaN], ['siparis', 'Siparişte', sip.length]]
+          .map(([id, l, n]) => ({ l, n: String(n), ...cip(suz === id, () => this.setState({ ambarSuz: suz === id ? '' : id })) }));
+        const siralar = [['gun', 'Kaç gün yeter'], ['tuketim', 'En çok tüketilen'], ['az', 'A → Z']].map(([id, l]) => ({
+          l, bg: sira === id ? ui.surf : 'transparent', golge: sira === id ? '0 1px 3px rgba(0,0,0,.14)' : 'none',
+          sec: () => this.setState({ ambarSira: id })
+        }));
+
+        // — tablo satırları (masaüstü) ve kalem kartları (telefon)
+        const satir = x => {
+          const { k, d, dag } = x;
+          const mx = Math.max(1, d.toplam);
+          const g = d.toplam <= 0 && d.girilmis ? 0 : d.kacGun;
+          const meta = [
+            dag.some(n => n > 0) ? AMBARLAR.map((A, i) => dag[i] > 0 ? kisa(A) + ' ' + sayi(dag[i]) : '').filter(Boolean).join(' · ') : 'ambarda yok',
+            d.zim ? 'ekiplerde ' + sayi(d.zim) + ' ' + k.birim : '',
+            d.girilmis ? this.tl((d.toplam + d.zim) * (Number(k.fiyat) || 0)) : ''
+          ].filter(Boolean).join(' · ');
           return {
-            ad: m[0], birim: m[2], fiyat: this.tl(m[1]) + ' / ' + m[2],
-            toplam: toplam + ' ' + m[2],
-            toplamFg: kritik ? 'var(--color-uyari)' : ui.fg,
-            meta: [
-              dag.length ? dag.map(x => kisa(x.A) + ' ' + x.n).join(' · ') : 'ambarda yok',
-              zim ? 'ekiplerde ' + zim + ' ' + m[2] : '',
-              girilmis ? this.tl((toplam + zim) * m[1]) : ''
-            ].filter(Boolean).join(' · '),
-            kritik, girilmis,
-            giris: () => this.setState({ ambarForm: { tur: 'giris', malzeme: m[0], ambar: AMBARLAR[0], ekip: '', adet: '', not: '' } }),
-            zimmetVer: () => this.setState({ ambarForm: { tur: 'zimmet', malzeme: m[0], ambar: (dag[0] || { A: AMBARLAR[0] }).A, ekip: SAHA_EKIP[0] || '', adet: '', not: '' } })
+            ad: k.ad, kod: k.kod, birim: k.birim, katL: MALZEME_KAT[k.kat] || '—',
+            w0: (dag[0] / mx * 100).toFixed(1) + '%', w1: (dag[1] / mx * 100).toFixed(1) + '%',
+            w2: (dag[2] / mx * 100).toFixed(1) + '%', w3: (dag[3] / mx * 100).toFixed(1) + '%',
+            toplamN: sayi(d.toplam), toplam: sayi(d.toplam) + ' ' + k.birim,
+            toplamFg: d.kritik ? kirmizi : ui.fg,
+            ekipte: d.zim ? sayi(d.zim) + ' ' + birimK(k.birim) : '—',
+            tukEl: d.tuk.toplam > 0 ? this.kivilcim(d.tuk.seri, gunC(g), 96, 26)
+              : React.createElement('span', { style: { font: '400 11.5px/1 var(--font-body)', color: ui.mut } }, 'çıkış yok'),
+            tukYazi: d.tuk.toplam > 0 ? sayi(d.tuk.toplam) + ' ' + birimK(k.birim) + ' / 30 gün' : '',
+            gun: gunYazi(x), gunC: d.toplam <= 0 && d.girilmis ? kirmizi : gunC(d.kacGun),
+            hiz: d.tuk.ort > 0 ? '· ' + sayi(d.tuk.ort) + '/gün' : '',
+            gunW: (g == null ? 0 : Math.min(g, 60) / 60 * 100).toFixed(1) + '%',
+            zemin: d.kritik ? (dark ? 'rgba(255,69,58,.07)' : 'rgba(215,0,21,.035)') : 'transparent',
+            sipVar: sipSet.has(k.ad),
+            meta, kritik: d.kritik, girilmis: d.girilmis,
+            ac: () => this.setState({ ambarKart: k.ad }),
+            giris: () => formAc('giris', k.ad),
+            zimmetVer: () => formAc('zimmet', k.ad, { ambar: (AMBARLAR.find((A, i) => dag[i] > 0)) || AMBARLAR[0] })
+          };
+        };
+        const satirlar = gorunen.map(satir);
+
+        // — tükenmek üzere
+        const tukenen = kritikler.slice().sort((a, b) => gunAnahtar(a) - gunAnahtar(b) || (a.d.toplam / a.d.esik) - (b.d.toplam / b.d.esik)).slice(0, 6)
+          .map(x => {
+            const on = sipSet.has(x.k.ad);
+            const g = x.d.toplam <= 0 ? 0 : x.d.kacGun;
+            const oran = g != null ? Math.min(1, g / 7) : Math.min(1, x.d.toplam / Math.max(1, x.d.esik * 2));
+            return {
+              ad: x.k.ad,
+              gun: x.d.toplam <= 0 ? 'Tükendi' : (x.d.kacGun != null ? gunYazi(x) : 'eşikte · ' + sayi(x.d.toplam) + ' ' + birimK(x.k.birim)),
+              c: g != null && g >= 7 ? turuncu : kirmizi, w: Math.max(4, oran * 100).toFixed(0) + '%',
+              bL: on ? '✓ Siparişte' : 'Siparişe ekle',
+              bBg: on ? 'rgba(52,199,89,.15)' : (dark ? 'rgba(10,132,255,.2)' : 'rgba(0,113,227,.1)'),
+              bFg: on ? '#1b7a36' : ui.acc,
+              sec: () => this.siparisEkle(x.k.ad),
+              ac: () => this.setState({ ambarKart: x.k.ad })
+            };
+          });
+
+        // — bugünkü hareketler
+        const HT = {
+          giris: ['Giriş', 'rgba(52,199,89,.15)', '#1b7a36'], cikis: ['Çıkış', 'rgba(0,0,0,.06)', ui.fg],
+          zimmet: ['Zimmet', 'rgba(0,113,227,.12)', ui.acc], iade: ['İade', 'rgba(175,82,222,.13)', '#8e3fb8'],
+          sarf: ['Sarf', 'rgba(255,159,10,.17)', '#9a5200'], hurda: ['Hurda', 'rgba(215,0,21,.1)', kirmizi]
+        };
+        const bugunH = hareketler.filter(h => this.damgaMs(h.damga) >= bugun.getTime());
+        const hSatir = h => {
+          const t = HT[h.tur] || [h.tur, ui.surf2, ui.fg];
+          return {
+            tur: t[0], bg: t[1], fg: t[2],
+            ne: h.malzeme + ' × ' + sayi(Number(h.adet) || 0) + ' ' + birimK(h.birim || ''),
+            alt: [[h.ambar && kisa(h.ambar), h.ekip].filter(Boolean).join(' → '), h.not, h.kim].filter(Boolean).join(' · '),
+            saat: (String(h.damga || '').split(' ')[1] || ''),
+            gun: String(h.damga || '').split(' ')[0]
+          };
+        };
+
+        // — ekip zimmeti (silinmiş/adı değişmiş ekibin zimmeti de görünür)
+        const zimEkipler = [...new Set([...SAHA_EKIP, ...Object.keys(zimTablo).filter(c => Object.keys(zimTablo[c] || {}).length)])];
+        const zimmetler = zimEkipler.map(c => {
+          const t = zimTablo[c] || {};
+          const list = Object.keys(t).filter(k => t[k] > 0);
+          const deger = list.reduce((x, ad) => x + t[ad] * (Number((this.katalogBul(ad) || {}).fiyat) || 0), 0);
+          return {
+            ekip: c, varMi: list.length > 0 && yazabilir, kalem: list.length ? list.length + ' kalem · ' + this.tl(deger) : 'zimmet yok',
+            ozet: list.length ? list.map(k => k + ' × ' + sayi(t[k])).join(' · ') : 'zimmetinde malzeme yok',
+            ozetFg: list.length ? ui.fg : ui.mut,
+            iade: () => formAc('iade', list[0], { ekip: c }),
+            sarf: () => formAc('sarf', list[0], { ekip: c }),
+            hurda: () => formAc('hurda', list[0], { ekip: c })
           };
         });
-        const kritikSayi = kalemler.filter(k => k.kritik).length;
-        const zimKalem = SAHA_EKIP.reduce((t, c) => t + Object.keys(zimTablo[c] || {}).length, 0);
-        return {
-          not: 'Önce “Giriş” ile mevcut girilir, sahaya çıkacak malzeme ekibe zimmet edilir, iş bitince iade edilir ya da sarf düşülür. Kritik eşiğin altına düşen kalem kırmızı yazılır.',
-          stats: [
-            { n: String(kalemler.filter(k => k.girilmis).length), label: 'Ambarda kalem', fg: ui.fg },
-            { n: String(kritikSayi), label: 'Kritik seviye', fg: kritikSayi ? 'var(--color-uyari)' : ui.fg },
-            { n: String(zimKalem), label: 'Ekip zimmetinde', fg: ui.fg },
-            { n: String(((s.ambar && s.ambar.hareket) || []).length), label: 'Hareket kaydı', fg: ui.fg }
-          ],
-          yeni: () => this.setState({ ambarForm: { tur: 'giris', malzeme: STOK_KALEM[0][0], ambar: AMBARLAR[0], ekip: '', adet: '', not: '' } }),
-          kalemler,
-          zimmetler: SAHA_EKIP.map(c => {
-            const t = zimTablo[c] || {};
-            const list = Object.keys(t).filter(k => t[k] > 0);
+
+        // — malzeme kartı
+        const kartK = s.ambarKart ? this.katalogBul(s.ambarKart) : null;
+        const kart = (() => {
+          if (!kartK) return { on: false };
+          const d = this.ambarDurum(kartK.ad);
+          const x = { k: kartK, d, dag: AMBARLAR.map(A => this.ambarMevcut(kartK.ad, A)) };
+          const r = satir(x);
+          return {
+            on: true, ad: kartK.ad, kod: kartK.kod, katL: MALZEME_KAT[kartK.kat] || '—', birim: kartK.birim,
+            fiyat: this.tl(Number(kartK.fiyat) || 0) + ' / ' + kartK.birim, esik: sayi(d.esik) + ' ' + kartK.birim,
+            pasif: !!kartK.pasif,
+            toplam: r.toplam, toplamFg: r.toplamFg, gun: r.gun, gunC: r.gunC,
+            hiz: d.tuk.ort > 0 ? 'günde ortalama ' + sayi(d.tuk.ort) + ' ' + birimK(kartK.birim) : '',
+            tuk: d.tuk.toplam > 0 ? sayi(d.tuk.toplam) + ' ' + kartK.birim + ' son 30 günde' : 'son 30 günde ambar çıkışı yok',
+            tukEl: d.tuk.toplam > 0 ? this.kivilcim(d.tuk.seri, r.gunC, 220, 44) : '',
+            ambarlar: AMBARLAR.map((A, i) => ({ ad: A, n: sayi(x.dag[i]) + ' ' + birimK(kartK.birim), c: AMB_RENK[i], fg: x.dag[i] > 0 ? ui.fg : ui.mut })),
+            ekipler: Object.keys(zimTablo).filter(c => Number((zimTablo[c] || {})[kartK.ad]) > 0)
+              .map(c => ({ ad: c, n: sayi(zimTablo[c][kartK.ad]) + ' ' + birimK(kartK.birim) })),
+            ekipYok: !d.zim,
+            hareket: hareketler.filter(h => h.malzeme === kartK.ad).slice(0, 8).map(hSatir),
+            hareketYok: !hareketler.some(h => h.malzeme === kartK.ad),
+            yazabilir: yazabilir && !kartK.pasif, katYetki,
+            sipL: sipSet.has(kartK.ad) ? '✓ Siparişte' : 'Siparişe ekle',
+            sipOneri: 'öneri: ' + sayi(this.siparisOneri(kartK.ad)) + ' ' + kartK.birim,
+            giris: () => formAc('giris', kartK.ad),
+            zimmet: () => formAc('zimmet', kartK.ad, { ambar: (AMBARLAR.find((A, i) => x.dag[i] > 0)) || AMBARLAR[0] }),
+            siparis: () => this.siparisEkle(kartK.ad),
+            duzenle: () => this.setState({ ambarKart: null, malzemeForm: { ...kartK, fiyat: String(kartK.fiyat ?? ''), esik: String(kartK.esik ?? '') } }),
+            pasifL: kartK.pasif ? 'Yeniden etkinleştir' : 'Pasife al',
+            pasifYap: () => this.malzemePasif(kartK.kod, !kartK.pasif),
+            kapat: () => this.setState({ ambarKart: null })
+          };
+        })();
+
+        // — malzeme tanım formu
+        const mf = s.malzemeForm;
+        const mfSet = (alan, v) => this.setState({ malzemeForm: { ...this.state.malzemeForm, [alan]: v } });
+        const malzemeForm = !mf ? { on: false } : {
+          on: true, baslik: mf.kod ? mf.kod + ' · düzenle' : 'Yeni malzeme',
+          kod: mf.kod || this.malzemeKodSira(katalog),
+          adKilit: !!(mf.kod && this.malzemeHareketli((katalog.find(k => k.kod === mf.kod) || {}).ad || '')),
+          ad: mf.ad || '', onAd: e => mfSet('ad', e.target.value),
+          kat: mf.kat || 'sarf', katlar: Object.keys(MALZEME_KAT).map(k => ({ v: k, l: MALZEME_KAT[k] })), onKat: e => mfSet('kat', e.target.value),
+          birim: mf.birim || 'adet', birimler: MALZEME_BIRIM, onBirim: e => mfSet('birim', e.target.value),
+          fiyat: mf.fiyat ?? '', onFiyat: e => mfSet('fiyat', e.target.value),
+          esik: mf.esik ?? '', onEsik: e => mfSet('esik', e.target.value),
+          esikIpucu: 'boş bırakılırsa ' + (KRITIK_ESIK[mf.birim || 'adet'] || 2) + ' ' + (mf.birim || 'adet'),
+          benzer: (() => {
+            const a = sadeMetin(mf.ad || '');
+            if (a.length < 3) return '';
+            const b = katalog.filter(k => k.kod !== mf.kod && sadeMetin(k.ad).includes(a)).slice(0, 3).map(k => k.kod + ' ' + k.ad);
+            return b.length ? 'Katalogda benzer: ' + b.join(' · ') : '';
+          })(),
+          kaydet: () => this.malzemeKaydet(this.state.malzemeForm),
+          kapat: () => this.setState({ malzemeForm: null })
+        };
+
+        // — sipariş listesi
+        const siparisPanel = !s.siparisPanel ? { on: false } : {
+          on: true, bos: !sip.length, yazabilir, salt: !yazabilir,
+          toplam: this.tl(sip.reduce((t, x) => t + (Number(x.adet) || 0) * (Number((this.katalogBul(x.malzeme) || {}).fiyat) || 0), 0)),
+          kalemler: sip.map(x => {
+            const k = this.katalogBul(x.malzeme) || {};
+            const d = this.ambarDurum(x.malzeme);
             return {
-              ekip: c, varMi: list.length > 0,
-              ozet: list.length ? list.map(k => k + ' × ' + t[k]).join(' · ') : 'zimmetinde malzeme yok',
-              ozetFg: list.length ? ui.fg : ui.mut,
-              iade: () => this.setState({ ambarForm: { tur: 'iade', malzeme: list[0] || STOK_KALEM[0][0], ambar: AMBARLAR[0], ekip: c, adet: '', not: '' } }),
-              sarf: () => this.setState({ ambarForm: { tur: 'sarf', malzeme: list[0] || STOK_KALEM[0][0], ambar: '', ekip: c, adet: '', not: '' } }),
-              hurda: () => this.setState({ ambarForm: { tur: 'hurda', malzeme: list[0] || STOK_KALEM[0][0], ambar: '', ekip: c, adet: '', not: '' } })
+              ad: x.malzeme, kod: k.kod || '—', birim: x.birim,
+              adet: String(x.adet), onAdet: e => this.siparisAdet(x.id, e.target.value),
+              durum: d.toplam <= 0 ? 'ambarda kalmadı'
+                : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
+              tutar: this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)),
+              ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
+              cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + ' listeden çıkarıldı.')
             };
           }),
-          hareketler: ((s.ambar && s.ambar.hareket) || []).slice(0, 40).map(x => ({
+          kopyala: () => this.siparisKopyala(),
+          temizle: () => this.siparisYaz([], 'Sipariş listesi temizlendi.'),
+          kritikEkle: () => {
+            const yeni = kritikler.filter(x => !sipSet.has(x.k.ad));
+            if (!yeni.length) return this.duyur('Kritik kalemlerin hepsi zaten listede.', 4000);
+            this.siparisYaz([...sip, ...yeni.map((x, i) => ({
+              id: 's' + Date.now() + i, malzeme: x.k.ad, adet: this.siparisOneri(x.k.ad), birim: x.k.birim,
+              ekleyen: (me || {}).name || '', damga: this.damga()
+            }))], yeni.length + ' kritik kalem listeye eklendi.');
+          },
+          kapat: () => this.setState({ siparisPanel: false })
+        };
+
+        return {
+          acik: true, yazabilir, katYetki,
+          not: 'Önce “Giriş” ile mevcut girilir, sahaya çıkacak malzeme ekibe zimmet edilir, iş bitince iade edilir ya da sarf düşülür. Kritik eşiğin altına düşen ya da 7 günden az yetecek kalem kırmızı yazılır.',
+          baslikAlt: AMBARLAR.length + ' ambar · ' + stokta.length + ' malzeme çeşidi · ' + zimEkipler.filter(c => Object.keys(zimTablo[c] || {}).length).length + ' ekipte zimmet',
+          q: s.ambarQ || '', onQ: e => this.setState({ ambarQ: e.target.value, ambarHepsi: false }),
+          kpis, kategoriler, suzgecler, siralar,
+          ambarAd: AMBARLAR.map((A, i) => ({ ad: kisa(A), c: AMB_RENK[i] })),
+          satirlar, satirVar: satirlar.length > 0, satirYok: !satirlar.length,
+          bosYazi: q ? '“' + (s.ambarQ || '') + '” ile eşleşen malzeme yok.' : 'Bu süzgece uyan malzeme yok.',
+          sonuc: liste.length + ' malzeme' + (liste.length > gorunen.length ? ' · ilk ' + gorunen.length + ' gösteriliyor' : ''),
+          dahaVar: liste.length > gorunen.length,
+          hepsiniGoster: () => this.setState({ ambarHepsi: true }),
+          tukenen, tukenenVar: tukenen.length > 0, tukenenYok: !tukenen.length,
+          bugunH: bugunH.slice(0, 8).map(hSatir), bugunSay: bugunH.length + ' hareket',
+          bugunVar: bugunH.length > 0, bugunYok: !bugunH.length,
+          sipN: String(sip.length), sipVar: sip.length > 0,
+          siparisAc: () => this.setState({ siparisPanel: true }),
+          malzemeYeni: () => this.setState({ malzemeForm: { kod: '', ad: s.ambarQ || '', kat: katF || 'sarf', birim: 'adet', fiyat: '', esik: '' } }),
+          kart, malzemeForm, siparisPanel,
+          // telefon şablonu bu alanları kullanır
+          stats: [
+            { n: String(ambardaN), label: 'Ambarda kalem', fg: ui.fg },
+            { n: String(kritikler.length), label: 'Kritik seviye', fg: kritikler.length ? kirmizi : ui.fg },
+            { n: String(SAHA_EKIP.reduce((t, c) => t + Object.keys(zimTablo[c] || {}).length, 0)), label: 'Ekip zimmetinde', fg: ui.fg },
+            { n: String(hareketler.length), label: 'Hareket kaydı', fg: ui.fg }
+          ],
+          yeni: () => formAc('giris', ''),
+          kalemler: satirlar,
+          zimmetler,
+          hareketler: hareketler.slice(0, 40).map(x => ({
             tur: HAREKET_AD[x.tur] || x.tur,
-            turFg: x.tur === 'giris' || x.tur === 'iade' ? ui.fg : (x.tur === 'hurda' ? 'var(--color-uyari)' : ui.acc),
+            turFg: x.tur === 'giris' || x.tur === 'iade' ? ui.fg : (x.tur === 'hurda' ? kirmizi : ui.acc),
             malzeme: x.malzeme, adet: x.adet + ' ' + x.birim,
             meta: [[x.ambar, x.ekip].filter(Boolean).join(' → '), x.damga, x.kim, x.not]
               .filter(Boolean).join(' · ')
           })),
-          hareketYok: !((s.ambar && s.ambar.hareket) || []).length,
+          hareketYok: !hareketler.length,
           hareketBos: 'Henüz hareket yok. İlk adım: kullandığınız malzemelerin ambar mevcudunu “Giriş” ile girin.',
           form: {
             on: !!af,
             baslik: af ? HAREKET_AD[af.tur] : '',
             turler: Object.keys(HAREKET_AD).map(k => ({
               label: HAREKET_AD[k],
-              ...seg(!!af && af.tur === k, () => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k } }))
+              ...seg(!!af && af.tur === k, () => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k,
+                ambar: k === 'sarf' || k === 'hurda' ? '' : (this.state.ambarForm.ambar || AMBARLAR[0]),
+                ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || SAHA_EKIP[0] || '') : '' } }))
             })),
             malzeme: af ? af.malzeme : '', malzemeler: STOK_KALEM.map(m => m[0]),
+            // masaüstünde yazarak arama: 300+ kalemde açılır liste yerine
+            malzemeSecenek: STOK_KALEM.map(m => ({ v: m[0], l: m[3] + ' · ' + (MALZEME_KAT[m[4]] || '') + ' · ' + m[2] })),
             onMalzeme: e => this.setState({ ambarForm: { ...this.state.ambarForm, malzeme: e.target.value } }),
+            malzemeUyari: af && af.malzeme && !STOK_KALEM.some(m => m[0] === af.malzeme) ? 'Katalogda yok — listeden seçin.' : '',
             ambar: af ? af.ambar : '', ambarlar: AMBARLAR,
             ambarVar: !!af && af.tur !== 'sarf' && af.tur !== 'hurda',
             onAmbar: e => this.setState({ ambarForm: { ...this.state.ambarForm, ambar: e.target.value } }),
@@ -12563,11 +13340,11 @@ class Component extends DCLogic {
             not: af ? af.not : '',
             onNot: e => this.setState({ ambarForm: { ...this.state.ambarForm, not: e.target.value } }),
             durum: (() => {
-              if (!af || !af.malzeme) return '';
-              const kalem = STOK_KALEM.find(m => m[0] === af.malzeme);
-              const b = kalem ? kalem[2] : 'adet';
-              const m1 = af.ambar ? this.ambarMevcut(af.malzeme, af.ambar) + ' ' + b + ' · ' + af.ambar : '';
-              const m2 = af.ekip ? this.ambarZimmet(af.malzeme, af.ekip) + ' ' + b + ' · ' + af.ekip + ' zimmeti' : '';
+              if (!af || !af.malzeme) return '—';
+              const kalem = this.katalogBul(af.malzeme);
+              const b = kalem ? kalem.birim : 'adet';
+              const m1 = af.ambar ? sayi(this.ambarMevcut(af.malzeme, af.ambar)) + ' ' + b + ' · ' + af.ambar : '';
+              const m2 = af.ekip ? sayi(this.ambarZimmet(af.malzeme, af.ekip)) + ' ' + b + ' · ' + af.ekip + ' zimmeti' : '';
               return [m1, m2].filter(Boolean).join('  |  ') || '—';
             })(),
             kaydet: () => this.ambarHareket(this.state.ambarForm),
@@ -14052,12 +14829,33 @@ class Component extends DCLogic {
           sil: () => this.setState(st => ({ faultForm: { ...st.faultForm, malzeme: st.faultForm.malzeme.filter((_, j) => j !== i) } }))
         })) : [],
         malzemeVar: !!(ff && ff.malzeme && ff.malzeme.length),
-        malzemeSecenek: MALZEME.map(mz => ({
-          ad: mz[0], fiyat: this.tl(mz[1]) + ' / ' + mz[2],
-          ekle: () => this.setState(st => ({
-            faultForm: { ...st.faultForm, malzeme: [...(st.faultForm.malzeme || []), { ad: mz[0], adet: 1, birim: mz[2], tutar: mz[1] }] }
-          }))
-        })),
+        // Katalog 300+ kalemi bulabilir: hepsi düğme olarak dökülmez. Arama
+        // boşken ekibin zimmetindeki kalemler önce gelir (kapanışta zaten
+        // o zimmetten düşülür), aramada eşleşenler.
+        malzemeQ: s.arizaMlzQ || '',
+        onMalzemeQ: e => this.setState({ arizaMlzQ: e.target.value }),
+        ...(() => {
+          const q = sadeMetin(s.arizaMlzQ || '');
+          const zim = (ff && ff.crew && ((s.ambar || {}).zimmet || {})[ff.crew]) || {};
+          const kodu = ad => (this.katalogBul(ad) || {}).kod || '';
+          const uyan = q ? MALZEME.filter(mz => sadeMetin(mz[0] + ' ' + kodu(mz[0])).includes(q))
+            : MALZEME.slice().sort((a, b) => ((Number(zim[b[0]]) > 0) - (Number(zim[a[0]]) > 0)));
+          const sinir = q ? 24 : 14;
+          const zimSay = Object.keys(zim).filter(x => Number(zim[x]) > 0).length;
+          return {
+            malzemeNot: uyan.length > sinir ? (uyan.length - sinir) + ' kalem daha var — aramak için yazın.'
+              : (q && !uyan.length ? 'Eşleşen malzeme yok. Katalogda yoksa Ambar > Malzeme tanımla.' : (zimSay && !q ? ff.crew + ' zimmetindekiler önde.' : '')),
+            malzemeSecenek: uyan.slice(0, sinir).map(mz => {
+              const z = Number(zim[mz[0]]) || 0;
+              return {
+                ad: mz[0], fiyat: this.tl(mz[1]) + ' / ' + mz[2] + (z ? ' · zimmette ' + z : ''),
+                ekle: () => this.setState(st => ({
+                  faultForm: { ...st.faultForm, malzeme: [...(st.faultForm.malzeme || []), { ad: mz[0], adet: 1, birim: mz[2], tutar: mz[1] }] }
+                }))
+              };
+            })
+          };
+        })(),
         iscilik: ff ? (ff.iscilik || '') : '',
         onIscilik: e => this.setState({ faultForm: { ...this.state.faultForm, iscilik: e.target.value } }),
         maliyet: (() => {
@@ -14836,14 +15634,10 @@ class Component extends DCLogic {
           return !!a && a.district === ilceF;
         });
         const sarfF = hareketF.filter(h => h.tur === 'sarf' || h.tur === 'hurda');
-        const tutarOf = h => { const kalem = STOK_KALEM.find(m => m[0] === h.malzeme); return kalem ? kalem[1] * (Number(h.adet) || 0) : 0; };
+        // Pasife alınmış kalemin eski sarfı da fiyatıyla sayılır
+        const tutarOf = h => { const kalem = this.katalogBul(h.malzeme); return kalem ? (Number(kalem.fiyat) || 0) * (Number(h.adet) || 0) : 0; };
         const malzemeMaliyet = sarfF.reduce((t, h) => t + tutarOf(h), 0);
-        const kritikStokSayi = STOK_KALEM.filter(m => {
-          const toplam = AMBARLAR.reduce((t, A) => t + this.ambarMevcut(m[0], A), 0);
-          const zim = SAHA_EKIP.reduce((t, c) => t + this.ambarZimmet(m[0], c), 0);
-          const esik = KRITIK_ESIK[m[2]] || 2;
-          return toplam + zim > 0 && toplam <= esik;
-        }).length;
+        const kritikStokSayi = STOK_KALEM.filter(m => this.ambarDurum(m[0]).kritik).length;
         const koyG = {};
         for (const h of sarfF) {
           const a = h.assetId ? assetOf(h.assetId) : null;

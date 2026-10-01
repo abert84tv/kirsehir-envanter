@@ -1590,3 +1590,48 @@ tam" varsayılanına düşüp herkese açılamaz.
 Test: gerçek oturumla (a.bertan) pano, aşama tıklamaları, KML/CSV/GPX
 okuma ve önizleme (kaydetmeden), Bugün/Bakım/Deneme ekranları; konsol
 temiz, duman testi temiz, etiket dengesi tamam.
+
+## 2026.10.01 — 4. aşama: Ambar ve Stok ekranı
+
+Masaüstü Ambar ekranı tasarım taslağına göre yeniden yazıldı (telefon
+görünümü aynı verilerle eski düzende; 6. aşamada yenilenecek):
+- **Malzeme kataloğu** artık kodda sabit değil: sunucuda `malzeme`
+  anahtarında, `{ kod, ad, kat, birim, fiyat, esik, pasif }`. Başlangıç
+  listesi eski 16 kalem (MLZ-0001…0016, kategorili). "Malzeme tanımla",
+  malzeme kartında "Düzenle" / "Pasife al". Mevcut ve zimmet ADA göre
+  tutulduğu için hareketi olan kalemin adı ve birimi değiştirilemez.
+  Yetki: yönetici, müdür, mühendis, şef (sunucuda da denetlenir).
+- **Kaç gün yeter:** `ambar_hareket` her hareketi `gun` altında gün gün
+  toplar (net ambar çıkışı = zimmet + çıkış − iade), 60 gün saklar. Son 30
+  günün ortalamasıyla (sistem yeniyse geçen gün, en az 7) hesaplanır.
+  Kritik = eşiğe inmiş ya da 7 günden az yetecek ya da 30 günde çıkışı olup
+  tükenmiş. Özet'teki "kritik stok" sayısı da aynı kuralı kullanır.
+- Ekran: arama, kategori/kritik/ambarda/siparişte süzgeçleri, üç sıralama,
+  ambar başına renkli dağılım çubuğu, 14 günlük tüketim kıvılcımı,
+  "Tükenmek üzere", "Bugünkü hareketler", ekip zimmeti; malzeme kartı
+  (ambar/ekip dağılımı, son hareketler); hareket formu modal, malzeme
+  yazarak aranır (datalist), katalogda olmayan ad reddedilir. 300 kalemde
+  ilk 120 satır, "Tümünü göster"; çizim ~35–55 ms.
+- **Sipariş listesi** ortak (`siparis` anahtarı): önerilen miktar 30 günlük
+  ihtiyaç − mevcut; ambar girişi yapılınca kalem listeden düşer; metin
+  olarak panoya kopyalanır. Miktar kutusu yazmayı bitirince tek sefer yazar.
+- Arıza formunda malzeme seçimi arama kutusuyla: boşken ekibin
+  zimmetindekiler önde, 14 kalem; aramada 24.
+
+Bulunan hatalar:
+- `ambarKritikMesaj` metotta tanımsız `SAHA_EKIP` kullanıyordu: zimmet/sarf/
+  hurda sonrası kritik stok uyarısı hiç çıkmıyor, işlem sonu hata
+  veriyordu.
+- **Muhtar defteri sunucuya hiç yazılmamıştı:** sunucu `muhtar` anahtarını
+  tanımıyordu; ayrıca kuyruk gönderiminde ve yerel kopyada eşlemesi
+  eksikti. Sunucu/istemci eşlemesi tek tabloya (`MODUL_ALAN`) toplandı.
+- Ambar yerel kopyası okunurken yeni `gun` alanı atılıyordu; arıza
+  kapanışındaki sarf da onu siliyordu — korunuyor.
+
+Sunucu: `SQL-ambar-katalog-siparis.sql` (göç `ambar_katalog_siparis_gunluk`).
+Test: gerçek oturumla, sunucu bağlantısı yalnız sekmede kesilerek (yazma
+yok): giriş/zimmet/iade/sarf, bakiye reddi, katalog dışı ad reddi, 312
+kalemlik sahte katalog + 30 günlük tüketimle görünüm/sıralama/hız,
+katalog düzenleme (Türkçe fiyat "1.250,50"), sipariş akışı, arıza formu
+araması, telefon görünümü. Sonrasında yerel test verisi silindi;
+veritabanında iz yok (kurum_veri sürümleri değişmedi).

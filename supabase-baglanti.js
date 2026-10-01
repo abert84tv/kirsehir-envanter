@@ -132,13 +132,24 @@ export function tesisSuret(r) {
   };
 }
 
+function damgaBicim(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return String(iso);
+  const i = n => String(n).padStart(2, '0');
+  return `${i(d.getDate())}.${i(d.getMonth() + 1)}.${d.getFullYear()} ${i(d.getHours())}:${i(d.getMinutes())}`;
+}
+
 export function arizaSuret(r) {
   return {
     id: 'f' + r.id, dbId: r.id, no: r.no, assetId: 't' + r.tesis_id,
     tesisDbId: r.tesis_id, district: r.ilce, type: r.tur,
     priority: r.oncelik, status: r.durum, crew: r.ekip || '',
     desc: r.aciklama || '', malzeme: r.malzeme || [], maliyet: r.maliyet,
-    reporter: r.acan, opened: r.acildi, closer: r.kapatan, closed: r.kapandi,
+    // Program tarihleri "GG.AA.YYYY SS:DD" bekler (hedef süre, raporlar, mükerrer
+    // denetimi); sunucu ISO verir. Özgün damga hassas hesap için ayrıca tutulur.
+    reporter: r.acan, opened: damgaBicim(r.acildi), closer: r.kapatan, closed: damgaBicim(r.kapandi),
+    openedIso: r.acildi || null, closedIso: r.kapandi || null,
     sync: 'synced', yazilabilir: r.yazilabilir !== false
   };
 }

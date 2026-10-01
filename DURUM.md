@@ -1536,3 +1536,57 @@ yaptı; testler gerçek veritabanına karşı yapıldı.
   hariç, o silinemez).
 - Birim tekrarı ("21,450kw kW") düzeltildi; dar pencerede üst çubuk
   düğmeleri ikona iniyor, başlık kaybolmuyor.
+
+## Yeni arayüze geçiş — 3. aşama: İşler > Genel bakış (operasyon panosu) + senaryo taramasında bulunan hatalar
+
+**Genel bakış (masaüstü).** İşler artık "Genel bakış" süzgeciyle açılıyor
+(yetkisi Arıza'dan miras, sekmesi `isPano`; telefonda yok, son aşamada).
+Gerçek verilerden: dört gösterge (bugün gelen talep+arıza, bugün kapanan,
+hedef süresi geçen — "Hedef süre" modülü kapalıysa sayılmaz, ortalama çözüm
+süresi) ve saatlik kıvılcım grafikleri; iş hattı (Talep → Açık arıza →
+Atandı → Sahada → Beklemede → Bugün kapandı), gecikenler kırmızı bölüm,
+aşamaya tıklayınca ilgili liste o durumla süzülü açılır; öncelikli işler
+(gecikmiş, öncelik, yaş sırası); son hareketler (sunucu denetim izinden);
+ilçe yoğunluğu (tıklayınca arıza listesi o ilçeyle aranır) ve ekip yükü.
+Grafikler `kivilcim()` ile JS'te kurulur — şablonda `{{ }}` delikli SVG yok.
+
+**Güvenlik:** sekme yetkisi artık süzgeç haritasındaki kaynağından okunur
+(`sekmeYetki`); kendi yetki anahtarı olmayan sekme "bilinmeyen anahtar →
+tam" varsayılanına düşüp herkese açılamaz.
+
+**Bulunan ve düzeltilen hatalar (senaryo taraması):**
+- **Kod "onarma" döngüsü:** veri her yüklendiğinde çalışan kod onarımı,
+  numarası kayıt sayısından büyük her geçerli kodu bozuk sayıyordu. Silinmiş
+  kayıt boşluk bırakınca en yeni tesisin kodu sessizce eski numaraya
+  kayardı (basılı barkod geçersiz); çöpteki kodla çakışınca da her 30 sn'de
+  sunucuya yazıp denetim izine "KS-KUY-0266 → KS-KUY-0266" satırı ekledi
+  (yalnız test kaydında oldu, gerçek kayıt etkilenmedi — denetim iziyle
+  doğrulandı). Artık geçerli kod asla değişmez; onarılan bozuk kod ve yeni
+  kayıt numarası boşluğa değil en büyüğün bir fazlasına gider.
+- **Uydurma deneme verisi:** statik/dinamik/debi dolu kuyuya hiç yapılmamış
+  iki deneme ekleniyordu ("Sondaj deneme ekibi", 05.06.2026 "Kontrol
+  denemesi", türetilmiş değerlerle) — kaldırıldı, yalnız girilen denemeler.
+- **Sahte içe aktarma:** İçe ve dışa aktarım ekranı dosya okumuyor, her
+  seferinde aynı 12 uydurma satırı ("KUYU 1", "Ahiler deposu"…) ilçe
+  merkezlerinin yanına yapay koordinatla üretiyor, sonuçları sunucuya
+  yazmadan "eşitlendi" gösteriyordu. Gerçek okuyucu yazıldı: KML/KMZ yer
+  imi, GPX waypoint, CSV (; , sekme ayraç, virgüllü ondalık, "enlem/boylam"
+  ya da lat/lon başlığı). İlçe/köy en yakın resmî yerleşimden, 30 m içinde
+  kayıtlı tesis "zaten kayıtlı" işaretlenir, il dışı aktarılmaz; kayıtlar
+  sunucuya tek tek yazılır (çevrimdışıysa kuyruğa), özgün ad saha notuna
+  düşer. "Google Sheets bağlantısı" seçeneği kaldırıldı (hiç çalışmıyordu).
+- **Sunucu arızalarında tarih:** `arizaSuret` ISO zamanı programın
+  "GG.AA.YYYY SS:DD" biçimine çeviriyor (özgünü `openedIso/closedIso`);
+  önceden sunucudan gelen arızalarda hedef süre/gecikme, raporların tarih
+  süzgeci ve mükerrer denetimi hiç çalışmıyordu.
+- Arıza listesi "Bildirim"e göre metin olarak sıralanıyordu (30.09 > 01.10)
+  — zamanla sıralanıyor; aramada ilçe adı da aranıyor.
+- Bakım "Yapıldı" sabit 04.09.2026 yazıyordu; bakım gecikme hesabı "bugün"
+  yerine sabit 4 Eylül 2026'ya göre yapılıyordu; "Bugün" ekranı başlığı
+  sabit "4 Eylül 2026, Cuma" idi — hepsi gerçek bugüne bağlandı.
+- Menüden "Yeni tesis" ve dosyadan aktarma yollarında da yapım yılı 2026 ve
+  "—" yer tutucuları vardı — kaldırıldı (masaüstünde menü yolu sihirbazı açar).
+
+Test: gerçek oturumla (a.bertan) pano, aşama tıklamaları, KML/CSV/GPX
+okuma ve önizleme (kaydetmeden), Bugün/Bakım/Deneme ekranları; konsol
+temiz, duman testi temiz, etiket dengesi tamam.

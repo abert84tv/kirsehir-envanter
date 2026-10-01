@@ -7873,14 +7873,16 @@ const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'
 const MODUL_ADI = {
   ekip: 'Ekip', personel: 'Personel', nobet: 'Nöbet takvimi',
   ambar: 'Ambar', arac: 'Araç', talep: 'Talep', muhtar: 'Muhtarlar',
-  malzeme: 'Malzeme kataloğu', siparis: 'Sipariş listesi'
+  malzeme: 'Malzeme kataloğu', siparis: 'Sipariş listesi', modul: 'Modül ayarları'
 };
 // Sunucudaki modül anahtarı → programdaki durum alanı. Yükleme, yazma ve
 // kuyruk gönderme aynı eşlemeyi kullanır (önceden üç ayrı yerde elle
 // yazılıydı; muhtar bunlardan ikisinde unutulmuştu).
 const MODUL_ALAN = {
   ekip: 'ekipler', personel: 'personel', nobet: 'nobet', ambar: 'ambar', arac: 'arac',
-  talep: 'talepler', muhtar: 'muhtarlar', malzeme: 'malzemeKatalog', siparis: 'siparis'
+  talep: 'talepler', muhtar: 'muhtarlar', malzeme: 'malzemeKatalog', siparis: 'siparis',
+  // Modül anahtarları kurum ayarıdır (2026.10.01'e kadar yalnız cihazda duruyordu)
+  modul: 'modul'
 };
 // Telefonun alt çubuğunda en çok dört sayfa durur; gerisi "Tümü" sayfasında.
 const TELEFON_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet'];
@@ -7972,7 +7974,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.01-106';
+const SURUM = '2026.10.01-107';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -8082,7 +8084,7 @@ class Component extends DCLogic {
     modul: (() => {
       const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false, ambar: true, arac: true, talep: true };
       try {
-        const p = JSON.parse(localStorage.getItem('ks-moduller') || 'null');
+        const p = JSON.parse(localStorage.getItem('ks-modul') || localStorage.getItem('ks-moduller') || 'null');
         if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;
       } catch (e) { /* depolama kapalı */ }
       return v;
@@ -8699,15 +8701,24 @@ class Component extends DCLogic {
   yer(a) { return (a.village || 'Köy girilmedi') + ' · ' + a.district; }
   tl(n) { return (Math.round(n) || 0).toLocaleString('tr-TR') + ' ₺'; }
   // periyodik bakım: kuyu 6 ay, depo 12 ay, elektrik tesisi 12 ay
+  // Modül anahtarı kurum ayarıdır: sunucuya yazılır, bütün cihazlarda aynı
+  // olur (önceden yalnız cihazda duruyordu — bilgisayarda açılan modül
+  // telefonda kapalı kalıyordu). Hedef süre, kanıt ve merkez onayı arıza
+  // modülünün içinde çalışır: arıza kapalıyken bunlardan biri açılırsa
+  // arıza da açılır (önceden ayar kaydediliyor ama düğme "Kapalı" kalıyordu).
   modulAnahtar(ad, on) {
-    const y = { ...this.state.modul, [ad]: !!on };
-    this.denetimYaz('ayar', 'Modül ' + (on ? 'açıldı' : 'kapatıldı'), MODUL_AD[ad] || ad, 'Modüller');
+    const bagli = ['sure', 'kanit', 'onay'].includes(ad);
+    const arizaDa = on && bagli && this.state.modul.ariza === false;
+    const y = { ...this.state.modul, [ad]: !!on, ...(arizaDa ? { ariza: true } : {}) };
+    this.denetimYaz('ayar', 'Modül ' + (on ? 'açıldı' : 'kapatıldı'), (MODUL_AD[ad] || ad) + (arizaDa ? ' · arıza modülü de açıldı' : ''), 'Modüller');
     try { localStorage.setItem('ks-moduller', JSON.stringify(y)); } catch (e) { /* depolama kapalı */ }
+    this.modulYaz('modul', y);
     const geri = MODUL_AD[ad] || ad;
     this.setState({ modul: y }, () => this.duyur(
       geri + (on
-        ? ' modülü açıldı — menüsü ve kayıt sekmesi geri geldi.'
-        : ' modülü kapatıldı. Kayıtlar veritabanında duruyor, yeniden açtığınızda yerinde bulunur.'),
+        ? (arizaDa ? ' açıldı — çalışması için Arıza modülü de açıldı.' : (bagli ? ' açıldı.' : ' modülü açıldı — menüsü ve kayıt sekmesi geri geldi.'))
+        : (bagli ? ' kapatıldı.' : ' modülü kapatıldı. Kayıtlar veritabanında duruyor, yeniden açtığınızda yerinde bulunur.'))
+        + ' Ayar bütün cihazlarda geçerli.',
       6000, on ? 'iyi' : 'bilgi', () => this.setState({ tab: 'ayarlar', ayarBolum: 'modul' })));
   }
   // Ekip vardiyası / yetkinliği. Ad değişmez; kayıtlardaki ekip metni bozulmasın.
@@ -8845,6 +8856,10 @@ class Component extends DCLogic {
     if (!bekleyen.muhtar && Array.isArray(d.muhtar)) yama.muhtarlar = d.muhtar;
     if (!bekleyen.malzeme && Array.isArray(d.malzeme)) yama.malzemeKatalog = d.malzeme;
     if (!bekleyen.siparis && Array.isArray(d.siparis)) yama.siparis = d.siparis;
+    if (!bekleyen.modul && d.modul && typeof d.modul === 'object' && !Array.isArray(d.modul)) {
+      yama.modul = { ...this.state.modul };
+      for (const k in yama.modul) if (k in d.modul) yama.modul[k] = d.modul[k] !== false;
+    }
     // Sunucu bomboşsa cihazdaki kopya korunur: ilk kurulumda veri kaybolmasın
     // (Sipariş listesi bundan muaf: boşalmış liste geçerli bir durumdur,
     // yoksa başka cihazda boşaltılan liste burada eski hâliyle kalırdı.)
@@ -15043,7 +15058,10 @@ class Component extends DCLogic {
         };
       })(),
       // Modüller: kurum bu iki bölümü kullanmıyorsa kapatır, program yalın çalışır
-      moduller: {
+      moduller: (() => {
+        // Bağımlı modülün düğmesi kendi ayarını gösterir (arıza kapalıyken de)
+        const modAyar = ad => ad === 'sure' || ad === 'onay' ? s.modul[ad] === true : s.modul[ad] !== false;
+        return {
         not: 'Kapatılan modülün menüsü, kayıt sekmesi ve uyarıları görünmez; girilmiş kayıtlar veritabanında durur ve modül yeniden açıldığında yerinde bulunur. Envanter, harita, özet ve rapor her zaman açıktır.',
         list: [
           {
@@ -15084,27 +15102,28 @@ class Component extends DCLogic {
           },
           {
             ad: 'Hedef süre',
-            ac: seg(sureOn, () => { if (!sureOn) this.modulAnahtar('sure', true); }),
-            kapa: seg(!sureOn, () => { if (sureOn) this.modulAnahtar('sure', false); }),
-            sayi: arizaOn ? 'acil 2 · yüksek 5 · normal 15 · düşük 30 gün' : 'arıza modülü kapalı — etkisiz',
+            ac: seg(modAyar('sure'), () => { if (!modAyar('sure') || !arizaOn) this.modulAnahtar('sure', true); }),
+            kapa: seg(!modAyar('sure'), () => { if (modAyar('sure')) this.modulAnahtar('sure', false); }),
+            sayi: arizaOn ? 'acil 2 · yüksek 5 · normal 15 · düşük 30 gün' : 'arıza modülü kapalı — açarsanız arıza da açılır',
             aciklama: 'Arıza listesinde bildirim tarihinden sayılan hedef tarih ve kalan gün gösterilir; geciken kayıt kırmızı yazılır. Süre yalnızca sıra gösterir — kaydı kapatmayı engellemez, kimseye uyarı gitmez. Süreler personel durumuna göre geniş tutulmuştur; sahada baskı yaratıyorsa kapatın, program hiçbir yerinde süre aramaz.'
           },
           {
             ad: 'Kanıt zorunluluğu',
-            ac: seg(kanitOn, () => { if (!kanitOn) this.modulAnahtar('kanit', true); }),
-            kapa: seg(!kanitOn, () => { if (kanitOn) this.modulAnahtar('kanit', false); }),
-            sayi: arizaOn ? 'en az bir fotoğraf' : 'arıza modülü kapalı — etkisiz',
+            ac: seg(modAyar('kanit'), () => { if (!modAyar('kanit') || !arizaOn) this.modulAnahtar('kanit', true); }),
+            kapa: seg(!modAyar('kanit'), () => { if (modAyar('kanit')) this.modulAnahtar('kanit', false); }),
+            sayi: arizaOn ? 'en az bir fotoğraf' : 'arıza modülü kapalı — açarsanız arıza da açılır',
             aciklama: 'Bir arıza “Çözüldü” işaretlenirken kayıtta fotoğraf yoksa kapanış kabul edilmez. Yapılan işin kanıtı kalır, sonradan “yapıldı mı” tartışması olmaz. Kapalıyken fotoğraf yine eklenebilir, ama kapanış şartı değildir.'
           },
           {
             ad: 'Merkez onayı',
-            ac: seg(onayOn, () => { if (!onayOn) this.modulAnahtar('onay', true); }),
-            kapa: seg(!onayOn, () => { if (onayOn) this.modulAnahtar('onay', false); }),
-            sayi: arizaOn ? 'Kontrolde adımı eklenir' : 'arıza modülü kapalı — etkisiz',
+            ac: seg(modAyar('onay'), () => { if (!modAyar('onay') || !arizaOn) this.modulAnahtar('onay', true); }),
+            kapa: seg(!modAyar('onay'), () => { if (modAyar('onay')) this.modulAnahtar('onay', false); }),
+            sayi: arizaOn ? 'Kontrolde adımı eklenir' : 'arıza modülü kapalı — açarsanız arıza da açılır',
             aciklama: 'Açıkken saha kaydı doğrudan kapatamaz: işi “Kontrolde” bırakır, merkez fotoğrafı görüp onaylar ya da nedenini yazıp sahaya iade eder. İade nedeni kaydın notuna işlenir. Merkezde denetimi yapacak personel yoksa kapalı tutun — akış bugünkü gibi kalır.'
           }
         ]
-      },
+        };
+      })(),
       // Ayarlar listesi — iOS Ayarlar gibi kümelenmiş satırlar
       ayarListe: AYAR_LISTE.map(([baslik, satirlar]) => ({
         baslik,

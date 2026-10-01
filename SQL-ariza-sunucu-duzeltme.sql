@@ -66,3 +66,21 @@ begin
     execute d;
   end loop;
 end $$;
+
+-- 2026.10.01 (göç modul_ayarlari_ortak): modül anahtarları kurum ayarı oldu.
+-- veri_yaz / veri_yaz_surumlu izin listesine 'modul' eklendi; yalnız yönetici
+-- ve müdür yazar (ekip/personel/nöbet ile aynı kural).
+do $$
+declare f text; d text;
+begin
+  foreach f in array array['public.veri_yaz(uuid,text,jsonb)', 'public.veri_yaz_surumlu(uuid,text,jsonb,bigint)']
+  loop
+    d := pg_get_functiondef(f::regprocedure);
+    d := replace(d, '''malzeme'', ''siparis'') then', '''malzeme'', ''siparis'', ''modul'') then');
+    d := replace(d, 'if p_anahtar in (''ekip'', ''personel'', ''nobet'') and k.rol not in (''yonetici'', ''mudur'') then',
+                    'if p_anahtar in (''ekip'', ''personel'', ''nobet'', ''modul'') and k.rol not in (''yonetici'', ''mudur'') then');
+    d := replace(d, 'Ekip ve personel düzenini yalnızca müdür ve yönetici değiştirebilir.',
+                    'Ekip, personel ve modül ayarlarını yalnızca müdür ve yönetici değiştirebilir.');
+    execute d;
+  end loop;
+end $$;

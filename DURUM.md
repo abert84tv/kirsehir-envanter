@@ -1722,3 +1722,15 @@ Not: kaydırılan kapsayıcı içinde overflow'lu bölümler flex/grid'de sıfı
 yüksekliğe büzülüyordu — kapsayıcı `grid-auto-rows:max-content`.
 Sürüm 2026.10.01-106. Test: 375 px'de üç ekran ve dört panel, masaüstü
 gerileme kontrolü; konsol temiz, cihazda test izi yok.
+
+## 2026.10.01 — Modül anahtarları
+
+Kullanıcı bildirimi (telefon): Kanıt zorunluluğu "Açık"a basınca "açıldı"
+bildirimi çıkıyor ama düğme "Kapalı" kalıyordu. Neden: o cihazda arıza
+modülü kapalıydı; hedef süre/kanıt/onay düğmesi kendi ayarını değil
+"arıza açık mı && ayar" sonucunu gösteriyordu. Şimdi düğme kendi ayarını
+gösterir; arıza kapalıyken bunlardan biri açılırsa arıza da açılır.
+Asıl kök: modül anahtarları yalnız cihazda (ks-moduller) duruyordu —
+bilgisayarda açılan modül telefonda kapalı kalıyordu. Artık kurum ayarı:
+sunucuda `modul` anahtarı (yönetici/müdür yazar), açılışta bütün cihazlara
+yüklenir. Sürüm 2026.10.01-107.

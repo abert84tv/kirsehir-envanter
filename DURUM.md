@@ -1754,3 +1754,22 @@ arızaya fotoğraf yüklendi.
   (foto_listesi.ariza_id) sayılır ve formda yeşil çerçeveyle gösterilir.
 Kontrol: KS-KUY-0065 (3), KS-KUY-0236 (5), KS-AGP-0001 arıza (1) fotoğrafı
 sunucuda ve açılıyor. Sürüm 2026.10.01-108.
+
+## 2026.10.01 — Telefonda sade arıza ekranı
+
+Kullanıcı isteği: sahada arızayla uğraşırken bu karmaşık formu doldurmak
+zor. Telefonda arıza artık sade ekranla açılır (masaüstü formu aynı):
+- Yeni arıza: Tesis → "Ne oldu?" (büyük tür düğmeleri) → "Ne kadar acil?"
+  (Acil/Yüksek/Normal) → Fotoğraf (Çek / Galeriden) → Not + "Sesle anlat"
+  → (yetkiliyse) Ekip → altta sabit "Arızayı kaydet".
+- Var olan arıza: üstte Açık→Atandı→Sahada→Kapandı adımları ve tek ana
+  düğme: "Sahaya vardım" (+Yol tarifi) ya da "İşi tamamla" (saha akışının
+  kapanış adımına gider: sonrası fotoğrafı, zimmetten malzeme). Kayıttaki
+  fotoğraflar yeşil çerçeveyle.
+- Malzeme, süre, maliyet, iş akışı, iş emri, ekip önerisi, tesis geçmişi
+  "Ayrıntılı form"un arkasında; oradan "← Sade görünüm" ile dönülür.
+- Fotoğraf aşaması kendiliğinden: sahadaysa "Sonrası", değilse "Öncesi".
+- Telefonda yeni arızada tesis artık boş başlar (listenin ilk kaydı
+  kendiliğinden seçili geliyordu — yanlış tesise kayıt riski); seçilmeden
+  kaydedilmez. Konum alınmışsa tesis listesi cihaza en yakından başlar.
+Sürüm 2026.10.01-109.

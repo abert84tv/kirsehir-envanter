@@ -89,6 +89,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-asama{transition:transform .15s ease,box-shadow .25s ease}
 .ks-asama:hover{transform:translateY(-2px)}
 @media (prefers-reduced-motion:reduce){.ks-ciz{animation:none;stroke-dashoffset:0}.ks-akis,.ks-parla{animation:none}}
+.ks-nokta{position:absolute;border-radius:50%;box-shadow:0 0 0 2px var(--ks-nokta-kenar,#fff)}
+.ks-nokta.ks-ping::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid currentColor;animation:ksPing 1.6s ease-out infinite}
+@media (prefers-reduced-motion:reduce){.ks-nokta.ks-ping::after{animation:none}}
 /* Dar masaüstü penceresinde üst çubuk düğmeleri yalnız ikona iner, başlık kaybolmaz */
 @media (max-width:1180px){.ks-ust-etiket{display:none}}
 </style>
@@ -1310,6 +1313,163 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ x.damga }} · {{ x.kim }}</span>
 </div>
 </sc-for>
+</div>
+</sc-if>
+
+<!-- kaynaklar > ekipler (ekip ve araç panosu) -->
+<sc-if value="{{ tab.ekipPano }}" hint-placeholder-val="{{ false }}">
+<div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};padding:16px 22px 22px;display:flex;flex-direction:column;gap:14px">
+
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<div style="flex:1 1 260px;min-width:0;font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ekipPano.baslikAlt }}</div>
+<button onClick="{{ ekipPano.aracDefteri }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/36px var(--font-body)">Araç defteri</button>
+<sc-if value="{{ ekipPano.ayarYetki }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ ekipPano.ekipDuzenle }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/36px var(--font-body)">Ekip ve personel düzenle</button>
+</sc-if>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 18px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="font:700 27px/1 var(--font-heading);letter-spacing:-.02em">{{ ekipPano.perTop }}</span>
+<span style="font:600 13px/1 var(--font-body)">personel</span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ ekipPano.perIpucu }}</span>
+</div>
+<sc-if value="{{ ekipPano.perVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;margin:10px 0;gap:2px">
+<sc-for list="{{ ekipPano.perSeg }}" as="g" hint-placeholder-count="4">
+<div onClick="{{ g.sec }}" style="cursor:pointer;height:12px;width:{{ g.w }};background:{{ g.c }};opacity:{{ g.op }};transition:width .6s ease,opacity .2s"></div>
+</sc-for>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ ekipPano.perSeg }}" as="g" hint-placeholder-count="4">
+<button onClick="{{ g.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;border:1px solid {{ g.kenar }};background:{{ g.bg }};font:400 12px/1 var(--font-body)"><span style="width:8px;height:8px;border-radius:50%;background:{{ g.c }}"></span><span style="font-weight:500">{{ g.l }}</span><b>{{ g.n }}</b></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ ekipPano.perYok }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:10px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Personel havuzu boş. Kişiler Ayarlar > Ekipler bölümünden eklenir ve ekiplere atanır; izin/rapor günleri kişinin kartından girilir.</div>
+</sc-if>
+</section>
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 18px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="font:700 27px/1 var(--font-heading);letter-spacing:-.02em">{{ ekipPano.aracTop }}</span>
+<span style="font:600 13px/1 var(--font-body)">araç ve ekipman</span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ ekipPano.aracIpucu }}</span>
+</div>
+<sc-if value="{{ ekipPano.aracVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;margin:10px 0;gap:2px">
+<sc-for list="{{ ekipPano.aracSeg }}" as="g" hint-placeholder-count="4">
+<div onClick="{{ g.sec }}" style="cursor:pointer;height:12px;width:{{ g.w }};background:{{ g.c }};opacity:{{ g.op }};transition:width .6s ease,opacity .2s"></div>
+</sc-for>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ ekipPano.aracSeg }}" as="g" hint-placeholder-count="4">
+<button onClick="{{ g.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;border:1px solid {{ g.kenar }};background:{{ g.bg }};font:400 12px/1 var(--font-body)"><span style="width:8px;height:8px;border-radius:50%;background:{{ g.c }}"></span><span style="font-weight:500">{{ g.l }}</span><b>{{ g.n }}</b></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ ekipPano.aracYok }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:10px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Araç kaydı yok. Araçlar “Araç defteri”nden eklenir.</div>
+</sc-if>
+</section>
+</div>
+
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:14px;align-items:start">
+<section style="min-width:0;border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};overflow:hidden">
+<div style="display:flex;align-items:baseline;gap:10px;padding:13px 16px 10px;flex-wrap:wrap">
+<span style="font:700 14px/1 var(--font-heading)">Ekipler</span>
+<span style="flex:1;min-width:0;font:400 12px/1.3 var(--font-body);color:{{ ekipPano.ekipNotC }}">{{ ekipPano.ekipNot }}</span>
+<sc-if value="{{ ekipPano.secVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ekipPano.secKaldir }}" style="all:unset;cursor:pointer;font:600 11.5px/1 var(--font-body);padding:5px 9px;border-radius:7px;background:{{ ui.fg }};color:{{ ui.surf }}">{{ ekipPano.secAd }} ×</button>
+</sc-if>
+</div>
+<sc-if value="{{ ekipPano.ekipVar }}" hint-placeholder-val="{{ true }}">
+<div style="padding:2px 16px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+<sc-for list="{{ ekipPano.ekipler }}" as="e" hint-placeholder-count="6">
+<div style="border-radius:12px;padding:11px 12px;background:{{ e.zemin }};box-shadow:{{ e.halka }};display:flex;flex-direction:column;gap:8px;min-width:0">
+<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-width:0">
+<div style="display:flex;align-items:center;gap:6px;min-width:0">
+<span style="font:700 13.5px/1.2 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.ad }}</span>
+<sc-if value="{{ e.nobetci }}" hint-placeholder-val="{{ false }}"><span style="flex:none;font:700 10px/1 var(--font-body);padding:3px 6px;border-radius:5px;background:rgba(175,82,222,.14);color:#8e3fb8">nöbetçi</span></sc-if>
+<span style="flex:1"></span>
+<span style="flex:none;font:700 10.5px/1 var(--font-body);padding:3px 7px;border-radius:6px;background:{{ e.yukBg }};color:{{ e.yukFg }}">{{ e.yukL }}</span>
+</div>
+<div style="font:400 11px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.bolge }}</div>
+<div style="display:flex;align-items:center;gap:6px;font:400 11.5px/1.3 var(--font-body);min-width:0">
+<span style="width:7px;height:7px;border-radius:50%;background:{{ e.isC }};flex:none"></span>
+<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.is }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:4px;min-height:30px;flex-wrap:wrap">
+<sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3">
+<span title="{{ u.title }}" style="width:26px;height:26px;border-radius:50%;background:{{ ui.surf }};color:{{ ui.fg }};font:700 10px/26px var(--font-body);text-align:center;box-shadow:0 0 0 2px {{ ui.surf }},0 0 0 4px {{ u.c }};margin:0 5px 0 2px;opacity:{{ u.op }};transition:opacity .2s">{{ u.ini }}</span>
+</sc-for>
+<span style="flex:1"></span>
+<span style="font:600 10.5px/1 var(--font-body);color:{{ e.kisiC }};white-space:nowrap">{{ e.kisi }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;font:500 11px/1.2 var(--font-body);color:{{ e.aracC }};min-width:0"><span style="flex:none;opacity:.7">Araç:</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.arac }}</span></div>
+<div style="height:5px;border-radius:3px;background:{{ ui.rule }};overflow:hidden"><div style="height:5px;width:{{ e.yukW }};background:{{ e.yukC }};border-radius:3px;transition:width .6s ease"></div></div>
+</button>
+<button onClick="{{ e.isler }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;font:600 11.5px/1 var(--font-body);color:{{ ui.acc }}">İşlerini aç →</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ekipPano.ekipYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:28px 16px;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Henüz ekip tanımlı değil. Ekipler Ayarlar > Ekipler bölümünden kurulur.</div>
+</sc-if>
+</section>
+
+<div style="min-width:0;display:flex;flex-direction:column;gap:14px">
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:12px 14px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+<span style="font:700 14px/1 var(--font-heading)">İş haritası</span>
+<span style="flex:1"></span>
+<span class="ks-canli"></span>
+</div>
+<div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-bottom:8px">{{ ekipPano.haritaNot }}</div>
+<div style="position:relative;height:232px;border-radius:10px;background:{{ ui.surf2 }};overflow:hidden;--ks-nokta-kenar:{{ ui.surf }}">
+<sc-for list="{{ ekipPano.tesisNokta }}" as="t" hint-placeholder-count="0">
+<span style="position:absolute;left:{{ t.x }};top:{{ t.y }};width:3px;height:3px;border-radius:50%;background:{{ ui.mut }};opacity:.45"></span>
+</sc-for>
+<sc-for list="{{ ekipPano.ilceEt }}" as="i" hint-placeholder-count="0">
+<span style="position:absolute;left:{{ i.x }};top:{{ i.y }};transform:translate(-50%,-140%);font:600 10px/1 var(--font-body);color:{{ ui.mut }};white-space:nowrap;pointer-events:none">{{ i.ad }}</span>
+</sc-for>
+<sc-for list="{{ ekipPano.isNokta }}" as="v" hint-placeholder-count="0">
+<span class="{{ v.sinif }}" title="{{ v.title }}" style="left:{{ v.x }};top:{{ v.y }};width:{{ v.d }};height:{{ v.d }};background:{{ v.c }};color:{{ v.c }};opacity:{{ v.op }}"></span>
+</sc-for>
+</div>
+<div style="font:400 11px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:7px">Araç takip (GPS) bağlantısı henüz yok; bağlanınca araç konumları da burada görünecek.</div>
+</section>
+
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};overflow:hidden">
+<div style="display:flex;align-items:center;gap:8px;padding:12px 14px 8px">
+<span style="font:700 14px/1 var(--font-heading)">Araç filosu</span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ ekipPano.filoSay }}</span>
+<span style="flex:1"></span>
+<sc-if value="{{ ekipPano.vfVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ekipPano.vfKaldir }}" style="all:unset;cursor:pointer;font:600 11.5px/1 var(--font-body);padding:5px 9px;border-radius:7px;background:{{ ui.fg }};color:{{ ui.surf }}">Süzgeci kaldır ×</button>
+</sc-if>
+</div>
+<sc-for list="{{ ekipPano.filo }}" as="a" hint-placeholder-count="5">
+<button onClick="{{ a.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:100px minmax(0,1fr) 84px;align-items:center;gap:10px;padding:8px 14px;border-top:1px solid {{ ui.rule }};background:{{ a.zemin }}" style-hover="background:{{ ui.surf2 }}">
+<span style="min-width:0"><span style="display:block;font:700 12px/1.25 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.plaka }}</span><span style="display:block;font:400 10.5px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.tip }}</span></span>
+<span style="min-width:0"><span style="display:block;font:500 12px/1.25 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.kim }}</span><span style="display:flex;align-items:center;gap:6px;margin-top:3px"><span style="flex:none;width:56px;height:4px;border-radius:2px;background:{{ ui.surf2 }};overflow:hidden"><span style="display:block;height:4px;width:{{ a.muW }};background:{{ a.muBar }}"></span></span><span style="font:400 10.5px/1 var(--font-body);color:{{ a.muC }};white-space:nowrap">{{ a.muL }}</span></span></span>
+<span style="text-align:right"><span style="display:inline-block;font:700 10.5px/1 var(--font-body);padding:4px 7px;border-radius:6px;background:{{ a.dBg }};color:{{ a.dFg }}">{{ a.durum }}</span></span>
+</button>
+</sc-for>
+<sc-if value="{{ ekipPano.filoYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 14px;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu süzgece uyan araç yok.</div>
+</sc-if>
+</section>
+</div>
+</div>
 </div>
 </sc-if>
 
@@ -7154,6 +7314,7 @@ const SAYFA_ALT = {
   planli: 'Tarihi önceden belli periyodik bakımlar.',
   liste: 'Bütün tesisler tablo olarak — başlığa basarak sırala, alt satırdan süz.',
   harita: 'Aynı kayıtlar harita üzerinde; tıklayınca kayıt açılır.',
+  ekip: 'Ekiplerin yükü, personel ve araç durumu, açık işlerin haritası.',
   malzeme: 'Ambar stoğu, ekip zimmeti ve hareket dökümü.',
   arac: 'Araç, ekipman ve bunların zimmeti.',
   ozet: 'İlçe dağılımı, eksik bilgi, ekip ve arıza özetleri.',
@@ -7181,7 +7342,8 @@ const SUZGEC_TANIM = {
   isler: [['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
   envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter']],
-  kaynaklar: [['malzeme', 'Stok', 'ambar'], ['arac', 'Araç', 'arac']],
+  // "Ekipler" (ekip ve araç panosu) araç yetkisinden miras alır, sekmesi ekipPano
+  kaynaklar: [['ekip', 'Ekipler', 'arac', 'ekipPano'], ['malzeme', 'Stok', 'ambar'], ['arac', 'Araç', 'arac']],
   // Denetim izi ve Çöp kutusu buradan Ayarlar'a taşındı (2026.09.15) — ikisi
   // de zaten Ayarlar > Veri bölümünde ayrıca listeleniyordu (AYAR_LISTE),
   // Özet'in altında ikinci bir yoldan erişilebilir olmaları kafa karıştırıyordu
@@ -7207,7 +7369,7 @@ const SUZGEC_ESKI = (() => {
 })();
 // Birleşmeden sonraki sayfa adları
 const SUZGEC_SAYFA_AD = {
-  isler: 'İşler', envanter: 'Envanter', kaynaklar: 'Ambar ve Araç',
+  isler: 'İşler', envanter: 'Envanter', kaynaklar: 'Ekip, Araç, Ambar',
   ozet: 'Özet', kesit: 'Hat Kesiti', ayarlar: 'Ayarlar', gosterge: 'Üst çubuk'
 };
 // Eski sayfa kimliğinin bugünkü süzgeç adı — "Sayfa yetkileri" panelinde
@@ -7231,7 +7393,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.09.30-103';
+const SURUM = '2026.10.01-104';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11459,6 +11621,7 @@ class Component extends DCLogic {
     const canAssign = can('assign');
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && (s.device === 'phone' || !(arizaOn || talepOn))) tabId = arizaOn ? 'ariza' : (talepOn ? 'talep' : 'harita');
+    if (tabId === 'ekipPano' && s.device === 'phone') tabId = ambarOn ? 'ambar' : (aracOn ? 'arac' : 'harita');
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';
@@ -11880,7 +12043,7 @@ class Component extends DCLogic {
     const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış yalnız masaüstünde (telefon şablonu son aşamada)
-      gunluk: arizaOn || bakimOn, isPano: (arizaOn || talepOn) && s.device !== 'phone' };
+      gunluk: arizaOn || bakimOn, isPano: (arizaOn || talepOn) && s.device !== 'phone', ekipPano: s.device !== 'phone' };
     const suzgecSayi = { ariza: acikAriza, talep: acikTalep };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
@@ -14272,6 +14435,173 @@ class Component extends DCLogic {
       // Sayfa süzgeç çubuğu — birleşmiş sayfaların üstünde durur.
       // Tek süzgeçli sayfada (Hat Kesiti) çubuk hiç çıkmaz.
       // İşler > Genel bakış: talepten kapanışa iş hattı, günün göstergeleri, öncelikli işler
+      // Kaynaklar > Ekipler: personel ve araç durumu, ekip yükü, iş haritası
+      // (yalnız masaüstü; telefon şablonu son aşamada)
+      ekipPano: (() => {
+        if (tabId !== 'ekipPano') return { acik: false };
+        const kirmizi = 'var(--color-uyari)', turuncu = '#ff9f0a', yesil = '#34c759', mor = '#af52de', gri = '#8e8e93', indigo = '#5e5ce6';
+        const iki = n => String(n).padStart(2, '0');
+        const bugun = new Date();
+        const bugunIso = bugun.getFullYear() + '-' + iki(bugun.getMonth() + 1) + '-' + iki(bugun.getDate());
+        const acikF = arizaOn ? s.faults.filter(f => !KAPALI_DURUM.includes(f.status)) : [];
+        const assetOf = id => s.assets.find(a => a.id === id) || null;
+        const ekipIsler = ad => acikF.filter(f => f.crew === ad);
+        const sahadaEkip = new Set(acikF.filter(f => f.status === 'sahada' && f.crew && f.crew !== ATANMADI).map(f => f.crew));
+        const ekipListe = s.ekipler || [];
+        const uyeEkip = {};
+        for (const e of ekipListe) for (const id of [e.sefId, ...(e.uyeIdler || [])].filter(Boolean)) if (!uyeEkip[id]) uyeEkip[id] = e.ad;
+
+        // — personelin bugünkü durumu: gün kaydı kartın durumunu ezer; dönüş
+        //   tarihi geçmiş izin/rapor görevde sayılır
+        const PS = {
+          sahada: ['Sahada', turuncu], musait: ['Görevde', yesil], izin: ['İzinli', gri],
+          rapor: ['Raporlu', mor], gorevli: ['Başka görevde', indigo]
+        };
+        const perDurum = p => {
+          const g = (p.gunler || []).find(x => x.tarih === bugunIso && ['izin', 'rapor', 'gorevli'].includes(x.tur));
+          if (g) return g.tur;
+          if (['izin', 'rapor', 'gorevli'].includes(p.durum) && !(p.donus && p.donus < bugunIso)) return p.durum;
+          return sahadaEkip.has(uyeEkip[p.id]) ? 'sahada' : 'musait';
+        };
+        const personel = (s.personel || []).filter(p => p.durum !== 'ayrildi');
+        const perD = Object.fromEntries(personel.map(p => [p.id, perDurum(p)]));
+        const pf = s.ekipPf || '';
+        const seg = (TANIM, sayac, toplam, secili, sec) => Object.keys(TANIM).filter(k => sayac[k]).map(k => ({
+          l: TANIM[k][0], c: TANIM[k][1], n: String(sayac[k]),
+          w: (sayac[k] / Math.max(1, toplam) * 100).toFixed(2) + '%',
+          op: !secili || secili === k ? '1' : '.25',
+          bg: secili === k ? ui.surf2 : 'transparent', kenar: secili === k ? ui.fg : ui.rule,
+          sec: () => sec(secili === k ? '' : k)
+        }));
+        const perSay = {};
+        personel.forEach(p => { perSay[perD[p.id]] = (perSay[perD[p.id]] || 0) + 1; });
+        const perSeg = seg(PS, perSay, personel.length, pf, k => this.setState({ ekipPf: k }));
+
+        // — araçlar
+        const AS = {
+          gorevde: ['Görevde', 'var(--color-accent)', dark ? 'rgba(10,132,255,.2)' : 'rgba(0,113,227,.12)', ui.acc],
+          musait: ['Müsait', yesil, 'rgba(52,199,89,.15)', '#1b7a36'],
+          bakimda: ['Bakımda', turuncu, 'rgba(255,159,10,.17)', '#9a5200'],
+          arizali: ['Arızalı', kirmizi, 'rgba(215,0,21,.1)', kirmizi],
+          disi: ['Hizmet dışı', gri, ui.surf2, ui.mut]
+        };
+        const araclar = (s.arac && s.arac.list) || [];
+        const aracSay = {};
+        araclar.forEach(v => { const d = AS[v.durum] ? v.durum : 'musait'; aracSay[d] = (aracSay[d] || 0) + 1; });
+        const vf = s.ekipVf || '';
+        const aracSeg = seg(AS, aracSay, araclar.length, vf, k => this.setState({ ekipVf: k }));
+
+        // — ekip kartları
+        const secEkip = s.ekipSec || '';
+        const ini = ad => String(ad || '?').trim().split(/\s+/).map(x => x[0]).slice(0, 2).join('').toLocaleUpperCase('tr');
+        const ISC = { sahada: turuncu, atandi: 'var(--color-accent)' };
+        const ekipKart = ekipListe.map(e => {
+          const isler = ekipIsler(e.ad);
+          const n = isler.length;
+          const etkin = isler.find(f => f.status === 'sahada') || isler.find(f => f.status === 'atandi') || isler[0];
+          const a = etkin ? assetOf(etkin.assetId) : null;
+          const uyeler = [...new Set([e.sefId, ...(e.uyeIdler || [])].filter(Boolean))]
+            .map(id => (s.personel || []).find(p => p.id === id)).filter(p => p && p.durum !== 'ayrildi');
+          const yok = uyeler.filter(p => ['izin', 'rapor', 'gorevli'].includes(perD[p.id])).length;
+          const arac = araclar.filter(v => v.ekip === e.ad && v.durum === 'gorevde');
+          const on = secEkip === e.ad;
+          const yukC = n >= 6 ? kirmizi : (n >= 4 ? turuncu : yesil);
+          return {
+            ad: e.ad, bolge: [(e.bolgeler || []).join(', '), e.vardiya].filter(Boolean).join(' · '),
+            nobetci: e.ad === nobetciEkip,
+            yukL: n >= 6 ? n + ' iş · aşırı yük' : (n ? n + ' açık iş' : 'boşta'),
+            yukBg: n >= 6 ? 'rgba(215,0,21,.1)' : ui.surf2, yukFg: n >= 6 ? kirmizi : ui.fg,
+            yukW: (Math.min(n, 8) / 8 * 100).toFixed(1) + '%', yukC,
+            is: etkin ? [a ? a.code : etkin.no, a ? this.yer(a) : (etkin.district || ''), (STATUS_LABEL[etkin.status] || etkin.status).toLocaleLowerCase('tr')].filter(Boolean).join(' · ')
+              : (arizaOn ? 'Açık işi yok' : 'Arıza modülü kapalı'),
+            isC: etkin ? (ISC[etkin.status] || mor) : yesil,
+            uyeler: uyeler.map(p => {
+              const d = perD[p.id];
+              return { ini: ini(p.ad), c: PS[d][1], title: p.ad + ' · ' + p.meslek + ' · ' + PS[d][0], op: !pf || pf === d ? '1' : '.22' };
+            }),
+            uyeYok: !uyeler.length,
+            kisi: uyeler.length ? (uyeler.length - yok) + '/' + uyeler.length + ' kişi' + (yok ? ' · ' + yok + ' yok' : '') : 'üye atanmadı',
+            kisiC: yok ? kirmizi : ui.mut,
+            arac: arac.length ? arac.map(v => v.plaka || v.ad).join(', ') : 'araç yok',
+            aracC: arac.length ? ui.fg : ui.mut,
+            zemin: on ? (dark ? 'rgba(10,132,255,.12)' : 'rgba(0,113,227,.06)') : ui.surf2,
+            halka: on ? '0 0 0 2px var(--color-accent)' : '0 0 0 1px ' + ui.rule,
+            sec: () => this.setState({ ekipSec: on ? '' : e.ad }),
+            isler: () => this.setState({ tab: 'ariza', arzF: { ekip: e.ad }, arzQ: '' })
+          };
+        }).sort((x, y) => (y.nobetci - x.nobetci) || 0);
+        const atanmamis = acikF.filter(f => !f.crew || f.crew === ATANMADI).length;
+
+        // — iş haritası: araç takip bağlantısı yok; noktalar açık işlerin yeri
+        const W = 372, H = 232;
+        const LA0 = 38.83, LA1 = 39.74, LO0 = 33.45, LO1 = 34.64;
+        const sc = (H - 16) / (LA1 - LA0), kx = Math.cos(39.3 * Math.PI / 180);
+        const x0 = (W - (LO1 - LO0) * kx * sc) / 2;
+        const px = (lat, lon) => [x0 + (lon - LO0) * kx * sc, 8 + (LA1 - lat) * sc];
+        const icinde = (lat, lon) => isFinite(lat) && isFinite(lon) && lat > LA0 && lat < LA1 && lon > LO0 && lon < LO1;
+        const tesisNokta = s.assets.filter(a => icinde(a.lat, a.lon)).map(a => {
+          const [x, y] = px(a.lat, a.lon); return { x: x.toFixed(1) + 'px', y: y.toFixed(1) + 'px' };
+        });
+        const ilceEt = (m ? m.DISTRICTS : []).filter(d => icinde(d.lat, d.lon)).map(d => {
+          const [x, y] = px(d.lat, d.lon); return { ad: d.name, x: x.toFixed(1) + 'px', y: y.toFixed(1) + 'px' };
+        });
+        const isNokta = acikF.map(f => ({ f, a: assetOf(f.assetId) })).filter(x => x.a && icinde(x.a.lat, x.a.lon)).map(({ f, a }) => {
+          const [x, y] = px(a.lat, a.lon);
+          const atanmadi = !f.crew || f.crew === ATANMADI;
+          const on = secEkip && f.crew === secEkip;
+          const c = atanmadi ? kirmizi : (ISC[f.status] || mor);
+          const d = on ? 12 : 8;
+          return {
+            x: (x - d / 2).toFixed(1) + 'px', y: (y - d / 2).toFixed(1) + 'px', d: d + 'px', c,
+            sinif: 'ks-nokta' + (f.status === 'sahada' || on ? ' ks-ping' : ''),
+            op: !secEkip || on ? '1' : '.25',
+            title: f.no + ' · ' + a.code + ' · ' + (atanmadi ? 'atanmadı' : f.crew) + ' · ' + (STATUS_LABEL[f.status] || f.status)
+          };
+        });
+
+        // — araç filosu
+        const muayeneGun = iso => { if (!iso) return null; const d = new Date(iso + 'T00:00:00'); return isNaN(d) ? null : Math.round((d - new Date(bugunIso + 'T00:00:00')) / 86400000); };
+        const filo = araclar.filter(v => !vf || (AS[v.durum] ? v.durum : 'musait') === vf).map(v => {
+          const d = AS[v.durum] ? v.durum : 'musait';
+          const mg = muayeneGun(v.muayene);
+          const tur = (ARAC_TUR[v.tur] || {}).ad || v.tur || '';
+          const on = secEkip && v.ekip === secEkip;
+          return {
+            plaka: v.plaka || v.ad, tip: v.plaka ? v.ad + ' · ' + tur : tur,
+            kim: d === 'gorevde' ? [v.ekip, v.surucu, v.is].filter(Boolean).join(' · ') || 'görevde' : (v.ekip ? v.ekip + ' · ' : '') + AS[d][0].toLocaleLowerCase('tr'),
+            durum: AS[d][0], dBg: AS[d][2], dFg: AS[d][3],
+            muL: mg == null ? 'muayene tarihi yok' : (mg < 0 ? 'muayene ' + (-mg) + ' gün geçti' : 'muayeneye ' + mg + ' gün'),
+            muC: mg != null && mg < 30 ? kirmizi : ui.mut,
+            muW: mg == null ? '0%' : Math.max(4, Math.min(100, mg / 365 * 100)).toFixed(0) + '%',
+            muBar: mg == null ? ui.surf2 : (mg < 30 ? kirmizi : (mg < 90 ? turuncu : yesil)),
+            zemin: on ? (dark ? 'rgba(10,132,255,.12)' : 'rgba(0,113,227,.06)') : 'transparent',
+            ac: () => this.setState({ tab: 'arac', aracForm: { ...v } })
+          };
+        });
+
+        const ayarYetki = ['yonetici', 'mudur'].includes((me || {}).role);
+        return {
+          acik: true,
+          baslikAlt: personel.length + ' personel · ' + ekipListe.length + ' ekip · ' + araclar.length + ' araç ve ekipman'
+            + (nobetciEkip ? ' · bugün nöbetçi: ' + nobetciEkip : ''),
+          perTop: String(personel.length), perSeg, perVar: personel.length > 0, perYok: !personel.length,
+          perIpucu: pf ? 'ekip kartlarında vurgulanıyor · tekrar tıklayın, kaldırın' : 'tıklayın: ekip kartlarında vurgulanır',
+          aracTop: String(araclar.length), aracSeg, aracVar: araclar.length > 0, aracYok: !araclar.length,
+          aracIpucu: vf ? 'filo süzülüyor · tekrar tıklayın, kaldırın' : 'tıklayın: filo listesi süzülür',
+          ekipler: ekipKart, ekipVar: ekipKart.length > 0, ekipYok: !ekipKart.length,
+          ekipNot: 'yük çubuğu açık iş sayısı · 6 ve üstü aşırı yük' + (atanmamis ? ' · ' + atanmamis + ' iş ekip bekliyor' : ''),
+          ekipNotC: atanmamis ? kirmizi : ui.mut,
+          tesisNokta, ilceEt, isNokta,
+          haritaNot: isNokta.length ? isNokta.length + ' açık iş · turuncu sahada, mavi atandı, kırmızı ekip bekliyor' : 'haritada gösterilecek açık iş yok',
+          filo, filoVar: filo.length > 0, filoYok: !filo.length,
+          filoSay: vf ? filo.length + ' araç · ' + AS[vf][0].toLocaleLowerCase('tr') : araclar.length + ' araç',
+          vfVar: !!vf, vfKaldir: () => this.setState({ ekipVf: '' }),
+          secVar: !!secEkip, secAd: secEkip, secKaldir: () => this.setState({ ekipSec: '' }),
+          ayarYetki,
+          ekipDuzenle: () => this.setState({ tab: 'ayarlar', ayarBolum: 'ekip' }),
+          aracDefteri: () => this.setState({ tab: 'arac' })
+        };
+      })(),
       pano: (() => {
         if (tabId !== 'isPano') return { acik: false };
         const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
@@ -14463,7 +14793,7 @@ class Component extends DCLogic {
         ayarKap: tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop',
         ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim',
         ambar: tabId === 'ambar', arac: tabId === 'arac', talep: tabId === 'talep',
-        isPano: tabId === 'isPano'
+        isPano: tabId === 'isPano', ekipPano: tabId === 'ekipPano'
       },
       // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez
       navGruplu: MENU_GRUP.map(([baslik, idler]) => ({

@@ -1635,3 +1635,27 @@ kalemlik sahte katalog + 30 günlük tüketimle görünüm/sıralama/hız,
 katalog düzenleme (Türkçe fiyat "1.250,50"), sipariş akışı, arıza formu
 araması, telefon görünümü. Sonrasında yerel test verisi silindi;
 veritabanında iz yok (kurum_veri sürümleri değişmedi).
+
+## 2026.10.01 — 5. aşama: Ekip ve Araç panosu
+
+"Ambar ve Araç" sayfası "Ekip, Araç, Ambar" oldu; masaüstünde ilk süzgeç
+**Ekipler** (`ekipPano`, araç yetkisinden miras; telefonda Stok'a düşer):
+- Personel durum çubuğu: bugünkü gün kaydı (izin/rapor/başka görev) kartın
+  durumunu ezer, dönüş tarihi geçmiş izin görevde sayılır, görevdeki kişi
+  ekibinin sahada işi varsa "Sahada". Tıklayınca ekip kartlarındaki kişiler
+  vurgulanır.
+- Araç durum çubuğu (görevde/müsait/bakımda/arızalı/hizmet dışı); tıklayınca
+  filo listesi süzülür.
+- Ekip kartları: bölge ve vardiya, nöbetçi rozeti, açık iş yükü (6+ aşırı),
+  o anki işi, üyeler (bugünkü duruma göre halka rengi), görevdeki araçlar,
+  "İşlerini aç" → Açık arızalar ekip süzgeciyle.
+- İş haritası: tesisler gri, açık işler durum rengiyle (sahadaki nabız
+  atar); seçili ekibin işleri öne çıkar. Araç takip (GPS) bağlantısı yok,
+  ekranda da böyle yazıyor — konum uydurulmadı.
+- Araç filosu: muayeneye kalan gün çubuğu; satır araç defterinde kaydı açar.
+Sürüm damgası 2026.10.01-104.
+
+Test: gerçek oturum, sunucu bağlantısı sekmede kesik; 30 personel, 10 ekip,
+22 araç, 50 açık arıza yalnız ekranda (kaydedilmeden) yüklenerek süzgeçler,
+seçim, yönlendirmeler, koyu tema ve telefon yönlendirmesi denendi; konsol
+temiz, yerel depoda test izi yok.

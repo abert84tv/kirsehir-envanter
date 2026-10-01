@@ -1839,3 +1839,13 @@ Program:
 Test: kural sınıflandırıcı örnek mesajlarla; talep→şebeke arızası; gerçek
 veritabanında tesissiz arıza + nokta yazma/okuma, köy raporu, liste; test
 arızası (ARZ-2026-002) silindi, sayaç geri alındı. Sürüm 2026.10.01-111.
+
+## 2026.10.01 — Arıza kayıt bilgisi (telefon)
+
+Kullanıcı: "Hangi arıza ekibi atandı vs bunları göremedim." Telefondaki sade
+arıza ekranında var olan arızada "Kayıt bilgisi" kartı: atanan ekip (büyük;
+atanmadıysa kırmızı; ekip telefonu varsa "Ara"), yetkiliye ekip değiştirme,
+açan + zaman, öncelik, hedef süre (açıksa), iş emri, kapanış, noktayı alan;
+"Bu arızanın hareketleri" (denetim izinden). Yeni arıza sunucu numarası
+alınca "Arıza numarası verildi AR-1xx → ARZ-…" iz satırı düşer; geçici
+numarayla yazılmış satırlar da arızaya bağlanır. Sürüm 2026.10.01-112.

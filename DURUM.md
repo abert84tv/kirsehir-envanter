@@ -1659,3 +1659,47 @@ Test: gerçek oturum, sunucu bağlantısı sekmede kesik; 30 personel, 10 ekip,
 22 araç, 50 açık arıza yalnız ekranda (kaydedilmeden) yüklenerek süzgeçler,
 seçim, yönlendirmeler, koyu tema ve telefon yönlendirmesi denendi; konsol
 temiz, yerel depoda test izi yok.
+
+## 2026.10.01 — 6. aşama (1. bölüm): saha akışı ve iki temel kayıt hatası
+
+**Kritik hata 1 — arızalar sunucuya hiç yazılmıyordu.** `arizaKaydet`
+tanımlıydı ama hiçbir yerden çağrılmıyordu: arıza yalnız ekranda duruyor,
+ilk veri yenilemesinde sunucudaki (boş) listeyle eziliyor, sayfa yenilenince
+kayboluyordu. Fotoğraflar da arıza kimliği olmadan yükleniyordu. Şimdi:
+- her yeni/değişen arıza "pending" olur, cihazda saklanır
+  (`ks-ariza-bekleyen`), `arizaKuyrukGonder` sırayla yazar; bağlantı gelince
+  ve her veri yenilemesinde yeniden dener; yenileme bekleyen kaydı ezmez;
+- yeni kayıt numarasını sunucu sayacından alır (ARZ-yıl-sıra); cihazdaki
+  "AR-1xx" iki cihazda çakışıyordu. Alınan numara kayda hemen işlenir,
+  başarısız denemede boşa numara harcanmaz;
+- yeni kaydın fotoğraf ve sesli notları arıza kimliği belli olunca yüklenir
+  (arıza kanıtı olarak bağlanır); bağlı talebin arıza numarası güncellenir.
+- Sunucu: enum'a eksik 6 durum eklendi; `ariza_kaydet` iptali de kapanış
+  sayar, yeniden açılan kaydın kapanış damgasını siler.
+
+**Kritik hata 2 — modül verisi sunucuya hiç yazılamamıştı.** `rol` enum'unda
+'izleyici' yok; `veri_yaz`, `veri_yaz_surumlu`, `ambar_hareket` içindeki
+`k.rol = 'izleyici'` her çağrıda hata veriyordu. Ekip, personel, nöbet,
+ambar, araç, talep (ve muhtar) yalnız cihazlarda kalmıştı; program hatayı
+sessizce kuyruğa alıp tekrar deniyordu. Karşılaştırma `k.rol::text` yapıldı.
+Cihazlarda kuyrukta bekleyen veriler artık bir sonraki bağlantıda gider.
+DİKKAT: SQL-moduller-sunucu.sql / SQL-veri-butunlugu.sql / SQL-ambar-hurda.sql
+yeniden çalıştırılırsa hata geri gelir — ardından SQL-ariza-sunucu-duzeltme.sql
+çalıştırılmalı.
+
+**Telefon > İşler > Bana atanan** taslağa göre yeniden yazıldı (saha
+personeli akışı): selamlama, ekip ve araç, günün ilerleme halkası; o anki iş
+kartı (öncelik, hedef süre, tesis, mesafe — konum alınırsa kuş uçuşu),
+adımlar Atandı → Sahadayım → Tamamlandı: "Sahaya vardım", öncesi fotoğrafı
+(kanıt açıksa zorunlu), "İşi tamamla" → sonrası fotoğrafı, ekip zimmetinden
++/− ile malzeme, kısa not, kapat (merkez onayı açıksa "Onaya gönder");
+kapanışta zimmet düşülür, bağlı iş emri kapanır, "İş kapandı" ekranı.
+Sıradaki işler (öncelik, konum varsa yakınlık) ve Zimmetim listesi.
+"Bana atanan" önceden ekibe göre süzmüyordu, herkese bütün açık arızaları
+gösteriyordu — düzeltildi (masaüstü listesi de). Telefon alt çubuğunda
+"Kaynaklar" kısa adı. Sürüm 2026.10.01-105.
+
+Test: yerelde (sunucu kesik) bütün adımlar; gerçek veritabanında KS-KUY-0001
+üzerinde test arızası aç → sahada → kapat, yenilemeden sonra kalıcılık,
+tesis durumunun arızalı→aktif dönüşü doğrulandı; test arızası ve numara
+sayacı silindi (denetim izi satırları duruyor).

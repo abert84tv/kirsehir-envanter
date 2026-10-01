@@ -92,6 +92,11 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-nokta{position:absolute;border-radius:50%;box-shadow:0 0 0 2px var(--ks-nokta-kenar,#fff)}
 .ks-nokta.ks-ping::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid currentColor;animation:ksPing 1.6s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.ks-nokta.ks-ping::after{animation:none}}
+@keyframes ksPop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.1);opacity:1}100%{transform:none}}
+.ks-pop{animation:ksPop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes ksTik{to{stroke-dashoffset:0}}
+.ks-tik{stroke-dasharray:1;stroke-dashoffset:1;animation:ksTik .5s ease .25s forwards}
+@media (prefers-reduced-motion:reduce){.ks-pop{animation:none}.ks-tik{animation:none;stroke-dashoffset:0}}
 /* Dar masaüstü penceresinde üst çubuk düğmeleri yalnız ikona iner, başlık kaybolmaz */
 @media (max-width:1180px){.ks-ust-etiket{display:none}}
 </style>
@@ -4320,23 +4325,151 @@ Hareket gir
 </sc-if>
 
 <sc-if value="{{ tab.gunluk }}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="flex:1;overflow:auto;min-height:0">
-<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Bugün</div>
-<div style="font:600 12px/1.35 var(--font-body);color:{{ ui.fg }}">{{ isListesi.who }}</div>
-<div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ isListesi.date }}</div>
+<div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="background:{{ ui.surf }};padding:16px 16px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="flex:1;min-width:0">
+<div style="font:700 21px/1.2 var(--font-heading);letter-spacing:-.01em">{{ saha.selam }}</div>
+<div style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:2px">{{ saha.alt }}</div>
 </div>
-<sc-if value="{{ isListesi.empty }}" hint-placeholder-val="{{ false }}">
-<div style="padding:18px 14px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bugün için bekleyen iş yok.</div>
+<sc-if value="{{ saha.konumVar }}" hint-placeholder-val="{{ false }}">
+<span style="display:flex;align-items:center;gap:6px;font:600 11.5px/1 var(--font-body);color:#1f8a3d"><span class="ks-canli"></span>Konum</span>
 </sc-if>
-<sc-for list="{{ isListesi.items }}" as="it" hint-placeholder-count="8">
-<button onClick="{{ it.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:4px;width:100%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
-<span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ it.kindFg }}">{{ it.kind }}</span>
-<span style="font:600 14px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ it.title }}</span>
-<span style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ it.meta }}</span>
+<sc-if value="{{ saha.konumYok }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ saha.konumAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12px/1 var(--font-body);color:{{ ui.acc }};display:flex;align-items:center">Konumumu al</button>
+</sc-if>
+<span style="flex:none;width:34px;height:34px;border-radius:50%;background:#ff9f0a;color:#fff;font:700 12px/34px var(--font-body);text-align:center">{{ saha.ini }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:14px;background:{{ ui.surf2 }};border-radius:14px;padding:10px 12px">
+<span style="position:relative;flex:none;width:44px;height:44px"><svg width="44" height="44" viewBox="0 0 44 44" style="display:block" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="{{ ui.rule }}" stroke-width="5"></circle><circle cx="22" cy="22" r="18" fill="none" stroke="#34c759" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ saha.halka }}" transform="rotate(-90 22 22)" style="transition:stroke-dasharray .8s ease"></circle></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 11.5px/1 var(--font-body)">{{ saha.bitti }}/{{ saha.toplam }}</span></span>
+<div style="flex:1;min-width:0">
+<div style="font:600 13.5px/1.3 var(--font-body)">{{ saha.ozet }}</div>
+<div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:1px">{{ saha.ozetAlt }}</div>
+</div>
+</div>
+</div>
+
+<div style="padding:14px 14px 18px">
+<sc-if value="{{ saha.basariVar }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="background:{{ ui.surf }};border-radius:18px;padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 1px 0 rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.06)">
+<div class="ks-pop" style="width:76px;height:76px;border-radius:50%;background:#34c759;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(52,199,89,.35)"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="ks-tik" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<div style="font:700 17px/1.2 var(--font-heading)">{{ saha.basariBaslik }}</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ saha.basariMetin }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ saha.isGoster }}" hint-placeholder-val="{{ true }}">
+<div class="ks-gir" style="position:relative;overflow:hidden;background:{{ ui.surf }};border-radius:18px;padding:16px;box-shadow:0 1px 0 rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.06)">
+<div style="display:flex;align-items:center;gap:8px">
+<span class="{{ saha.is.prSinif }}" style="font:700 11px/1 var(--font-body);padding:4px 9px;border-radius:7px;background:{{ saha.is.prBg }};color:{{ saha.is.prFg }}">{{ saha.is.pr }}</span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ saha.is.no }}</span>
+<span style="flex:1"></span>
+<span style="font:700 11.5px/1 var(--font-body);color:{{ saha.is.sureC }}">{{ saha.is.sure }}</span>
+</div>
+<div style="font:700 20px/1.25 var(--font-heading);letter-spacing:-.01em;margin-top:10px">{{ saha.is.baslik }}</div>
+<div style="font:400 13px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ saha.is.tesis }}</div>
+<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;font:400 12px/1.2 var(--font-body)">
+<span style="display:flex;align-items:center;gap:5px;background:{{ ui.surf2 }};padding:6px 9px;border-radius:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.4"></circle></svg>{{ saha.is.mesafe }}</span>
+<span style="display:flex;align-items:center;gap:5px;background:{{ ui.surf2 }};padding:6px 9px;border-radius:8px;min-width:0;max-width:100%"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ saha.is.not }}</span></span>
+</div>
+
+<div style="display:flex;align-items:center;margin:18px 4px 6px">
+<sc-for list="{{ saha.is.adimlar }}" as="a" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;flex:{{ a.esnek }}">
+<span style="width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font:700 11.5px/1 var(--font-body);background:{{ a.bg }};color:{{ a.fg }};box-shadow:{{ a.halka }};transition:background .3s,box-shadow .3s">{{ a.ic }}</span>
+<sc-if value="{{ a.cizgi }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;height:3px;background:{{ ui.rule }};border-radius:2px;margin:0 6px;overflow:hidden"><div style="height:3px;width:{{ a.cizgiW }};background:var(--color-accent);transition:width .6s ease"></div></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;font:400 11px/1 var(--font-body);color:{{ ui.mut }};margin:0 0 14px"><span>Atandı</span><span>Sahadayım</span><span>Tamamlandı</span></div>
+
+<sc-if value="{{ saha.is.s0 }}" hint-placeholder-val="{{ true }}">
+<div class="ks-gir" style="display:flex;gap:8px">
+<button onClick="{{ saha.is.yolTarifi }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:50px;padding:0 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14px/50px var(--font-body)">Yol tarifi</button>
+<button onClick="{{ saha.is.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">Sahaya vardım</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.is.s1 }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir">
+<button onClick="{{ saha.is.fotoOnce }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;border:1.5px dashed {{ saha.is.onceKenar }};background:{{ saha.is.onceZemin }};border-radius:12px;padding:11px 12px;margin-bottom:10px">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ saha.is.onceIk }};color:#fff;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body)">{{ saha.is.onceL }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ saha.is.onceAlt }}</span></span>
+</button>
+<button onClick="{{ saha.is.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center;opacity:{{ saha.is.tamamlaOp }}">İşi tamamla</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.is.s2 }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir">
+<button onClick="{{ saha.is.fotoSonra }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;border:1.5px dashed {{ saha.is.sonraKenar }};background:{{ saha.is.sonraZemin }};border-radius:12px;padding:11px 12px;margin-bottom:12px">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ saha.is.sonraIk }};color:#fff;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body)">{{ saha.is.sonraL }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">İş bittikten sonraki hâli</span></span>
+</button>
+<sc-if value="{{ saha.ambarOn }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="font:700 12.5px/1.3 var(--font-body);margin-bottom:6px">Kullanılan malzeme <span style="font-weight:500;color:{{ ui.mut }}">· ekip zimmetinden düşülür</span></div>
+<sc-for list="{{ saha.is.mz }}" as="m" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:500 13px/1.3 var(--font-body)">{{ m.ad }}</div><div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.elde }}</div></div>
+<button onClick="{{ m.eksi }}" aria-label="Azalt" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:50%;background:{{ ui.surf2 }};font:400 20px/36px var(--font-body);text-align:center">−</button>
+<span style="width:30px;text-align:center;font:700 15px/1 var(--font-body);color:{{ m.c }}">{{ m.n }}</span>
+<button onClick="{{ m.arti }}" aria-label="Artır" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:50%;background:rgba(0,113,227,.12);color:{{ ui.acc }};font:400 20px/36px var(--font-body);text-align:center">+</button>
+</div>
+</sc-for>
+<sc-if value="{{ saha.is.mzYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:8px 0;border-top:1px solid {{ ui.rule }};font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ saha.is.mzYokNot }}</div>
+</sc-if>
+</div>
+</sc-if>
+<textarea value="{{ saha.is.kapNot }}" onChange="{{ saha.is.onKapNot }}" rows="2" placeholder="Kısa not (isteğe bağlı) — ne yapıldı" style="all:unset;box-sizing:border-box;display:block;width:100%;margin-top:10px;border-radius:12px;border:1px solid {{ ui.rule }};padding:10px 12px;font:400 14px/1.4 var(--font-body);background:{{ ui.bg }}"></textarea>
+<button onClick="{{ saha.is.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;margin-top:12px;border-radius:14px;background:{{ saha.is.kapatBg }};color:#fff;font:700 15px/50px var(--font-body);text-align:center;opacity:{{ saha.is.kapatOp }}">{{ saha.is.kapatL }}</button>
+<button onClick="{{ saha.is.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:42px;margin-top:6px;border-radius:12px;font:600 13px/42px var(--font-body);color:{{ ui.mut }};text-align:center">Vazgeç</button>
+</div>
+</sc-if>
+<button onClick="{{ saha.is.formAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;margin:12px auto 0;font:600 12px/1 var(--font-body);color:{{ ui.acc }}">Kaydın tamamını aç</button>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.isYok }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="background:{{ ui.surf }};border-radius:18px;padding:28px 18px;text-align:center">
+<div class="ks-pop" style="width:60px;height:60px;margin:0 auto 10px;border-radius:50%;background:#34c759;display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="ks-tik" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<div style="font:700 17px/1.2 var(--font-heading)">{{ saha.bosBaslik }}</div>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:4px">{{ saha.bosAlt }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.sonrakiVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;align-items:baseline;gap:8px;margin:18px 4px 8px"><span style="font:700 15px/1 var(--font-heading)">Sıradaki işler</span><span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">dokunun, o iş açılır</span></div>
+<div style="background:{{ ui.surf }};border-radius:16px;overflow:hidden">
+<sc-for list="{{ saha.sonraki }}" as="j" hint-placeholder-count="3">
+<button onClick="{{ j.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:none;width:28px;height:28px;border-radius:50%;background:{{ ui.surf2 }};font:700 12px/28px var(--font-body);text-align:center">{{ j.sira }}</span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ j.baslik }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ j.tesis }}</span></span>
+<span style="flex:none;text-align:right"><span style="display:inline-block;font:700 10.5px/1 var(--font-body);padding:3px 7px;border-radius:6px;background:{{ j.prBg }};color:{{ j.prFg }}">{{ j.pr }}</span><span style="display:block;font:400 11px/1.2 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ j.mesafe }}</span></span>
 </button>
 </sc-for>
-<div style="height:14px"></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.zimmetVar }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="display:flex;align-items:baseline;gap:8px;margin:18px 4px 8px"><span style="font:700 15px/1 var(--font-heading)">Zimmetim</span><span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">ekibin üstündeki malzeme</span></div>
+<div style="background:{{ ui.surf }};border-radius:16px;overflow:hidden">
+<sc-for list="{{ saha.zimmet }}" as="z" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:600 13.5px/1.3 var(--font-body)">{{ z.ad }}</div><div style="font:400 11.5px/1.3 var(--font-body);color:{{ z.notC }}">{{ z.not }}</div></div>
+<span style="font:700 16px/1 var(--font-body);color:{{ z.c }}">{{ z.n }} <span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }}">{{ z.birim }}</span></span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
 </div>
 </sc-if>
 
@@ -7393,7 +7526,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.01-104';
+const SURUM = '2026.10.01-105';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -7474,7 +7607,15 @@ class Component extends DCLogic {
     envQ: '', envSort: { k: 'code', dir: 1 }, envF: {},
     arzQ: '', arzSort: { k: 'no', dir: 1 }, arzF: {},
     zoom: 11, center: null, fly: null,
-    assets: [], faults: [], isEmirleri: [], isEmriPanel: null, selected: null, detailTab: 'bilgi',
+    assets: [],
+    // Sunucuya henüz yazılamamış arızalar cihazdan geri yüklenir
+    faults: (() => {
+      try {
+        const b = JSON.parse(localStorage.getItem('ks-ariza-bekleyen') || '[]');
+        return Array.isArray(b) ? b.filter(f => f && f.id && f.assetId).map(f => ({ ...f, sync: 'pending' })) : [];
+      } catch (e) { return []; }
+    })(),
+    isEmirleri: [], isEmriPanel: null, selected: null, detailTab: 'bilgi',
     panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false,
     hatKatman: (() => { try { return localStorage.getItem('ks-hat-katman') !== '0'; } catch (e) { return true; } })(),
     filter: (() => {
@@ -7819,7 +7960,7 @@ class Component extends DCLogic {
         this.setState({ hatKatman: !!d.on });
       }
       if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
-      if (d.ks === 'konum') { this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
+      if (d.ks === 'konum') { this.setState({ benimKonum: { lat: d.lat, lon: d.lon, t: Date.now() } }); this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
       if (d.ks === 'konumYok') {
         this.say(d.kod === 1
           ? 'Konum izni verilmemiş. Tarayıcı ayarlarından bu siteye konum iznini açın; sonra GİT düğmesine yeniden basın.'
@@ -7884,6 +8025,8 @@ class Component extends DCLogic {
       this.setState({ ayarBolum: null });
     // runtime prevState vermeyebilir — kendi anlık görüntümüzle karşılaştırırız
     const s = this.state;
+    // Bekleyen arızalar cihazda saklanır (arizaBekleyenYaz)
+    if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
     if (s.session) {
       const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.hatKatman,
         s.bildirimKanal, s.bildirimEsik, s.conv.sys, s.conv.zone, s.tab, s.detailTab,
@@ -8319,6 +8462,7 @@ class Component extends DCLogic {
   modulKuyrukDene() {
     if (!this._sb || !this.state.sunucu || this.state.offline) return;
     if ((this.state.ambarKuyruk || []).length) this.ambarKuyrukGonder();
+    if ((this.state.faults || []).some(f => f.sync === 'pending')) this.arizaKuyrukGonder();
     if ((this.state.talepler || []).some(t => t.noGecici)) this.talepNoDuzelt();
     if (!Object.keys(this.state.modulKuyruk || {}).length) return;
     this.modulKuyrukGonder();
@@ -10533,6 +10677,154 @@ class Component extends DCLogic {
     if (ok) this.fotoYenile(tesisDbId);
     return ok;
   }
+  // Arıza kaydını sunucuya yazar. 2026.10.01'e kadar arızalar hiç sunucuya
+  // gitmiyordu (arizaKaydet tanımlıydı ama çağrılmıyordu): kayıt yalnız
+  // ekranda duruyor, ilk veri yenilemesinde sunucudaki boş listeyle
+  // eziliyordu. Artık her yeni/değişen arıza "pending" işaretlenir, cihazda
+  // saklanır (ks-ariza-bekleyen) ve sırayla gönderilir. Yeni kayıt numarasını
+  // sunucudaki sayaçtan alır (ARZ-yıl-sıra): cihazda üretilen "AR-1xx"
+  // numaraları iki cihazda çakışıyordu.
+  async arizaGonder(id) {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || this.state.offline || !this.state.sunucu) return null;
+    const f = (this.state.faults || []).find(x => x.id === id);
+    if (!f || f.sync !== 'pending') return null;
+    const a = (this.state.assets || []).find(x => x.id === f.assetId);
+    // Tesis henüz sunucuda değilse önce tesis kuyruğu gider
+    if (!a || a.dbId == null) return null;
+    let no = f.no;
+    if (!f.dbId && !/^ARZ-\d{4}-\d+$/.test(no || '')) {
+      const n = await M.numaraAl('ariza');
+      if (!n.ok) return null;
+      no = n.data;
+      // Alınan numara hemen kayda işlenir: yazma başarısız olursa yeniden
+      // denemede aynı numara kullanılır, sayaçtan boşa numara harcanmaz
+      await new Promise(res => this.setState(st => ({
+        faults: (st.faults || []).map(x => x.id === id ? { ...x, no } : x)
+      }), res));
+    }
+    const malT = (f.malzeme || []).reduce((t, mz) => t + (Number(mz.tutar) || 0) * (Number(mz.adet) || 1), 0);
+    const saat = parseFloat(String(f.hours || '').replace(',', '.')) || 0;
+    const isc = parseFloat(String(f.iscilik || '').replace(',', '.')) || saat * 320;
+    const r = await M.arizaKaydet({
+      dbId: f.dbId || null, no, tesisDbId: a.dbId, type: f.type, priority: f.priority || 'Normal',
+      status: f.status || 'acik', crew: f.crew && f.crew !== ATANMADI ? f.crew : null,
+      desc: f.note || f.desc || null, malzeme: f.malzeme || [], maliyet: malT + isc || null
+    });
+    if (!r.ok) {
+      if (!r.cevrimdisi) this.duyur((f.no || 'Arıza') + ' sunucuya yazılamadı: ' + (r.err || 'bilinmeyen hata') + ' Kayıt cihazda bekliyor.', 9000, 'kotu');
+      return null;
+    }
+    const dbId = f.dbId || Number(r.data);
+    const yeniId = f.dbId ? f.id : 'f' + dbId;
+    const yeni = { ...f, id: yeniId, dbId, no, tesisDbId: a.dbId, sync: 'synced' };
+    const ff = this.state.faultForm;
+    // Talep, arızaya cihaz numarasıyla bağlanmıştı — sunucu numarasına çevrilir
+    const tl = (this.state.talepler || []);
+    const talepDegis = no !== f.no && tl.some(t => t.arizaNo === f.no);
+    if (talepDegis) {
+      const yeniTl = tl.map(t => t.arizaNo === f.no ? { ...t, arizaNo: no } : t);
+      this.modulYaz('talep', yeniTl.slice(0, 1000));
+    }
+    await new Promise(res => this.setState(st => ({
+      faults: (st.faults || []).map(x => x.id === id ? yeni : x),
+      faultForm: ff && ff.id === id ? { ...ff, id: yeniId, dbId, no, sync: 'synced' } : st.faultForm,
+      ...(talepDegis ? { talepler: (st.talepler || []).map(t => t.arizaNo === f.no ? { ...t, arizaNo: no } : t) } : {})
+    }), res));
+    // Kayıtla birlikte seçilen fotoğraf ve sesli notlar arıza kimliği belli
+    // olunca yüklenir — arıza kanıtı sayılsınlar diye
+    const md = (this._arizaMedya || {})[id];
+    if (md) {
+      delete this._arizaMedya[id];
+      if ((md.photos || []).length) {
+        this.arizaFotoGonder(md.photos, a.dbId, a.code, dbId).then(n => {
+          if (n) this.duyur(`${n} arıza fotoğrafı ${no} kaydına yüklendi.`, 5000, 'iyi');
+        });
+      }
+      for (const sn of (md.sesler || [])) {
+        const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
+        M.sesYukle(sn.blob, a.dbId, a.code, sec, 'Arıza sesli notu · ' + (ASAMA_AD[sn.asama] || ASAMA_AD.once), dbId);
+      }
+    }
+    return yeni;
+  }
+  async arizaKuyrukGonder() {
+    if (this._arizaGonderiyor) return 0;
+    const bekleyen = (this.state.faults || []).filter(f => f.sync === 'pending').map(f => f.id);
+    if (!bekleyen.length) return 0;
+    this._arizaGonderiyor = true;
+    let n = 0;
+    try {
+      for (const id of bekleyen) { if (await this.arizaGonder(id)) n++; }
+    } finally { this._arizaGonderiyor = false; }
+    return n;
+  }
+  // Telefon saha akışı: işin durumunu değiştirir (sahaya vardım / kapat).
+  // Arıza formunu açmadan aynı kuyruktan sunucuya gider.
+  sahaDurum(f, yeni, ek) {
+    if (!f) return;
+    const kapanis = yeni === 'cozuldu' || yeni === 'kontrol';
+    const g = { ...f, ...(ek || {}), status: yeni, sync: 'pending' };
+    if (kapanis && ek && ek.notEk) {
+      g.note = ((f.note || '') + (f.note ? '\n' : '') + 'SAHA · ' + this.damga() + ' · ' + ek.notEk).trim();
+      delete g.notEk;
+    }
+    this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? g : x), sahaKapanis: null }));
+    const a = (this.state.assets || []).find(x => x.id === f.assetId);
+    this.denetimYaz('ariza', 'Saha: ' + (STATUS_LABEL[yeni] || yeni), (f.no || '') + ' · ' + (f.type || '')
+      + ((g.malzeme || []).length && kapanis ? ' · ' + g.malzeme.map(m => m.ad + ' × ' + m.adet).join(', ') : ''), a ? a.code : '');
+    setTimeout(() => this.arizaKuyrukGonder(), 0);
+    if (yeni === 'cozuldu') {
+      // Seçilen malzeme ekip zimmetinden düşülür (kullanıcı adet seçerek onayladı)
+      if (this.state.modul.ambar !== false && (g.malzeme || []).length && g.crew && g.crew !== ATANMADI) {
+        setTimeout(() => this.arizaStokDus(g), 0);
+      }
+      if (g.dbId) {
+        const ie = this.isEmriBul(g.dbId);
+        if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, g), 300);
+      }
+    }
+  }
+  // Saha fotoğrafı: öncesi/sonrası. Arıza sunucudaysa hemen yüklenir, değilse
+  // kayıt yazılınca (arizaGonder) yüklenmek üzere bekler.
+  sahaFoto(f, asama) {
+    if (!f) return;
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment'; inp.style.display = 'none';
+    inp.onchange = () => {
+      const list = [...(inp.files || [])];
+      inp.remove();
+      if (!list.length) return;
+      const ek = list.map(file => ({ file, url: URL.createObjectURL(file), kb: Math.round(file.size / 1024), asama }));
+      const sf = { ...(this.state.sahaFoto || {}) };
+      const k = sf[f.id] || { once: 0, sonra: 0 };
+      sf[f.id] = { ...k, [asama]: k[asama] + ek.length };
+      this.setState({ sahaFoto: sf });
+      const a = (this.state.assets || []).find(x => x.id === f.assetId);
+      if (f.dbId && a && a.dbId != null && !this.state.offline && this._sb) {
+        this.arizaFotoGonder(ek, a.dbId, a.code, f.dbId).then(n => {
+          this.duyur(n ? `${ASAMA_AD[asama]} fotoğrafı ${f.no} kaydına yüklendi.` : 'Fotoğraf yüklenemedi — bağlantıyı kontrol edip yeniden çekin.', 5000, n ? 'iyi' : 'kotu');
+        });
+      } else {
+        this._arizaMedya = this._arizaMedya || {};
+        const md = this._arizaMedya[f.id] || { photos: [], sesler: [] };
+        md.photos = [...md.photos, ...ek];
+        this._arizaMedya[f.id] = md;
+        // Kayıt yeniden gönderilecek ki fotoğraf da onunla gitsin
+        this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? { ...x, sync: 'pending' } : x) }));
+        this.duyur(`${ASAMA_AD[asama]} fotoğrafı cihazda — kayıt sunucuya yazılınca yüklenecek.`, 5000);
+      }
+    };
+    document.body.appendChild(inp);
+    inp.click();
+  }
+  // Gönderilmemiş arızalar cihazda saklanır: sayfa kapanıp açılsa da kaybolmaz.
+  // (Seçilen fotoğraf dosyaları saklanamaz — tarayıcı izin vermez.)
+  arizaBekleyenYaz() {
+    const b = (this.state.faults || []).filter(f => f.sync === 'pending')
+      .map(f => ({ ...f, photos: (f.photos || []).filter(p => !p.file), sesler: [] }));
+    try { localStorage.setItem('ks-ariza-bekleyen', JSON.stringify(b)); } catch (e) { /* depolama kapalı */ }
+  }
   // Masaüstü yeni tesis sihirbazı (3 adım: tür ve yer → konum → bilgi ve foto)
   naAc() {
     const m = this.state.data;
@@ -10748,7 +11040,14 @@ class Component extends DCLogic {
       return;
     }
     const assets = (t.data || []).map(M.tesisSuret);
-    const faults = a.ok ? (a.data || []).map(M.arizaSuret) : this.state.faults;
+    // Sunucuya henüz yazılmamış (pending) arızalar korunur: yenisi listeye
+    // eklenir, değiştirilmişi sunucudaki eski hâlinin yerine geçer
+    const bekleyenF = (this.state.faults || []).filter(f => f.sync === 'pending');
+    const faults = a.ok
+      ? [...bekleyenF.filter(f => !f.dbId),
+        ...(a.data || []).map(M.arizaSuret).map(x => ({ ...x, note: x.desc }))
+          .map(x => bekleyenF.find(y => y.dbId === x.dbId) || x)]
+      : this.state.faults;
     const kilitli = assets.filter(x => !x.yazilabilir).length;
     // Saha notları sunucudan geri okunur: her kaydın en son notu not alanında görünür
     let notes = this.state.notes;
@@ -10782,6 +11081,7 @@ class Component extends DCLogic {
     }
     this.copYenile().then(() => this.kodDenetle());
     this.isEmriYenile();
+    if (bekleyenF.length) setTimeout(() => this.arizaKuyrukGonder(), 300);
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider
     this.toMap({ ks: 'assets', assets: birlesik, faults });
     if (!sessiz) {
@@ -14808,7 +15108,9 @@ class Component extends DCLogic {
         const acikBadge = navVisible
           .filter(g => !secili.includes(g))
           .reduce((t, g) => t + (g.badge || 0), 0);
-        return [...secili.map(navItem), {
+        // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
+        const KISA = { kaynaklar: 'Kaynaklar' };
+        return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
           label: 'Tümü', go: () => this.setState({ menuAcik: true }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
           mark: 'transparent', dot: s.menuAcik ? 'var(--color-accent)' : 'transparent',
@@ -15268,7 +15570,9 @@ class Component extends DCLogic {
         }
         if (!f || !f.assetId) return this.say('Kayıt seçin.');
         const a = s.assets.find(x => x.id === f.assetId);
-        const sync = s.offline ? 'pending' : 'synced';
+        // Her kayıt önce "pending": sunucuya arizaKuyrukGonder yazar
+        const sync = 'pending';
+        const yeniId = f.id ? f.id : 'nf' + Date.now();
         // Numara if/else dışında üretilir: talep bağlama, denetim izi ve
         // zimmet düşümü hepsi bu numarayı kullanır.
         const arizaNo = f.id ? f.no : 'AR-' + String(101 + s.faults.length);
@@ -15280,7 +15584,7 @@ class Component extends DCLogic {
           });
         } else {
           this.setState({
-            faults: [{ ...f, id: 'nf' + Date.now(), no: arizaNo, sync, reporter: s.role, opened: this.damga() }, ...s.faults],
+            faults: [{ ...f, id: yeniId, no: arizaNo, sync, reporter: s.role, opened: this.damga() }, ...s.faults],
             panel: s.device === 'phone' ? 'yok' : 'ariza', faultForm: null, tab: 'ariza',
             queue: [{ id: 'q' + Date.now(), title: `${arizaNo} · yeni arıza`, meta: `${a.code} · ${f.type} · ${(f.photos || []).length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
@@ -15313,9 +15617,17 @@ class Component extends DCLogic {
         this.denetimYaz('ariza', f.id ? 'Arıza güncellendi' : 'Arıza açıldı',
           f.type + ' · ' + (STATUS_LABEL[f.status] || f.status) + ' · ' + f.priority
           + ' · ' + (f.crew || 'ekip atanmadı'), arizaNo || (ffAsset ? ffAsset.code : ''));
-        // sesli notlar da kayıtla birlikte gider
+        // sesli notlar da kayıtla birlikte gider. Yeni kayıtta arıza kimliği
+        // sunucuya yazılınca belli olur: fotoğraf ve ses o zaman yüklenir
+        // (arizaGonder), böylece arıza kanıtı olarak bağlanır.
         const sesler = (f.sesler || []).filter(x => x.blob);
-        if (sesler.length && a && a.dbId && !s.offline) {
+        const bekleyen = (f.photos || []).filter(p => p.file);
+        if (!f.dbId && (sesler.length || bekleyen.length)) {
+          this._arizaMedya = this._arizaMedya || {};
+          this._arizaMedya[yeniId] = { photos: bekleyen, sesler };
+        }
+        setTimeout(() => this.arizaKuyrukGonder(), 0);
+        if (f.dbId && sesler.length && a && a.dbId && !s.offline) {
           (async () => {
             let n = 0;
             for (const sn of sesler) {
@@ -15331,8 +15643,7 @@ class Component extends DCLogic {
           })();
         }
         // seçilen fotoğraflar kaydın kendisiyle birlikte veritabanına yüklenir
-        const bekleyen = (f.photos || []).filter(p => p.file);
-        if (bekleyen.length && a && a.dbId && !s.offline) {
+        if (f.dbId && bekleyen.length && a && a.dbId && !s.offline) {
           this.arizaFotoGonder(bekleyen, a.dbId, a.code, f.dbId).then(n => {
             if (n) {
               this.veriYenile(true);
@@ -15340,7 +15651,7 @@ class Component extends DCLogic {
               setTimeout(() => this.setState({ toast: null }), 8000);
             }
           });
-        } else if (bekleyen.length) {
+        } else if (bekleyen.length && (f.dbId || s.offline || !this._sb)) {
           this.say(`${bekleyen.length} fotoğraf cihazda bekliyor — ${s.offline ? 'bağlantı gelince' : 'kayıt veritabanına yazıldıktan sonra'} yüklenecek.`, true);
           setTimeout(() => this.setState({ toast: null }), 8000);
         }
@@ -15825,9 +16136,172 @@ class Component extends DCLogic {
           note: 'Periyot: kuyular 6 ayda bir, depo ve elektrik tesisleri 12 ayda bir. Bakımı yaptığınızda satırdaki “Yapıldı” düğmesine basın; tarih bugüne çekilir ve sonraki bakım günü kendiliğinden hesaplanır.'
         };
       })(),
+      // Telefon > İşler > Bana atanan: saha personelinin akışı. Ekibin açık
+      // işleri sırayla; o anki iş kartında Sahaya vardım → öncesi fotoğrafı
+      // → İşi tamamla (sonrası fotoğrafı, zimmetten malzeme) adımları.
+      saha: (() => {
+        if (!(s.device === 'phone' && tabId === 'gunluk')) return { acik: false };
+        const kirmizi = 'var(--color-uyari)', yesil = '#34c759';
+        const iki = n => String(n).padStart(2, '0');
+        // Ekip: kullanıcı kaydındaki ekip, yoksa personel havuzunda hesabına bağlı kişinin ekibi
+        const kisi = (s.personel || []).find(p => p.kullanici && me && p.kullanici === me.user);
+        const crew = (me && me.crew) || (kisi ? ((s.ekipler || []).find(e => e.sefId === kisi.id || (e.uyeIdler || []).includes(kisi.id)) || {}).ad : '') || '';
+        const PR = { 'Acil': 0, 'Yüksek': 1, 'Normal': 2, 'Düşük': 3 };
+        const tum = arizaOn ? s.faults : [];
+        const ekibin = f => crew ? f.crew === crew : (f.crew && f.crew !== ATANMADI);
+        const acik = tum.filter(f => ekibin(f) && !KAPALI_DURUM.includes(f.status));
+        const konum = s.benimKonum;
+        const assetOf = f => s.assets.find(x => x.id === f.assetId) || null;
+        const km = a => konum && a && isFinite(a.lat) ? this.mesafeM(konum, a) / 1000 : null;
+        // Sıra: sahada olan önce, sonra öncelik, sonra (konum varsa) yakınlık, sonra açılış
+        const sirali = acik.filter(f => f.status !== 'kontrol').map(f => ({ f, a: assetOf(f) }))
+          .sort((x, y) => (y.f.status === 'sahada') - (x.f.status === 'sahada')
+            || (PR[x.f.priority] ?? 9) - (PR[y.f.priority] ?? 9)
+            || ((km(x.a) ?? 1e9) - (km(y.a) ?? 1e9))
+            || this.damgaMs(x.f.opened) - this.damgaMs(y.f.opened));
+        const onayBekleyen = acik.filter(f => f.status === 'kontrol').length;
+        const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+        const bitti = tum.filter(f => ekibin(f) && KAPALI_DURUM.includes(f.status) && this.damgaMs(f.closed) >= bugun.getTime()).length
+          + onayBekleyen;
+        const toplam = bitti + sirali.length;
+        const secId = s.sahaAktifId && sirali.some(x => x.f.id === s.sahaAktifId) ? s.sahaAktifId : (sirali[0] || { f: {} }).f.id;
+        const cur = sirali.find(x => x.f.id === secId) || null;
+        const PRC = {
+          'Acil': ['rgba(215,0,21,.1)', kirmizi], 'Yüksek': ['rgba(255,159,10,.17)', '#9a5200'],
+          'Normal': [ui.surf2, ui.fg], 'Düşük': [ui.surf2, ui.mut]
+        };
+        const mesafeYazi = a => { const k = km(a); return k == null ? (a ? a.district || '' : '') : (k < 1 ? Math.round(k * 1000) + ' m' : k.toFixed(1).replace('.', ',') + ' km') + ' · kuş uçuşu'; };
+        const saat = (new Date()).getHours();
+        const selam = saat < 11 ? 'Günaydın' : (saat < 18 ? 'İyi günler' : 'İyi akşamlar');
+        const arac = ((s.arac && s.arac.list) || []).find(v => v.ekip === crew && v.durum === 'gorevde');
+        const sf = s.sahaFoto || {};
+
+        let is = { var: false };
+        if (cur) {
+          const f = cur.f, a = cur.a;
+          const step = f.status === 'sahada' ? 1 : 0;
+          const kp = s.sahaKapanis && s.sahaKapanis.id === f.id ? s.sahaKapanis : null;
+          const fo = sf[f.id] || { once: 0, sonra: 0 };
+          const onceTamam = !kanitOn || fo.once > 0;
+          const sonraTamam = !kanitOn || fo.sonra > 0;
+          const d = sureOn ? this.sureDurum(f) : null;
+          const adim = kp ? 2 : step;
+          const zim = ((s.ambar || {}).zimmet || {})[f.crew] || {};
+          const secim = (kp && kp.mz) || {};
+          const mzListe = Object.keys(zim).filter(ad => Number(zim[ad]) > 0).sort((x, y) => x.localeCompare(y, 'tr'));
+          const secilen = mzListe.filter(ad => secim[ad] > 0);
+          const kapat = () => {
+            if (!sonraTamam) return this.duyur('Kanıt zorunlu — önce sonrası fotoğrafını çekin.', 5000, 'kotu');
+            const malzeme = secilen.map(ad => {
+              const k = this.katalogBul(ad) || {};
+              return { ad, adet: secim[ad], birim: k.birim || 'adet', tutar: Number(k.fiyat) || 0 };
+            });
+            this.sahaDurum(f, onayOn ? 'kontrol' : 'cozuldu', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
+            this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + ' zimmetten düşüldü. ' : '')
+              + (onayOn ? 'Kayıt merkez onayına gönderildi.' : 'Öncesi/sonrası kanıt tesisin arıza geçmişine yazıldı.') } });
+            clearTimeout(this._sahaZ);
+            this._sahaZ = setTimeout(() => this.setState({ sahaBasari: null, sahaAktifId: null }), 2200);
+          };
+          is = {
+            var: true,
+            no: f.no || '', pr: f.priority || 'Normal', prBg: (PRC[f.priority] || PRC.Normal)[0], prFg: (PRC[f.priority] || PRC.Normal)[1],
+            prSinif: f.priority === 'Acil' ? 'ks-nabiz' : '',
+            sure: d ? (d.gecikti ? d.etiket : 'hedef ' + d.hedef) : (STATUS_LABEL[f.status] || f.status),
+            sureC: d && d.gecikti ? kirmizi : ui.mut,
+            baslik: f.type || 'Arıza', tesis: a ? a.code + ' · ' + this.yer(a) : (f.district || ''),
+            mesafe: mesafeYazi(a) || '—', not: (f.note || f.desc || '').split('\n')[0] || 'not yok',
+            adimlar: [0, 1, 2].map(i => ({
+              ic: adim > i ? '✓' : String(i + 1),
+              bg: adim > i ? 'var(--color-accent)' : (adim === i ? ui.surf : ui.surf2),
+              fg: adim > i ? '#fff' : (adim === i ? ui.acc : ui.mut),
+              halka: adim === i ? '0 0 0 2px var(--color-accent)' : 'none',
+              cizgi: i < 2, cizgiW: adim > i ? '100%' : '0%', esnek: i < 2 ? '1 1 0' : '0 0 auto'
+            })),
+            s0: adim === 0, s1: adim === 1, s2: adim === 2,
+            yolTarifi: () => { if (a && this.yolTarifiVer(a)) this.say(`${a.code} için güzergâh hesaplanıyor…`); },
+            vardim: () => this.sahaDurum(f, 'sahada'),
+            fotoOnce: () => this.sahaFoto(f, 'once'),
+            onceL: fo.once ? '✓ Öncesi fotoğrafı · ' + fo.once + ' fotoğraf' : 'Öncesi fotoğrafı çek',
+            onceAlt: kanitOn ? 'İşe başlamadan önce çekin — zorunlu' : 'İşe başlamadan önceki hâli',
+            onceKenar: fo.once ? yesil : ui.rule, onceZemin: fo.once ? 'rgba(52,199,89,.08)' : ui.surf2, onceIk: fo.once ? yesil : 'var(--color-accent)',
+            tamamla: () => {
+              if (!onceTamam) return this.duyur('Kanıt zorunlu — önce öncesi fotoğrafını çekin.', 5000, 'kotu');
+              this.setState({ sahaKapanis: { id: f.id, mz: {}, not: '' } });
+            },
+            tamamlaOp: onceTamam ? '1' : '.5',
+            fotoSonra: () => this.sahaFoto(f, 'sonra'),
+            sonraL: fo.sonra ? '✓ Sonrası fotoğrafı · ' + fo.sonra + ' fotoğraf' : 'Sonrası fotoğrafı çek',
+            sonraKenar: fo.sonra ? yesil : ui.rule, sonraZemin: fo.sonra ? 'rgba(52,199,89,.08)' : ui.surf2, sonraIk: fo.sonra ? yesil : 'var(--color-accent)',
+            mzVar: mzListe.length > 0, mzYok: !mzListe.length,
+            mzYokNot: f.crew && f.crew !== ATANMADI ? f.crew + ' zimmetinde malzeme yok.' : 'İş bir ekibe atanmamış — zimmet düşülemez.',
+            mz: mzListe.map(ad => {
+              const n = secim[ad] || 0, elde = Number(zim[ad]) || 0;
+              const k = this.katalogBul(ad) || {};
+              const adim2 = k.birim === 'metre' && elde >= 10 ? 5 : 1;
+              const yaz = v => this.setState({ sahaKapanis: { ...this.state.sahaKapanis, mz: { ...((this.state.sahaKapanis || {}).mz || {}), [ad]: v } } });
+              return {
+                ad, elde: 'zimmette ' + elde + ' ' + (k.birim || ''), n: String(n), c: n ? ui.acc : ui.mut,
+                arti: () => yaz(Math.min(elde, n + adim2)), eksi: () => yaz(Math.max(0, n - adim2))
+              };
+            }),
+            kapNot: kp ? kp.not || '' : '',
+            onKapNot: e => this.setState({ sahaKapanis: { ...this.state.sahaKapanis, not: e.target.value } }),
+            kapatL: !sonraTamam ? 'Önce sonrası fotoğrafı' : (onayOn ? 'Onaya gönder' : (secilen.length ? 'Kapat · ' + secilen.length + ' kalem zimmetten düş' : 'Malzemesiz kapat')),
+            kapatBg: sonraTamam ? yesil : ui.mut, kapatOp: sonraTamam ? '1' : '.6',
+            kapat,
+            vazgec: () => this.setState({ sahaKapanis: null }),
+            formAc: () => this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } })
+          };
+        }
+        const halka = 113.1;
+        return {
+          acik: true,
+          selam: selam + (me && me.name ? ', ' + String(me.name).split(' ')[0] : ''),
+          alt: [crew || 'Ekip atanmamış — bütün ekiplerin işleri', arac ? (arac.plaka || arac.ad) : ''].filter(Boolean).join(' · '),
+          ini: String((me && me.name) || '?').split(/\s+/).map(x => x[0]).slice(0, 2).join('').toLocaleUpperCase('tr'),
+          bitti: String(bitti), toplam: String(toplam), kalan: String(sirali.length),
+          halka: (toplam ? bitti / toplam * halka : 0).toFixed(1) + ' ' + halka,
+          ozet: toplam ? 'Bugün ' + bitti + ' iş tamam, ' + sirali.length + ' kaldı' : 'Ekibinize açık iş yok',
+          ozetAlt: (konum ? 'Önceliğe ve yakınlığa göre dizildi' : 'Önceliğe göre dizildi · konumunuzu alırsanız yakınlık da sayılır')
+            + (onayBekleyen ? ' · ' + onayBekleyen + ' iş merkez onayında' : ''),
+          konumVar: !!konum, konumYok: !konum,
+          konumAl: () => {
+            if (!navigator.geolocation) return this.duyur('Bu cihaz konum vermiyor.', 4000, 'kotu');
+            this.say('Konumunuz alınıyor…');
+            navigator.geolocation.getCurrentPosition(
+              p => { this.setState({ benimKonum: { lat: p.coords.latitude, lon: p.coords.longitude, t: Date.now() } }); this.duyur('Konum alındı — işler yakınlığa göre de dizildi.', 4000, 'iyi'); },
+              e => this.duyur(e && e.code === 1 ? 'Konum izni verilmemiş — tarayıcı ayarlarından açın.' : 'Konum alınamadı — açık alanda yeniden deneyin.', 6000, 'kotu'),
+              { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+          },
+          is, isGoster: !!cur && !s.sahaBasari, isYok: !cur && !s.sahaBasari,
+          basariVar: !!s.sahaBasari, basariMetin: (s.sahaBasari || {}).metin || '',
+          basariBaslik: (s.sahaBasari || {}).onay ? 'Onaya gönderildi' : 'İş kapandı',
+          bosBaslik: arizaOn ? (toplam ? 'Bugünkü işler bitti' : 'Açık iş yok') : 'Arıza modülü kapalı',
+          bosAlt: arizaOn ? 'Yeni iş atanınca burada görünecek.' : 'Yönetici Ayarlar > Modüller bölümünden açabilir.',
+          sonraki: sirali.filter(x => x.f.id !== secId).slice(0, 12).map((x, i) => ({
+            sira: String(i + 2), baslik: x.f.type || 'Arıza',
+            tesis: (x.a ? x.a.code + ' · ' + this.yer(x.a) : '') + (x.f.status === 'sahada' ? ' · sahada' : ''),
+            pr: x.f.priority || 'Normal', prBg: (PRC[x.f.priority] || PRC.Normal)[0], prFg: (PRC[x.f.priority] || PRC.Normal)[1],
+            mesafe: mesafeYazi(x.a), sec: () => this.setState({ sahaAktifId: x.f.id, sahaKapanis: null })
+          })),
+          sonrakiVar: sirali.length > 1,
+          zimmet: (() => {
+            const z = ((s.ambar || {}).zimmet || {})[crew] || {};
+            return Object.keys(z).filter(ad => Number(z[ad]) > 0).sort((x, y) => x.localeCompare(y, 'tr')).map(ad => {
+              const k = this.katalogBul(ad) || {};
+              const az = Number(z[ad]) <= ((k.birim === 'metre') ? 10 : 1);
+              return { ad, n: String(z[ad]), birim: k.birim || '', c: az ? kirmizi : ui.fg, not: az ? 'azaldı · ambardan isteyin' : (k.kod || ''), notC: az ? kirmizi : ui.mut };
+            });
+          })(),
+          zimmetVar: !!crew && Object.values(((s.ambar || {}).zimmet || {})[crew] || {}).some(v => Number(v) > 0),
+          ambarOn
+        };
+      })(),
       isListesi: (() => {
         const my = me && me.crew;
-        const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
+        // "Bana atanan": ekibi olan kullanıcıya yalnız kendi ekibinin işleri
+        // (önceden herkese bütün açık arızalar listeleniyordu)
+        const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status) && (!my || f.crew === my));
         const gecikmis = s.assets.map(a => ({ a, b: this.bakimDurum(a) }))
           .filter(r => r.b.gun !== null && r.b.gun < 0)
           .sort((x, y) => x.b.gun - y.b.gun).slice(0, 6);

@@ -36,7 +36,7 @@ begin
   if p_anahtar = 'malzeme' and k.rol not in ('yonetici', 'mudur', 'muhendis', 'sef') then
     raise exception 'Malzeme kataloğunu yalnızca yönetici, müdür, mühendis ve şef değiştirebilir.';
   end if;
-  if p_anahtar in ('ambar', 'arac', 'talep', 'muhtar', 'siparis') and k.rol = 'izleyici' then
+  if p_anahtar in ('ambar', 'arac', 'talep', 'muhtar', 'siparis') and k.rol::text = 'izleyici' then
     raise exception 'İzleyici hesabı kayıt değiştiremez.';
   end if;
   insert into kurum_veri (anahtar, veri, surum, guncelleyen, guncelleme)
@@ -65,7 +65,7 @@ begin
   if p_anahtar = 'malzeme' and k.rol not in ('yonetici', 'mudur', 'muhendis', 'sef') then
     raise exception 'Malzeme kataloğunu yalnızca yönetici, müdür, mühendis ve şef değiştirebilir.';
   end if;
-  if p_anahtar in ('ambar', 'arac', 'talep', 'muhtar', 'siparis') and k.rol = 'izleyici' then
+  if p_anahtar in ('ambar', 'arac', 'talep', 'muhtar', 'siparis') and k.rol::text = 'izleyici' then
     raise exception 'İzleyici hesabı kayıt değiştiremez.';
   end if;
   select surum, veri into mevcut, guncel from kurum_veri where anahtar = p_anahtar for update;
@@ -97,7 +97,7 @@ declare
 begin
   k := oturum_sahibi(p_token);
   if k.id is null then raise exception 'Oturum geçersiz — çıkıp yeniden girin.'; end if;
-  if k.rol = 'izleyici' then raise exception 'İzleyici hesabı ambar hareketi yapamaz.'; end if;
+  if k.rol::text = 'izleyici' then raise exception 'İzleyici hesabı ambar hareketi yapamaz.'; end if;
 
   select veri, surum into a, sur from kurum_veri where anahtar = 'ambar' for update;
   if a is null then

@@ -1491,3 +1491,27 @@ panel adedi, trafo tipi) korundu. Kayıt sürümleri bir artırıldı ki açık
 ekranlardaki eski kopya üzerine yazamasın. Özgün hâli API'ye kapalı
 `yedek.tesis_20261001` tablosunda; geri almak için:
 `update public.tesis t set veri = y.veri, yapim_yili = y.yapim_yili from yedek.tesis_20261001 y where t.id = y.id;`
+
+## Yeni arayüze geçiş — 2. aşama: Envanter (yeni kayıt sihirbazı, tesis kartı)
+
+- **Yeni tesis sihirbazı (masaüstü).** Üst çubukta "+ Yeni tesis"; İşlem >
+  Yeni tesis kur ve haritadaki "bu noktada yeni tesis" de masaüstünde bunu
+  açar (telefon eski formda, son aşamada). Üç adım: tür ve yer → konum →
+  bilgi ve foto. Konum üç yoldan: cihaz GPS'i (ofiste yanıltıcı olduğu
+  yazılı), haritadan seç (pencere küçülür, haritada çift tıklanan nokta
+  forma döner, ilçe en yakın kayıttan otomatik), koordinat yaz (virgül de
+  kabul). 60 m içinde kayıtlı tesis varsa mükerrer uyarısı: "Mevcut kaydı
+  aç" ya da "Farklı tesis, devam" — onay konuma bağlı, konum değişince
+  düşer. İl sınırı dışı ve geçersiz yıl ilerletmez.
+- **Bulunan ve düzeltilen çökme:** yalnız enlem yazılıp boylam boşken
+  `coordText` null üzerinde `toFixed` çağırıyor, bütün ekran
+  "renderVals(): Cannot read properties of null" ile düşüyordu.
+- **Haritadan yeni tesis** yolunda da yapım yılı varsayılanı "2026" idi —
+  düzeltildi; ilçe artık noktaya en yakın kayıttan geliyor.
+- **Tesis kartı (masaüstü):** açık arıza rozeti (nabız), dört hızlı eylem
+  (Yol tarifi, Arıza aç — açık arıza varsa önce sorar, Fotoğraf, Düzenle),
+  kayıt tamlığı çubuğu (% ve eksik alan sayısı, "Tamamla").
+
+Test: önizleme oturumunda (sunucu kapalı) sihirbazın her yolu ve kartın
+dört eylemi tarayıcıda çalıştırıldı, konsol temiz; duman testi temiz,
+etiket dengesi tamam.

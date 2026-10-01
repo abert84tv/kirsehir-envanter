@@ -70,7 +70,7 @@ for (const f of htmlDosyalari) {
   if (!fs.existsSync(p)) continue;
   const html = fs.readFileSync(p, 'utf8');
   const refs = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(m => m[1])
-    .filter(r => !/^https?:\/\//.test(r) && !r.startsWith('#'));
+    .filter(r => !/^https?:\/\//.test(r) && !r.startsWith('#') && !r.includes('{{'));
   let tamam = true;
   for (const r of refs) {
     if (!dosyaVarMi(r)) { tamam = false; basarisiz(f + ' → "' + r + '" yok'); }

@@ -1416,3 +1416,78 @@ giriş yapıp görecek.
 ### Yükleme
 `git push origin main` — Vercel otomatik yayına alır. Veritabanı
 değişikliği yok.
+
+## Yeni kayıt ve tesis kartı hataları — sürüm 2026.10.01 (henüz yayınlanmadı)
+
+Yeni arayüz mockup'ı (Design canvas) test edilirken gerçek programın yeni
+tesis kaydı ve tesis kartı kodu incelendi; veritabanıyla doğrulanan dört hata
+bulundu ve kodda düzeltildi.
+
+**Bulgular (canlı veritabanı ile doğrulandı).**
+- Yeni kayıt formundaki "Fotoğraf çek" kamerayı açmıyordu, yalnız sayaç
+  artırıyordu — kayıt "3 fotoğraf" diyordu ama hiç dosya yoktu.
+- Yapım yılı boş bırakılınca sessizce 2026 yazılıyordu (form varsayılanı da
+  "2026" idi). 24 deponun 23'ünde yapım yılı 2026 — büyük olasılıkla bu hata.
+- Boş teknik alanlar veritabanına "—" metni, son bakım "Yeni kayıt" olarak
+  yazılıyordu (24 depo, AG, 2 GES). Veri tamlığı sayımını şişiriyordu:
+  "veri dolu" görünen 48 kaydın yalnız 3'ünde gerçek teknik değer var.
+- Depo/AG/GES kartı boş alanları "— eksik" yerine "undefined m³" gibi
+  gösterebiliyordu; GES kartında uydurma bir "Beslediği kayıt: KS-KUY-…"
+  satırı, AG kartında sabit "400 V" ve "Direk tipi" varsayılanı vardı.
+
+**Düzeltmeler (index.html).**
+- Yeni kayıt fotoğrafı gerçek dosya seçici/kamera; dosyalar bellekte bekler,
+  kayıt veritabanına yazılınca `fotoGonder` ile gerçekten yüklenir. Önizleme
+  `imgEl` ile (şablonda `src="{{…}}"` yok — boş istek atmaz).
+- Yapım yılı varsayılanı boş; boş kalırsa boş yazılır, geçersizse uyarır.
+  Düzenleme formunda yıl artık silinebiliyor.
+- Yeni kayıt `d: {}` ile açılır; kartta "—" ve "Yeni kayıt" eksik sayılır,
+  depo/AG/GES satırları da `f()/u()` ile "— eksik" gösterir, uydurma
+  satırlar kaldırıldı.
+- Ortak veritabanı oturumu yokken açılan kayıt yanlışlıkla "eşitlendi"
+  görünüyordu; artık "bekliyor".
+- duman-testi.js şablon ifadesi içeren src/href'i dosya sanmıyor.
+
+**Veritabanı.** Eski kayıtlardaki "—" yer tutucuları ve 23 depodaki 2026 yılı
+kullanıcı onayı olmadan değiştirilmedi.
+
+**Test.** duman-testi temiz, sc-if/sc-for dengeli (383/383, 317/317), yerel
+sunucuda (npx serve — /harita, /profil, /hat artık çözülüyor) giriş ekranı
+JS hatası ve 404 olmadan açılıyor. Giriş gerektiren uçtan uca test bekliyor.
+
+## Yeni arayüze geçiş — 1. aşama: masaüstü kabuğu (henüz yayınlanmadı)
+
+Canvas'taki yeni tasarımın masaüstü kabuğu programa geçirildi; sayfa
+gövdelerine dokunulmadı.
+
+- **Sol menü (232px):** marka (damla simgesi), arama kutusu (üst çubuktan
+  taşındı; öneri listesi altına açılır), büyük harfli grup başlıkları,
+  her sayfada ikon (`ikon()` setine isler/kaynaklar/envanter/kesit/ozet/
+  ayarlar eklendi), etkin sayfa dolu mavi hap, rozetler hafif nabız atar.
+  Altta baş harfli oturum kartı ve Çıkış düğmesi.
+- **Üst çubuk:** solda sayfa başlığı + tek satır açıklama (`ustBar`,
+  açıklamalar `SAYFA_ALT` sabitine taşındı — artık tek süzgeçli sayfalarda
+  da başlık var); sağda kuyruk göstergesi (kırmızı), canlı bağlantı hapı
+  (yeşil nabız / çevrimdışıysa kırmızı), Yenile, Koordinat, tema.
+- **Süzgeç satırı:** başlık üst çubuğa çıktığı için yalnız süzgeçler kaldı.
+- Yeni CSS: `.ks-canli`, `.ks-nabiz`, `.ks-gir` (hareket azaltma tercihine
+  uyar). Telefon kabuğu değişmedi (son aşama).
+
+**Test.** Giriş yapılamadığı için yalnız bu tarayıcı sekmesinde, sunucu
+bağlantısı (`_sb`) ve denetim yazımı kapatılarak sahte bir yönetici
+oturumuyla çizdirildi — veritabanına hiçbir istek gitmedi, oluşan tek
+localStorage anahtarı silindi. Altı sayfa yeni kabukta hatasız açıldı;
+yeni kayıt formunun yerel yolu (boş yıl, gerçek fotoğraf seçici, geçersiz
+yıl engeli, `d: {}`, "bekliyor" durumu) ve depo/GES kartının "— eksik"
+gösterimi doğrulandı. Sunucuya yazan yol (tesisKaydet + fotoğraf yükleme)
+gerçek girişle test edilmeli.
+
+### Veri temizliği — 1 Ekim 2026 (kullanıcı onayıyla)
+Eski yeni-kayıt formunun bıraktığı izler canlı veritabanında temizlendi:
+27 kayıtta (24 depo, 1 AG, 2 GES) `veri.d` içindeki "—" ve "Yeni kayıt"
+değerleri ile depolardaki sahte "kaynak: 0" silindi; 23 depodaki form
+varsayılanı yapım yılı 2026 boşaltıldı. GES/AG'deki gerçek değerler (güç,
+panel adedi, trafo tipi) korundu. Kayıt sürümleri bir artırıldı ki açık
+ekranlardaki eski kopya üzerine yazamasın. Özgün hâli API'ye kapalı
+`yedek.tesis_20261001` tablosunda; geri almak için:
+`update public.tesis t set veri = y.veri, yapim_yili = y.yapim_yili from yedek.tesis_20261001 y where t.id = y.id;`

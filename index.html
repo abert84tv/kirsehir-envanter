@@ -69,6 +69,17 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .scroll::-webkit-scrollbar-thumb{background:rgba(60,60,67,.26);border-radius:4px}
 .scroll::-webkit-scrollbar-thumb:hover{background:rgba(60,60,67,.42)}
 .scroll::-webkit-scrollbar-track{background:transparent}
+/* Yeni kabuk (2026.10): canlı gösterge, rozet nabzı, sayfa geçişi */
+@keyframes ksPing{0%{transform:scale(.6);opacity:.8}100%{transform:scale(2.1);opacity:0}}
+@keyframes ksNabiz{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes ksGir{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ks-canli{position:relative;width:7px;height:7px;border-radius:50%;background:#34c759;display:inline-block;flex:none}
+.ks-canli::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid #34c759;animation:ksPing 1.8s ease-out infinite}
+.ks-canli.ks-kapali{background:var(--color-uyari)}
+.ks-canli.ks-kapali::after{border-color:var(--color-uyari)}
+.ks-nabiz{display:inline-block;animation:ksNabiz 2.1s ease-in-out infinite}
+.ks-gir{animation:ksGir .35s ease both}
+@media (prefers-reduced-motion:reduce){.ks-canli::after,.ks-nabiz,.ks-gir{animation:none}}
 </style>
 </helmet>
 
@@ -158,30 +169,68 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
 <div style="position:relative;width:100%;height:100dvh;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};overflow:hidden">
 
-<div style="flex:none;display:flex;align-items:center;gap:12px;padding:0 14px;height:56px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
-<span style="width:18px;height:18px;background:var(--color-accent);flex:none"></span>
-<span style="font:600 14px/1 var(--font-heading);letter-spacing:-.01em">Kırşehir Envanter</span>
-<span style="width:2px;height:24px;background:{{ ui.rule }}"></span>
-<div style="flex:1 1 120px;min-width:0;max-width:520px;display:flex;align-items:center;gap:9px;border-radius:10px;border:1px solid {{ ui.rule }};padding:8px 11px;background:{{ ui.bg }}">
-<span style="width:11px;height:11px;border-radius:10px;border:1px solid {{ ui.mut }};border-radius:50%;flex:none"></span>
-<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kayıt kodu, 39.1462 34.1583 veya 572799,55 4331744,74" style="all:unset;flex:1;min-width:0;font:400 13.5px/1 var(--font-body);color:{{ ui.fg }}">
+<div style="flex:1;display:flex;min-height:0">
+
+<!-- sidebar — marka, arama, gruplu menü, oturum -->
+<div style="width:232px;flex:none;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
+<div style="flex:none;display:flex;align-items:center;gap:9px;padding:16px 18px 12px">
+<span style="width:24px;height:24px;border-radius:7px;background:var(--color-accent);flex:none;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"></path></svg></span>
+<span style="font:700 14.5px/1 var(--font-heading);letter-spacing:-.015em;color:{{ ui.fg }}">Kırşehir Envanter</span>
+</div>
+<div style="flex:none;margin:0 12px 6px;display:flex;align-items:center;gap:8px;border-radius:9px;border:1px solid {{ ui.rule }};padding:8px 10px;background:{{ ui.bg }}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ ui.mut }}" stroke-width="2" stroke-linecap="round" style="flex:none"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" title="Köy, kayıt kodu, 39.1462 34.1583 veya 572799,55 4331744,74" aria-label="Ara" style="all:unset;flex:1;min-width:0;font:400 13px/1 var(--font-body);color:{{ ui.fg }}">
 <sc-if value="{{ seeking.on }}" hint-placeholder-val="{{ false }}">
-<span style="flex:none;font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent)">Aranıyor…</span>
+<span style="flex:none;font:600 10.5px/1 var(--font-body);color:var(--color-accent)">…</span>
 </sc-if>
 </div>
-<span style="flex:1 1 0;min-width:0"></span>
-<sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11px/1 var(--font-body);letter-spacing:-.01em" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">{{ kuyrukG.label }}</button>
+<div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:4px 12px 8px;gap:2px">
+<sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:6px">
+<div style="padding:6px 10px 4px;font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:{{ n.pill }};color:{{ n.fg }}" style-hover="background:{{ n.hover }}">
+<span style="flex:none;width:16px;height:16px;display:flex;align-items:center;justify-content:center">{{ n.ikon }}</span>
+<span style="flex:1;min-width:0;font:{{ n.agirlik }} 13.5px/1.25 var(--font-body);letter-spacing:-.012em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
+<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+<span class="ks-nabiz" style="flex:none;min-width:20px;padding:1px 7px;border-radius:9px;background:{{ n.badgeBg }};color:{{ n.badgeFg }};font:700 11px/1.5 var(--font-body);text-align:center">{{ n.badgeN }}</span>
 </sc-if>
-<button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.yenile }} {{ esitle.label }}</button>
-<button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:8px 12px;border-radius:10px;border:1px solid var(--color-accent);color:var(--color-accent);font:600 11px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
-<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 12px;border-radius:10px;border:1px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:600 11px/1 var(--font-body);letter-spacing:-.01em">{{ net.badge }}</button>
-<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:36px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
-<button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:8px 11px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.cikis }} Çıkış</button>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div title="{{ sessionCard.dev }} · {{ sessionCard.crew }}" style="flex:none;padding:12px 14px;border-top:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
+<span style="flex:none;width:30px;height:30px;border-radius:50%;background:{{ ui.fg }};color:{{ ui.bg }};font:700 11px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ sessionCard.bas }}</span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<div style="font:600 13px/1.25 var(--font-heading);color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.name }}</div>
+<div style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.role }}</div>
+</div>
+<button onClick="{{ logout }}" title="Çıkış — oturum kapanır" aria-label="Çıkış" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:30px;height:30px;border-radius:8px;color:{{ ui.mut }};display:flex;align-items:center;justify-content:center" style-hover="background:{{ ui.surf2 }};color:var(--color-uyari)">{{ ikonlar.cikisBuyuk }}</button>
+</div>
+</div>
+
+<!-- main -->
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<span style="font:700 17px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.baslik }}</span>
+<span style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.alt }}</span>
+</div>
+<sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
+<span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
+</sc-if>
+<sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;background:var(--color-uyari);color:#fff;font:600 12px/34px var(--font-body);letter-spacing:-.01em" style-hover="opacity:.88">{{ kuyrukG.label }}</button>
+</sc-if>
+<button onClick="{{ toggleNet }}" title="{{ net.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:8px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ net.yazi }};background:{{ net.zemin }}"><span class="ks-canli {{ net.nokta }}"></span>{{ net.badge }}</button>
+<button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.yenile }} {{ esitle.label }}</button>
+<button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ convBtn.border }};background:{{ convBtn.bg }};color:{{ convBtn.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔ Koordinat</button>
+<button onClick="{{ toggleTheme }}" title="Açık / koyu tema" aria-label="Tema" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
 </div>
 
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="position:absolute;top:58px;left:176px;width:520px;max-width:calc(100% - 200px);z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 34px rgba(0,0,0,.16);max-height:320px;overflow:auto;padding:4px">
+<div class="scroll ks-gir" style="position:absolute;top:100px;left:12px;width:480px;max-width:calc(100% - 40px);z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 34px rgba(0,0,0,.16);max-height:320px;overflow:auto;padding:4px">
 <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
 <button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:9px 12px;border-radius:9px" style-hover="background:{{ ui.surf2 }}">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};width:78px;flex:none">{{ s.kind }}</span>
@@ -192,47 +241,13 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </div>
 </sc-if>
 
-<div style="flex:1;display:flex;min-height:0">
-
-<!-- sidebar -->
-<div style="width:196px;flex:none;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
-<div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:6px 10px 8px;gap:2px">
-<sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
-<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:1px;margin-top:2px">
-<div style="padding:7px 10px 3px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};opacity:.8">{{ g.baslik }}</div>
-<sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
-<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:9px;background:{{ n.pill }}" style-hover="background:{{ n.hover }}">
-<span style="flex:1;min-width:0;font:600 13.5px/1.25 var(--font-body);letter-spacing:-.012em;color:{{ n.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
-<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
-<span style="flex:none;min-width:20px;padding:2px 6px;border-radius:9px;background:{{ n.badgeBg }};color:{{ n.badgeFg }};font:600 11.5px/1.4 var(--font-body);text-align:center">{{ n.badgeN }}</span>
-</sc-if>
-</button>
-</sc-for>
-</div>
-</sc-for>
-</div>
-<div title="{{ sessionCard.dev }} · {{ sessionCard.crew }}" style="flex:none;padding:10px 12px;border-top:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:1px">
-<div style="font:600 13px/1.25 var(--font-heading);color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.name }}</div>
-<div style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.role }}</div>
-</div>
-</div>
-
-<!-- main -->
-<div style="flex:1;min-width:0;display:flex;flex-direction:column">
 <sc-if value="{{ saltOkur }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;padding:9px 20px;border-bottom:1px solid var(--color-uyari-200);background:var(--color-uyari-100);font:600 12px/1.45 var(--font-body);color:var(--color-uyari-800)">{{ saltOkurNot }}</div>
 </sc-if>
 
-<!-- Sayfa süzgeç çubuğu — birleşmiş sayfaların başlığı ve süzgeçleri -->
+<!-- Sayfa süzgeç çubuğu — başlık artık üst çubukta; burada yalnız süzgeçler -->
 <sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
-<div style="flex:none;display:flex;align-items:center;gap:16px;padding:7px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="flex:1;display:flex;align-items:baseline;gap:12px;min-width:0">
-<span style="flex:none;font:600 17px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
-<span style="flex:1;min-width:0;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sayfaBar.alt }}</span>
-<sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
-<span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
-</sc-if>
-</div>
+<div style="flex:none;display:flex;align-items:center;gap:16px;padding:8px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div style="flex:none;display:flex;width:fit-content;gap:2px;padding:2px;border-radius:11px;background:{{ ui.surf2 }}">
 <sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
 <button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:32px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13.5px/1 var(--font-body);letter-spacing:-.012em">
@@ -555,7 +570,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </label>
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Yapım yılı</span>
-<input value="{{ newAsset.year }}" onChange="{{ onNaYear }}" inputmode="numeric" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<input value="{{ newAsset.year }}" onChange="{{ onNaYear }}" inputmode="numeric" placeholder="Bilinmiyorsa boş" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
 </div>
 <div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:14px;display:flex;align-items:center;gap:16px">
@@ -584,7 +599,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <button onClick="{{ addNaPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
 <sc-for list="{{ newAsset.photos }}" as="p" hint-placeholder-count="0">
-<div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ ui.rule }};background:repeating-linear-gradient(45deg,{{ ui.ph1 }} 0 6px,{{ ui.ph2 }} 6px 12px)"></div>
+<div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">{{ p.img }}</div>
 </sc-for>
 </div>
 </div>
@@ -4262,7 +4277,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 </label>
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Yapım yılı</span>
-<input value="{{ newAsset.year }}" onChange="{{ onNaYear }}" inputmode="numeric" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.surf }}">
+<input value="{{ newAsset.year }}" onChange="{{ onNaYear }}" inputmode="numeric" placeholder="Bilinmiyorsa boş" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.surf }}">
 </label>
 <div style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Durum</span>
@@ -4287,7 +4302,7 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <button onClick="{{ addNaPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
 <sc-for list="{{ newAsset.photos }}" as="p" hint-placeholder-count="0">
-<div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ ui.rule }};background:repeating-linear-gradient(45deg,{{ ui.ph1 }} 0 6px,{{ ui.ph2 }} 6px 12px)"></div>
+<div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">{{ p.img }}</div>
 </sc-for>
 </div>
 <button onClick="{{ saveNewAsset }}" class="btn btn-primary" style="width:100%;justify-content:center;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:15px 16px">{{ newAsset.cta }}</button>
@@ -6503,6 +6518,24 @@ const MODUL_ADI = {
 };
 // Telefonun alt çubuğunda en çok dört sayfa durur; gerisi "Tümü" sayfasında.
 const TELEFON_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet'];
+// Sayfa/süzgeç başına tek satırlık açıklama — üst çubukta başlığın altında
+const SAYFA_ALT = {
+  gelen: 'Köyden gelen ihbar ve istekler. Gereken talep arızaya dönüşür.',
+  acik: 'Açık arıza ve iş emirleri.',
+  bugun: 'Bugün size ve ekibinize düşen işler.',
+  planli: 'Tarihi önceden belli periyodik bakımlar.',
+  liste: 'Bütün tesisler tablo olarak — başlığa basarak sırala, alt satırdan süz.',
+  harita: 'Aynı kayıtlar harita üzerinde; tıklayınca kayıt açılır.',
+  malzeme: 'Ambar stoğu, ekip zimmeti ve hareket dökümü.',
+  arac: 'Araç, ekipman ve bunların zimmeti.',
+  ozet: 'İlçe dağılımı, eksik bilgi, ekip ve arıza özetleri.',
+  kesit: 'Hat boyunca yükseklik kesiti.',
+  denetim: 'Kim neyi ne zaman değiştirdi — silinemeyen kayıt.',
+  cop: 'Silinen kayıtlar burada bekler; 30 gün içinde geri alınır.',
+  ayarlar: 'Kurum, veri ve program ayarları.',
+  yerlesim: 'Köy konumlarının elle düzeltilmesi.',
+  aktarim: 'Dosyadan içe alma ve dışa aktarma.'
+};
 // Sol menüdeki sayfalar — kullanıcı bazında yetki verilebilen birimler
 const SAYFALAR = [['harita', 'Harita'], ['envanter', 'Envanter'], ['ariza', 'Arıza'],
   ['gunluk', 'Bugün'], ['talep', 'Talep'], ['bakim', 'Bakım'], ['ambar', 'Ambar'], ['arac', 'Araç'], ['ozet', 'Özet'], ['profil', 'Hat Kesiti'],
@@ -9354,6 +9387,11 @@ class Component extends DCLogic {
     if (ok) this.fotoYenile(tesisDbId);
     return ok;
   }
+  _naTemizle() {
+    (this._naUrls || []).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { /* zaten bırakıldı */ } });
+    this._naUrls = [];
+    this._naFiles = [];
+  }
   // ── fotoğraf: dosya seçici gizli bir input; kamera ve galeri aynı düğmeden
   fotoSec(kamera) {
     const sel = this.state.assets.find(a => a.id === this.state.selected);
@@ -10213,7 +10251,14 @@ class Component extends DCLogic {
       donustur: ['M8 3 4 7l4 4', 'M4 7h16', 'm16 21 4-4-4-4', 'M20 17H4'],
       yenile: ['M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8', 'M21 3v5h-5', 'M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16', 'M8 16H3v5'],
       cikis: ['M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4', 'm16 17 5-5-5-5', 'M21 12H9'],
-      ariza: ['M7 18v-6a5 5 0 0 1 10 0v6', 'M5 21a1 1 0 0 0 1-1v-1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a1 1 0 0 0 1 1', 'M12 2v1', 'M2 12h1', 'M21 12h1', 'M5.6 4.6 6.3 5.3', 'M18.4 4.6l-.7.7']
+      ariza: ['M7 18v-6a5 5 0 0 1 10 0v6', 'M5 21a1 1 0 0 0 1-1v-1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a1 1 0 0 0 1 1', 'M12 2v1', 'M2 12h1', 'M21 12h1', 'M5.6 4.6 6.3 5.3', 'M18.4 4.6l-.7.7'],
+      // Sol menü sayfaları
+      isler: ['M13 2 4 14h6l-1 8 9-12h-6z'],
+      kaynaklar: ['M3 7l9-4 9 4-9 4-9-4z', 'M3 7v10l9 4 9-4V7', 'M12 11v10'],
+      envanter: ['M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z', 'M12 6.6a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8'],
+      kesit: ['M3 17l5-6 4 3 4-7 5 6', 'M3 21h18'],
+      ozet: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'],
+      ayarlar: ['M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6', 'M12 2v3', 'M12 19v3', 'M4.2 4.2l2.1 2.1', 'M17.7 17.7l2.1 2.1', 'M2 12h3', 'M19 12h3', 'M4.2 19.8l2.1-2.1', 'M17.7 6.3l2.1-2.1']
     };
     const b = boyut || 16;
     return React.createElement('svg', {
@@ -10276,8 +10321,12 @@ class Component extends DCLogic {
       ['WGS84', `${sel.lat.toFixed(5)}, ${sel.lon.toFixed(5)}`],
       ['Koordinat kaynağı', sel.coordSource || (sel.coordApprox ? 'Yaklaşık — saha ölçümü bekliyor' : 'Saha GPS')]
     ];
-    const f = v => (v === '' || v === undefined || v === null) ? '— eksik' : v;
-    const u = (v, unit) => (v === '' || v === undefined || v === null) ? '— eksik' : v + ' ' + unit;
+    // Eski yeni-kayıt formu boş alanlara "—" ve bakıma "Yeni kayıt" yazıyordu;
+    // bunlar gerçek değer değil, eksik sayılır.
+    const bos = v => v === '' || v === undefined || v === null || v === '—' || v === 'Yeni kayıt';
+    const f = v => bos(v) ? '— eksik' : v;
+    const u = (v, unit) => bos(v) ? '— eksik' : v + ' ' + unit;
+    const var_ = v => v === true || v === 'true' || v === 'Var' ? 'Var' : (v === false || v === 'false' || v === 'Yok' ? 'Yok' : '— eksik');
     const hd = t => [t, '', 2];
     let out;
     if (sel.type === 'kuyu') out = [
@@ -10303,8 +10352,8 @@ class Component extends DCLogic {
       ['Haritadaki özgün adı', sel.kmlName ? 'KML yer imi no ' + sel.kmlName : '—']
     ];
     else if (sel.type === 'depo') out = [
-      ['Yapım yılı', sel.year, 1], ['Hacim', d.hacim + ' m³'], ['Besleyen kaynak sayısı', d.kaynak],
-      ['Malzeme', d.malzeme], ['RF modülü', d.rfMod ? 'Var' : 'Yok'],
+      ['Yapım yılı', f(sel.year), 1], ['Hacim', u(d.hacim, 'm³')], ['Besleyen kaynak sayısı', f(d.kaynak || '')],
+      ['Malzeme', f(d.malzeme)], ['RF modülü', var_(d.rfMod)],
       hd('Klorlama ve seviye'),
       ['Klorlama cihazı', f(d.klorCihaz)], ['Seviye sensörü / telemetri', f(d.seviyeSensor)],
       hd('Terfi hattı ve şebeke'),
@@ -10314,19 +10363,19 @@ class Component extends DCLogic {
       hd('Bakım ve güvenlik'),
       ['Son temizlik', f(d.temizlik)], ['Kapak ve güvenlik', f(d.kapak)],
       hd('Konum'),
-      ...coord, ['Son bakım', d.bakim]
+      ...coord, ['Son bakım', f(d.bakim)]
     ];
     else if (sel.type === 'ag') out = [
-      ['Kurulum (yapım) yılı', sel.year, 1], ['Pano tipi', d.pano],
-      ['Trafo tipi', d.trafoTipi || 'Direk tipi'], ['Besleyen trafo', d.trafo + ' kVA'],
-      ['Ana sigorta', d.sigorta + ' A'], ['Branş sigortası', d.brans + ' A'], ['Kalkış tipi', d.kalkis],
-      ['Kompanzasyon', d.klor ? 'Var' : 'Yok'], ['Besleme gerilimi', '400 V'],
-      ...coord, ['Son bakım', d.bakim]
+      ['Kurulum (yapım) yılı', f(sel.year), 1], ['Pano tipi', f(d.pano)],
+      ['Trafo tipi', f(d.trafoTipi)], ['Besleyen trafo', u(d.trafo, 'kVA')],
+      ['Ana sigorta', u(d.sigorta, 'A')], ['Branş sigortası', u(d.brans, 'A')], ['Kalkış tipi', f(d.kalkis)],
+      ['Kompanzasyon', var_(d.klor)],
+      ...coord, ['Son bakım', f(d.bakim)]
     ];
     else out = [
-      ['Devreye alma (yapım) yılı', sel.year, 1], ['Kurulu güç', d.guc + ' kW'], ['Panel adedi', d.panelAdet],
-      ['İnverter', d.inverter], ['Bağlantı tipi', d.baglanti], ['Beslediği kayıt', 'KS-KUY-' + String(1 + d.kaynak * 3).padStart(4, '0')],
-      ...coord
+      ['Devreye alma (yapım) yılı', f(sel.year), 1], ['Kurulu güç', u(d.guc, 'kW')], ['Panel adedi', f(d.panelAdet)],
+      ['İnverter', f(d.inverter)], ['Bağlantı tipi', f(d.baglanti)],
+      ...coord, ['Son bakım', f(d.bakim)]
     ];
     return out;
   }
@@ -10827,6 +10876,8 @@ class Component extends DCLogic {
       fgPlain: g.acik ? ui.acc : ui.mut,
       fgList: g.acik ? ui.acc : ui.fg,
       isaret: g.acik ? '✓' : '',
+      ikon: this.ikon(g.id, 16),
+      agirlik: g.acik ? 600 : 500,
       badge: g.badge > 0, badgeN: g.badge
     });
     const aktifGrup = navVisible.find(g => g.acik) || null;
@@ -10883,9 +10934,10 @@ class Component extends DCLogic {
       },
       sessionCard: me ? {
         name: me.name, role: me.roleLabel || ROLE_LABEL[me.role] || me.role,
+        bas: String(me.name || '?').trim().split(/\s+/).map(p => p[0] || '').join('').slice(0, 2).toLocaleUpperCase('tr'),
         dev: (s.device === 'phone' ? 'Telefon' : 'Bilgisayar') + ' oturumu' + (s.autoLogin ? ' · kayıtlı girişle açıldı' : (s.remember ? ' · giriş bu cihazda saklandı' : '')),
         crew: me.crew || 'Ekip ataması yetkisi: ' + (canAssign ? 'var' : 'yok')
-      } : { name: '', role: '', dev: '', crew: '' },
+      } : { name: '', role: '', bas: '', dev: '', crew: '' },
 
       setBase: {
         street: seg(s.mapBase === 'street', () => this.setState({ mapBase: 'street' }, () => this.toMap({ ks: 'setBase', base: 'street' }))),
@@ -11114,7 +11166,7 @@ class Component extends DCLogic {
         listNote: s.scenario === 'foto' ? 'Seçtiğiniz kayıt Foto sekmesinde açılır; çekilen kare çevrimdışıysa cihazda bekler.'
           : (s.scenario === 'guncelle' ? 'Kayıt Bilgi sekmesinde açılır; düzenleme önce cihaza yazılır, sonra eşitlenir.'
             : 'Kayıt detayı açılır — arıza geçmişi, fotoğraflar ve yol tarifi buradan görülür.'),
-        back: () => { this._bekleyenHat = null; this.setState({ scenario: null, newAsset: null }); }
+        back: () => { this._bekleyenHat = null; this._naTemizle(); this.setState({ scenario: null, newAsset: null }); }
       },
       scenarios: [
         ['yeni', 'Yeni tesis kur', 'Sahada olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açın; konum GPS’ten gelir.', canCreateAsset],
@@ -11126,7 +11178,7 @@ class Component extends DCLogic {
         border: ok ? 'var(--color-accent)' : ui.rule, fg: ok ? ui.fg : ui.mut,
         badgeFg: ok ? ui.acc : ui.mut,
         go: () => ok
-          ? this.setState({ scenario: id, newAsset: id === 'yeni' ? { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '2026', note: '', lat: null, lon: null, photos: 0 } : null })
+          ? (this._naTemizle(), this.setState({ scenario: id, newAsset: id === 'yeni' ? { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '', note: '', lat: null, lon: null, photos: 0, fotoUrl: [] } : null }))
           : this.say('Bu rolde bu işlem kapalı — rol dağıtımı Ayarlar > Roller ve yetkiler ekranında.')
       })),
       scenList: [...vis].slice(0, 40).map(a => ({
@@ -11165,7 +11217,7 @@ class Component extends DCLogic {
             : 'Yaklaşık konum — GPS alınamadı, köy/ilçe merkezi kondu. Sahada gerçek GPS ile düzeltilmeli.')
           : 'GİT düğmesi cihaz GPS’ini ister; alınamazsa köy/ilçe merkezi yaklaşık konum olarak konur.',
         coordColor: na && na.lat ? (na.coordAcc ? ui.acc : 'var(--color-uyari)') : ui.mut,
-        photos: na ? Array.from({ length: na.photos }, () => ({})) : [],
+        photos: na ? (na.fotoUrl || []).map(url => ({ img: this.imgEl(url, 'Yeni tesis fotoğrafı') })) : [],
         photoCount: na ? `${na.photos} fotoğraf` : '0 fotoğraf',
         code: na ? `KS-${TYPES[na.type].pre}-YENİ` : '',
         cta: s.offline ? 'Cihaza kaydet (kuyruğa al)' : 'Kaydet ve eşitle'
@@ -11212,20 +11264,53 @@ class Component extends DCLogic {
           { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
         );
       },
-      addNaPhoto: () => this.setState({ newAsset: { ...this.state.newAsset, photos: this.state.newAsset.photos + 1 } }),
+      // Yeni kayıt formundaki fotoğraflar kayıt açılana kadar bellekte bekler,
+      // kayıt veritabanına yazılınca gerçek dosya olarak yüklenir.
+      addNaPhoto: () => {
+        let inp = this._naInput;
+        if (!inp) {
+          inp = document.createElement('input');
+          inp.type = 'file';
+          inp.accept = 'image/*';
+          inp.style.position = 'fixed';
+          inp.style.left = '-9999px';
+          inp.style.opacity = '0';
+          document.body.appendChild(inp);
+          this._naInput = inp;
+        }
+        inp.value = '';
+        inp.multiple = s.device !== 'phone';
+        if (s.device === 'phone') inp.setAttribute('capture', 'environment');
+        else inp.removeAttribute('capture');
+        inp.onchange = () => {
+          const list = [...(inp.files || [])].filter(f => /^image\//.test(f.type));
+          inp.value = '';
+          if (!list.length || !this.state.newAsset) return;
+          this._naFiles = [...(this._naFiles || []), ...list];
+          const urls = list.map(f => URL.createObjectURL(f));
+          this._naUrls = [...(this._naUrls || []), ...urls];
+          this.setState(st => ({ newAsset: st.newAsset ? { ...st.newAsset, photos: (st.newAsset.photos || 0) + list.length, fotoUrl: [...(st.newAsset.fotoUrl || []), ...urls] } : st.newAsset }));
+        };
+        inp.click();
+      },
       saveNewAsset: () => {
         const n = this.state.newAsset;
         const naNot = (n.note || '').trim();
         if (!n.village) return this.say('Köy / yerleşim seçin.');
         if (!n.lat) return this.say('Konumu alın — GİT düğmesi.');
-        const d = m.DISTRICTS.find(x => x.name === n.district);
+        const yilHam = String(n.year || '').trim();
+        const yil = parseInt(yilHam, 10);
+        if (yilHam && !(yil >= 1900 && yil <= new Date().getFullYear() + 1)) return this.say('Yapım yılı geçersiz — bilinmiyorsa boş bırakın.');
+        const dosyalar = this._naFiles || [];
+        this._naFiles = [];
+        const sunucuVar = !!(this._sb && this._sb.tokenOku() && !s.offline);
         const asset = {
           id: 'na' + Date.now(), type: n.type, village: n.village, district: n.district,
           lat: n.lat, lon: n.lon, coordApprox: !n.coordAcc,
           code: this.siradakiKod(n.type),
-          status: n.status === 'pasif' ? 'pasif' : 'aktif', sync: s.offline ? 'pending' : 'synced', photos: n.photos,
-          year: parseInt(n.year, 10) || 2026,
-          d: { derinlik: '—', pompaD: '—', cap: '—', statik: '—', dinamik: '—', debi: '—', kolon: '—', kolonCap: '—', rf: 'Yok', motor: '—', kablo: '—', hacim: '—', kaynak: 0, malzeme: '—', klor: false, rfMod: false, sigorta: '—', brans: '—', kalkis: '—', pano: '—', trafo: '—', guc: '—', panelAdet: '—', inverter: '—', baglanti: '—', bakim: 'Yeni kayıt' }
+          status: n.status === 'pasif' ? 'pasif' : 'aktif', sync: sunucuVar ? 'synced' : 'pending', photos: 0,
+          year: yilHam ? yil : '',
+          d: {}
         };
         // Elle açılan kayıt damgası: yalnızca bu damgayı taşıyanlar
         // çevrimdışı kuyruktan sunucuya gönderilir.
@@ -11255,6 +11340,8 @@ class Component extends DCLogic {
             if (yeni) this.flyTo(yeni.lat, yeni.lon, 15);
             this.say(`${asset.code} veritabanına yazıldı — bütün ekiplerin ekranında görünüyor. Detay alanlarını şimdi doldurabilirsiniz.`, true);
             setTimeout(() => this.setState({ toast: null }), 8000);
+            if (yeni && dosyalar.length) await this.fotoGonder(yeni, dosyalar);
+            this._naTemizle();
           });
           return;
         }
@@ -11262,13 +11349,15 @@ class Component extends DCLogic {
           assets: [asset, ...s.assets], scenario: null, newAsset: null,
           notes: naNot ? { ...s.notes, [asset.id]: naNot } : s.notes,
           selected: asset.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita',
-          queue: [{ id: 'q' + Date.now(), title: asset.code + ' · yeni tesis', meta: `${asset.village} · ${TYPES[asset.type].kind} · ${asset.photos} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
+          queue: [{ id: 'q' + Date.now(), title: asset.code + ' · yeni tesis', meta: `${asset.village} · ${TYPES[asset.type].kind}`, state: 'pending', dotPend: true }, ...s.queue]
         });
         if (this._bekleyenHat) { this.hatKaydet(asset.id, this._bekleyenHat); this._bekleyenHat = null; }
         this.yerelTesisYaz([asset, ...this.yerelTesisOku().filter(x => x.code !== asset.code)]);
         this.flyTo(asset.lat, asset.lon, 15);
         if (naNot) this.iz(asset.id, 'Saha notu eklendi', naNot.slice(0, 90));
-        this.say(s.offline ? 'Yeni tesis cihaza kaydedildi — bağlantı gelince kendiliğinden yüklenir.' : 'Yeni tesis kaydı eşitlendi. Detay alanlarını şimdi doldurabilirsiniz.');
+        this._naTemizle();
+        this.say((s.offline ? 'Yeni tesis cihaza kaydedildi — bağlantı gelince kendiliğinden yüklenir.' : 'Yeni tesis cihaza kaydedildi — ortak veritabanı oturumu yok, bağlanınca gönderilir.')
+          + (dosyalar.length ? ' Çektiğiniz ' + dosyalar.length + ' fotoğraf yüklenemedi; bağlantı gelince kayıt kartının Foto sekmesinden ekleyin.' : ''), !!dosyalar.length);
       },
       goToMyLocation: () => {
         // Harita cihaz GPS'ini ister (harita.html → konumBul); gerçek sonuç
@@ -11546,8 +11635,12 @@ class Component extends DCLogic {
         };
       })(),
       net: s.offline
-        ? { label: 'Çevrimdışı', badge: 'Çevrimdışı', short: 'Off', fill: 'var(--color-uyari)', border: 'var(--color-uyari)', ink: '#fff' }
-        : { label: '4G', badge: 'Çevrim içi', short: 'On', fill: 'transparent', border: ui.rule, ink: ui.mut },
+        ? { label: 'Çevrimdışı', badge: 'Çevrimdışı', short: 'Off', fill: 'var(--color-uyari)', border: 'var(--color-uyari)', ink: '#fff',
+          nokta: 'ks-kapali', yazi: 'var(--color-uyari)', zemin: dark ? 'rgba(255,69,58,.14)' : 'var(--color-uyari-100)',
+          ipucu: 'Çevrimdışı — kayıtlar cihazda bekler. Dokununca çevrimiçine döner.' }
+        : { label: '4G', badge: s.sunucu ? 'Canlı' : 'Çevrim içi', short: 'On', fill: 'transparent', border: ui.rule, ink: ui.mut,
+          nokta: '', yazi: dark ? '#30d158' : '#1b7a36', zemin: dark ? 'rgba(48,209,88,.12)' : 'rgba(52,199,89,.12)',
+          ipucu: s.sunucu ? 'Ortak veritabanına bağlı — değişiklikler herkese anında gider.' : 'İnternet var; ortak veritabanı bağlantısı bekleniyor.' },
       toggleNet: () => { const off = !s.offline; this.setState({ offline: off }); this.say(off ? 'Çevrimdışı — kayıtlar IndexedDB’de tutulacak.' : 'Bağlantı geldi — arka plan eşitlemesi hazır.'); },
       toggleTheme: () => this.temaSec(dark ? 'light' : 'dark'),
       onQuery: e => this.setState({ query: e.target.value }),
@@ -12815,23 +12908,17 @@ class Component extends DCLogic {
       })(),
       // Sayfa süzgeç çubuğu — birleşmiş sayfaların üstünde durur.
       // Tek süzgeçli sayfada (Hat Kesiti) çubuk hiç çıkmaz.
+      // Üst çubuk: her sayfada başlık + tek satır açıklama (süzgeç sayısından bağımsız)
+      ustBar: (() => {
+        const g = aktifGrup;
+        const z0 = g && g.suz.find(z => z.hedef === tabId);
+        const DIS = { kuyruk: ['Bekleyen kayıtlar', 'Sunucuya gönderilmeyi bekleyen kayıtlar.'], islem: ['Kayıt işlemleri', 'Yeni tesis kur, mevcut tesise gir, bilgi güncelle, fotoğraf ekle.'] };
+        if (g) return { baslik: g.ad, alt: SAYFA_ALT[(z0 || {}).id] || SAYFA_ALT[tabId] || '' };
+        const d = DIS[tabId];
+        return d ? { baslik: d[0], alt: d[1] } : { baslik: 'Kırşehir Envanter', alt: '' };
+      })(),
       sayfaBar: (() => {
-        const ALT = {
-          gelen: 'Köyden gelen ihbar ve istekler. Gereken talep arızaya dönüşür.',
-          acik: 'Açık arıza ve iş emirleri.',
-          bugun: 'Bugün size ve ekibinize düşen işler.',
-          planli: 'Tarihi önceden belli periyodik bakımlar.',
-          liste: 'Bütün tesisler tablo olarak — başlığa basarak sırala, alt satırdan süz.',
-          harita: 'Aynı kayıtlar harita üzerinde; tıklayınca kayıt açılır.',
-          malzeme: 'Ambar stoğu, ekip zimmeti ve hareket dökümü.',
-          arac: 'Araç, ekipman ve bunların zimmeti.',
-          ozet: 'İlçe dağılımı, eksik bilgi, ekip ve arıza özetleri.',
-          denetim: 'Kim neyi ne zaman değiştirdi — silinemeyen kayıt.',
-          cop: 'Silinen kayıtlar burada bekler; 30 gün içinde geri alınır.',
-          ayarlar: 'Kurum, veri ve program ayarları.',
-          yerlesim: 'Köy konumlarının elle düzeltilmesi.',
-          aktarim: 'Dosyadan içe alma ve dışa aktarma.'
-        };
+        const ALT = SAYFA_ALT;
         const g = aktifGrup;
         if (!g) return { acik: false, telAcik: false, baslik: '', alt: '', suzgecler: [] };
         // Ayarlar'da bu üst çubuk hapları (Köy konumları/İçe-dışa aktarım/
@@ -14274,7 +14361,7 @@ class Component extends DCLogic {
         if (!canWrite) return this.say('Bu rolde kayıt düzenleme kapalı.');
         if (!this.yazabilir(sel)) return this.kilitUyar(sel);
         const d = sel.d || {};
-        const bos = v => (v === '—' || v === undefined || v === null) ? '' : v;
+        const bos = v => (v === '—' || v === 'Yeni kayıt' || v === undefined || v === null) ? '' : v;
         const g = { id: sel.id, year: sel.year == null ? '' : String(sel.year), ilce: sel.district || '', koy: sel.village || '', d: {} };
         for (const [, alanlar] of (ALANLAR[sel.type] || [])) {
           for (const [k] of alanlar) {
@@ -14346,11 +14433,12 @@ class Component extends DCLogic {
               temiz[k] = v;
               dolu++;
             }
-            const yil = parseInt(String(g.year).replace(/[^0-9]/g, ''), 10);
+            const yilHam = String(g.year == null ? '' : g.year).replace(/[^0-9]/g, '');
+            const yil = yilHam ? parseInt(yilHam, 10) : '';
             const koy = (g.koy || '').trim();
             const ilce = g.ilce || a.district;
             const yerDegisti = koy !== (a.village || '') || ilce !== a.district;
-            const yeni = { ...a, village: koy, district: ilce, villageAuto: yerDegisti ? undefined : a.villageAuto, year: isFinite(yil) ? yil : a.year, d: { ...(a.d || {}), ...temiz }, sync: s.offline ? 'pending' : a.sync };
+            const yeni = { ...a, village: koy, district: ilce, villageAuto: yerDegisti ? undefined : a.villageAuto, year: yil, d: { ...(a.d || {}), ...temiz }, sync: s.offline ? 'pending' : a.sync };
             this.setState({
               alanForm: null,
               assets: s.assets.map(x => x.id === a.id ? yeni : x),

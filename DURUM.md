@@ -1703,3 +1703,22 @@ Test: yerelde (sunucu kesik) bütün adımlar; gerçek veritabanında KS-KUY-000
 üzerinde test arızası aç → sahada → kapat, yenilemeden sonra kalıcılık,
 tesis durumunun arızalı→aktif dönüşü doğrulandı; test arızası ve numara
 sayacı silindi (denetim izi satırları duruyor).
+
+## 2026.10.01 — 6. aşama (2. bölüm): telefonda Genel bakış, Ekipler, Ambar
+
+Üç ekranın telefon şablonu yazıldı; veri masaüstüyle ortak (pano,
+ekipPano, ambarEkran). Telefon yönlendirmeleri kaldırıldı — İşler'de
+"Genel bakış", Kaynaklar'da "Ekipler" telefonda da açılıyor.
+- Genel bakış: 2×2 gösterge, dikey iş hattı, öncelikli işler, ekip yükü,
+  ilçe yoğunluğu, son hareketler.
+- Ekipler: personel/araç durum çubukları (dokununca süzer), ekip kartları,
+  iş haritası (telefon genişliğine göre 322 px), araç filosu.
+- Ambar: arama, hareket/sipariş/malzeme tanımla düğmeleri, göstergeler,
+  tükenmek üzere, yatay kaydırmalı kategoriler, sıralama, malzeme kartları
+  (kaç gün yeter, ambar dağılım çubuğu), bugünkü hareketler, ekip zimmeti
+  (iade/sarf/hurda). Hareket formu, malzeme kartı, malzeme tanımı ve sipariş
+  listesi telefonda alttan açılan tam genişlik paneller.
+Not: kaydırılan kapsayıcı içinde overflow'lu bölümler flex/grid'de sıfır
+yüksekliğe büzülüyordu — kapsayıcı `grid-auto-rows:max-content`.
+Sürüm 2026.10.01-106. Test: 375 px'de üç ekran ve dört panel, masaüstü
+gerileme kontrolü; konsol temiz, cihazda test izi yok.

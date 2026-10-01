@@ -6883,6 +6883,36 @@ Hareket gir
 <sc-if value="{{ panel.isFault }}" hint-placeholder-val="{{ false }}">
 <!-- telefon: sade arıza ekranı -->
 <sc-if value="{{ faultForm.sadeMod }}" hint-placeholder-val="{{ true }}">
+<!-- telefon: tesis seçici -->
+<sc-if value="{{ faultForm.sade.secici.acik }}" hint-placeholder-val="{{ false }}">
+<div style="background:{{ ui.bg }};min-height:100%;display:flex;flex-direction:column">
+<div style="flex:none;padding:12px 14px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:700 19px/1.2 var(--font-heading)">Tesis seçin</span>
+<button onClick="{{ faultForm.sade.secici.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 12px;border-radius:12px;background:{{ ui.surf2 }};font:600 14px/44px var(--font-body)">Vazgeç</button>
+</div>
+<input type="search" value="{{ faultForm.sade.secici.q }}" onChange="{{ faultForm.sade.secici.onQ }}" placeholder="Köy adı, kod ya da ilçe yazın…" aria-label="Tesis ara" style="all:unset;box-sizing:border-box;width:100%;min-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};padding:0 14px;font:400 16px/48px var(--font-body);background:{{ ui.bg }}">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.secici.not }}</span>
+<sc-if value="{{ faultForm.sade.secici.konumYok }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ faultForm.sade.secici.konumAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:38px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/38px var(--font-body);color:{{ ui.acc }}">Konumumu al</button>
+</sc-if>
+</div>
+</div>
+<div>
+<sc-for list="{{ faultForm.sade.secici.satirlar }}" as="r" hint-placeholder-count="8">
+<button onClick="{{ r.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ r.zemin }}">
+<span style="flex:none;width:36px;height:36px;border-radius:10px;background:{{ ui.surf2 }};font:700 14px/36px var(--font-body);text-align:center">{{ r.harf }}</span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 15px/1.3 var(--font-body)">{{ r.ust }}</span><span style="display:block;font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ r.alt }}</span></span>
+</button>
+</sc-for>
+<sc-if value="{{ faultForm.sade.secici.bos }}" hint-placeholder-val="{{ false }}">
+<div style="padding:30px 16px;text-align:center;font:400 14px/1.5 var(--font-body);color:{{ ui.mut }}">Eşleşen tesis yok. Köy adının ilk birkaç harfini ya da kodun sonunu yazmayı deneyin (ör. “0028”).</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.sade.formGoster }}" hint-placeholder-val="{{ true }}">
 <div class="ks-gir" style="background:{{ ui.bg }};min-height:100%">
 <div style="padding:14px 16px 12px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }};display:flex;align-items:flex-start;gap:12px">
 <div style="flex:1;min-width:0">
@@ -6930,17 +6960,9 @@ Hareket gir
 <div style="display:flex;align-items:center;gap:10px;margin-top:7px">
 <div style="flex:1;min-width:0"><div style="font:700 15px/1.3 var(--font-body)">{{ faultForm.sade.tesis }}</div><div style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.tesisAlt }}</div></div>
 <sc-if value="{{ faultForm.sade.tesisDegisVar }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ faultForm.sade.tesisDegis }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/40px var(--font-body);color:{{ ui.acc }}">Değiştir</button>
+<button onClick="{{ faultForm.sade.tesisDegis }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 14px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/44px var(--font-body)">{{ faultForm.sade.tesisDegisL }}</button>
 </sc-if>
 </div>
-<sc-if value="{{ faultForm.sade.tesisSecAcik }}" hint-placeholder-val="{{ false }}">
-<select value="{{ faultForm.assetId }}" onChange="{{ onFaultAsset }}" aria-label="Tesis seçin" style="all:unset;box-sizing:border-box;display:block;width:100%;margin-top:10px;min-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};padding:0 12px;font:600 14px/48px var(--font-body);background:{{ ui.bg }};cursor:pointer">
-<option value="">Tesis seçin…</option>
-<sc-for list="{{ assetOptions }}" as="o" hint-placeholder-count="4">
-<option value="{{ o.id }}">{{ o.label }}</option>
-</sc-for>
-</select>
-</sc-if>
 </div>
 
 <div style="background:{{ ui.surf }};border-radius:16px;padding:14px">
@@ -7020,6 +7042,7 @@ Hareket gir
 </sc-if>
 <div style="height:14px"></div>
 </div>
+</sc-if>
 </sc-if>
 
 <sc-if value="{{ faultForm.ayrintiMod }}" hint-placeholder-val="{{ false }}">
@@ -8132,7 +8155,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.01-109';
+const SURUM = '2026.10.01-110';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -8857,6 +8880,32 @@ class Component extends DCLogic {
   toMap(msg) { const w = this.mapWin(); if (w) w.postMessage(msg, '*'); }
 
   yer(a) { return (a.village || 'Köy girilmedi') + ' · ' + a.district; }
+  // Köy adı girilmemiş tesis için koordinata en yakın köy (4 km içinde).
+  // Kuyuların çoğunda köy alanı boş: kod tek başına hangi tesis olduğunu
+  // söylemiyordu. Yalnız gösterimde kullanılır, kayda yazılmaz; raporlar
+  // yer() ile girilmiş köye göre gruplamaya devam eder.
+  yakinKoy(a) {
+    if (!a || !isFinite(a.lat) || !isFinite(a.lon) || !this._yer) return null;
+    const anahtar = a.lat.toFixed(5) + ',' + a.lon.toFixed(5);
+    this._yakinKoyOb = this._yakinKoyOb || {};
+    if (anahtar in this._yakinKoyOb) return this._yakinKoyOb[anahtar];
+    let en = null, ed = Infinity;
+    for (const r of this._yer) {
+      if (r[3] !== 'YKOY' && r[3] !== 'BCK') continue;
+      const d = this.mesafeM({ lat: r[1], lon: r[2] }, a);
+      if (d < ed) { ed = d; en = r; }
+    }
+    // Bucak merkezleri listede "Akçakent_Mrkbucak" gibi yazılı
+    const ad = en ? String(en[0]).replace(/_?Mrk ?(bucak|köy)$/i, ' merkez').replace(/_/g, ' ').trim() : '';
+    return (this._yakinKoyOb[anahtar] = en && ed < 4000 ? { ad, m: ed } : null);
+  }
+  // Ekranda gösterilecek yer: girilmiş köy, yoksa "≈ en yakın köy", yoksa ilçe
+  yerGoster(a) {
+    if (!a) return '';
+    if (a.village) return a.village + ' · ' + a.district;
+    const k = this.yakinKoy(a);
+    return k ? '≈ ' + k.ad + ' · ' + a.district : a.district + ' (köy girilmedi)';
+  }
   tl(n) { return (Math.round(n) || 0).toLocaleString('tr-TR') + ' ₺'; }
   // periyodik bakım: kuyu 6 ay, depo 12 ay, elektrik tesisi 12 ay
   // Modül anahtarı kurum ayarıdır: sunucuya yazılır, bütün cihazlarda aynı
@@ -9989,34 +10038,37 @@ class Component extends DCLogic {
   }
   // Talebi arıza kaydına çevirir: köydeki kayıtlardan birini seçtirir,
   // arıza formunu talep bilgisiyle doldurur, talebi bağlar.
+  // Talepten arıza: tesis seçimi arıza ekranındaki seçiciyle yapılır.
+  // Önceden yalnız köy adı birebir girilmiş tesisler aranıyor ve sıra numarası
+  // window.prompt ile soruluyordu — kuyuların çoğunda köy adı boş olduğu için
+  // "köyünde kayıtlı tesis yok" deyip duruyordu. Artık talebin köyü yerleşim
+  // listesinde bulunur, o noktaya yakın tesisler önce gelir.
   talepArizaya(id) {
     const t = (this.state.talepler || []).find(x => x.id === id);
     if (!t) return;
-    const adaylar = (this.state.assets || []).filter(a => a.village === t.koy);
-    if (!adaylar.length) {
-      return this.duyur(t.koy + ' köyünde kayıtlı tesis yok. Önce tesisi kaydedin, sonra talebi arızaya çevirin.', 8000, 'kotu',
-        () => this.setState({ tab: 'islem' }));
-    }
-    const secim = adaylar.length === 1 ? adaylar[0] : (() => {
-      const cevap = window.prompt(t.koy + ' köyündeki kayıtlar:\n\n'
-        + adaylar.map((a, i) => (i + 1) + ') ' + a.code + ' · ' + TYPES[a.type].kind).join('\n')
-        + '\n\nArıza hangi kayda açılsın? Sıra numarasını yazın.', '1');
-      const n = parseInt(cevap, 10);
-      return n >= 1 && n <= adaylar.length ? adaylar[n - 1] : null;
-    })();
-    if (!secim) return;
-    const turler = (FAULT_TYPES[secim.type] || ['Diğer']);
+    const nk = nkey(t.koy), ik = nkey(t.ilce);
+    const yerler = this._yer || [];
+    const nokta = yerler.find(r => nkey(r[0]) === nk && (!ik || !r[4] || nkey(r[4]) === ik)) || yerler.find(r => nkey(r[0]) === nk);
+    const ayni = (this.state.assets || []).filter(a => a.village && nkey(a.village) === nk && (!ik || nkey(a.district) === ik));
+    const tek = ayni.length === 1 ? ayni[0] : null;
+    const telefon = this.state.device === 'phone';
     this.setState({
-      tab: 'ariza', panel: 'ariza', selected: secim.id,
+      tab: telefon ? this.state.tab : 'ariza', panel: 'ariza', selected: tek ? tek.id : this.state.selected,
       faultForm: {
-        assetId: secim.id, type: turler[0], priority: t.oncelik, status: 'acik',
-        crew: 'Atanmadı', note: t.no + ' · ' + (TALEP_SIFAT[t.sifat] || '') + ' ' + t.ad
-          + (t.tel ? ' (' + t.tel + ')' : '') + ' · ' + (TALEP_KANAL[t.kanal] || '') + '\n' + t.aciklama,
+        assetId: tek ? tek.id : null, type: (FAULT_TYPES[tek ? tek.type : 'kuyu'] || ['Diğer'])[0],
+        priority: t.oncelik || 'Normal', status: 'acik', crew: ATANMADI,
+        note: t.no + ' · ' + (TALEP_SIFAT[t.sifat] || '') + ' ' + t.ad
+          + (t.tel ? ' (' + t.tel + ')' : '') + ' · ' + (TALEP_KANAL[t.kanal] || '') + '\n' + (t.aciklama || ''),
         malzeme: [], sesler: [], iscilik: '', isaret: null,
-        id: null, photos: [], hours: '', talepId: t.id
+        id: null, photos: [], hours: '', talepId: t.id,
+        talepKoy: t.koy, talepNokta: nokta ? { lat: nokta[1], lon: nokta[2] } : null,
+        tesisSec: !tek, tesisQ: ''
       }
-    }, () => this.duyur(t.no + ' arıza formuna taşındı — ' + secim.code
-      + '. Arıza türünü seçip kaydedin; kaydedince talep “Arızaya dönüştürüldü” olur.', 8000, 'iyi'));
+    }, () => this.duyur(t.no + ' arıza formuna taşındı — ' + (tek
+      ? tek.code + ' seçildi. Arıza türünü seçip kaydedin.'
+      : (nokta ? t.koy + ' köyüne yakın tesisler listede önce. Tesisi seçin, türü işaretleyip kaydedin.'
+        : t.koy + ' köyü yerleşim listesinde bulunamadı — tesisi arayarak seçin.'))
+      + ' Kaydedince talep “Arızaya dönüştürüldü” olur.', 9000, 'iyi'));
   }
   aracYaz(a, mesaj) {
     this.modulYaz('arac', a);
@@ -15584,7 +15636,7 @@ class Component extends DCLogic {
             const a = s.assets.find(x => x.id === f.assetId);
             return {
               no: f.no, pr: f.priority || 'Normal', prC: oncRenk(f.priority),
-              ne: f.type || 'Arıza', yer: (a ? a.code + ' · ' : '') + (a ? this.yer(a) : (f.district || '')),
+              ne: f.type || 'Arıza', yer: (a ? a.code + ' · ' : '') + (a ? this.yerGoster(a) : (f.district || '')),
               durum: STATUS_LABEL[f.status] || f.status, ekip: f.crew && f.crew !== ATANMADI ? f.crew : 'Atanmadı',
               ekipC: f.crew && f.crew !== ATANMADI ? ui.fg : 'var(--color-bekle)',
               sure: d ? (d.gecikti ? d.etiket : 'hedef ' + d.hedef) : (f.opened || ''), sureC: d && d.gecikti ? kirmizi : ui.mut,
@@ -15874,14 +15926,16 @@ class Component extends DCLogic {
       assetOptions: (() => {
         // 264 kaydın tamamını <select>'e basmak telefonu kilitliyordu — en yakın 40 kayıt
         const secili = ff && ff.assetId;
-        // Konum alınmışsa cihaza en yakın 40 tesis, yoksa il merkezine göre
-        const uzak = s.benimKonum ? (a => this.mesafeM(s.benimKonum, a)) : (a => this.distKm(a));
+        // Talepten geliyorsa talebin köyüne, konum alınmışsa cihaza, yoksa il
+        // merkezine en yakın 40 tesis
+        const ref = (ff && ff.talepNokta) || s.benimKonum;
+        const uzak = ref ? (a => this.mesafeM(ref, a)) : (a => this.distKm(a));
         const yakin = [...s.assets].filter(a => isFinite(a.lat)).sort((x, y) => uzak(x) - uzak(y)).slice(0, 40);
         if (secili && !yakin.some(a => a.id === secili)) {
           const a = s.assets.find(x => x.id === secili);
           if (a) yakin.unshift(a);
         }
-        return yakin.map(a => ({ id: a.id, label: `${a.code} · ${a.village || a.district}` }));
+        return yakin.map(a => ({ id: a.id, label: `${a.code} · ${TYPES[a.type].label} · ${this.yerGoster(a)}` }));
       })(),
       crews: CREWS,
       faultForm: {
@@ -15903,16 +15957,57 @@ class Component extends DCLogic {
           const kayitAsama = ff.status === 'sahada' || ff.status === 'kontrol' ? 'sonra' : 'once';
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
           return {
-            yeni, mevcut: !yeni,
+            yeni, mevcut: !yeni, formGoster: !(yeni && ff.tesisSec),
             ust: yeni ? 'Yeni arıza' : (STATUS_LABEL[ff.status] || ff.status),
             ustC: yeni ? ui.acc : (kapali ? '#1b7a36' : ui.acc),
             baslik: yeni ? 'Arıza bildir' : (ff.no || '') + ' · ' + (ff.type || ''),
-            tesis: ffAsset ? ffAsset.code + ' · ' + this.yer(ffAsset) : 'Tesis seçilmedi',
-            tesisAlt: ffAsset ? TYPES[ffAsset.type].kind : (s.benimKonum ? 'Liste size en yakından başlar' : 'Haritada tesise dokunup “Arıza” derseniz kendiliğinden gelir'),
-            tesisTur: ffAsset ? TYPES[ffAsset.type].kind : '',
-            tesisSecAcik: yeni && (!ffAsset || !!ff.tesisSec),
-            tesisDegis: () => yaz({ tesisSec: !ff.tesisSec }),
+            tesis: ffAsset ? TYPES[ffAsset.type].label + ' · ' + this.yerGoster(ffAsset) : 'Tesis seçilmedi',
+            tesisAlt: ffAsset ? ffAsset.code + ' · ' + TYPES[ffAsset.type].kind
+              : (ff.talepKoy ? 'Talep: ' + ff.talepKoy + ' — yakındaki tesisler önce gelir' : 'Dokunun, köy adı ya da kodla arayın'),
+            tesisDegis: () => yaz({ tesisSec: true, tesisQ: '' }),
             tesisDegisVar: yeni,
+            tesisDegisL: ffAsset ? 'Değiştir' : 'Tesis seç',
+            // Tam ekran tesis seçici: bütün tesislerde arama; köy adı boşsa
+            // en yakın köy gösterilir. Talepten gelindiyse talebin köyüne,
+            // konum alındıysa cihaza yakın olanlar önce.
+            secici: (() => {
+              const acik = yeni && !!ff.tesisSec;
+              if (!acik) return { acik: false };
+              const q = sadeMetin(ff.tesisQ || '');
+              const ref = ff.talepNokta || s.benimKonum || null;
+              const refAd = ff.talepNokta ? (ff.talepKoy || 'talep köyü') : (s.benimKonum ? 'konumunuz' : '');
+              const etiket = a => sadeMetin([a.code, a.village, (this.yakinKoy(a) || {}).ad, a.district, TYPES[a.type].label, TYPES[a.type].kind, a.barkod].filter(Boolean).join(' '));
+              let l = s.assets.filter(a => isFinite(a.lat) && (!q || etiket(a).includes(q)));
+              const uz = a => ref ? this.mesafeM(ref, a) : 0;
+              l.sort((x, y) => (ref ? uz(x) - uz(y) : 0) || (x.district || '').localeCompare(y.district || '', 'tr') || x.code.localeCompare(y.code, 'tr'));
+              const toplam = l.length;
+              l = l.slice(0, q ? 60 : 40);
+              const kmYaz = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
+              return {
+                acik: true, q: ff.tesisQ || '',
+                onQ: e => yaz({ tesisQ: e.target.value }),
+                kapat: () => yaz({ tesisSec: false }),
+                konumYok: !s.benimKonum && !ff.talepNokta,
+                konumAl: () => {
+                  if (!navigator.geolocation) return this.duyur('Bu cihaz konum vermiyor.', 4000, 'kotu');
+                  this.say('Konumunuz alınıyor…');
+                  navigator.geolocation.getCurrentPosition(
+                    p => { this.setState({ benimKonum: { lat: p.coords.latitude, lon: p.coords.longitude, t: Date.now() } }); this.duyur('Konum alındı — size en yakın tesisler üstte.', 4000, 'iyi'); },
+                    e => this.duyur(e && e.code === 1 ? 'Konum izni verilmemiş — tarayıcı ayarlarından açın.' : 'Konum alınamadı — açık alanda yeniden deneyin.', 6000, 'kotu'),
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+                },
+                not: (q ? toplam + ' tesis eşleşti' : toplam + ' tesis') + (refAd ? ' · ' + refAd + ' yakınından başlar' : ' · ilçeye göre')
+                  + (toplam > l.length ? ' · ilk ' + l.length + ' gösteriliyor, aramayı daraltın' : ''),
+                bos: !l.length,
+                satirlar: l.map(a => ({
+                  ust: TYPES[a.type].label + ' · ' + this.yerGoster(a),
+                  alt: a.code + (ref ? ' · ' + kmYaz(uz(a)) : '') + (a.status === 'pasif' ? ' · pasif' : ''),
+                  harf: TYPES[a.type].glyph,
+                  zemin: a.id === ff.assetId ? (dark ? 'rgba(10,132,255,.18)' : 'rgba(0,113,227,.08)') : 'transparent',
+                  sec: () => this.setState({ faultForm: { ...this.state.faultForm, assetId: a.id, type: (FAULT_TYPES[a.type] || ['Diğer'])[0], tesisSec: false, tesisQ: '' } })
+                }))
+              };
+            })(),
             turler: FAULT_TYPES[ffAsset ? ffAsset.type : 'kuyu'].map(t => ({
               l: t, bg: ff.type === t ? 'var(--color-accent)' : ui.surf, fg: ff.type === t ? '#fff' : ui.fg,
               kenar: ff.type === t ? 'var(--color-accent)' : ui.rule, sec: () => yaz({ type: t })
@@ -16925,7 +17020,7 @@ class Component extends DCLogic {
             prSinif: f.priority === 'Acil' ? 'ks-nabiz' : '',
             sure: d ? (d.gecikti ? d.etiket : 'hedef ' + d.hedef) : (STATUS_LABEL[f.status] || f.status),
             sureC: d && d.gecikti ? kirmizi : ui.mut,
-            baslik: f.type || 'Arıza', tesis: a ? a.code + ' · ' + this.yer(a) : (f.district || ''),
+            baslik: f.type || 'Arıza', tesis: a ? TYPES[a.type].label + ' · ' + this.yerGoster(a) + ' · ' + a.code : (f.district || ''),
             mesafe: mesafeYazi(a) || '—', not: (f.note || f.desc || '').split('\n')[0] || 'not yok',
             adimlar: [0, 1, 2].map(i => ({
               ic: adim > i ? '✓' : String(i + 1),
@@ -16997,7 +17092,7 @@ class Component extends DCLogic {
           bosAlt: arizaOn ? 'Yeni iş atanınca burada görünecek.' : 'Yönetici Ayarlar > Modüller bölümünden açabilir.',
           sonraki: sirali.filter(x => x.f.id !== secId).slice(0, 12).map((x, i) => ({
             sira: String(i + 2), baslik: x.f.type || 'Arıza',
-            tesis: (x.a ? x.a.code + ' · ' + this.yer(x.a) : '') + (x.f.status === 'sahada' ? ' · sahada' : ''),
+            tesis: (x.a ? TYPES[x.a.type].label + ' · ' + this.yerGoster(x.a) + ' · ' + x.a.code : '') + (x.f.status === 'sahada' ? ' · sahada' : ''),
             pr: x.f.priority || 'Normal', prBg: (PRC[x.f.priority] || PRC.Normal)[0], prFg: (PRC[x.f.priority] || PRC.Normal)[1],
             mesafe: mesafeYazi(x.a), sec: () => this.setState({ sahaAktifId: x.f.id, sahaKapanis: null })
           })),

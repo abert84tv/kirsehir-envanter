@@ -1773,3 +1773,24 @@ zor. Telefonda arıza artık sade ekranla açılır (masaüstü formu aynı):
   kendiliğinden seçili geliyordu — yanlış tesise kayıt riski); seçilmeden
   kaydedilmez. Konum alınmışsa tesis listesi cihaza en yakından başlar.
 Sürüm 2026.10.01-109.
+
+## 2026.10.01 — Tesis seçici ve talepten arıza
+
+Kullanıcı bildirimi: telefonda tesis seçerken yalnız kod ve ilçe görünüyor
+(hangi tesis olduğu anlaşılmıyor), yalnız 40 tesis listeleniyor.
+- Kök: 264 kuyunun 247'sinde köy alanı boş. `yakinKoy(a)` koordinata en
+  yakın köyü (koyler.js YKOY/BCK, 4 km içinde) bulur; `yerGoster(a)`
+  "≈ Güzler · Merkez" yazar. Yalnız gösterim — kayda yazılmaz, raporlar
+  girilmiş köye göre gruplamaya devam eder. Bucak/merkez köy adları
+  ("Akçakent_Mrkbucak") "Akçakent merkez" gösterilir.
+- Telefonda sade arıza ekranında tam ekran tesis seçici: bütün tesislerde
+  arama (köy, yakın köy, kod, ilçe, tür, barkod), satırda "Kuyu · ≈ Köy ·
+  İlçe" ve kod + uzaklık; talepten gelindiyse talebin köyüne, konum
+  alındıysa cihaza yakın olanlar önce; "Konumumu al".
+- Talepten arıza (talepArizaya): köy adı birebir eşleşen tesis yoksa
+  "kayıtlı tesis yok" deyip duruyor, birden çoksa window.prompt ile sıra
+  numarası soruyordu. Artık talebin köyü yerleşim listesinde bulunur, form
+  seçici açık gelir (köyde tek tesis varsa o seçili). Masaüstündeki tesis
+  listesi de talep köyüne/konuma göre sıralanır, satırda tür ve yakın köy.
+- Saha kartlarında ve Genel bakış'ta da yerGoster.
+Sürüm 2026.10.01-110.

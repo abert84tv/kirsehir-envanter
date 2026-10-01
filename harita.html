@@ -164,7 +164,8 @@ import { buildAssets, TYPES, STATUS_LABEL } from './envanter.js';
 import { ISU_KAYNAK, ISU_MEMBA, ISU_ISUDEPO } from './isu-katmanlar.js';
 
 let { assets, faults } = buildAssets(DATA);
-let openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
+const KAPALI = ['cozuldu', 'iptal'];
+let openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
 let sonFilter = null;
 
 const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true });
@@ -291,6 +292,7 @@ isuYenile();
 
 // ── envanter kayıtları
 const assetLayer = L.layerGroup().addTo(map);
+const noktaLayer = L.layerGroup().addTo(map);
 let markers = [];
 function cizAssets() {
 assetLayer.clearLayers();
@@ -321,6 +323,18 @@ for (const a of assets) {
     else parent.postMessage({ ks: 'select', id: a.id, code: a.code }, '*');
   });
   markers.push(mk);
+}
+// Arıza noktaları: ekibin sahada kaydettiği koordinat (boru hattı arızası
+// tesisin yerinde değildir). Açık arızalar kırmızı, dokununca arıza açılır.
+noktaLayer.clearLayers();
+for (const f of faults) {
+  if (!f || !f.nokta || KAPALI.includes(f.status)) continue;
+  const yer = f.koy ? f.koy + (f.district ? ' · ' + f.district : '') : (f.district || '');
+  L.circleMarker([f.nokta.lat, f.nokta.lon], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#d70015', fillOpacity: .95 })
+    .bindPopup(`<b>${f.no || 'Arıza'}</b><br>${f.type || ''}<br>${yer}` +
+      `<br><i>Arıza noktası${f.noktaDogruluk != null ? ' · ±' + f.noktaDogruluk + ' m' : ''}</i>`)
+    .on('click', () => parent.postMessage({ ks: 'arizaAc', id: f.id }, '*'))
+    .addTo(noktaLayer);
 }
 isuYenile();
 applyLabels();
@@ -524,7 +538,7 @@ addEventListener('message', e => {
     assets = d.assets;
     if (Array.isArray(d.faults)) {
       faults = d.faults;
-      openFaults = new Set(faults.filter(f => f.status !== 'cozuldu').map(f => f.assetId));
+      openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
     }
     cizAssets();
   }

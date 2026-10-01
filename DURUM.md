@@ -1794,3 +1794,48 @@ Kullanıcı bildirimi: telefonda tesis seçerken yalnız kod ve ilçe görünüy
   listesi de talep köyüne/konuma göre sıralanır, satırda tür ve yakın köy.
 - Saha kartlarında ve Genel bakış'ta da yerGoster.
 Sürüm 2026.10.01-110.
+
+## 2026.10.01 — Arıza noktası, iş grupları, şebeke arızası, başvuru sınıflandırma
+
+Kullanıcı isteği: (1) vatandaş/muhtar köy adıyla arıza bildirir, arıza boru
+hattında olabilir — ekip varınca arıza noktasının koordinatı kaydedilsin,
+köy raporlarında kullanılsın; (2) arıza türleri açılır liste olsun, önce iş
+grubu, sonra yalnız o grubun türleri; (3) WhatsApp/Telegram/SMS/telefon
+başvuruları operatöre düşmeden yapay zekâyla ön sınıflandırılsın.
+
+Sunucu (SQL-ariza-nokta-koy.sql, göç ariza_nokta_koy_grup):
+- ariza.tesis_id boş olabilir (şebeke arızası: ilçe zorunlu, köy);
+  grup, koy, ilce, lat, lon, konum_zaman, konum_dogruluk, konum_k eklendi.
+- ariza_kaydet yeni imza (grup/köy/ilçe/nokta); nokta il sınırı dışındaysa
+  reddedilir; boş gelen nokta eskisini silmez.
+- ariza_listesi tesissiz arızaları da (left join) ve noktayı döndürür.
+- foto_ekle/ses_ekle tesissiz arızada ilçeyi arızadan alır;
+  ariza_foto_listesi(arıza) eklendi. Program arıza fotoğraflarını artık
+  tesise değil arızaya göre okur (fotolar['a'+id]).
+
+Program:
+- ARIZA_GRUP: su şebekesi, kuyu-pompa, depo, elektrik, GES, kanalizasyon
+  (6 grup, 60+ tür). Telefon sade ekranı ve ayrıntılı form: İş grubu → Arıza
+  türü açılır listeleri. Tesis seçilince grup tesisin türünden gelir.
+- "Nerede?": Tesiste / Şebekede (köyde: ilçe + köy). Ayrıntılı formda
+  "— Tesis yok (şebeke / boru hattı) —" seçeneği.
+- Arıza noktası (arizaNoktaAl): "Sahaya vardım"da kendiliğinden alınır,
+  sade ekranda ve saha kartında "Buradayım — kaydet / Yeniden al"; doğruluk
+  ve en yakın köy bildirilir. Haritada açık arızaların noktaları kırmızı
+  (dokununca arıza açılır); Ekipler iş haritası ve saha mesafesi noktayı
+  kullanır.
+- Özet > Köy bazlı arızalar: köy = girilen > tesis köyü > arıza noktasına en
+  yakın köy > tesise en yakın köy; açık sayısı, grup dağılımı, en sık tür,
+  şebeke arızası, nokta kayıt oranı. Köy bazlı malzeme raporu da ≈ yakın köyü
+  kullanır.
+- Başvuru sınıflandırma: talepSiniflandir (kural; ek almış kökleri tanır,
+  1043 yerleşim adında köy, metinde geçen ilçe ipucu, aciliyet ifadeleri).
+  Talep formunda öneri kutusu + "Öneriyi uygula", iş grubu/tür listeleri;
+  talep listesinde sınıf. Yapay zekâ: sunucu işlevi talep-siniflandir
+  (supabase-islev-talep-siniflandir.ts, claude-haiku-4-5; uygulama oturumu
+  oturum_ac ile doğrulanır; ANTHROPIC_API_KEY Secrets'a girilince çalışır).
+- Talepten arıza: talebin sınıfı kullanılır; su/kanal (şebeke) talebi tesis
+  sormadan talebin köyüyle açılır.
+Test: kural sınıflandırıcı örnek mesajlarla; talep→şebeke arızası; gerçek
+veritabanında tesissiz arıza + nokta yazma/okuma, köy raporu, liste; test
+arızası (ARZ-2026-002) silindi, sayaç geri alındı. Sürüm 2026.10.01-111.

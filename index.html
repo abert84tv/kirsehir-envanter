@@ -1048,6 +1048,41 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ne anlattı</span>
 <textarea value="{{ talepEkran.form.aciklama }}" onChange="{{ talepEkran.form.onAciklama }}" rows="3" placeholder="Üç gündür su gelmiyor, depo boş görünüyor" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13px/1.5 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}"></textarea>
 </label>
+<sc-if value="{{ talepEkran.form.oneri.var }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:12px;border:1px solid var(--color-accent);background:{{ ui.surf2 }};padding:11px 12px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="font:700 11px/1 var(--font-body);color:{{ ui.acc }}">{{ talepEkran.form.oneri.kaynak }}</span>
+<span style="flex:1"></span>
+<sc-if value="{{ talepEkran.form.oneri.aiVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ talepEkran.form.oneri.ai }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:34px;padding:0 10px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.acc }}">{{ talepEkran.form.oneri.aiL }}</button>
+</sc-if>
+</div>
+<div style="font:600 13.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ talepEkran.form.oneri.ozet }}</div>
+<div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ talepEkran.form.oneri.gerekce }}</div>
+<sc-if value="{{ talepEkran.form.oneri.uygulaVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ talepEkran.form.oneri.uygula }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:38px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/38px var(--font-body)">Öneriyi uygula</button>
+</sc-if>
+<sc-if value="{{ talepEkran.form.oneri.uygulandiVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12px/1.3 var(--font-body);color:#1b7a36">✓ Öneri uygulandı — aşağıdan değiştirebilirsiniz.</span>
+</sc-if>
+</div>
+</sc-if>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İş grubu</span>
+<select value="{{ talepEkran.form.grup }}" onChange="{{ talepEkran.form.onGrup }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:44px">
+<sc-for list="{{ talepEkran.form.gruplar }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+<sc-if value="{{ talepEkran.form.turVar }}" hint-placeholder-val="{{ false }}">
+<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Arıza türü</span>
+<select value="{{ talepEkran.form.tur }}" onChange="{{ talepEkran.form.onTur }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:44px">
+<sc-for list="{{ talepEkran.form.turler }}" as="o" hint-placeholder-count="8"><option value="{{ o }}">{{ o }}</option></sc-for>
+</select>
+</label>
+</sc-if>
+</div>
 <sc-if value="{{ talepEkran.form.sonucVar }}" hint-placeholder-val="{{ false }}">
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sonuç / not</span>
@@ -2145,6 +2180,18 @@ Hareket gir
 </div>
 <div style="padding:12px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ozet.weekNote }}</div>
 <div>
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Köy bazlı arızalar</div>
+<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ ozet.arizaKoyNot }}</div>
+<sc-for list="{{ ozet.arizaKoy }}" as="ak" hint-placeholder-count="0">
+<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<span style="flex:1 1 200px;font:600 13px/1.3 var(--font-body);color:{{ ui.fg }}">{{ ak.name }}</span>
+<span style="flex:3 1 320px;font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ak.ozet }}</span>
+<span style="flex:none;min-width:30px;text-align:right;font:700 15px/1 var(--font-heading);color:{{ ui.fg }}">{{ ak.n }}</span>
+</div>
+</sc-for>
+<sc-if value="{{ !ozet.arizaKoyVar }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Seçili aralıkta arıza yok.</div>
+</sc-if>
 <div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Köy bazlı malzeme kullanımı ve maliyeti</div>
 <div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ ozet.malzemeKoyNot }}</div>
 <sc-for list="{{ ozet.malzemeKoy }}" as="mk" hint-placeholder-count="0">
@@ -3776,9 +3823,32 @@ Hareket gir
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kayıt</span>
 <select value="{{ faultForm.assetId }}" onChange="{{ onFaultAsset }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<option value="">— Tesis yok (şebeke / boru hattı) —</option>
 <sc-for list="{{ assetOptions }}" as="o" hint-placeholder-count="4">
 <option value="{{ o.id }}">{{ o.label }}</option>
 </sc-for>
+</select>
+</label>
+<sc-if value="{{ faultForm.tesisYok }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px">
+<label style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ faultForm.yerGrup.ilce }}" onChange="{{ faultForm.yerGrup.onIlce }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.ilceler }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+<label style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy</span>
+<select value="{{ faultForm.yerGrup.koy }}" onChange="{{ faultForm.yerGrup.onKoy }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.koyler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+</div>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İş grubu</span>
+<select value="{{ faultForm.yerGrup.grup }}" onChange="{{ faultForm.yerGrup.onGrup }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.gruplar }}" as="o" hint-placeholder-count="6"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
 </select>
 </label>
 
@@ -4399,6 +4469,7 @@ Hareket gir
 
 <sc-if value="{{ saha.is.s1 }}" hint-placeholder-val="{{ false }}">
 <div class="ks-gir">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font:600 12.5px/1.3 var(--font-body);color:{{ saha.is.noktaC }}"><span style="flex:1">{{ saha.is.noktaYazi }}</span><button onClick="{{ saha.is.noktaAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.acc }};font:600 12.5px/36px var(--font-body)">{{ saha.is.noktaL }}</button></div>
 <button onClick="{{ saha.is.fotoOnce }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;border:1.5px dashed {{ saha.is.onceKenar }};background:{{ saha.is.onceZemin }};border-radius:12px;padding:11px 12px;margin-bottom:10px">
 <span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ saha.is.onceIk }};color:#fff;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
 <span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body)">{{ saha.is.onceL }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ saha.is.onceAlt }}</span></span>
@@ -4568,6 +4639,41 @@ Hareket gir
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ne anlattı</span>
 <textarea value="{{ talepEkran.form.aciklama }}" onChange="{{ talepEkran.form.onAciklama }}" rows="4" placeholder="Üç gündür su gelmiyor, depo boş görünüyor" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:400 13px/1.5 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}"></textarea>
 </label>
+<sc-if value="{{ talepEkran.form.oneri.var }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:12px;border:1px solid var(--color-accent);background:{{ ui.surf2 }};padding:11px 12px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="font:700 11px/1 var(--font-body);color:{{ ui.acc }}">{{ talepEkran.form.oneri.kaynak }}</span>
+<span style="flex:1"></span>
+<sc-if value="{{ talepEkran.form.oneri.aiVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ talepEkran.form.oneri.ai }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:34px;padding:0 10px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.acc }}">{{ talepEkran.form.oneri.aiL }}</button>
+</sc-if>
+</div>
+<div style="font:600 13.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ talepEkran.form.oneri.ozet }}</div>
+<div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ talepEkran.form.oneri.gerekce }}</div>
+<sc-if value="{{ talepEkran.form.oneri.uygulaVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ talepEkran.form.oneri.uygula }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:38px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/38px var(--font-body)">Öneriyi uygula</button>
+</sc-if>
+<sc-if value="{{ talepEkran.form.oneri.uygulandiVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12px/1.3 var(--font-body);color:#1b7a36">✓ Öneri uygulandı — aşağıdan değiştirebilirsiniz.</span>
+</sc-if>
+</div>
+</sc-if>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İş grubu</span>
+<select value="{{ talepEkran.form.grup }}" onChange="{{ talepEkran.form.onGrup }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:44px">
+<sc-for list="{{ talepEkran.form.gruplar }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+<sc-if value="{{ talepEkran.form.turVar }}" hint-placeholder-val="{{ false }}">
+<label style="flex:1 1 180px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Arıza türü</span>
+<select value="{{ talepEkran.form.tur }}" onChange="{{ talepEkran.form.onTur }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:44px">
+<sc-for list="{{ talepEkran.form.turler }}" as="o" hint-placeholder-count="8"><option value="{{ o }}">{{ o }}</option></sc-for>
+</select>
+</label>
+</sc-if>
+</div>
 <sc-if value="{{ talepEkran.form.sonucVar }}" hint-placeholder-val="{{ false }}">
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sonuç / not</span>
@@ -6956,21 +7062,53 @@ Hareket gir
 </sc-if>
 
 <div style="background:{{ ui.surf }};border-radius:16px;padding:14px">
-<div style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Tesis</div>
-<div style="display:flex;align-items:center;gap:10px;margin-top:7px">
+<div style="font:700 15px/1 var(--font-heading);margin-bottom:10px">Ne oldu?</div>
+<label style="display:block;font:600 12px/1 var(--font-body);color:{{ ui.mut }};margin-bottom:6px">İş grubu</label>
+<select value="{{ faultForm.sade.grup }}" onChange="{{ faultForm.sade.onGrup }}" aria-label="İş grubu" style="all:unset;box-sizing:border-box;display:block;width:100%;min-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};padding:0 12px;font:600 15px/48px var(--font-body);background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.sade.gruplar }}" as="o" hint-placeholder-count="6"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+<label style="display:block;font:600 12px/1 var(--font-body);color:{{ ui.mut }};margin:12px 0 6px">Arıza türü</label>
+<select value="{{ faultForm.sade.tur }}" onChange="{{ faultForm.sade.onTur }}" aria-label="Arıza türü" style="all:unset;box-sizing:border-box;display:block;width:100%;min-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};padding:0 12px;font:600 15px/48px var(--font-body);background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.sade.turSecenek }}" as="o" hint-placeholder-count="8"><option value="{{ o }}">{{ o }}</option></sc-for>
+</select>
+</div>
+
+<div style="background:{{ ui.surf }};border-radius:16px;padding:14px">
+<div style="font:700 15px/1 var(--font-heading);margin-bottom:10px">Nerede?</div>
+<sc-if value="{{ faultForm.sade.modSecVar }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;background:{{ ui.surf2 }};border-radius:12px;padding:3px;margin-bottom:12px">
+<sc-for list="{{ faultForm.sade.modSec }}" as="o" hint-placeholder-count="2">
+<button onClick="{{ o.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:42px;border-radius:10px;background:{{ o.bg }};color:{{ o.fg }};font:600 14px/42px var(--font-body)">{{ o.l }}</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.sade.tesisModu }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px">
 <div style="flex:1;min-width:0"><div style="font:700 15px/1.3 var(--font-body)">{{ faultForm.sade.tesis }}</div><div style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.tesisAlt }}</div></div>
 <sc-if value="{{ faultForm.sade.tesisDegisVar }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ faultForm.sade.tesisDegis }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 14px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/44px var(--font-body)">{{ faultForm.sade.tesisDegisL }}</button>
 </sc-if>
 </div>
+</sc-if>
+<sc-if value="{{ faultForm.sade.koyModu }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px">
+<select value="{{ faultForm.sade.ilce }}" onChange="{{ faultForm.sade.onIlce }}" aria-label="İlçe" style="all:unset;box-sizing:border-box;display:block;width:100%;min-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};padding:0 12px;font:600 15px/48px var(--font-body);background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.sade.ilceler }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+<select value="{{ faultForm.sade.koy }}" onChange="{{ faultForm.sade.onKoy }}" aria-label="Köy" style="all:unset;box-sizing:border-box;display:block;width:100%;min-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};padding:0 12px;font:600 15px/48px var(--font-body);background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.sade.koyler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+<div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">Boru hattı, vana, abone bağlantısı gibi bir tesise bağlı olmayan arızalar köyle kaydedilir; tam yeri ekip varınca “Arıza noktası” ile işaretlenir.</div>
 </div>
-
-<div style="background:{{ ui.surf }};border-radius:16px;padding:14px">
-<div style="font:700 15px/1 var(--font-heading);margin-bottom:10px">Ne oldu?</div>
-<div style="display:flex;flex-wrap:wrap;gap:8px">
-<sc-for list="{{ faultForm.sade.turler }}" as="t" hint-placeholder-count="6">
-<button onClick="{{ t.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 14px;border-radius:12px;border:1.5px solid {{ t.kenar }};background:{{ t.bg }};color:{{ t.fg }};font:600 14px/46px var(--font-body)">{{ t.l }}</button>
-</sc-for>
+</sc-if>
+<div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ ui.surf2 }};display:flex;align-items:center;justify-content:center;color:{{ ui.acc }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.4"></circle></svg></span>
+<div style="flex:1;min-width:0">
+<div style="font:600 13.5px/1.3 var(--font-body)">Arıza noktası</div>
+<sc-if value="{{ faultForm.sade.noktaVar }}" hint-placeholder-val="{{ false }}"><div style="font:600 12px/1.35 var(--font-body);color:#1b7a36">{{ faultForm.sade.noktaYazi }}</div></sc-if>
+<div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.noktaAlt }}</div>
+</div>
+<button onClick="{{ faultForm.sade.noktaAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:42px;padding:0 12px;border-radius:12px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 13px/42px var(--font-body)">{{ faultForm.sade.noktaL }}</button>
 </div>
 </div>
 
@@ -7066,9 +7204,32 @@ Hareket gir
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kayıt</span>
 <select value="{{ faultForm.assetId }}" onChange="{{ onFaultAsset }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer">
+<option value="">— Tesis yok (şebeke / boru hattı) —</option>
 <sc-for list="{{ assetOptions }}" as="o" hint-placeholder-count="4">
 <option value="{{ o.id }}">{{ o.label }}</option>
 </sc-for>
+</select>
+</label>
+<sc-if value="{{ faultForm.tesisYok }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px">
+<label style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ faultForm.yerGrup.ilce }}" onChange="{{ faultForm.yerGrup.onIlce }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.ilceler }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+<label style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy</span>
+<select value="{{ faultForm.yerGrup.koy }}" onChange="{{ faultForm.yerGrup.onKoy }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.koyler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+</div>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İş grubu</span>
+<select value="{{ faultForm.yerGrup.grup }}" onChange="{{ faultForm.yerGrup.onGrup }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.gruplar }}" as="o" hint-placeholder-count="6"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
 </select>
 </label>
 <label style="display:flex;flex-direction:column;gap:5px">
@@ -7751,6 +7912,39 @@ const FAULT_TYPES = {
   ag: ['Elektrik kesintisi', 'Sigorta attı', 'Kontaktör / röle arızası', 'Kablo arızası', 'Pano su aldı', 'Diğer'],
   ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer']
 };
+// İş grubu → arıza türleri. Arıza ekranında önce grup, sonra yalnız o
+// gruba ait türler açılır listede gelir. "tesis" grubun hangi tesis türüne
+// bağlandığını, "sebeke" tesis yerine köyde bir noktada olabileceğini
+// (boru hattı, vana, abone bağlantısı) söyler.
+const ARIZA_GRUP = {
+  su: { ad: 'Su şebekesi / boru hattı', sebeke: true, tesis: null, turler: [
+    'Boru patlağı', 'Boru kaçağı / sızıntı', 'Su yok / kesinti', 'Basınç düşüklüğü', 'Vana arızası',
+    'Vana kaçağı', 'Abone bağlantısı arızası', 'Sayaç arızası', 'Bulanık / kirli su', 'Çeşme / hidrant arızası',
+    'Donma', 'Diğer'] },
+  kuyu: { ad: 'Kuyu ve pompa', sebeke: false, tesis: 'kuyu', turler: [
+    'Pompa çalışmıyor', 'Debi düşüklüğü', 'Motor aşırı akım', 'Motor yandı', 'Kolon borusu kaçağı',
+    'Çekvalf arızası', 'Kuyu kumlanması', 'Seviye / şamandıra arızası', 'Kuyu başı kaçağı', 'RF haberleşme kesildi', 'Diğer'] },
+  depo: { ad: 'Depo', sebeke: false, tesis: 'depo', turler: [
+    'Depo kaçağı / çatlak', 'Taşma', 'Klorlama cihazı arızası', 'Klor yetersiz / fazla', 'Seviye sensörü arızası',
+    'Giriş / çıkış vanası arızası', 'Kapak / güvenlik', 'Temizlik gerekiyor', 'RF modülü arızası', 'Diğer'] },
+  elektrik: { ad: 'Elektrik / pano', sebeke: false, tesis: 'ag', turler: [
+    'Elektrik kesintisi', 'Sigorta attı', 'Kontaktör / röle arızası', 'Kablo arızası', 'Pano su aldı',
+    'Termik attı', 'Faz kaybı', 'Trafo arızası', 'Topraklama sorunu', 'Kompanzasyon arızası', 'Diğer'] },
+  ges: { ad: 'GES', sebeke: false, tesis: 'ges', turler: [
+    'İnverter arızası', 'Panel kırığı', 'Panel kirli', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası',
+    'Kablo / konnektör arızası', 'Diğer'] },
+  kanal: { ad: 'Kanalizasyon', sebeke: true, tesis: null, turler: [
+    'Tıkanıklık', 'Taşma', 'Rögar kapağı kırık / yok', 'Koku', 'Hat çökmesi / göçük', 'Foseptik dolu', 'Diğer'] }
+};
+// Tesis türünden varsayılan grup; eski kayıtta grup yoksa türden tahmin
+const TESIS_GRUP = { kuyu: 'kuyu', depo: 'depo', ag: 'elektrik', ges: 'ges' };
+function arizaGrubu(f, a) {
+  if (f && ARIZA_GRUP[f.grup]) return f.grup;
+  if (a && TESIS_GRUP[a.type]) return TESIS_GRUP[a.type];
+  const tur = f && f.type;
+  for (const g in ARIZA_GRUP) if (tur && ARIZA_GRUP[g].turler.includes(tur)) return g;
+  return 'su';
+}
 // Malzeme kataloğu ilk kurulumda bu listeyle başlar — [ad, birim fiyat ₺,
 // birim, kategori]. Liste sabit değil: Ambar ekranındaki "Malzeme tanımla"
 // ile eklenir, fiyatı ve kritik eşiği değişir; sunucuda "malzeme"
@@ -8155,7 +8349,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.01-110';
+const SURUM = '2026.10.01-111';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -8241,7 +8435,7 @@ class Component extends DCLogic {
     faults: (() => {
       try {
         const b = JSON.parse(localStorage.getItem('ks-ariza-bekleyen') || '[]');
-        return Array.isArray(b) ? b.filter(f => f && f.id && f.assetId).map(f => ({ ...f, sync: 'pending' })) : [];
+        return Array.isArray(b) ? b.filter(f => f && f.id && (f.assetId || f.ilce)).map(f => ({ ...f, sync: 'pending' })) : [];
       } catch (e) { return []; }
     })(),
     isEmirleri: [], isEmriPanel: null, selected: null, detailTab: 'bilgi',
@@ -8589,6 +8783,12 @@ class Component extends DCLogic {
         this.setState({ hatKatman: !!d.on });
       }
       if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
+      // Haritadaki arıza noktasına dokunuldu: arıza açılır
+      if (d.ks === 'arizaAc') {
+        const f = (this.state.faults || []).find(x => x.id === d.id);
+        if (f) this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } });
+        return;
+      }
       if (d.ks === 'konum') { this.setState({ benimKonum: { lat: d.lat, lon: d.lon, t: Date.now() } }); this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
       if (d.ks === 'konumYok') {
         this.say(d.kod === 1
@@ -9977,6 +10177,105 @@ class Component extends DCLogic {
   }
   // Yeni talepte numara sunucudan alınır; alma işi beklediği için kayıt
   // iki adıma bölünür. Var olan talebin numarası değişmez.
+  // Gelen talep metninden ön sınıflandırma (kurala dayalı, çevrimdışı çalışır):
+  // iş grubu, arıza türü, aciliyet ve metinde geçen köy. Yapay zekâ
+  // sınıflandırması kurulunca onun sonucu tercih edilir (talepAiSiniflandir).
+  talepSiniflandir(metin, ipucu) {
+    // Türkçe harfler sadeleşir, boşluklar korunur (sadeMetin boşluğu da siler)
+    const katla = x => String(x || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u')
+      .replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/â/g, 'a').replace(/[^a-z0-9]+/g, ' ');
+    const T = ' ' + katla(metin) + ' ';
+    const ham = ' ' + String(metin || '').toLocaleLowerCase('tr') + ' ';
+    const var_ = re => re.test(T);
+    const gerekce = [];
+    // Kökler ekleriyle de eşleşir (kuyu-nun, pompa-sı, boru-su); kısa ve
+    // başka kelimenin başı olabilecekler (faz, ges, don) tam kelime aranır
+    const GRUP_KURAL = [
+      ['kanal', /\b(kanalizasyon\w*|rogar\w*|foseptik\w*|lagim\w*|pis su|atik su|gider\w*)/],
+      ['ges', /\b(ges\b|gunes panel\w*|gunes enerji\w*|inverter\w*|invertor\w*)/],
+      ['elektrik', /\b(elektrik\w*|sigorta\w*|pano\w*|trafo\w*|faz\b|kontaktor\w*|termik\w*|cereyan\w*)/],
+      ['depo', /\b(depo\w*|hazne\w*|klor\w*)/],
+      ['kuyu', /\b(kuyu\w*|pompa\w*|dalgic\w*|motor\w*|sondaj\w*|debi\w*)/],
+      ['su', /\b(boru\w*|patla\w*|kacak\w*|kacag\w*|sizinti\w*|siziyor|vana\w*|sayac\w*|su yok|susuz\w*|su gelmiyor|basinc\w*|tazyik\w*|bulanik\w*|camur\w*|cesme\w*|hidrant\w*|dondu|donma\w*)/]
+    ];
+    let grup = null;
+    for (const [g, re] of GRUP_KURAL) { const m = T.match(re); if (m) { grup = g; gerekce.push('“' + m[1] + '” → ' + ARIZA_GRUP[g].ad); break; } }
+    if (!grup && /su\b/.test(T)) { grup = 'su'; gerekce.push('“su” → ' + ARIZA_GRUP.su.ad); }
+    const TUR_KURAL = {
+      su: [[/patla/, 'Boru patlağı'], [/(kacak|kacag|sizinti|siziyor|akiyor)/, 'Boru kaçağı / sızıntı'], [/(su yok|susuz|gelmiyor|kesik|kesinti|akmiyor)/, 'Su yok / kesinti'],
+        [/(basinc|tazyik|az geliyor|zayif|ince akiyor)/, 'Basınç düşüklüğü'], [/vana/, 'Vana arızası'], [/sayac/, 'Sayaç arızası'],
+        [/(bulanik|camur|kirli|renkli|kokulu su)/, 'Bulanık / kirli su'], [/(cesme|hidrant)/, 'Çeşme / hidrant arızası'], [/(dondu|donma|buz)/, 'Donma']],
+      kuyu: [[/(yandi|yanik)/, 'Motor yandı'], [/(calismiyor|durdu|calismaz|bozuldu)/, 'Pompa çalışmıyor'], [/(debi|az su|su azaldi)/, 'Debi düşüklüğü'],
+        [/(atiyor|akim)/, 'Motor aşırı akım'], [/(kum|camur)/, 'Kuyu kumlanması'], [/(kacak|sizinti)/, 'Kuyu başı kaçağı']],
+      depo: [[/(tasiyor|tasma|tasti)/, 'Taşma'], [/(catlak|kacak|sizinti)/, 'Depo kaçağı / çatlak'], [/klor/, 'Klor yetersiz / fazla'], [/(kapak|kilit)/, 'Kapak / güvenlik'], [/(temizlik|kirli)/, 'Temizlik gerekiyor']],
+      elektrik: [[/(elektrik yok|kesinti|kesik)/, 'Elektrik kesintisi'], [/sigorta/, 'Sigorta attı'], [/termik/, 'Termik attı'], [/faz/, 'Faz kaybı'], [/trafo/, 'Trafo arızası'], [/(su aldi|islandi)/, 'Pano su aldı'], [/kablo/, 'Kablo arızası']],
+      ges: [[/(kirik|catlak)/, 'Panel kırığı'], [/(kirli|toz)/, 'Panel kirli'], [/inverter|invertor/, 'İnverter arızası'], [/(uretim|az uretiyor)/, 'Üretim düşüklüğü']],
+      kanal: [[/(tikali|tikandi|tikanik)/, 'Tıkanıklık'], [/(tasiyor|tasma)/, 'Taşma'], [/(rogar|kapak)/, 'Rögar kapağı kırık / yok'], [/koku/, 'Koku'], [/(cokme|gocuk)/, 'Hat çökmesi / göçük'], [/foseptik/, 'Foseptik dolu']]
+    };
+    let tur = null;
+    if (grup) {
+      for (const [re, ad] of TUR_KURAL[grup] || []) if (var_(re)) { tur = ad; gerekce.push(ad); break; }
+      if (!tur) tur = ARIZA_GRUP[grup].turler[0];
+    }
+    // Aciliyet
+    let oncelik = 'Normal';
+    if (var_(/\b(acil|hemen|derhal|cok acil|tum koy|butun koy|koyun tamami|kimsede su yok|hastane|okul|cami|patla\w*|sel|su basti)\b/)) { oncelik = 'Acil'; gerekce.push('aciliyet ifadesi'); }
+    else if (var_(/\b(su yok|susuz|gelmiyor|iki gundur|2 gundur|uc gundur|3 gundur|gunlerdir|hala)\b/)) { oncelik = 'Yüksek'; gerekce.push('uzun süren kesinti'); }
+    // Köy: metinde geçen yerleşim adı (en uzun eşleşme); ilçe ipucu varsa ona öncelik
+    let koy = null, ilce = null;
+    // Metinde geçen ilçe adı köy değil, ilçe ipucudur ("Mucur Kırlar köyü")
+    const ilceler = ((this.state.data && this.state.data.DISTRICTS) || []).map(d => d.name);
+    const ilceAdlari = new Set(ilceler.map(x => katla(x).trim()));
+    const ilceMetin = ilceler.find(x => T.includes(' ' + katla(x).trim() + ' '));
+    if (ilceMetin && !(ipucu && ipucu.ilce)) ipucu = { ...(ipucu || {}), ilce: ilceMetin };
+    const yerler = (this._yer || []).filter(r => r[3] === 'YKOY' || r[3] === 'BCK');
+    let enUzun = 0;
+    for (const r of yerler) {
+      const ad = katla(String(r[0]).replace(/_?Mrk ?(bucak|köy)$/i, '')).trim();
+      if (ad.length < 3 || ad.length <= enUzun || ilceAdlari.has(ad)) continue;
+      if (T.includes(' ' + ad + ' ')) {
+        if (ipucu && ipucu.ilce && r[4] && katla(r[4]).trim() !== katla(ipucu.ilce).trim()) continue;
+        enUzun = ad.length; koy = String(r[0]).replace(/_?Mrk ?(bucak|köy)$/i, ' merkez').trim(); ilce = r[4] || null;
+      }
+    }
+    if (koy) gerekce.push('köy: ' + koy);
+    if (!ilce && ilceMetin) { ilce = ilceMetin; gerekce.push('ilçe: ' + ilceMetin); }
+    const guven = (grup ? 1 : 0) + (tur && grup ? 1 : 0) + (koy ? 1 : 0);
+    return { grup, tur, oncelik, koy, ilce, gerekce, guven, kaynak: 'kural' };
+  }
+  // Yapay zekâ sınıflandırması: sonuç öneri kutusuna gelir, operatör uygular
+  async talepAiSiniflandir() {
+    const tf = this.state.talepForm;
+    const M = this._sb;
+    if (!tf || !M || !M.aiSiniflandir) return;
+    const metin = [tf.konu, tf.aciklama].filter(Boolean).join('. ');
+    if ((tf.aciklama || '').trim().length < 6) return this.duyur('Önce başvurunun ne olduğunu yazın.', 4000, 'kotu');
+    this.setState({ talepForm: { ...tf, aiYukleniyor: true } });
+    const r = await M.aiSiniflandir(metin);
+    const f0 = this.state.talepForm;
+    if (!f0) return;
+    if (!r.ok) {
+      this.setState({ talepForm: { ...f0, aiYukleniyor: false } });
+      return this.duyur(r.anahtarYok
+        ? 'Yapay zekâ henüz kurulmadı — Supabase > Edge Functions > Secrets bölümüne ANTHROPIC_API_KEY girilmeli. Şimdilik otomatik öneri kullanılıyor.'
+        : 'Yapay zekâ sınıflandıramadı: ' + r.err, 9000, 'kotu');
+    }
+    const d = r.data;
+    // Yapay zekânın yazdığı köy yerleşim listesinde aranır (yazım farkı olabilir)
+    const katla = x => String(x || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u')
+      .replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[^a-z0-9]+/g, ' ').replace(/\s*koy(u|unde|unden)?$/, '').trim();
+    let koy = null, ilce = d.ilce || null;
+    if (d.koy) {
+      const hedef = katla(d.koy);
+      const r2 = (this._yer || []).find(y => (y[3] === 'YKOY' || y[3] === 'BCK') && katla(String(y[0]).replace(/_?Mrk ?(bucak|köy)$/i, '')) === hedef
+        && (!ilce || !y[4] || katla(y[4]) === katla(ilce)));
+      if (r2) { koy = String(r2[0]).replace(/_?Mrk ?(bucak|köy)$/i, ' merkez').trim(); ilce = ilce || r2[4] || null; }
+    }
+    this.setState({ talepForm: { ...f0, aiYukleniyor: false, aiSonuc: {
+      grup: d.grup, tur: d.tur, oncelik: d.oncelik, koy, ilce, kaynak: 'ai',
+      gerekce: [d.ozet, d.gerekce, d.koy && !koy ? '“' + d.koy + '” yerleşim listesinde bulunamadı' : ''].filter(Boolean)
+    } } });
+  }
   talepKaydet(g) {
     if (!g) return;
     const ad = (g.ad || '').trim();
@@ -10019,7 +10318,10 @@ class Component extends DCLogic {
       sonuc: (g.sonuc || '').trim(),
       arizaNo: g.arizaNo || '',
       kvkkOnay: !!g.kvkkOnay, kvkkSilme: g.kvkkSilme || '',
-      alan: g.alan || ((this.state.session && this.state.session.name) || '')
+      alan: g.alan || ((this.state.session && this.state.session.name) || ''),
+      // Ön sınıflandırma (kural ya da yapay zekâ) — arızaya çevrilince grup/tür buradan gelir
+      grup: ARIZA_GRUP[g.grup] ? g.grup : null, tur: g.tur || null,
+      siniflandirma: g.siniflandirma || null
     };
     if (i < 0) liste.unshift(kayit); else liste[i] = kayit;
     this.denetimYaz('talep', i < 0 ? 'Talep alındı' : 'Talep güncellendi',
@@ -10049,22 +10351,33 @@ class Component extends DCLogic {
     const nk = nkey(t.koy), ik = nkey(t.ilce);
     const yerler = this._yer || [];
     const nokta = yerler.find(r => nkey(r[0]) === nk && (!ik || !r[4] || nkey(r[4]) === ik)) || yerler.find(r => nkey(r[0]) === nk);
-    const ayni = (this.state.assets || []).filter(a => a.village && nkey(a.village) === nk && (!ik || nkey(a.district) === ik));
+    // Talebin sınıfı (yoksa metinden tahmin): şebeke arızası (su/kanal)
+    // tesis seçtirmeden talebin köyüyle açılır
+    const sinif = ARIZA_GRUP[t.grup] ? { grup: t.grup, tur: t.tur } : this.talepSiniflandir([t.konu, t.aciklama].join(' '), { ilce: t.ilce });
+    const grup = ARIZA_GRUP[sinif.grup] ? sinif.grup : 'su';
+    const G = ARIZA_GRUP[grup];
+    const tur = G.turler.includes(sinif.tur) ? sinif.tur : G.turler[0];
+    const sebeke = G.sebeke;
+    const ayni = sebeke ? [] : (this.state.assets || []).filter(a => a.village && nkey(a.village) === nk && (!ik || nkey(a.district) === ik)
+      && (!G.tesis || a.type === G.tesis));
     const tek = ayni.length === 1 ? ayni[0] : null;
     const telefon = this.state.device === 'phone';
     this.setState({
       tab: telefon ? this.state.tab : 'ariza', panel: 'ariza', selected: tek ? tek.id : this.state.selected,
       faultForm: {
-        assetId: tek ? tek.id : null, type: (FAULT_TYPES[tek ? tek.type : 'kuyu'] || ['Diğer'])[0],
+        assetId: tek ? tek.id : null, type: tur, grup, yerModu: sebeke ? 'koy' : 'tesis',
+        ilce: sebeke ? (t.ilce || '') : '', koy: sebeke ? (t.koy || '') : '',
         priority: t.oncelik || 'Normal', status: 'acik', crew: ATANMADI,
         note: t.no + ' · ' + (TALEP_SIFAT[t.sifat] || '') + ' ' + t.ad
           + (t.tel ? ' (' + t.tel + ')' : '') + ' · ' + (TALEP_KANAL[t.kanal] || '') + '\n' + (t.aciklama || ''),
         malzeme: [], sesler: [], iscilik: '', isaret: null,
         id: null, photos: [], hours: '', talepId: t.id,
         talepKoy: t.koy, talepNokta: nokta ? { lat: nokta[1], lon: nokta[2] } : null,
-        tesisSec: !tek, tesisQ: ''
+        tesisSec: !tek && !sebeke, tesisQ: ''
       }
-    }, () => this.duyur(t.no + ' arıza formuna taşındı — ' + (tek
+    }, () => this.duyur(t.no + ' arıza formuna taşındı — ' + (sebeke
+      ? G.ad + ' arızası olarak ' + t.koy + ' köyüyle açıldı; tesis gerekmiyor. Ekip varınca arıza noktasını kaydeder.'
+      : tek
       ? tek.code + ' seçildi. Arıza türünü seçip kaydedin.'
       : (nokta ? t.koy + ' köyüne yakın tesisler listede önce. Tesisi seçin, türü işaretleyip kaydedin.'
         : t.koy + ' köyü yerleşim listesinde bulunamadı — tesisi arayarak seçin.'))
@@ -11335,7 +11648,7 @@ class Component extends DCLogic {
   async arizaFotoGonder(photos, tesisDbId, kod, arizaDbId) {
     const M = this._sb;
     const gercek = (photos || []).filter(p => p.file);
-    if (!M || !M.tokenOku() || !tesisDbId || !gercek.length) return 0;
+    if (!M || !M.tokenOku() || (!tesisDbId && !arizaDbId) || !gercek.length) return 0;
     let ok = 0;
     for (const p of gercek) {
       // arizaDbId verilince "arıza kanıtı" sayılır — saklama süresi min 2 yıl,
@@ -11345,8 +11658,15 @@ class Component extends DCLogic {
       if (r.ok) ok++;
       try { URL.revokeObjectURL(p.url); } catch (e) {}
     }
-    if (ok) this.fotoYenile(tesisDbId);
+    if (ok) { if (tesisDbId) this.fotoYenile(tesisDbId); if (arizaDbId) this.arizaFotoYenile(arizaDbId); }
     return ok;
+  }
+  // Arızaya bağlı fotoğraflar — tesissiz arıza dahil (fotolar['a' + id])
+  async arizaFotoYenile(arizaDbId) {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || !arizaDbId || !M.arizaFotoListesi) return;
+    const r = await M.arizaFotoListesi(arizaDbId);
+    if (r.ok) this.setState(st => ({ fotolar: { ...st.fotolar, ['a' + arizaDbId]: r.data } }));
   }
   // Arıza kaydını sunucuya yazar. 2026.10.01'e kadar arızalar hiç sunucuya
   // gitmiyordu (arizaKaydet tanımlıydı ama çağrılmıyordu): kayıt yalnız
@@ -11360,9 +11680,11 @@ class Component extends DCLogic {
     if (!M || !M.tokenOku() || this.state.offline || !this.state.sunucu) return null;
     const f = (this.state.faults || []).find(x => x.id === id);
     if (!f || f.sync !== 'pending') return null;
-    const a = (this.state.assets || []).find(x => x.id === f.assetId);
-    // Tesis henüz sunucuda değilse önce tesis kuyruğu gider
-    if (!a || a.dbId == null) return null;
+    const a = f.assetId ? (this.state.assets || []).find(x => x.id === f.assetId) : null;
+    // Tesis henüz sunucuda değilse önce tesis kuyruğu gider; tesissiz
+    // (şebeke) arızada ilçe gerekir
+    if (f.assetId && (!a || a.dbId == null)) return null;
+    if (!f.assetId && !f.ilce) return null;
     let no = f.no;
     if (!f.dbId && !/^ARZ-\d{4}-\d+$/.test(no || '')) {
       const n = await M.numaraAl('ariza');
@@ -11378,9 +11700,11 @@ class Component extends DCLogic {
     const saat = parseFloat(String(f.hours || '').replace(',', '.')) || 0;
     const isc = parseFloat(String(f.iscilik || '').replace(',', '.')) || saat * 320;
     const r = await M.arizaKaydet({
-      dbId: f.dbId || null, no, tesisDbId: a.dbId, type: f.type, priority: f.priority || 'Normal',
+      dbId: f.dbId || null, no, tesisDbId: a ? a.dbId : null, type: f.type, priority: f.priority || 'Normal',
       status: f.status || 'acik', crew: f.crew && f.crew !== ATANMADI ? f.crew : null,
-      desc: f.note || f.desc || null, malzeme: f.malzeme || [], maliyet: malT + isc || null
+      desc: f.note || f.desc || null, malzeme: f.malzeme || [], maliyet: malT + isc || null,
+      grup: arizaGrubu(f, a), koy: a ? null : f.koy, ilce: a ? null : f.ilce,
+      nokta: f.nokta || null, noktaDogruluk: f.noktaDogruluk ?? null
     });
     if (!r.ok) {
       if (!r.cevrimdisi) this.duyur((f.no || 'Arıza') + ' sunucuya yazılamadı: ' + (r.err || 'bilinmeyen hata') + ' Kayıt cihazda bekliyor.', 9000, 'kotu');
@@ -11388,7 +11712,7 @@ class Component extends DCLogic {
     }
     const dbId = f.dbId || Number(r.data);
     const yeniId = f.dbId ? f.id : 'f' + dbId;
-    const yeni = { ...f, id: yeniId, dbId, no, tesisDbId: a.dbId, sync: 'synced' };
+    const yeni = { ...f, id: yeniId, dbId, no, tesisDbId: a ? a.dbId : null, grup: arizaGrubu(f, a), sync: 'synced' };
     const ff = this.state.faultForm;
     // Talep, arızaya cihaz numarasıyla bağlanmıştı — sunucu numarasına çevrilir
     const tl = (this.state.talepler || []);
@@ -11402,19 +11726,20 @@ class Component extends DCLogic {
       faultForm: ff && ff.id === id ? { ...ff, id: yeniId, dbId, no, sync: 'synced' } : st.faultForm,
       ...(talepDegis ? { talepler: (st.talepler || []).map(t => t.arizaNo === f.no ? { ...t, arizaNo: no } : t) } : {})
     }), res));
+    this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults });
     // Kayıtla birlikte seçilen fotoğraf ve sesli notlar arıza kimliği belli
     // olunca yüklenir — arıza kanıtı sayılsınlar diye
     const md = (this._arizaMedya || {})[id];
     if (md) {
       delete this._arizaMedya[id];
       if ((md.photos || []).length) {
-        this.arizaFotoGonder(md.photos, a.dbId, a.code, dbId).then(n => {
+        this.arizaFotoGonder(md.photos, a ? a.dbId : null, a ? a.code : no, dbId).then(n => {
           if (n) this.duyur(`${n} arıza fotoğrafı ${no} kaydına yüklendi.`, 5000, 'iyi');
         });
       }
       for (const sn of (md.sesler || [])) {
         const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
-        M.sesYukle(sn.blob, a.dbId, a.code, sec, 'Arıza sesli notu · ' + (ASAMA_AD[sn.asama] || ASAMA_AD.once), dbId);
+        M.sesYukle(sn.blob, a ? a.dbId : null, a ? a.code : no, sec, 'Arıza sesli notu · ' + (ASAMA_AD[sn.asama] || ASAMA_AD.once), dbId);
       }
     }
     return yeni;
@@ -11441,6 +11766,8 @@ class Component extends DCLogic {
       delete g.notEk;
     }
     this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? g : x), sahaKapanis: null }));
+    // Sahaya varınca arıza noktası kendiliğinden alınır (izin yoksa uyarır)
+    if (yeni === 'sahada' && !f.nokta) setTimeout(() => this.arizaNoktaAl(g, true), 300);
     const a = (this.state.assets || []).find(x => x.id === f.assetId);
     this.denetimYaz('ariza', 'Saha: ' + (STATUS_LABEL[yeni] || yeni), (f.no || '') + ' · ' + (f.type || '')
       + ((g.malzeme || []).length && kapanis ? ' · ' + g.malzeme.map(m => m.ad + ' × ' + m.adet).join(', ') : ''), a ? a.code : '');
@@ -11455,6 +11782,95 @@ class Component extends DCLogic {
         if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, g), 300);
       }
     }
+  }
+  // Arıza noktası: ekibin cihaz konumu arızanın kendi koordinatı olarak
+  // kaydedilir (boru hattı arızası tesisin yerinde değildir). "Sahaya
+  // vardım"da kendiliğinden alınır, istenirse yeniden alınır. Köy raporları
+  // bu noktanın en yakın köyünü kullanır.
+  arizaNoktaAl(f, sessiz) {
+    if (!f) return;
+    if (!navigator.geolocation) { if (!sessiz) this.duyur('Bu cihaz konum vermiyor.', 4000, 'kotu'); return; }
+    if (!sessiz) this.say('Arıza noktası alınıyor — açık alanda birkaç saniye bekleyin…');
+    navigator.geolocation.getCurrentPosition(p => {
+      const nokta = { lat: +p.coords.latitude.toFixed(6), lon: +p.coords.longitude.toFixed(6) };
+      const dog = Math.round(p.coords.accuracy || 0);
+      if (nokta.lat < 38.5 || nokta.lat > 40.1 || nokta.lon < 33 || nokta.lon > 35.1) {
+        return this.duyur('Alınan konum il sınırı dışında (' + nokta.lat + ', ' + nokta.lon + ') — kaydedilmedi.', 7000, 'kotu');
+      }
+      const ek = { nokta, noktaDogruluk: dog, noktaZaman: new Date().toISOString() };
+      const yeniKayit = !f.id;
+      this.setState(st => ({
+        faults: yeniKayit ? st.faults : (st.faults || []).map(x => x.id === f.id ? { ...x, ...ek, sync: 'pending' } : x),
+        faultForm: st.faultForm && (yeniKayit ? !st.faultForm.id : st.faultForm.id === f.id) ? { ...st.faultForm, ...ek } : st.faultForm,
+        benimKonum: { lat: nokta.lat, lon: nokta.lon, t: Date.now() }
+      }));
+      if (!yeniKayit) setTimeout(() => this.arizaKuyrukGonder(), 0);
+      const k = this.yakinKoy(nokta);
+      this.duyur('Arıza noktası ' + (yeniKayit ? 'forma eklendi' : 'kaydedildi') + ' · ±' + dog + ' m'
+        + (k ? ' · ' + k.ad + ' köyüne ' + (k.m < 1000 ? Math.round(k.m) + ' m' : (k.m / 1000).toFixed(1) + ' km') : '')
+        + (dog > 50 ? '. Doğruluk düşük — açık alanda yeniden alabilirsiniz.' : '.'), 6000, dog > 50 ? 'kotu' : 'iyi');
+    }, e => {
+      if (!sessiz || (e && e.code === 1)) this.duyur(e && e.code === 1 ? 'Konum izni verilmemiş — tarayıcı ayarlarından bu siteye konum iznini açın.' : 'Konum alınamadı — açık alanda yeniden deneyin.', 7000, 'kotu');
+    }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
+  }
+  // Arıza formunun grup/tür, yer (tesis ya da köy) ve arıza noktası alanları —
+  // telefonun sade ekranı ve ayrıntılı form ortak kullanır
+  arizaFormYer(ff, ffAsset) {
+    const s = this.state, m = s.data, ui = this.th();
+    const yaz = y => this.setState({ faultForm: { ...this.state.faultForm, ...y } });
+    const g = arizaGrubu(ff, ffAsset);
+    const liste = ARIZA_GRUP[g].turler.includes(ff.type) || !ff.type ? ARIZA_GRUP[g].turler : [ff.type, ...ARIZA_GRUP[g].turler];
+    const yerModu = ff.yerModu || (ff.assetId ? 'tesis' : (ARIZA_GRUP[g].sebeke ? 'koy' : 'tesis'));
+    const dIlce = m ? m.DISTRICTS.find(x => x.name === ff.ilce) : null;
+    const koyler = dIlce ? [...new Set([...(m.VILLAGES[dIlce.id] || []), ...(((s.ekKoyler || {})[dIlce.id] || []).map(x => x.ad))])].sort((x, y) => x.localeCompare(y, 'tr')) : [];
+    const n = ff.nokta;
+    const nk = n ? this.yakinKoy(n) : null;
+    const kmY = v => v < 1000 ? Math.round(v) + ' m' : (v / 1000).toFixed(1).replace('.', ',') + ' km';
+    return {
+      grup: g, gruplar: Object.keys(ARIZA_GRUP).map(k => ({ v: k, l: ARIZA_GRUP[k].ad })),
+      onGrup: e => {
+        const v = e.target.value;
+        const G = ARIZA_GRUP[v];
+        yaz({ grup: v, type: G.turler[0],
+          // şebeke grubunda tesis yerine köy; tesisin türü uymuyorsa tesis bırakılır
+          ...(G.sebeke && !ff.id ? { yerModu: 'koy' } : {}),
+          ...(!G.sebeke && !ff.id ? { yerModu: 'tesis' } : {}),
+          ...(ffAsset && G.tesis && G.tesis !== ffAsset.type && !ff.id ? { assetId: null } : {}) });
+      },
+      turSecenek: liste, tur: ff.type || '', onTur: e => yaz({ type: e.target.value }),
+      yerModu, tesisModu: yerModu === 'tesis', koyModu: yerModu === 'koy',
+      modSec: !ff.id ? [['tesis', 'Tesiste'], ['koy', 'Şebekede (köyde)']].map(([k, l]) => ({
+        l, bg: yerModu === k ? 'var(--color-accent)' : 'transparent', fg: yerModu === k ? '#fff' : ui.fg,
+        sec: () => yaz(k === 'koy' ? { yerModu: 'koy', assetId: null, tesisSec: false } : { yerModu: 'tesis' })
+      })) : [],
+      modSecVar: !ff.id,
+      ilceler: [{ v: '', l: 'İlçe seçin…' }, ...(m ? m.DISTRICTS.map(d => ({ v: d.name, l: d.name })) : [])],
+      ilce: ff.ilce || '', onIlce: e => yaz({ ilce: e.target.value, koy: '' }),
+      koyler: [{ v: '', l: ff.ilce ? 'Köy seçin…' : 'Önce ilçe' }, ...koyler.map(k => ({ v: k, l: k }))],
+      koy: ff.koy || '', onKoy: e => yaz({ koy: e.target.value }),
+      koyYazi: !ff.assetId && ff.koy ? ff.koy + ' · ' + (ff.ilce || '') : '',
+      noktaVar: !!n, noktaYok: !n,
+      noktaYazi: n ? 'Kayıtlı · ±' + (ff.noktaDogruluk ?? '?') + ' m' + (nk ? ' · ' + nk.ad + ' köyüne ' + kmY(nk.m) : '') : '',
+      noktaAlt: n ? n.lat.toFixed(5) + ', ' + n.lon.toFixed(5) + (ff.noktaKim ? ' · ' + ff.noktaKim : '')
+        : (ff.id ? '“Sahaya vardım”da kendiliğinden alınır' : 'Arızanın başındaysanız şimdi kaydedin'),
+      noktaAl: () => this.arizaNoktaAl(this.state.faultForm),
+      noktaL: n ? 'Yeniden al' : 'Buradayım — kaydet',
+      noktaHarita: () => { if (n) { this.flyTo(n.lat, n.lon, 17); this.setState({ panel: 'yok', tab: 'harita' }); } }
+    };
+  }
+  // Raporlarda arızanın köyü: girilen köy > tesisin köyü > arıza noktasına
+  // en yakın köy > tesise en yakın köy
+  arizaKoy(f, a) {
+    if (!f) return { ad: '', ilce: '', kaynak: '' };
+    a = a || (f.assetId ? (this.state.assets || []).find(x => x.id === f.assetId) : null);
+    const ilce = (a && a.district) || f.district || f.ilce || '';
+    if (f.koy) return { ad: f.koy, ilce, kaynak: 'girilen' };
+    if (a && a.village) return { ad: a.village, ilce, kaynak: 'tesis' };
+    const n = f.nokta ? this.yakinKoy(f.nokta) : null;
+    if (n) return { ad: n.ad, ilce, kaynak: 'nokta' };
+    const t = a ? this.yakinKoy(a) : null;
+    if (t) return { ad: t.ad, ilce, kaynak: 'tesis-yakın' };
+    return { ad: '', ilce, kaynak: '' };
   }
   // Saha fotoğrafı: öncesi/sonrası. Arıza sunucudaysa hemen yüklenir, değilse
   // kayıt yazılınca (arizaGonder) yüklenmek üzere bekler.
@@ -11472,8 +11888,8 @@ class Component extends DCLogic {
       sf[f.id] = { ...k, [asama]: k[asama] + ek.length };
       this.setState({ sahaFoto: sf });
       const a = (this.state.assets || []).find(x => x.id === f.assetId);
-      if (f.dbId && a && a.dbId != null && !this.state.offline && this._sb) {
-        this.arizaFotoGonder(ek, a.dbId, a.code, f.dbId).then(n => {
+      if (f.dbId && !this.state.offline && this._sb) {
+        this.arizaFotoGonder(ek, a ? a.dbId : null, a ? a.code : f.no, f.dbId).then(n => {
           this.duyur(n ? `${ASAMA_AD[asama]} fotoğrafı ${f.no} kaydına yüklendi.` : 'Fotoğraf yüklenemedi — bağlantıyı kontrol edip yeniden çekin.', 5000, n ? 'iyi' : 'kotu');
         });
       } else {
@@ -11716,7 +12132,7 @@ class Component extends DCLogic {
     const bekleyenF = (this.state.faults || []).filter(f => f.sync === 'pending');
     const faults = a.ok
       ? [...bekleyenF.filter(f => !f.dbId),
-        ...(a.data || []).map(M.arizaSuret).map(x => ({ photos: [], sesler: [], ...x, malzeme: x.malzeme || [], note: x.desc }))
+        ...(a.data || []).map(M.arizaSuret).map(x => ({ photos: [], sesler: [], ...x, malzeme: x.malzeme || [], note: x.desc, ilce: x.assetId ? null : x.district }))
           .map(x => bekleyenF.find(y => y.dbId === x.dbId) || x)]
       : this.state.faults;
     const kilitli = assets.filter(x => !x.yazilabilir).length;
@@ -12706,7 +13122,7 @@ class Component extends DCLogic {
     const arzSort = s.arzSort || { k: 'no', dir: 1 };
     const arzF = s.arzF || {};
     const arzQn = norm((s.arzQ || '').trim());
-    const arzKod = f => { const a = s.assets.find(x => x.id === f.assetId); return a ? a.code : ''; };
+    const arzKod = f => { const a = f.assetId ? s.assets.find(x => x.id === f.assetId) : null; return (a ? a.code + ' ' + (a.village || '') : '') + ' ' + (f.koy || ''); };
     const ONC_SIRA = { 'Acil': 0, 'Yüksek': 1, 'Normal': 2, 'Düşük': 3 };
     const arzVal = (f, k) => k === 'assetCode' ? arzKod(f) : k === 'status' ? (STATUS_LABEL[f.status] || '')
       : k === 'priority' ? (ONC_SIRA[f.priority] === undefined ? 9 : ONC_SIRA[f.priority])
@@ -14668,7 +15084,39 @@ class Component extends DCLogic {
               label: p, ...seg(!!tf && tf.oncelik === p, () => this.setState({ talepForm: { ...this.state.talepForm, oncelik: p } }))
             })),
             aciklama: tf ? tf.aciklama : '',
-            onAciklama: e => this.setState({ talepForm: { ...this.state.talepForm, aciklama: e.target.value } }),
+            onAciklama: e => this.setState({ talepForm: { ...this.state.talepForm, aciklama: e.target.value, aiSonuc: null } }),
+            // Ön sınıflandırma önerisi: metinden iş grubu, tür, aciliyet, köy.
+            // Yapay zekâ sonucu varsa o, yoksa kurala dayalı tahmin.
+            oneri: (() => {
+              if (!tf || (tf.aciklama || '').trim().length < 6) return { var: false };
+              const o = tf.aiSonuc || this.talepSiniflandir([tf.konu, tf.aciklama].join(' '), { ilce: tf.ilce });
+              const G = ARIZA_GRUP[o.grup];
+              const uygulandi = !!o.grup && tf.grup === o.grup && tf.tur === o.tur;
+              return {
+                var: true, kaynak: o.kaynak === 'ai' ? 'Yapay zekâ önerisi' : 'Otomatik öneri',
+                ozet: [G ? G.ad : 'İş grubu çıkarılamadı', o.tur, o.oncelik,
+                  o.koy ? o.koy + (o.ilce ? ' (' + o.ilce + ')' : '') : 'köy metinde yok'].filter(Boolean).join(' · '),
+                gerekce: (o.gerekce || []).length ? 'İpuçları: ' + o.gerekce.join(', ') : '',
+                uygulaVar: !!o.grup && !uygulandi, uygulandiVar: uygulandi,
+                uygula: () => {
+                  const f0 = this.state.talepForm;
+                  const koyDoldur = !f0.koy && o.koy;
+                  this.setState({ talepForm: { ...f0, grup: o.grup, tur: o.tur, oncelik: o.oncelik || f0.oncelik,
+                    ...(koyDoldur ? { koy: o.koy, ilce: o.ilce || f0.ilce } : {}),
+                    siniflandirma: { kaynak: o.kaynak, gerekce: o.gerekce || [], zaman: this.damga() } } });
+                },
+                aiVar: !!this._sb, aiYukleniyor: !!tf.aiYukleniyor,
+                aiL: tf.aiYukleniyor ? 'Yapay zekâ çalışıyor…' : 'Yapay zekâ ile sınıflandır',
+                ai: () => this.talepAiSiniflandir()
+              };
+            })(),
+            grup: tf ? tf.grup || '' : '',
+            gruplar: [{ v: '', l: 'İş grubu — seçilmedi' }, ...Object.keys(ARIZA_GRUP).map(k => ({ v: k, l: ARIZA_GRUP[k].ad }))],
+            onGrup: e => { const v = e.target.value; this.setState({ talepForm: { ...this.state.talepForm, grup: v || null, tur: v ? ARIZA_GRUP[v].turler[0] : null } }); },
+            tur: tf ? tf.tur || '' : '',
+            turler: tf && ARIZA_GRUP[tf.grup] ? ARIZA_GRUP[tf.grup].turler : [],
+            turVar: !!(tf && ARIZA_GRUP[tf.grup]),
+            onTur: e => this.setState({ talepForm: { ...this.state.talepForm, tur: e.target.value } }),
             sonuc: tf ? tf.sonuc : '',
             onSonuc: e => this.setState({ talepForm: { ...this.state.talepForm, sonuc: e.target.value } }),
             sonucVar: !!(tf && tf.id),
@@ -14685,7 +15133,7 @@ class Component extends DCLogic {
           list: suz.slice(0, 200).map(t => {
             const kapali = TALEP_KAPALI.includes(t.durum);
             return {
-              no: t.no, konu: t.konu,
+              no: t.no, konu: t.konu + (ARIZA_GRUP[t.grup] ? ' · ' + ARIZA_GRUP[t.grup].ad + (t.tur ? ' / ' + t.tur : '') : ''),
               kim: (TALEP_SIFAT[t.sifat] || '') + ' ' + t.ad + (t.tel ? ' · ' + t.tel : ''),
               yer: t.koy + (t.ilce ? ' · ' + t.ilce : ''),
               aciklama: t.aciklama,
@@ -15520,8 +15968,10 @@ class Component extends DCLogic {
         const ilceEt = (m ? m.DISTRICTS : []).filter(d => icinde(d.lat, d.lon)).map(d => {
           const [x, y] = px(d.lat, d.lon); return { ad: d.name, x: x.toFixed(1) + 'px', y: y.toFixed(1) + 'px' };
         });
-        const isNokta = acikF.map(f => ({ f, a: assetOf(f.assetId) })).filter(x => x.a && icinde(x.a.lat, x.a.lon)).map(({ f, a }) => {
-          const [x, y] = px(a.lat, a.lon);
+        // Arıza noktası kaydedilmişse o, yoksa tesisin yeri
+        const isNokta = acikF.map(f => ({ f, a: assetOf(f.assetId) })).map(x => ({ ...x, p: x.f.nokta || x.a }))
+          .filter(x => x.p && icinde(x.p.lat, x.p.lon)).map(({ f, a, p }) => {
+          const [x, y] = px(p.lat, p.lon);
           const atanmadi = !f.crew || f.crew === ATANMADI;
           const on = secEkip && f.crew === secEkip;
           const c = atanmadi ? kirmizi : (ISC[f.status] || mor);
@@ -15530,7 +15980,7 @@ class Component extends DCLogic {
             x: (x - d / 2).toFixed(1) + 'px', y: (y - d / 2).toFixed(1) + 'px', d: d + 'px', c,
             sinif: 'ks-nokta' + (f.status === 'sahada' || on ? ' ks-ping' : ''),
             op: !secEkip || on ? '1' : '.25',
-            title: f.no + ' · ' + a.code + ' · ' + (atanmadi ? 'atanmadı' : f.crew) + ' · ' + (STATUS_LABEL[f.status] || f.status)
+            title: f.no + ' · ' + (a ? a.code : (f.koy || 'şebeke')) + ' · ' + (atanmadi ? 'atanmadı' : f.crew) + ' · ' + (STATUS_LABEL[f.status] || f.status)
           };
         });
 
@@ -15873,7 +16323,7 @@ class Component extends DCLogic {
       faults: arzSatir.map(f => {
         const a = s.assets.find(x => x.id === f.assetId) || {};
         return {
-          no: f.no, assetCode: a.code || '—', type: f.type, priority: f.priority,
+          no: f.no, assetCode: a.code || (f.koy ? f.koy + ' (şebeke)' : '—'), type: f.type, priority: f.priority,
           status: STATUS_LABEL[f.status], crew: f.crew, opened: f.opened,
           sureVar: sureOn,
           sure: (() => {
@@ -15961,7 +16411,7 @@ class Component extends DCLogic {
             ust: yeni ? 'Yeni arıza' : (STATUS_LABEL[ff.status] || ff.status),
             ustC: yeni ? ui.acc : (kapali ? '#1b7a36' : ui.acc),
             baslik: yeni ? 'Arıza bildir' : (ff.no || '') + ' · ' + (ff.type || ''),
-            tesis: ffAsset ? TYPES[ffAsset.type].label + ' · ' + this.yerGoster(ffAsset) : 'Tesis seçilmedi',
+            tesis: ffAsset ? TYPES[ffAsset.type].label + ' · ' + this.yerGoster(ffAsset) : (ff.koy ? 'Şebeke · ' + ff.koy + ' · ' + (ff.ilce || '') : 'Tesis seçilmedi'),
             tesisAlt: ffAsset ? ffAsset.code + ' · ' + TYPES[ffAsset.type].kind
               : (ff.talepKoy ? 'Talep: ' + ff.talepKoy + ' — yakındaki tesisler önce gelir' : 'Dokunun, köy adı ya da kodla arayın'),
             tesisDegis: () => yaz({ tesisSec: true, tesisQ: '' }),
@@ -16004,14 +16454,17 @@ class Component extends DCLogic {
                   alt: a.code + (ref ? ' · ' + kmYaz(uz(a)) : '') + (a.status === 'pasif' ? ' · pasif' : ''),
                   harf: TYPES[a.type].glyph,
                   zemin: a.id === ff.assetId ? (dark ? 'rgba(10,132,255,.18)' : 'rgba(0,113,227,.08)') : 'transparent',
-                  sec: () => this.setState({ faultForm: { ...this.state.faultForm, assetId: a.id, type: (FAULT_TYPES[a.type] || ['Diğer'])[0], tesisSec: false, tesisQ: '' } })
+                  sec: () => {
+                    const g = TESIS_GRUP[a.type] || 'su';
+                    const ff0 = this.state.faultForm;
+                    this.setState({ faultForm: { ...ff0, assetId: a.id, grup: g, yerModu: 'tesis',
+                      type: ARIZA_GRUP[g].turler.includes(ff0.type) ? ff0.type : ARIZA_GRUP[g].turler[0], tesisSec: false, tesisQ: '' } });
+                  }
                 }))
               };
             })(),
-            turler: FAULT_TYPES[ffAsset ? ffAsset.type : 'kuyu'].map(t => ({
-              l: t, bg: ff.type === t ? 'var(--color-accent)' : ui.surf, fg: ff.type === t ? '#fff' : ui.fg,
-              kenar: ff.type === t ? 'var(--color-accent)' : ui.rule, sec: () => yaz({ type: t })
-            })),
+            // İş grubu → yalnız o grubun arıza türleri; yer (tesis/köy); arıza noktası
+            ...this.arizaFormYer(ff, ffAsset),
             oncelikler: ['Acil', 'Yüksek', 'Normal'].map(p => ({
               l: p, bg: ff.priority === p ? PRC[p] : ui.surf, fg: ff.priority === p ? '#fff' : ui.fg,
               kenar: ff.priority === p ? PRC[p] : ui.rule, sec: () => yaz({ priority: p })
@@ -16072,7 +16525,9 @@ class Component extends DCLogic {
           this.isEmriAc(ff, ffAsset);
         },
         assetId: ff ? ff.assetId : '', type: ff ? ff.type : '',
-        typeOptions: FAULT_TYPES[ffAsset ? ffAsset.type : 'kuyu'],
+        typeOptions: ff ? this.arizaFormYer(ff, ffAsset).turSecenek : FAULT_TYPES.kuyu,
+        yerGrup: ff ? this.arizaFormYer(ff, ffAsset) : {},
+        tesisYok: !!ff && !ff.assetId,
         note: ff ? ff.note : '', crew: ff ? ff.crew : CREWS[0], hours: ff ? ff.hours : '',
         photos: ff ? (ff.photos || []).map((p, i) => ({
           ...p,
@@ -16095,11 +16550,10 @@ class Component extends DCLogic {
         // Sunucuda bu arızaya bağlı fotoğraflar da formda görünür (önceden
         // yalnız yeni seçilenler görünüyordu: yüklenmiş kanıt "0 adet" sayılıyordu)
         ...(() => {
-          const fa = ff ? s.assets.find(x => x.id === ff.assetId) : null;
-          const liste = fa && fa.dbId != null ? (s.fotolar || {})[fa.dbId] : null;
-          if (ff && ff.dbId && fa && fa.dbId != null && !liste && this._sb) {
+          const liste = ff && ff.dbId ? (s.fotolar || {})['a' + ff.dbId] : null;
+          if (ff && ff.dbId && !liste && this._sb) {
             this._formFotoIstek = this._formFotoIstek || {};
-            if (!this._formFotoIstek[fa.dbId]) { this._formFotoIstek[fa.dbId] = 1; setTimeout(() => this.fotoYenile(fa.dbId), 0); }
+            if (!this._formFotoIstek[ff.dbId]) { this._formFotoIstek[ff.dbId] = 1; setTimeout(() => this.arizaFotoYenile(ff.dbId), 0); }
           }
           const kayit = ff && ff.dbId ? (liste || []).filter(x => x.arizaDbId === ff.dbId) : [];
           const yeni = ff ? (ff.photos || []).length : 0;
@@ -16339,7 +16793,10 @@ class Component extends DCLogic {
       },
       onFaultAsset: e => {
         const a = s.assets.find(x => x.id === e.target.value);
-        this.setState({ faultForm: { ...this.state.faultForm, assetId: e.target.value, type: FAULT_TYPES[a ? a.type : 'kuyu'][0] } });
+        const g = a ? TESIS_GRUP[a.type] || 'su' : arizaGrubu(this.state.faultForm, null);
+        const ff0 = this.state.faultForm;
+        this.setState({ faultForm: { ...ff0, assetId: e.target.value || null, grup: g,
+          type: ARIZA_GRUP[g].turler.includes(ff0.type) ? ff0.type : ARIZA_GRUP[g].turler[0] } });
       },
       onFaultType: e => this.setState({ faultForm: { ...this.state.faultForm, type: e.target.value } }),
       onFaultNote: e => this.setState({ faultForm: { ...this.state.faultForm, note: e.target.value } }),
@@ -16377,19 +16834,21 @@ class Component extends DCLogic {
         // arızaya bağlı fotoğraf da sayılır (önceden yalnız formda yeni
         // eklenen sayılıyordu: öncesi fotoğrafı yüklenmiş arıza kapatılamıyordu).
         if (kanitOn && f && f.status === 'cozuldu' && !((f.photos || []).length)) {
-          const fa = s.assets.find(x => x.id === f.assetId);
-          const liste = fa && fa.dbId != null ? (s.fotolar || {})[fa.dbId] : null;
-          if (f.dbId && fa && fa.dbId != null && !liste && this._sb && !this._kanitBak) {
+          const liste = f.dbId ? (s.fotolar || {})['a' + f.dbId] : null;
+          if (f.dbId && !liste && this._sb && !this._kanitBak) {
             this._kanitBak = true;
             this.say('Kayıttaki fotoğraflar kontrol ediliyor…');
-            return this.fotoYenile(fa.dbId).then(() => { this._kanitBak = false; this.renderVals().saveFault(); });
+            return this.arizaFotoYenile(f.dbId).then(() => { this._kanitBak = false; this.renderVals().saveFault(); });
           }
           this._kanitBak = false;
           const sunucuda = (liste || []).filter(p => p.arizaDbId === f.dbId).length;
           if (!sunucuda) return this.say('Kanıt zorunlu — kapatmadan önce en az bir fotoğraf ekleyin.', true);
         }
-        if (!f || !f.assetId) return this.say('Önce tesisi seçin.', true);
-        const a = s.assets.find(x => x.id === f.assetId);
+        // Tesis ya da (şebeke arızasında) ilçe+köy gerekir
+        if (!f || (!f.assetId && !f.ilce)) return this.say('Önce tesisi ya da arızanın köyünü seçin.', true);
+        if (!f.assetId && !f.koy) return this.say('Arızanın köyünü seçin.', true);
+        const a = f.assetId ? s.assets.find(x => x.id === f.assetId) : null;
+        const aKod = a ? a.code : (f.koy + ' · ' + f.ilce);
         // Her kayıt önce "pending": sunucuya arizaKuyrukGonder yazar
         const sync = 'pending';
         const yeniId = f.id ? f.id : 'nf' + Date.now();
@@ -16400,13 +16859,13 @@ class Component extends DCLogic {
           this.setState({
             faults: s.faults.map(x => x.id === f.id ? { ...f, sync } : x), panel: s.device === 'phone' ? 'yok' : 'ariza',
             faultForm: null,
-            queue: [{ id: 'q' + Date.now(), title: `${f.no} · durum ${STATUS_LABEL[f.status]}`, meta: `${a.code} · ${f.crew}`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
+            queue: [{ id: 'q' + Date.now(), title: `${f.no} · durum ${STATUS_LABEL[f.status]}`, meta: `${aKod} · ${f.crew}`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
         } else {
           this.setState({
             faults: [{ ...f, id: yeniId, no: arizaNo, sync, reporter: s.role, opened: this.damga() }, ...s.faults],
             panel: s.device === 'phone' ? 'yok' : 'ariza', faultForm: null, tab: 'ariza',
-            queue: [{ id: 'q' + Date.now(), title: `${arizaNo} · yeni arıza`, meta: `${a.code} · ${f.type} · ${(f.photos || []).length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
+            queue: [{ id: 'q' + Date.now(), title: `${arizaNo} · yeni arıza`, meta: `${aKod} · ${f.type} · ${(f.photos || []).length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
         }
         // Kapanan kayıtta kullanılan malzeme ekip zimmetinden düşülebilir
@@ -16465,7 +16924,7 @@ class Component extends DCLogic {
           // Gerçek gönderim açıksa mesaj sunucu işlevine gider; sonucu
           // arizaMesaj kendi bildirimini yazar.
           if (gercekGonderim) setTimeout(() => this.arizaMesaj({ ...f, no: arizaNo }, a), 0);
-          this.duyur(`Yeni arıza · ${a.code} — ${f.type} · ${f.priority} öncelik` +
+          this.duyur(`Yeni arıza · ${aKod} — ${f.type} · ${f.priority} öncelik` +
             (s.offline
               ? '. Cihaza kaydedildi, bağlantı gelince eşitlenecek.'
               : (gercekGonderim
@@ -16954,11 +17413,13 @@ class Component extends DCLogic {
         const konum = s.benimKonum;
         const assetOf = f => s.assets.find(x => x.id === f.assetId) || null;
         const km = a => konum && a && isFinite(a.lat) ? this.mesafeM(konum, a) / 1000 : null;
+        // Arıza noktası varsa mesafe ona, yoksa tesise
+        const yerOf = f => f.nokta || assetOf(f);
         // Sıra: sahada olan önce, sonra öncelik, sonra (konum varsa) yakınlık, sonra açılış
         const sirali = acik.filter(f => f.status !== 'kontrol').map(f => ({ f, a: assetOf(f) }))
           .sort((x, y) => (y.f.status === 'sahada') - (x.f.status === 'sahada')
             || (PR[x.f.priority] ?? 9) - (PR[y.f.priority] ?? 9)
-            || ((km(x.a) ?? 1e9) - (km(y.a) ?? 1e9))
+            || ((km(yerOf(x.f)) ?? 1e9) - (km(yerOf(y.f)) ?? 1e9))
             || this.damgaMs(x.f.opened) - this.damgaMs(y.f.opened));
         const onayBekleyen = acik.filter(f => f.status === 'kontrol').length;
         const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
@@ -16971,7 +17432,7 @@ class Component extends DCLogic {
           'Acil': ['rgba(215,0,21,.1)', kirmizi], 'Yüksek': ['rgba(255,159,10,.17)', '#9a5200'],
           'Normal': [ui.surf2, ui.fg], 'Düşük': [ui.surf2, ui.mut]
         };
-        const mesafeYazi = a => { const k = km(a); return k == null ? (a ? a.district || '' : '') : (k < 1 ? Math.round(k * 1000) + ' m' : k.toFixed(1).replace('.', ',') + ' km') + ' · kuş uçuşu'; };
+        const mesafeYazi = f => { const a = assetOf(f); const k = km(yerOf(f)); return k == null ? (f.koy || (a ? a.district : f.district) || '') : (k < 1 ? Math.round(k * 1000) + ' m' : k.toFixed(1).replace('.', ',') + ' km') + (f.nokta ? ' · arıza noktası' : ' · kuş uçuşu'); };
         const saat = (new Date()).getHours();
         const selam = saat < 11 ? 'Günaydın' : (saat < 18 ? 'İyi günler' : 'İyi akşamlar');
         const arac = ((s.arac && s.arac.list) || []).find(v => v.ekip === crew && v.durum === 'gorevde');
@@ -16984,10 +17445,10 @@ class Component extends DCLogic {
           const kp = s.sahaKapanis && s.sahaKapanis.id === f.id ? s.sahaKapanis : null;
           // Bu oturumda çekilenler + sunucuda bu arızaya bağlı olanlar
           const fo0 = sf[f.id] || { once: 0, sonra: 0 };
-          const srv = a && a.dbId != null ? (s.fotolar || {})[a.dbId] : null;
-          if (a && a.dbId != null && !srv && f.dbId && this._sb) {
+          const srv = f.dbId ? (s.fotolar || {})['a' + f.dbId] : null;
+          if (!srv && f.dbId && this._sb) {
             this._sahaFotoIstek = this._sahaFotoIstek || {};
-            if (!this._sahaFotoIstek[a.dbId]) { this._sahaFotoIstek[a.dbId] = 1; setTimeout(() => this.fotoYenile(a.dbId), 0); }
+            if (!this._sahaFotoIstek[f.dbId]) { this._sahaFotoIstek[f.dbId] = 1; setTimeout(() => this.arizaFotoYenile(f.dbId), 0); }
           }
           const bagli = (srv || []).filter(p => f.dbId && p.arizaDbId === f.dbId);
           const fo = {
@@ -17020,8 +17481,8 @@ class Component extends DCLogic {
             prSinif: f.priority === 'Acil' ? 'ks-nabiz' : '',
             sure: d ? (d.gecikti ? d.etiket : 'hedef ' + d.hedef) : (STATUS_LABEL[f.status] || f.status),
             sureC: d && d.gecikti ? kirmizi : ui.mut,
-            baslik: f.type || 'Arıza', tesis: a ? TYPES[a.type].label + ' · ' + this.yerGoster(a) + ' · ' + a.code : (f.district || ''),
-            mesafe: mesafeYazi(a) || '—', not: (f.note || f.desc || '').split('\n')[0] || 'not yok',
+            baslik: f.type || 'Arıza', tesis: a ? TYPES[a.type].label + ' · ' + this.yerGoster(a) + ' · ' + a.code : ('Şebeke · ' + [f.koy, f.district].filter(Boolean).join(' · ')),
+            mesafe: mesafeYazi(f) || '—', not: (f.note || f.desc || '').split('\n')[0] || 'not yok',
             adimlar: [0, 1, 2].map(i => ({
               ic: adim > i ? '✓' : String(i + 1),
               bg: adim > i ? 'var(--color-accent)' : (adim === i ? ui.surf : ui.surf2),
@@ -17032,6 +17493,10 @@ class Component extends DCLogic {
             s0: adim === 0, s1: adim === 1, s2: adim === 2,
             yolTarifi: () => { if (a && this.yolTarifiVer(a)) this.say(`${a.code} için güzergâh hesaplanıyor…`); },
             vardim: () => this.sahaDurum(f, 'sahada'),
+            noktaYazi: f.nokta ? 'Arıza noktası kayıtlı · ±' + (f.noktaDogruluk ?? '?') + ' m' : 'Arıza noktası henüz kaydedilmedi',
+            noktaC: f.nokta ? '#1b7a36' : 'var(--color-uyari)',
+            noktaL: f.nokta ? 'Yeniden al' : 'Şimdi kaydet',
+            noktaAl: () => this.arizaNoktaAl(f),
             fotoOnce: () => this.sahaFoto(f, 'once'),
             onceL: fo.once ? '✓ Öncesi fotoğrafı · ' + fo.once + ' fotoğraf' : 'Öncesi fotoğrafı çek',
             onceAlt: kanitOn ? 'İşe başlamadan önce çekin — zorunlu' : 'İşe başlamadan önceki hâli',
@@ -17092,9 +17557,9 @@ class Component extends DCLogic {
           bosAlt: arizaOn ? 'Yeni iş atanınca burada görünecek.' : 'Yönetici Ayarlar > Modüller bölümünden açabilir.',
           sonraki: sirali.filter(x => x.f.id !== secId).slice(0, 12).map((x, i) => ({
             sira: String(i + 2), baslik: x.f.type || 'Arıza',
-            tesis: (x.a ? TYPES[x.a.type].label + ' · ' + this.yerGoster(x.a) + ' · ' + x.a.code : '') + (x.f.status === 'sahada' ? ' · sahada' : ''),
+            tesis: (x.a ? TYPES[x.a.type].label + ' · ' + this.yerGoster(x.a) + ' · ' + x.a.code : 'Şebeke · ' + [x.f.koy, x.f.district].filter(Boolean).join(' · ')) + (x.f.status === 'sahada' ? ' · sahada' : ''),
             pr: x.f.priority || 'Normal', prBg: (PRC[x.f.priority] || PRC.Normal)[0], prFg: (PRC[x.f.priority] || PRC.Normal)[1],
-            mesafe: mesafeYazi(x.a), sec: () => this.setState({ sahaAktifId: x.f.id, sahaKapanis: null })
+            mesafe: mesafeYazi(x.f), sec: () => this.setState({ sahaAktifId: x.f.id, sahaKapanis: null })
           })),
           sonrakiVar: sirali.length > 1,
           zimmet: (() => {
@@ -17257,11 +17722,44 @@ class Component extends DCLogic {
         const koyG = {};
         for (const h of sarfF) {
           const a = h.assetId ? assetOf(h.assetId) : null;
-          const key = a ? this.yer(a) : 'Tesis belirtilmemiş';
+          // Köy adı girilmemiş tesiste en yakın köy (≈)
+          const key = a ? this.yerGoster(a) : 'Tesis belirtilmemiş';
           const o = (koyG[key] = koyG[key] || { tutar: 0, kalemler: {} });
           o.tutar += tutarOf(h);
           o.kalemler[h.malzeme] = (o.kalemler[h.malzeme] || 0) + (Number(h.adet) || 0);
         }
+        // Köy bazlı arızalar: arızanın köyü = girilen köy > tesisin köyü >
+        // arıza noktasına en yakın köy > tesise en yakın köy (arizaKoy)
+        const arizaKoyG = {};
+        for (const f of s.faults) {
+          const d = this.tarihParse(f.opened);
+          if (!d || d < aralik.bas || d >= aralik.bit) continue;
+          const a = f.assetId ? assetOf(f.assetId) : null;
+          const ky = this.arizaKoy(f, a);
+          if (ilceF && ky.ilce !== ilceF) continue;
+          const key = (ky.ad || 'Köy belirlenemedi') + ' · ' + (ky.ilce || '—');
+          const o = (arizaKoyG[key] = arizaKoyG[key] || { n: 0, acik: 0, nokta: 0, sebeke: 0, turler: {}, gruplar: {}, yaklasik: 0 });
+          o.n++;
+          if (!KAPALI_DURUM.includes(f.status)) o.acik++;
+          if (f.nokta) o.nokta++;
+          if (!f.assetId) o.sebeke++;
+          if (ky.kaynak === 'nokta' || ky.kaynak === 'tesis-yakın') o.yaklasik++;
+          o.turler[f.type] = (o.turler[f.type] || 0) + 1;
+          const g = arizaGrubu(f, a); o.gruplar[g] = (o.gruplar[g] || 0) + 1;
+        }
+        const arizaKoy = Object.entries(arizaKoyG).sort((x, y) => y[1].n - x[1].n || y[1].acik - x[1].acik).slice(0, 30)
+          .map(([name, o]) => {
+            const enSik = Object.entries(o.turler).sort((x, y) => y[1] - x[1])[0];
+            return {
+              name: name + (o.yaklasik === o.n ? ' ≈' : ''),
+              ozet: [o.acik ? o.acik + ' açık' : 'hepsi kapandı',
+                Object.entries(o.gruplar).map(([g, n]) => ARIZA_GRUP[g].ad + ' ' + n).join(', '),
+                enSik ? 'en sık: ' + enSik[0] + (enSik[1] > 1 ? ' (' + enSik[1] + ')' : '') : '',
+                o.sebeke ? o.sebeke + ' şebeke arızası' : '',
+                o.nokta ? o.nokta + '/' + o.n + ' arıza noktası kayıtlı' : 'arıza noktası yok'].filter(Boolean).join(' · '),
+              n: String(o.n)
+            };
+          });
         const malzemeKoy = Object.entries(koyG).sort((x, y) => y[1].tutar - x[1].tutar).slice(0, 20)
           .map(([name, o]) => ({
             name, ozet: Object.entries(o.kalemler).map(([k, n]) => k + ' × ' + n).join(' · '),
@@ -17352,6 +17850,8 @@ class Component extends DCLogic {
           weekNote: 'Gün/hafta/ay/yıl ya da özel bir aralık ve isterseniz tek bir ilçe seçin — arıza, deneme ve ambar hareketi kayıtlarının gerçek tarih damgasına göre süzülür.',
           malzemeKoy,
           malzemeKoyVar: malzemeKoy.length > 0,
+          arizaKoy, arizaKoyVar: arizaKoy.length > 0,
+          arizaKoyNot: 'Seçili aralıkta açılan arızaların köy · ilçe kırılımı. Köy şu sırayla belirlenir: kayıtta girilen köy, tesisin köyü, ekibin kaydettiği arıza noktasına en yakın köy, tesise en yakın köy. “≈” yalnız koordinattan bulunmuş köyü gösterir.',
           malzemeKoyNot: 'Seçili aralıkta arıza kapanışında ekip zimmetinden düşülen (sarf/hurda) malzemenin köy · ilçe kırılımı ve tutarı. Ambar ekranından elle girilen sarf işlemleri bir tesise bağlı olmadığı için "Tesis belirtilmemiş" altında toplanır.',
           // Özet tek ekranda 9 ayrı tablo/liste üst üste duruyordu (kullanıcı
           // geri bildirimi — "çok karmaşık"), üçe bölündü: Envanter (dağılım/

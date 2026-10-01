@@ -65,6 +65,21 @@ export async function giris(kullaniciAd, sifre, cihaz) {
   return { ok: true, data: k };
 }
 
+// Başvuru metnini yapay zekâyla sınıflandırır (sunucu işlevi "talep-siniflandir").
+// Anahtar işlevde durur; kurulmamışsa { ok:false, anahtarYok:true } döner.
+export async function aiSiniflandir(metin) {
+  try {
+    const r = await fetch(URL_ + '/functions/v1/talep-siniflandir', {
+      method: 'POST',
+      headers: { apikey: ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: tokenOku(), metin: String(metin || '').slice(0, 2000) })
+    });
+    const j = await r.json().catch(() => null);
+    if (!j) return { ok: false, err: 'Yapay zekâ yanıtı okunamadı (' + r.status + ').' };
+    return j.ok ? { ok: true, data: j } : { ok: false, err: j.err || 'Sınıflandırılamadı.', anahtarYok: !!j.anahtarYok };
+  } catch (e) { return { ok: false, cevrimdisi: true, err: 'Bağlantı yok.' }; }
+}
+
 export async function oturumAc(token) {
   const t = token || tokenOku();
   if (!t) return { ok: false, err: 'Kayıtlı oturum yok.' };
@@ -142,8 +157,13 @@ function damgaBicim(iso) {
 
 export function arizaSuret(r) {
   return {
-    id: 'f' + r.id, dbId: r.id, no: r.no, assetId: 't' + r.tesis_id,
+    id: 'f' + r.id, dbId: r.id, no: r.no, assetId: r.tesis_id != null ? 't' + r.tesis_id : null,
     tesisDbId: r.tesis_id, district: r.ilce, type: r.tur,
+    // Tesissiz arıza (boru hattı vb.) köy+ilçeyle durur; arıza noktası ekip
+    // sahaya varınca kaydedilir
+    grup: r.grup || null, koy: r.koy || null, tesisKoy: r.tesis_koy || null,
+    nokta: r.lat != null && r.lon != null ? { lat: r.lat, lon: r.lon } : null,
+    noktaZaman: r.konum_zaman || null, noktaDogruluk: r.konum_dogruluk ?? null, noktaKim: r.konum_kim || null,
     priority: r.oncelik, status: r.durum, crew: r.ekip || '',
     desc: r.aciklama || '', malzeme: r.malzeme || [], maliyet: r.maliyet,
     // Program tarihleri "GG.AA.YYYY SS:DD" bekler (hedef süre, raporlar, mükerrer
@@ -204,7 +224,10 @@ export async function arizaKaydet(f) {
     p_tesis_id: f.tesisDbId, p_tur: f.type,
     p_oncelik: f.priority || 'Normal', p_durum: f.status || 'acik',
     p_ekip: f.crew || null, p_aciklama: f.desc || null,
-    p_malzeme: f.malzeme || [], p_maliyet: f.maliyet ?? null
+    p_malzeme: f.malzeme || [], p_maliyet: f.maliyet ?? null,
+    p_grup: f.grup || null, p_koy: f.koy || null, p_ilce: f.ilce || null,
+    p_lat: f.nokta ? f.nokta.lat : null, p_lon: f.nokta ? f.nokta.lon : null,
+    p_konum_dogruluk: f.noktaDogruluk ?? null
   });
 }
 export function isEmriSuret(r) {
@@ -340,6 +363,16 @@ export async function sesListesi(tesisDbId) {
   })) };
 }
 
+// Arızaya bağlı fotoğraflar (tesissiz arıza dahil)
+export async function arizaFotoListesi(arizaDbId) {
+  const r = await cagir('ariza_foto_listesi', { p_token: tokenOku(), p_ariza_id: arizaDbId });
+  if (!r.ok) return r;
+  return { ok: true, data: (r.data || []).map(f => ({
+    id: f.id, tesisDbId: f.tesis_id, arizaDbId: f.ariza_id ?? null, anahtar: f.adres, url: fotoAdres(f.adres),
+    aciklama: f.aciklama || '', boyut: f.boyut, yukleyen: f.yukleyen,
+    yuklendi: f.yuklendi, yazilabilir: f.yazilabilir !== false
+  })) };
+}
 export async function fotoListesi(tesisDbId) {
   const r = await cagir('foto_listesi', { p_token: tokenOku(), p_tesis_id: tesisDbId ?? null });
   if (!r.ok) return r;

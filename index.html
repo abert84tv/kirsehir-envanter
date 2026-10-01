@@ -3857,6 +3857,12 @@ Hareket gir
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <button onClick="{{ cekFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
 <button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px" style-hover="background:var(--color-accent);color:#fff">GALERİDEN SEÇ</button>
+<sc-for list="{{ faultForm.kayitFoto }}" as="kp" hint-placeholder-count="0">
+<div title="Sunucuda kayıtlı" style="width:66px;height:66px;border-radius:10px;border:1px solid #34c759;position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+{{ kp.img }}
+<span style="position:absolute;left:0;bottom:0;background:#34c759;color:#fff;font:600 9.5px/1 var(--font-body);padding:3px 4px">{{ kp.etiket }}</span>
+</div>
+</sc-for>
 <sc-for list="{{ faultForm.photos }}" as="p" hint-placeholder-count="0">
 <div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ p.border }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
 {{ p.img }}
@@ -6965,6 +6971,12 @@ Hareket gir
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <button onClick="{{ cekFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:76px;height:76px;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
 <button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:76px;height:76px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">GALERİDEN SEÇ</button>
+<sc-for list="{{ faultForm.kayitFoto }}" as="kp" hint-placeholder-count="0">
+<div title="Sunucuda kayıtlı" style="width:66px;height:66px;border-radius:10px;border:1px solid #34c759;position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+{{ kp.img }}
+<span style="position:absolute;left:0;bottom:0;background:#34c759;color:#fff;font:600 9.5px/1 var(--font-body);padding:3px 4px">{{ kp.etiket }}</span>
+</div>
+</sc-for>
 <sc-for list="{{ faultForm.photos }}" as="p" hint-placeholder-count="0">
 <div style="width:76px;height:76px;border-radius:10px;border:1px solid {{ p.border }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
 {{ p.img }}
@@ -7974,7 +7986,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.01-107';
+const SURUM = '2026.10.01-108';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11506,7 +11518,7 @@ class Component extends DCLogic {
     const bekleyenF = (this.state.faults || []).filter(f => f.sync === 'pending');
     const faults = a.ok
       ? [...bekleyenF.filter(f => !f.dbId),
-        ...(a.data || []).map(M.arizaSuret).map(x => ({ ...x, note: x.desc }))
+        ...(a.data || []).map(M.arizaSuret).map(x => ({ photos: [], sesler: [], ...x, malzeme: x.malzeme || [], note: x.desc }))
           .map(x => bekleyenF.find(y => y.dbId === x.dbId) || x)]
       : this.state.faults;
     const kilitli = assets.filter(x => !x.yazilabilir).length;
@@ -15748,7 +15760,7 @@ class Component extends DCLogic {
         assetId: ff ? ff.assetId : '', type: ff ? ff.type : '',
         typeOptions: FAULT_TYPES[ffAsset ? ffAsset.type : 'kuyu'],
         note: ff ? ff.note : '', crew: ff ? ff.crew : CREWS[0], hours: ff ? ff.hours : '',
-        photos: ff ? ff.photos.map((p, i) => ({
+        photos: ff ? (ff.photos || []).map((p, i) => ({
           ...p,
           gercek: !!p.url,
           img: p.url ? this.imgEl(p.url, 'Arıza fotoğrafı') : null,
@@ -15763,10 +15775,28 @@ class Component extends DCLogic {
           kaldir: () => {
             const g = this.state.faultForm;
             if (p.url) { try { URL.revokeObjectURL(p.url); } catch (e) {} }
-            this.setState({ faultForm: { ...g, photos: g.photos.filter((_, k) => k !== i), isaret: null } });
+            this.setState({ faultForm: { ...g, photos: (g.photos || []).filter((_, k) => k !== i), isaret: null } });
           }
         })) : [],
-        photoCount: ff ? `${(ff.photos || []).length} adet` : '0 adet',
+        // Sunucuda bu arızaya bağlı fotoğraflar da formda görünür (önceden
+        // yalnız yeni seçilenler görünüyordu: yüklenmiş kanıt "0 adet" sayılıyordu)
+        ...(() => {
+          const fa = ff ? s.assets.find(x => x.id === ff.assetId) : null;
+          const liste = fa && fa.dbId != null ? (s.fotolar || {})[fa.dbId] : null;
+          if (ff && ff.dbId && fa && fa.dbId != null && !liste && this._sb) {
+            this._formFotoIstek = this._formFotoIstek || {};
+            if (!this._formFotoIstek[fa.dbId]) { this._formFotoIstek[fa.dbId] = 1; setTimeout(() => this.fotoYenile(fa.dbId), 0); }
+          }
+          const kayit = ff && ff.dbId ? (liste || []).filter(x => x.arizaDbId === ff.dbId) : [];
+          const yeni = ff ? (ff.photos || []).length : 0;
+          return {
+            kayitFoto: kayit.map(x => ({
+              img: this.imgEl(x.url, 'Arıza fotoğrafı'),
+              etiket: /Sonrası/.test(x.aciklama || '') ? 'Sonrası' : (/Öncesi/.test(x.aciklama || '') ? 'Öncesi' : 'Kayıtta')
+            })),
+            photoCount: kayit.length ? kayit.length + ' kayıtta' + (yeni ? ' · ' + yeni + ' yeni' : '') : yeni + ' adet'
+          };
+        })(),
         kaydetmiyor: !(ff && ff.kayitta),
         crewLocked: !canAssign, crewOpacity: canAssign ? '1' : '.55',
         assignNote: canAssign
@@ -16029,9 +16059,20 @@ class Component extends DCLogic {
             }
           }
         }
-        // Kanıtsız kapanış: fotoğraf olmadan “Çözüldü” yazılamaz
+        // Kanıtsız kapanış: fotoğraf olmadan “Çözüldü” yazılamaz. Sunucuda bu
+        // arızaya bağlı fotoğraf da sayılır (önceden yalnız formda yeni
+        // eklenen sayılıyordu: öncesi fotoğrafı yüklenmiş arıza kapatılamıyordu).
         if (kanitOn && f && f.status === 'cozuldu' && !((f.photos || []).length)) {
-          return this.say('Kanıt zorunlu — kapatmadan önce en az bir fotoğraf ekleyin.', true);
+          const fa = s.assets.find(x => x.id === f.assetId);
+          const liste = fa && fa.dbId != null ? (s.fotolar || {})[fa.dbId] : null;
+          if (f.dbId && fa && fa.dbId != null && !liste && this._sb && !this._kanitBak) {
+            this._kanitBak = true;
+            this.say('Kayıttaki fotoğraflar kontrol ediliyor…');
+            return this.fotoYenile(fa.dbId).then(() => { this._kanitBak = false; this.renderVals().saveFault(); });
+          }
+          this._kanitBak = false;
+          const sunucuda = (liste || []).filter(p => p.arizaDbId === f.dbId).length;
+          if (!sunucuda) return this.say('Kanıt zorunlu — kapatmadan önce en az bir fotoğraf ekleyin.', true);
         }
         if (!f || !f.assetId) return this.say('Kayıt seçin.');
         const a = s.assets.find(x => x.id === f.assetId);
@@ -16085,38 +16126,19 @@ class Component extends DCLogic {
         // sesli notlar da kayıtla birlikte gider. Yeni kayıtta arıza kimliği
         // sunucuya yazılınca belli olur: fotoğraf ve ses o zaman yüklenir
         // (arizaGonder), böylece arıza kanıtı olarak bağlanır.
+        // Dosyalar arıza kaydının içinde tutulmaz: kayıt sonradan yeniden
+        // kaydedilince aynı fotoğraf ikinci kez yükleniyordu (2026.10.01).
         const sesler = (f.sesler || []).filter(x => x.blob);
         const bekleyen = (f.photos || []).filter(p => p.file);
-        if (!f.dbId && (sesler.length || bekleyen.length)) {
+        if (sesler.length || bekleyen.length) {
           this._arizaMedya = this._arizaMedya || {};
-          this._arizaMedya[yeniId] = { photos: bekleyen, sesler };
+          const md = this._arizaMedya[yeniId] || { photos: [], sesler: [] };
+          this._arizaMedya[yeniId] = { photos: [...md.photos, ...bekleyen], sesler: [...md.sesler, ...sesler] };
         }
+        this.setState(st => ({ faults: (st.faults || []).map(x => x.id === yeniId ? { ...x, photos: (x.photos || []).filter(p => !p.file), sesler: [] } : x) }));
         setTimeout(() => this.arizaKuyrukGonder(), 0);
-        if (f.dbId && sesler.length && a && a.dbId && !s.offline) {
-          (async () => {
-            let n = 0;
-            for (const sn of sesler) {
-              const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
-              const r = await this._sb.sesYukle(sn.blob, a.dbId, a.code, sec,
-                'Arıza sesli notu · ' + (ASAMA_AD[sn.asama] || ASAMA_AD.once), f.dbId);
-              if (r.ok) n++;
-            }
-            if (n) {
-              this.say(`${n} sesli not ${a.code} kaydına yüklendi — ekipteki herkes dinleyebilir.`, true);
-              setTimeout(() => this.setState({ toast: null }), 8000);
-            }
-          })();
-        }
-        // seçilen fotoğraflar kaydın kendisiyle birlikte veritabanına yüklenir
-        if (f.dbId && bekleyen.length && a && a.dbId && !s.offline) {
-          this.arizaFotoGonder(bekleyen, a.dbId, a.code, f.dbId).then(n => {
-            if (n) {
-              this.veriYenile(true);
-              this.say(`${n} arıza fotoğrafı ${a.code} kaydına yüklendi — herkes görebilir.`, true);
-              setTimeout(() => this.setState({ toast: null }), 8000);
-            }
-          });
-        } else if (bekleyen.length && (f.dbId || s.offline || !this._sb)) {
+        // Seçilen fotoğraf ve sesler kayıt sunucuya yazılınca yüklenir (arizaGonder)
+        if (bekleyen.length && (s.offline || !this._sb)) {
           this.say(`${bekleyen.length} fotoğraf cihazda bekliyor — ${s.offline ? 'bağlantı gelince' : 'kayıt veritabanına yazıldıktan sonra'} yüklenecek.`, true);
           setTimeout(() => this.setState({ toast: null }), 8000);
         }
@@ -16646,7 +16668,18 @@ class Component extends DCLogic {
           const f = cur.f, a = cur.a;
           const step = f.status === 'sahada' ? 1 : 0;
           const kp = s.sahaKapanis && s.sahaKapanis.id === f.id ? s.sahaKapanis : null;
-          const fo = sf[f.id] || { once: 0, sonra: 0 };
+          // Bu oturumda çekilenler + sunucuda bu arızaya bağlı olanlar
+          const fo0 = sf[f.id] || { once: 0, sonra: 0 };
+          const srv = a && a.dbId != null ? (s.fotolar || {})[a.dbId] : null;
+          if (a && a.dbId != null && !srv && f.dbId && this._sb) {
+            this._sahaFotoIstek = this._sahaFotoIstek || {};
+            if (!this._sahaFotoIstek[a.dbId]) { this._sahaFotoIstek[a.dbId] = 1; setTimeout(() => this.fotoYenile(a.dbId), 0); }
+          }
+          const bagli = (srv || []).filter(p => f.dbId && p.arizaDbId === f.dbId);
+          const fo = {
+            once: fo0.once + bagli.filter(p => /Öncesi/.test(p.aciklama || '')).length,
+            sonra: fo0.sonra + bagli.filter(p => /Sonrası/.test(p.aciklama || '')).length
+          };
           const onceTamam = !kanitOn || fo.once > 0;
           const sonraTamam = !kanitOn || fo.sonra > 0;
           const d = sureOn ? this.sureDurum(f) : null;

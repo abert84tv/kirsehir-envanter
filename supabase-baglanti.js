@@ -344,7 +344,7 @@ export async function fotoListesi(tesisDbId) {
   const r = await cagir('foto_listesi', { p_token: tokenOku(), p_tesis_id: tesisDbId ?? null });
   if (!r.ok) return r;
   return { ok: true, data: (r.data || []).map(f => ({
-    id: f.id, tesisDbId: f.tesis_id, anahtar: f.adres, url: fotoAdres(f.adres),
+    id: f.id, tesisDbId: f.tesis_id, arizaDbId: f.ariza_id ?? null, anahtar: f.adres, url: fotoAdres(f.adres),
     aciklama: f.aciklama || '', boyut: f.boyut, yukleyen: f.yukleyen,
     yuklendi: f.yuklendi, yazilabilir: f.yazilabilir !== false
   })) };

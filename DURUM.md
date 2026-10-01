@@ -1734,3 +1734,23 @@ Asıl kök: modül anahtarları yalnız cihazda (ks-moduller) duruyordu —
 bilgisayarda açılan modül telefonda kapalı kalıyordu. Artık kurum ayarı:
 sunucuda `modul` anahtarı (yönetici/müdür yazar), açılışta bütün cihazlara
 yüklenir. Sürüm 2026.10.01-107.
+
+## 2026.10.01 — Arıza açılınca çökme, çift fotoğraf, görünmeyen kanıt
+
+Kullanıcı bildirimi: telefonda arızaya dokununca "Root.renderVals():
+Cannot read properties of undefined (reading 'map')"; iki kuyuya ve bir
+arızaya fotoğraf yüklendi.
+- Çökme: sunucudan gelen arızada `photos` yoktu, form `ff.photos.map`
+  çağırıyordu (arızalar bugüne dek sunucudan hiç gelmediği için ortaya
+  çıkmamıştı). Sunucu arızaları photos/sesler/malzeme boş listeyle gelir;
+  formdaki erişimler korundu.
+- Çift yükleme: yeni arızanın fotoğraf dosyası arıza kaydının içinde
+  kalıyordu; kayıt yeniden kaydedilince aynı fotoğraf ikinci kez yüklendi
+  (foto 15 ve 16, aynı boyut). Dosyalar artık kayıtta tutulmaz, yalnız
+  arizaGonder yükler. Yinelenen foto 16 çöp kutusuna alındı (30 gün).
+- Kanıt: form ve saha akışı yalnız o an seçilen fotoğrafı sayıyordu —
+  yüklenmiş "öncesi" fotoğrafı olan arıza kanıtsız sayılıp kapatılamazdı,
+  formda "0 adet" görünüyordu. Sunucuda arızaya bağlı fotoğraflar
+  (foto_listesi.ariza_id) sayılır ve formda yeşil çerçeveyle gösterilir.
+Kontrol: KS-KUY-0065 (3), KS-KUY-0236 (5), KS-AGP-0001 arıza (1) fotoğrafı
+sunucuda ve açılıyor. Sürüm 2026.10.01-108.

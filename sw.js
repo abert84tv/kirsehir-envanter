@@ -1,6 +1,6 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.05-116';
+const SURUM = 'ks-2026.10.05-117';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo';
 const KARO_LIMIT = 900;

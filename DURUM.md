@@ -1902,3 +1902,9 @@ Sürüm 2026.10.05-114.
 - Cihaz tarafı: PLC/GSM modem/Node-RED/ESP32 `POST /rest/v1/rpc/telemetri_yaz` ile ölçüm gönderir (internetsiz kalan toplayıcı eski zaman damgasıyla sonradan gönderebilir). MQTT/Modbus için aracı bir geçit gerekir (geçit aynı ucu çağırır).
 - Arayüz: Ekip, Araç, Ambar > Telemetri. Cihaz kartları (son değerler, veri geliyor/sessiz), ölçüm grafiği (6 sa–30 gün), alarmlar (Gördüm / Arızaya çevir), eşik kuralları, cihaz ekleme ve anahtar yenileme (yalnız yönetici, müdür, mühendis).
 - Sahte veri yok: arayüz boş başlar, cihaz bağlandıkça dolar.
+
+## 2026.10.05-117 — Vatandaş / muhtar başvuru sayfası
+- `/bildirim`: oturum gerektirmeyen telefon uyumlu form (ilçe, köy, konu, açıklama, isteğe bağlı konum, KVKK aydınlatma onayı). Başvuru "BSV-XXXXXX" takip kodu alır; aynı sayfadan kodla durum sorgulanır.
+- Kötüye kullanıma karşı (SQL-basvuru.sql, Supabase'e uygulandı): gizli bot alanı, IP başına saatte 5 / telefon başına günde 5 başvuru, aynı başvurunun tekrarı yeni kayıt açmaz, kara liste (personel "Spam" düğmesiyle ekler).
+- Personel tarafı: İşler > Gelen ekranında "Web başvuruları" kartı; "Talebe aktar" talebi açar, talep durumu/sonuç notu değiştikçe vatandaşın takip sayfası da güncellenir. "Başvuru bağlantısı" düğmesi adresi kopyalar.
+- Aydınlatma metni taslaktır; kurumun KVKK sorumlusu kontrol etmelidir.

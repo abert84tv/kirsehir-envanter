@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1f57a6">
+<title>Arıza Bildirimi · Kırşehir İl Özel İdaresi</title>
+<style>
+:root{--bg:#f4f6fa;--surf:#fff;--fg:#14202e;--mut:#5b6877;--rule:#d5dbe4;--acc:#1f57a6;--ok:#1b7a36;--bad:#c0281c}
+@media (prefers-color-scheme:dark){:root{--bg:#0f151d;--surf:#18212c;--fg:#eef2f7;--mut:#9aa7b6;--rule:#2b3745;--acc:#5aa0f2;--ok:#4cc46d;--bad:#ff7a6e}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:16px 16px 40px}
+header{display:flex;align-items:center;gap:12px;margin:6px 0 16px}
+.logo{width:44px;height:44px;border-radius:12px;background:var(--acc);display:flex;align-items:center;justify-content:center;flex:none}
+h1{font-size:19px;line-height:1.2;margin:0}
+.alt{color:var(--mut);font-size:13.5px;margin-top:2px}
+.sekme{display:flex;gap:6px;margin-bottom:14px}
+.sekme button{flex:1;height:46px;border-radius:12px;border:1px solid var(--rule);background:var(--surf);color:var(--fg);font:600 15px/1 inherit;font-family:inherit;cursor:pointer}
+.sekme button.ac{background:var(--acc);border-color:var(--acc);color:#fff}
+.kart{background:var(--surf);border:1px solid var(--rule);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:14px}
+label small{font-weight:400;color:var(--mut);font-size:12.5px}
+input,select,textarea{font:400 16px/1.3 inherit;font-family:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--rule);border-radius:12px;padding:0 12px;min-height:48px;width:100%}
+textarea{padding:12px;min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.sira{display:flex;gap:10px}
+.sira>*{flex:1;min-width:0}
+.sec{display:flex;gap:8px}
+.sec label{flex:1;flex-direction:row;align-items:center;gap:8px;border:1px solid var(--rule);border-radius:12px;padding:0 12px;min-height:48px;font-weight:600;cursor:pointer;background:var(--bg)}
+.sec input{width:auto;min-height:0;accent-color:var(--acc)}
+button.ana{height:54px;border:none;border-radius:14px;background:var(--acc);color:#fff;font:700 17px/1 inherit;font-family:inherit;cursor:pointer}
+button.ana:disabled{opacity:.55}
+button.ikinci{height:46px;border:1px solid var(--rule);border-radius:12px;background:transparent;color:var(--fg);font:600 15px/1 inherit;font-family:inherit;cursor:pointer;padding:0 14px}
+.kvkk{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:13.5px;line-height:1.45}
+.kvkk input{width:22px;height:22px;min-height:0;flex:none;margin-top:1px;accent-color:var(--acc)}
+.kvkk-metin{font-size:12.5px;color:var(--mut);line-height:1.5}
+.hata{background:rgba(192,40,28,.1);border:1px solid var(--bad);color:var(--bad);border-radius:12px;padding:11px 13px;font-weight:600;font-size:14px}
+.tamam{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.kod{font:800 34px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.04em;color:var(--acc);background:var(--bg);border:2px dashed var(--acc);border-radius:14px;padding:16px 18px}
+.durum{font-weight:800;font-size:20px}
+.gizli{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.gor{display:none}
+.gor.ac{display:flex;flex-direction:column;gap:14px}
+.yer{font-size:13px;color:var(--mut)}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C12 2 5 10.2 5 15a7 7 0 0014 0C19 10.2 12 2 12 2z"/></svg></div>
+  <div><h1>Su ve kanal arıza bildirimi</h1><div class="alt">Kırşehir İl Özel İdaresi</div></div>
+</header>
+
+<div class="sekme" role="tablist">
+  <button id="s-yeni" class="ac" role="tab" type="button">Bildirim yap</button>
+  <button id="s-sorgu" role="tab" type="button">Başvurumu sorgula</button>
+</div>
+
+<section id="g-yeni" class="gor ac">
+  <form id="form" class="kart" autocomplete="on" novalidate>
+    <div id="hata" class="hata" style="display:none" role="alert"></div>
+    <div class="sec" role="radiogroup" aria-label="Bildiren">
+      <label><input type="radio" name="sifat" value="vatandas" checked> Vatandaşım</label>
+      <label><input type="radio" name="sifat" value="muhtar"> Muhtarım</label>
+    </div>
+    <label>Adınız soyadınız
+      <input id="ad" name="name" autocomplete="name" maxlength="80" required>
+    </label>
+    <label>Telefon <small>Size dönüş yapılması için (isteğe bağlı)</small>
+      <input id="tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="05xx xxx xx xx">
+    </label>
+    <div class="sira">
+      <label>İlçe
+        <select id="ilce" required>
+          <option value="">Seçin…</option>
+          <option>Merkez</option><option>Kaman</option><option>Mucur</option><option>Çiçekdağı</option>
+          <option>Akpınar</option><option>Akçakent</option><option>Boztepe</option>
+        </select>
+      </label>
+      <label>Köy / mahalle
+        <input id="koy" list="koyler" maxlength="80" autocomplete="off" required placeholder="Yazın ya da seçin">
+        <datalist id="koyler"></datalist>
+      </label>
+    </div>
+    <label>Konu
+      <select id="konu" required>
+        <option>Susuzluk / su gelmiyor</option><option>Su kesintisi</option><option>Su bulanık / kirli</option>
+        <option>Boru patlağı — kaçak</option><option>Depo taşması</option><option>Elektrik kesintisi</option>
+        <option>Kanalizasyon sorunu</option><option>Yeni kuyu / depo isteği</option><option>Şebeke genişletme isteği</option>
+        <option>Şikâyet</option><option>Diğer</option>
+      </select>
+    </label>
+    <label>Sorun nedir?
+      <textarea id="aciklama" maxlength="1500" required placeholder="Örn: Köyün üst mahallesinde 2 gündür su yok."></textarea>
+    </label>
+    <div>
+      <button id="konumBtn" class="ikinci" type="button">📍 Konumumu ekle</button>
+      <div id="konumNot" class="yer" style="margin-top:6px">İsteğe bağlı — arıza yerini ekibe gösterir.</div>
+    </div>
+    <div class="gizli" aria-hidden="true"><label>Web sitesi <input id="bal" tabindex="-1" autocomplete="off"></label></div>
+    <label class="kvkk"><input id="kvkk" type="checkbox"> <span>Aydınlatma metnini okudum, kişisel verilerimin bu bildirim için işlenmesini onaylıyorum.</span></label>
+    <details class="kvkk-metin"><summary>Aydınlatma metni</summary>
+      <p>Kırşehir İl Özel İdaresi, bu formda verdiğiniz ad-soyad, telefon, yer ve konum bilgilerinizi yalnızca bildirdiğiniz sorunun giderilmesi, size dönüş yapılması ve hizmet kalitesinin ölçülmesi amacıyla, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 5/2 maddesi kapsamında işler. Bilgileriniz yetkili personel dışında kimseyle paylaşılmaz ve ilgili mevzuatın öngördüğü süre boyunca saklanır. Kanunun 11. maddesindeki haklarınızı kullanmak için kurumumuza yazılı başvurabilirsiniz.</p>
+    </details>
+    <button id="gonder" class="ana" type="submit">Bildirimi gönder</button>
+  </form>
+
+  <div id="tamam" class="kart tamam" style="display:none">
+    <div style="font-size:40px">✅</div>
+    <div style="font-weight:800;font-size:19px">Bildiriminiz alındı</div>
+    <div class="alt">Takip kodunuz:</div>
+    <div id="kodGoster" class="kod"></div>
+    <div class="alt">Bu kodu kaydedin; durumu “Başvurumu sorgula” bölümünden görebilirsiniz.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+      <button id="kopya" class="ikinci" type="button">Kodu kopyala</button>
+      <button id="yeniBtn" class="ikinci" type="button">Yeni bildirim</button>
+    </div>
+  </div>
+</section>
+
+<section id="g-sorgu" class="gor">
+  <form id="sorguForm" class="kart" novalidate>
+    <label>Takip kodunuz
+      <input id="takip" autocapitalize="characters" autocomplete="off" maxlength="14" placeholder="BSV-XXXXXX" style="font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;letter-spacing:.03em">
+    </label>
+    <button class="ana" type="submit">Durumu göster</button>
+    <div id="sorguSonuc"></div>
+    <div id="eski" class="yer"></div>
+  </form>
+</section>
+</main>
+
+<script type="module">
+const URL_ = 'https://lcnsganomudmxigaqmgd.supabase.co/rest/v1/rpc/';
+const ANON = 'sb_publishable_U2WQsXUNkYAQ2aQ-f6npRA_Uhz8Yktc';
+const $ = id => document.getElementById(id);
+const DURUM = {
+  yeni: ['Alındı', 'Bildiriminiz alındı; yetkililer inceleyecek.'],
+  incelemede: ['İnceleniyor', 'Bildiriminiz inceleniyor.'],
+  arizaya: ['Ekip görevlendirildi', 'Arıza kaydı açıldı, ekip yönlendirildi.'],
+  cozuldu: ['Çözüldü', 'Bildiriminiz sonuçlandı.'],
+  red: ['Karşılanamıyor', 'Bildiriminiz değerlendirildi.']
+};
+let konum = null;
+
+async function rpc(ad, govde) {
+  let r;
+  try {
+    r = await fetch(URL_ + ad, { method: 'POST', headers: { apikey: ANON, 'Content-Type': 'application/json' }, body: JSON.stringify(govde) });
+  } catch (e) { throw new Error('İnternet bağlantısı yok. Bağlantınızı kontrol edip yeniden deneyin.'); }
+  let j = null; try { j = await r.json(); } catch (e) { /* boş yanıt */ }
+  if (!r.ok) throw new Error((j && j.message) || 'Gönderilemedi, lütfen yeniden deneyin.');
+  return j;
+}
+function hataGoster(m) { const h = $('hata'); h.textContent = m; h.style.display = m ? '' : 'none'; if (m) h.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+
+// sekmeler
+function sekme(s) {
+  $('g-yeni').classList.toggle('ac', s === 'yeni'); $('g-sorgu').classList.toggle('ac', s === 'sorgu');
+  $('s-yeni').classList.toggle('ac', s === 'yeni'); $('s-sorgu').classList.toggle('ac', s === 'sorgu');
+  if (s === 'sorgu') eskiGoster();
+}
+$('s-yeni').onclick = () => sekme('yeni');
+$('s-sorgu').onclick = () => sekme('sorgu');
+
+// köy listesi (cihazda, çevrimdışı): seçilen ilçeye göre
+let YER = [];
+import('./koyler.js').then(m => { YER = m.YERLESIM.filter(r => r[3] === 'YKOY' || r[3] === 'BCK'); koyDoldur(); }).catch(() => {});
+function koyDoldur() {
+  const il = $('ilce').value;
+  const liste = YER.filter(r => !il || !r[4] || r[4] === il || (il === 'Merkez' && r[4] === 'Merkez')).map(r => r[0]);
+  $('koyler').innerHTML = [...new Set(liste)].sort((a, b) => a.localeCompare(b, 'tr')).map(k => '<option value="' + k.replace(/"/g, '&quot;') + '">').join('');
+}
+$('ilce').onchange = koyDoldur;
+
+$('konumBtn').onclick = () => {
+  if (!navigator.geolocation) { $('konumNot').textContent = 'Bu cihaz konum vermiyor.'; return; }
+  $('konumNot').textContent = 'Konum alınıyor…';
+  navigator.geolocation.getCurrentPosition(p => {
+    konum = { lat: +p.coords.latitude.toFixed(6), lon: +p.coords.longitude.toFixed(6) };
+    $('konumNot').textContent = '✔ Konum eklendi (±' + Math.round(p.coords.accuracy || 0) + ' m).';
+  }, () => { $('konumNot').textContent = 'Konum alınamadı — izin vermediyseniz köy adı yeterlidir.'; }, { enableHighAccuracy: true, timeout: 15000 });
+};
+
+$('form').onsubmit = async e => {
+  e.preventDefault(); hataGoster('');
+  const ad = $('ad').value.trim(), koy = $('koy').value.trim(), ac = $('aciklama').value.trim();
+  if (ad.length < 3) return hataGoster('Adınızı ve soyadınızı yazın.');
+  if (!$('ilce').value) return hataGoster('İlçeyi seçin.');
+  if (koy.length < 2) return hataGoster('Köy ya da mahalle adını yazın.');
+  if (ac.length < 10) return hataGoster('Sorunu bir iki cümleyle anlatın.');
+  if (!$('kvkk').checked) return hataGoster('Devam etmek için aydınlatma metnini onaylayın.');
+  const b = $('gonder'); b.disabled = true; b.textContent = 'Gönderiliyor…';
+  try {
+    const kod = await rpc('basvuru_ekle', {
+      p_ad: ad, p_tel: $('tel').value.trim(), p_sifat: document.querySelector('input[name=sifat]:checked').value,
+      p_ilce: $('ilce').value, p_koy: koy, p_konu: $('konu').value, p_aciklama: ac,
+      p_lat: konum ? konum.lat : null, p_lon: konum ? konum.lon : null, p_kvkk: true, p_bal: $('bal').value
+    });
+    try { const l = JSON.parse(localStorage.getItem('ks-takip') || '[]'); l.unshift({ kod, koy, t: Date.now() }); localStorage.setItem('ks-takip', JSON.stringify(l.slice(0, 8))); } catch (x) { /* depolama kapalı */ }
+    $('form').style.display = 'none'; $('tamam').style.display = ''; $('kodGoster').textContent = kod;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (x) { hataGoster(x.message); }
+  b.disabled = false; b.textContent = 'Bildirimi gönder';
+};
+$('kopya').onclick = () => { try { navigator.clipboard.writeText($('kodGoster').textContent); $('kopya').textContent = 'Kopyalandı ✔'; } catch (e) { /* elle seçilir */ } };
+$('yeniBtn').onclick = () => {
+  $('form').reset(); konum = null; $('konumNot').textContent = 'İsteğe bağlı — arıza yerini ekibe gösterir.';
+  $('tamam').style.display = 'none'; $('form').style.display = '';
+};
+
+// durum sorgula
+const tarih = iso => { const d = new Date(iso); return d.toLocaleDateString('tr-TR') + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); };
+async function sorgula(kod) {
+  const s = $('sorguSonuc'); s.innerHTML = '';
+  kod = String(kod || '').trim().toUpperCase();
+  if (!kod) return;
+  try {
+    const r = await rpc('basvuru_durum', { p_takip: kod });
+    if (!r || !r.length) { s.innerHTML = '<div class="hata">Bu kodla bir başvuru bulunamadı. Kodu kontrol edin.</div>'; return; }
+    const x = r[0], d = DURUM[x.durum] || [x.durum, ''];
+    const esc = t => String(t || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    s.innerHTML = '<div class="kart" style="background:var(--bg)"><div class="durum">' + esc(d[0]) + '</div><div>' + esc(d[1]) + '</div>'
+      + (x.sonuc ? '<div><b>Not:</b> ' + esc(x.sonuc) + '</div>' : '')
+      + '<div class="yer">' + esc(x.konu) + ' · ' + esc(x.koy) + '<br>Başvuru: ' + tarih(x.olusma) + ' · Son güncelleme: ' + tarih(x.guncelleme) + '</div></div>';
+  } catch (e) { s.innerHTML = '<div class="hata">' + e.message.replace(/</g, '&lt;') + '</div>'; }
+}
+$('sorguForm').onsubmit = e => { e.preventDefault(); sorgula($('takip').value); };
+function eskiGoster() {
+  try {
+    const l = JSON.parse(localStorage.getItem('ks-takip') || '[]');
+    $('eski').innerHTML = l.length ? 'Bu cihazdaki başvurularınız: ' + l.map(x => '<a href="#" data-k="' + x.kod + '">' + x.kod + '</a>').join(' · ') : '';
+    $('eski').querySelectorAll('a').forEach(a => a.onclick = ev => { ev.preventDefault(); $('takip').value = a.dataset.k; sorgula(a.dataset.k); });
+  } catch (e) { /* depolama kapalı */ }
+}
+const q = new URLSearchParams(location.search).get('takip');
+if (q) { sekme('sorgu'); $('takip').value = q; sorgula(q); }
+</script>
+</body>
+</html>

@@ -5,7 +5,8 @@
     { "source": "/", "destination": "/index.html" },
     { "source": "/harita", "destination": "/harita.html" },
     { "source": "/profil", "destination": "/profil.html" },
-    { "source": "/hat", "destination": "/hat.html" }
+    { "source": "/hat", "destination": "/hat.html" },
+    { "source": "/bildirim", "destination": "/bildirim.html" }
   ],
   "headers": [
     {

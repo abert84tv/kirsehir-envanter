@@ -989,8 +989,28 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 </div>
 <button onClick="{{ muhtarListeAc }}" style="all:unset;box-sizing:border-box;flex:none;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px;align-self:center">Muhtarlar</button>
 <button onClick="{{ isEmriListeAc }}" style="all:unset;box-sizing:border-box;flex:none;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px;align-self:center">İş Emirleri</button>
+<button onClick="{{ webBasvuru.kopyala }}" style="all:unset;box-sizing:border-box;flex:none;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px;align-self:center">Başvuru bağlantısı</button>
 <button onClick="{{ talepEkran.yeni }}" class="btn btn-primary" style="flex:none;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Talep al</button>
 </div>
+<sc-if value="{{ webBasvuru.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 16px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:8px"><span style="font:700 14px/1.2 var(--font-heading)">Web başvuruları</span><span style="font:700 12px/1 var(--font-body);color:#fff;background:#d92d20;border-radius:9px;padding:4px 8px">{{ webBasvuru.say }} yeni</span></div>
+<sc-for list="{{ webBasvuru.liste }}" as="b" hint-placeholder-count="2">
+<div style="border:1px solid {{ ui.rule }};border-left:5px solid {{ b.renk }};border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:{{ ui.bg }}">
+<span style="font:700 13.5px/1.3 var(--font-heading)">{{ b.baslik }}</span>
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ b.aciklama }}</span>
+<span style="font:500 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ b.alt }}</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ b.aktar }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/38px var(--font-body)">Talebe aktar</button>
+<button onClick="{{ b.engelle }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/36px var(--font-body)">Spam</button>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{ webBasvuru.fazla }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ webBasvuru.fazla }}</span>
+</sc-if>
+</div>
+</sc-if>
 <div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ talepEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
@@ -4787,6 +4807,7 @@ Hareket gir
 <h2 style="font:600 18px/1.1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Dış talepler</h2>
 <div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ talepEkran.not }}</div>
 <div style="display:flex;gap:8px;margin-top:11px">
+<button onClick="{{ webBasvuru.kopyala }}" style="all:unset;box-sizing:border-box;flex:1;text-align:center;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 15px">Başvuru bağlantısı</button>
 <button onClick="{{ talepEkran.yeni }}" class="btn btn-primary" style="flex:1;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">Talep al</button>
 </div>
 <div style="display:flex;gap:8px;margin-top:8px">
@@ -4794,6 +4815,25 @@ Hareket gir
 <button onClick="{{ muhtarListeAc }}" style="all:unset;box-sizing:border-box;flex:1;text-align:center;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 15px">Muhtarlar</button>
 </div>
 </div>
+<sc-if value="{{ webBasvuru.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 16px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:8px"><span style="font:700 14px/1.2 var(--font-heading)">Web başvuruları</span><span style="font:700 12px/1 var(--font-body);color:#fff;background:#d92d20;border-radius:9px;padding:4px 8px">{{ webBasvuru.say }} yeni</span></div>
+<sc-for list="{{ webBasvuru.liste }}" as="b" hint-placeholder-count="2">
+<div style="border:1px solid {{ ui.rule }};border-left:5px solid {{ b.renk }};border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:{{ ui.bg }}">
+<span style="font:700 13.5px/1.3 var(--font-heading)">{{ b.baslik }}</span>
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ b.aciklama }}</span>
+<span style="font:500 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ b.alt }}</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ b.aktar }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/38px var(--font-body)">Talebe aktar</button>
+<button onClick="{{ b.engelle }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/36px var(--font-body)">Spam</button>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{ webBasvuru.fazla }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ webBasvuru.fazla }}</span>
+</sc-if>
+</div>
+</sc-if>
 <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ talepEkran.stats }}" as="st" hint-placeholder-count="4">
 <div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
@@ -8515,7 +8555,7 @@ const MODUL_AD = {
 // her talep arızaya dönüşmez, ama dönüşenin izi kalır.
 const TALEP_KANAL = {
   telefon: 'Telefon', whatsapp: 'WhatsApp', telegram: 'Telegram', sms: 'SMS', dilekce: 'Dilekçe',
-  sahsen: 'Şahsen', eposta: 'E-posta', cimer: 'CİMER / BİMER'
+  sahsen: 'Şahsen', eposta: 'E-posta', cimer: 'CİMER / BİMER', web: 'Web formu'
 };
 const TALEP_SIFAT = { muhtar: 'Muhtar', vatandas: 'Vatandaş', kurum: 'Kurum', personel: 'Personel' };
 const TALEP_KONU = [
@@ -8863,7 +8903,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.05-116';
+const SURUM = '2026.10.05-117';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9011,6 +9051,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
+    basvurular: [],
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
     // Araç ve ekipman — liste, görev durumu ve hareket dökümü
@@ -10692,7 +10733,7 @@ class Component extends DCLogic {
   talepYaz(liste, mesaj, git) {
     this.modulYaz('talep', liste.slice(0, 1000));
     this.setState({ talepler: liste, talepForm: null },
-      () => { if (mesaj) this.duyur(mesaj, 6500, 'iyi', git || (() => this.setState({ tab: 'talep' }))); });
+      () => { this.basvuruEsitle(); if (mesaj) this.duyur(mesaj, 6500, 'iyi', git || (() => this.setState({ tab: 'talep' }))); });
   }
   talepNo() {
     const y = new Date().getFullYear();
@@ -10886,7 +10927,8 @@ class Component extends DCLogic {
       alan: g.alan || ((this.state.session && this.state.session.name) || ''),
       // Ön sınıflandırma (kural ya da yapay zekâ) — arızaya çevrilince grup/tür buradan gelir
       grup: ARIZA_GRUP[g.grup] ? g.grup : null, tur: g.tur || null,
-      siniflandirma: g.siniflandirma || null
+      siniflandirma: g.siniflandirma || null,
+      takip: g.takip || ''
     };
     if (i < 0) liste.unshift(kayit); else liste[i] = kayit;
     this.denetimYaz('talep', i < 0 ? 'Talep alındı' : 'Talep güncellendi',
@@ -12902,6 +12944,68 @@ class Component extends DCLogic {
     }
     return yazilan;
   }
+  // ── web başvuruları (bildirim.html): vatandaş / muhtar formundan gelenler
+  async basvuruYenile() {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || !M.basvuruListesi || this.state.offline) return;
+    const r = await M.basvuruListesi();
+    if (!r.ok) return;
+    const liste = (r.data || []).map(x => ({
+      id: x.id, takip: x.takip, ad: x.ad, tel: x.tel || '', sifat: x.sifat, ilce: x.ilce || '', koy: x.koy, konu: x.konu,
+      aciklama: x.aciklama, lat: x.lat, lon: x.lon, durum: x.durum, sonuc: x.sonuc || '', talepNo: x.talep_no || '', zaman: x.olusma
+    }));
+    this.setState({ basvurular: liste }, () => this.basvuruEsitle());
+  }
+  // Talebin durumu değişince başvurunun takip sayfası da güncellenir
+  async basvuruEsitle() {
+    const M = this._sb;
+    if (!M || !M.basvuruGuncelle || !M.tokenOku() || this.state.offline || this._basvuruEsit) return;
+    const bl = this.state.basvurular || [];
+    if (!bl.length) return;
+    const isler = [];
+    for (const t of (this.state.talepler || [])) {
+      if (!t.takip) continue;
+      const b = bl.find(x => x.takip === t.takip);
+      if (!b) continue;
+      const hedef = t.durum === 'yeni' ? 'incelemede' : t.durum;
+      const no = t.noGecici ? '' : t.no;
+      const sonucFark = !!t.sonuc && t.sonuc !== (b.sonuc || '');
+      const noFark = !!no && b.talepNo !== no;
+      if (b.durum !== hedef || sonucFark || noFark) isler.push({ b, hedef, t, no });
+    }
+    if (!isler.length) return;
+    this._basvuruEsit = true;
+    try {
+      for (const i of isler) {
+        const r = await M.basvuruGuncelle(i.b.id, i.hedef, i.t.sonuc || '', i.no);
+        if (r && r.ok) {
+          this.setState(st => ({ basvurular: (st.basvurular || []).map(x => x.id === i.b.id
+            ? { ...x, durum: i.hedef, sonuc: i.t.sonuc || x.sonuc, talepNo: i.no || x.talepNo } : x) }));
+        } else if (r && r.cevrimdisi) break;
+      }
+    } finally { this._basvuruEsit = false; }
+  }
+  async basvuruAktar(b) {
+    const me = this.state.session;
+    if (!me) return;
+    this.talepKaydet({
+      ad: b.ad, tel: b.tel, sifat: b.sifat === 'muhtar' ? 'muhtar' : 'vatandas', kanal: 'web', ilce: b.ilce, koy: b.koy,
+      konu: b.konu, aciklama: b.aciklama + (b.lat != null ? '\n[Bildirimdeki konum: ' + b.lat + ', ' + b.lon + ']' : ''),
+      kvkkOnay: true, takip: b.takip
+    });
+    // Kayıt gerçekten talep listesine girdiyse başvuru "incelemede" olur
+    await new Promise(r => setTimeout(r, 1500));
+    const t = (this.state.talepler || []).find(x => x.takip === b.takip);
+    if (t) this.basvuruEsitle();
+    else this.duyur('Talep oluşturulamadı — form uyarısını kontrol edin.', 5000, 'kotu');
+  }
+  async basvuruEngelle(b) {
+    if (!window.confirm(b.takip + ' başvurusu spam sayılıp gönderen engellensin mi?\n\n(' + b.ad + ' · ' + (b.tel || 'telefon yok') + ')')) return;
+    const r = await this._sb.basvuruEngelle(b.id);
+    if (!r.ok) return this.duyur(r.err || 'Engellenemedi.', 6000, 'kotu');
+    this.denetimYaz('talep', 'Web başvurusu engellendi', b.takip, '');
+    this.basvuruYenile();
+  }
   // ── telemetri: cihazlar, son değerler, alarmlar, eşik kuralları
   telemetriGuncelle(yama, cb) { this.setState(st => ({ telemetri: { ...st.telemetri, ...yama } }), cb); }
   async telemetriYenile(sessiz) {
@@ -13054,6 +13158,7 @@ class Component extends DCLogic {
       await this.kuyrukGonder(sessiz);
       await this.notKuyrukGonder();
       this.modulKuyrukDene();
+      this.basvuruEsitle();
       await this.medyaKuyrukGonder();
     } finally { this._senkronda = false; }
   }
@@ -13191,6 +13296,7 @@ class Component extends DCLogic {
     }
     this.copYenile().then(() => this.kodDenetle());
     this.isEmriYenile();
+    this.basvuruYenile();
     if (bekleyenF.length) setTimeout(() => this.arizaKuyrukGonder(), 300);
     if (assets.some(x => x.sync === 'pending')) setTimeout(() => this.kuyrukGonder(true), 600);
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider
@@ -16897,6 +17003,27 @@ class Component extends DCLogic {
       // İşler > Genel bakış: talepten kapanışa iş hattı, günün göstergeleri, öncelikli işler
       // Kaynaklar > Ekipler: personel ve araç durumu, ekip yükü, iş haritası
       // (masaüstü ve telefon şablonu ayrı, veri ortak)
+      webBasvuru: (() => {
+        const kopyala = () => {
+          const u = location.origin + '/bildirim';
+          try { navigator.clipboard.writeText(u); this.duyur('Bağlantı kopyalandı: ' + u + ' — muhtara ve vatandaşa gönderin.', 7000, 'iyi'); }
+          catch (e) { this.duyur('Bağlantı: ' + u, 9000); }
+        };
+        if (tabId !== 'talep') return { var: false, say: 0, liste: [], fazla: '', kopyala };
+        const yeni = (s.basvurular || []).filter(b => b.durum === 'yeni');
+        const ac = yeni.slice(0, 15);
+        return {
+          kopyala, var: yeni.length > 0, say: yeni.length,
+          fazla: yeni.length > ac.length ? '+ ' + (yeni.length - ac.length) + ' başvuru daha var — sırayla aktarın.' : '',
+          liste: ac.map(b => ({
+            baslik: b.konu + ' · ' + b.koy + (b.ilce ? ' (' + b.ilce + ')' : ''),
+            aciklama: b.aciklama,
+            alt: (b.sifat === 'muhtar' ? 'Muhtar ' : '') + b.ad + (b.tel ? ' · ' + b.tel : '') + ' · ' + this.damgaCevir(b.zaman) + ' · ' + b.takip + (b.lat != null ? ' · konumlu' : ''),
+            renk: '#d97706',
+            aktar: () => this.basvuruAktar(b), engelle: () => this.basvuruEngelle(b)
+          }))
+        };
+      })(),
       telemetri: (() => {
         const T = s.telemetri || {};
         const BOS = {

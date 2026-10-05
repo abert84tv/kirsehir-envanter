@@ -1942,3 +1942,5 @@ Sürüm 2026.10.05-114.
 ## 2026.10.06-124 — Ek ekip ve sıralı alt işler, telemetri geçit rehberi
 - İş emrine ek ekipler ve sırayla yapılacak alt işler (SQL: is_emri_ek). Önceki alt iş bitmeden sıradaki "bekleniyor" görünür.
 - `TELEMETRI-GECIT.md`: Modbus/MQTT cihazlar için geçit örnekleri.
+
+## 2026.10.06-125 — Çevrimdışı çizilen hatlar bağlantı gelince sunucuya gider

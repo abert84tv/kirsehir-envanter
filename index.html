@@ -9175,7 +9175,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-124';
+const SURUM = '2026.10.06-125';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9809,17 +9809,35 @@ class Component extends DCLogic {
     // Sunucuya da yazılır: hat tesisin kendisiyle birlikte bütün cihazlarda görünür
     const M = this._sb;
     const a = (this.state.assets || []).find(x => x.id === assetId);
-    if (!M || !M.hatKaydet || !M.tokenOku() || !a || !a.dbId || this.state.offline) return;
+    if (!M || !M.hatKaydet || !M.tokenOku() || !a || !a.dbId || this.state.offline) { if (a && a.dbId) this.hatBekleyenEkle(assetId); return; }
     M.hatKaydet(a.dbId, (liste || []).map(x => ({
       tur: x.tur, noktalar: x.noktalar,
       // Boru çapı ve malzemesi açıklama alanına "Ø110 mm · PE100 · not" biçiminde yazılır
       aciklama: [x.cap ? 'Ø' + x.cap + ' mm' : '', x.malzeme || '', x.aciklama || ''].filter(Boolean).join(' · ') || null
     }))).then(r => {
-      if (r.ok) return;
+      if (r.ok) { this.hatBekleyenCikar(assetId); return; }
+      if (r.cevrimdisi) this.hatBekleyenEkle(assetId);
       this.duyur(r.cevrimdisi
         ? 'Hat cihaza kaydedildi — bağlantı gelince sunucuya yazılır.'
         : 'Hat sunucuya yazılamadı: ' + r.err, 7000, r.cevrimdisi ? 'bilgi' : 'kotu');
     });
+  }
+  // Çevrimdışıyken çizilen hatlar bağlantı gelince sunucuya gönderilir
+  hatBekleyenOku() { try { const v = JSON.parse(localStorage.getItem('ks-hat-bekleyen') || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+  hatBekleyenYaz(l) { try { localStorage.setItem('ks-hat-bekleyen', JSON.stringify([...new Set(l)])); } catch (e) { /* depolama kapalı */ } }
+  hatBekleyenEkle(id) { this.hatBekleyenYaz([...this.hatBekleyenOku(), id]); }
+  hatBekleyenCikar(id) { this.hatBekleyenYaz(this.hatBekleyenOku().filter(x => x !== id)); }
+  async hatBekleyenGonder() {
+    const M = this._sb;
+    if (!M || !M.hatKaydet || !M.tokenOku() || this.state.offline) return;
+    for (const id of this.hatBekleyenOku()) {
+      const a = (this.state.assets || []).find(x => x.id === id);
+      if (!a || !a.dbId) continue;
+      const liste = (this.state.hatlar || {})[id] || [];
+      const r = await M.hatKaydet(a.dbId, liste.map(x => ({ tur: x.tur, noktalar: x.noktalar,
+        aciklama: [x.cap ? 'Ø' + x.cap + ' mm' : '', x.malzeme || '', x.aciklama || ''].filter(Boolean).join(' · ') || null })));
+      if (r.ok) this.hatBekleyenCikar(id); else if (r.cevrimdisi) break;
+    }
   }
   // Hat güzergâhları sunucudan gelir; sunucuda karşılığı olmayan kayıtların
   // hatları cihaz kopyasında kalır
@@ -9847,6 +9865,8 @@ class Component extends DCLogic {
     const sunucudakiKayit = new Set((this.state.assets || []).filter(a => a.dbId != null).map(a => a.id));
     const yerel = this.state.hatlar || {};
     for (const k in yerel) if (!sunucudakiKayit.has(k)) tablo[k] = yerel[k];
+    // Gönderilmemiş (çevrimdışı çizilmiş) hatlar sunucudaki eski hâliyle ezilmez
+    for (const id of this.hatBekleyenOku()) if (yerel[id]) tablo[id] = yerel[id];
     try { localStorage.setItem('ks-hatlar', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
     this.setState({ hatlar: tablo }, () => {
       this.hatlariYolla();
@@ -13669,6 +13689,7 @@ class Component extends DCLogic {
       await this.notKuyrukGonder();
       this.modulKuyrukDene();
       this.basvuruEsitle();
+      await this.hatBekleyenGonder();
       for (const f of (this.state.faults || [])) if (f.ekBekleyen && f.dbId && f.sync !== 'pending') await this.arizaEkGonder(f.id);
       await this.medyaKuyrukGonder();
     } finally { this._senkronda = false; }

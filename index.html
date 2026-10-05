@@ -1232,6 +1232,18 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Muayene tarihi</span>
 <input value="{{ aracEkran.form.muayene }}" onChange="{{ aracEkran.form.onMuayene }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Trafik sigortası bitişi</span>
+<input value="{{ aracEkran.form.sigorta }}" onChange="{{ aracEkran.form.onSigorta }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Marka</span>
+<input value="{{ aracEkran.form.marka }}" onChange="{{ aracEkran.form.onMarka }}"  style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Model</span>
+<input value="{{ aracEkran.form.model }}" onChange="{{ aracEkran.form.onModel }}"  style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
 </div>
 <sc-if value="{{ aracEkran.form.gunlukVar }}" hint-placeholder-val="{{ false }}">
 <div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-direction:column;gap:8px;max-width:560px">
@@ -2949,6 +2961,14 @@ Hareket gir
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Telefon</span>
 <input value="{{ personelHavuz.form.tel }}" onChange="{{ personelHavuz.form.onTel }}" inputmode="tel" placeholder="0532 000 00 00" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kullanabildiği araç türleri</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ personelHavuz.form.aracTurleri }}" as="a" hint-placeholder-count="6">
+<button onClick="{{ a.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 12px;border-radius:17px;border:1px solid {{ a.kenar }};background:{{ a.bg }};color:{{ a.fg }};font:600 12.5px/32px var(--font-body)">{{ a.ad }}</button>
+</sc-for>
+</div>
 </div>
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Not (isteğe bağlı)</span>
@@ -4768,6 +4788,17 @@ Hareket gir
 </div>
 <div style="display:flex;justify-content:space-between;font:400 11px/1 var(--font-body);color:{{ ui.mut }};margin:0 0 14px"><span>Atandı</span><span>Sahadayım</span><span>Tamamlandı</span></div>
 
+<sc-if value="{{ saha.olaySheet.var }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ saha.olaySheet.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);display:flex;align-items:flex-end">
+<div onClick="{{ saha.bekleSheet.dur }}" style="width:100%;background:{{ ui.surf }};border-radius:20px 20px 0 0;padding:16px 14px 22px;display:flex;flex-direction:column;gap:9px">
+<span style="font:700 16px/1.2 var(--font-heading)">Ne oldu?</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">İş ekipten alınır ve merkeze devredilir; araç arızalı olarak işaretlenir.</span>
+<button onClick="{{ saha.olaySheet.ariza }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:13px 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14.5px/1.3 var(--font-body)">Araç arızalandı</button>
+<button onClick="{{ saha.olaySheet.kaza }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:13px 16px;border-radius:14px;background:{{ ui.surf2 }};color:#d92d20;font:600 14.5px/1.3 var(--font-body)">Kaza oldu</button>
+<button onClick="{{ saha.olaySheet.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;border-radius:14px;border:1px solid {{ ui.rule }};text-align:center;font:600 14px/44px var(--font-body)">Vazgeç</button>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{ saha.bekleSheet.var }}" hint-placeholder-val="{{ false }}">
 <div onClick="{{ saha.bekleSheet.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);display:flex;align-items:flex-end">
 <div onClick="{{ saha.bekleSheet.dur }}" style="width:100%;background:{{ ui.surf }};border-radius:20px 20px 0 0;padding:16px 14px 22px;display:flex;flex-direction:column;gap:9px">
@@ -4791,6 +4822,7 @@ Hareket gir
 <button onClick="{{ saha.is.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">Sahaya vardım</button>
 </div>
 <button onClick="{{ saha.is.bekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 13.5px/40px var(--font-body);text-align:center">Beklemeye al</button>
+<button onClick="{{ saha.is.olay }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};color:#d92d20;font:600 13.5px/40px var(--font-body);text-align:center">Araç arızası / kaza</button>
 </sc-if>
 
 <sc-if value="{{ saha.is.s1 }}" hint-placeholder-val="{{ false }}">
@@ -4802,6 +4834,7 @@ Hareket gir
 </button>
 <button onClick="{{ saha.is.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center;opacity:{{ saha.is.tamamlaOp }}">İşi tamamla</button>
 <button onClick="{{ saha.is.bekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:44px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 14px/42px var(--font-body);text-align:center">Beklemeye al</button>
+<button onClick="{{ saha.is.olay }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};color:#d92d20;font:600 13.5px/40px var(--font-body);text-align:center">Araç arızası / kaza</button>
 </div>
 </sc-if>
 
@@ -5122,6 +5155,18 @@ Hareket gir
 <label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Muayene tarihi</span>
 <input value="{{ aracEkran.form.muayene }}" onChange="{{ aracEkran.form.onMuayene }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Trafik sigortası bitişi</span>
+<input value="{{ aracEkran.form.sigorta }}" onChange="{{ aracEkran.form.onSigorta }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Marka</span>
+<input value="{{ aracEkran.form.marka }}" onChange="{{ aracEkran.form.onMarka }}"  style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="flex:1 1 170px;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Model</span>
+<input value="{{ aracEkran.form.model }}" onChange="{{ aracEkran.form.onModel }}"  style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
 </div>
 <sc-if value="{{ aracEkran.form.gunlukVar }}" hint-placeholder-val="{{ false }}">
@@ -6869,6 +6914,14 @@ Hareket gir
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Telefon</span>
 <input value="{{ personelHavuz.form.tel }}" onChange="{{ personelHavuz.form.onTel }}" inputmode="tel" placeholder="0532 000 00 00" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
 </label>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kullanabildiği araç türleri</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ personelHavuz.form.aracTurleri }}" as="a" hint-placeholder-count="6">
+<button onClick="{{ a.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 12px;border-radius:17px;border:1px solid {{ a.kenar }};background:{{ a.bg }};color:{{ a.fg }};font:600 12.5px/32px var(--font-body)">{{ a.ad }}</button>
+</sc-for>
+</div>
 </div>
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Not (isteğe bağlı)</span>
@@ -9040,7 +9093,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.05-119';
+const SURUM = '2026.10.05-120';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9188,7 +9241,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    basvurular: [], bekleSheet: null,
+    basvurular: [], bekleSheet: null, olaySheet: null,
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -9464,7 +9517,8 @@ class Component extends DCLogic {
     window.addEventListener('offline', this._agGitti);
     this._gorunur = () => { if (!document.hidden) this.senkron(true); };
     document.addEventListener('visibilitychange', this._gorunur);
-    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); }, 60000);
+    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); }, 60000);
+    setTimeout(() => this.aracBelgeUyari(), 9000);
     // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
@@ -10141,6 +10195,7 @@ class Component extends DCLogic {
       durum: PERSONEL_DURUM[g.durum] ? g.durum : 'aktif',
       donus: g.donus || '',
       kullanici: (g.kullanici || '').trim(),
+      araclar: Array.isArray(g.araclar) ? g.araclar.filter(k => ARAC_TUR[k]) : [],
       gunler: Array.isArray(g.gunler) ? g.gunler : []
     };
     // Bir kullanıcı hesabı yalnız tek kişiye bağlanabilir
@@ -11151,7 +11206,8 @@ class Component extends DCLogic {
       id: g.id || 'ar' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       ad, tur, plaka: (g.plaka || '').trim().toLocaleUpperCase('tr'),
       yil: (g.yil || '').trim(), sayac: String(parseFloat(String(g.sayac || '').replace(',', '.')) || 0),
-      muayene: g.muayene || '',
+      muayene: g.muayene || '', sigorta: g.sigorta || '',
+      marka: (g.marka || '').trim(), model: (g.model || '').trim(),
       durum: g.durum || 'musait', ekip: g.ekip || '', surucu: (g.surucu || '').trim(), is: g.is || ''
     };
     const i = list.findIndex(x => x.id === kart.id);
@@ -11578,6 +11634,55 @@ class Component extends DCLogic {
     if (degisti) this.talepYaz(liste, cocuk.length + ' bağlı ihbar çözüldü olarak işaretlendi.');
     else this.duyur(cocuk.length + ' bağlı ihbar çözüldü olarak işaretlendi.', 5000, 'iyi');
     setTimeout(() => this.arizaKuyrukGonder(), 0);
+  }
+  // Muayene ve sigortası yaklaşan / geçen araçlar için günde bir kez uyarı
+  aracBelgeUyari() {
+    const me = this.state.session;
+    if (!me || !['yonetici', 'mudur', 'muhendis', 'sef'].includes(me.role)) return;
+    const liste = ((this.state.arac || {}).list || []);
+    if (!liste.length) return;
+    const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+    const iso = (bugun.getFullYear() + '-' + String(bugun.getMonth() + 1).padStart(2, '0') + '-' + String(bugun.getDate()).padStart(2, '0'));
+    try { if (localStorage.getItem('ks-belge-uyari') === iso) return; } catch (e) { /* depolama kapalı */ }
+    const kalan = d => { if (!d) return null; const x = new Date(d + 'T00:00:00'); return isNaN(x) ? null : Math.round((x - bugun) / 86400000); };
+    const gecen = [], yakin = [];
+    for (const v of liste) for (const [ad, d] of [['muayene', v.muayene], ['sigorta', v.sigorta]]) {
+      const k = kalan(d);
+      if (k == null) continue;
+      const adi = (v.plaka || v.ad) + ' ' + ad;
+      if (k < 0) gecen.push(adi); else if (k <= 30) yakin.push(adi + ' (' + k + ' gün)');
+    }
+    if (!gecen.length && !yakin.length) return;
+    try { localStorage.setItem('ks-belge-uyari', iso); } catch (e) { /* depolama kapalı */ }
+    this.duyur((gecen.length ? 'Süresi geçen: ' + gecen.slice(0, 3).join(', ') + (gecen.length > 3 ? '…' : '') + '. ' : '')
+      + (yakin.length ? 'Yaklaşan: ' + yakin.slice(0, 3).join(', ') + (yakin.length > 3 ? '…' : '') : ''), 14000, gecen.length ? 'kotu' : 'bilgi',
+      () => this.setState({ tab: 'arac' }));
+  }
+  // Saha: araç arızalandı ya da kaza oldu — araç "arızalı" olur, iş ekipten alınıp merkeze devredilir
+  // (bekleme olarak işaretlenir: aradaki süre SLA'dan düşer)
+  aracOlay(f, tur) {
+    if (!f) return;
+    const kaza = tur === 'kaza';
+    const a = this.state.arac || { list: [], hareket: [] };
+    const v = (a.list || []).find(x => x.ekip === f.crew && x.durum === 'gorevde');
+    const neden = (kaza ? 'Kaza' : 'Araç arızası') + ' — iş devri gerekiyor';
+    const simdi = this.damga();
+    if (v) {
+      const list = (a.list || []).map(x => x.id === v.id ? { ...x, durum: 'arizali', ekip: '', surucu: '', is: '' } : x);
+      const kayit = {
+        id: 'ag' + Date.now() + Math.random().toString(36).slice(2, 5), damga: simdi, aracId: v.id, arac: v.ad, plaka: v.plaka,
+        ne: kaza ? 'Kaza bildirimi' : 'Arıza bildirimi', detay: (f.no || '') + ' görevinde · ' + f.crew,
+        kim: (this.state.session && this.state.session.name) || ''
+      };
+      this.denetimYaz('kayit', 'Araç · ' + kayit.ne, kayit.detay, v.plaka || v.ad);
+      this.aracYaz(this.aracHareketYaz({ ...a, list }, kayit), null);
+    }
+    this.sahaDurum(f, 'bekleme', {
+      crew: ATANMADI, ek: { ...(f.ek || {}), beklemeNeden: neden, oncekiDurum: 'atandi' }, ekBekleyen: true,
+      note: ((f.note || f.desc || '') + '\n' + (kaza ? 'KAZA' : 'ARAÇ ARIZASI') + ' · ' + simdi + ' · ' + f.crew + (v ? ' · ' + (v.plaka || v.ad) : '') + ' — iş merkeze devredildi.').trim()
+    });
+    this.setState({ olaySheet: null, sahaAktifId: null });
+    this.duyur('İş merkeze devredildi — yeniden atama için bekliyor. Süre SLA’dan düşülür.', 8000, 'iyi');
   }
   // Planlı işin zamanı gelince (uygulama açıkken) ekibe bildirim gösterilir
   planliKontrol() {
@@ -16610,6 +16715,7 @@ class Component extends DCLogic {
         const list = (A.list || []).map(v => {
           const T = ARAC_TUR[v.tur] || ARAC_TUR.kamyonet;
           const kalan = gunFark(v.muayene);
+          const sigKalan = gunFark(v.sigorta);
           const gorevde = v.durum === 'gorevde';
           return {
             id: v.id, ad: v.ad, tur: T.ad,
@@ -16618,17 +16724,19 @@ class Component extends DCLogic {
             durumBg: gorevde ? 'var(--color-accent)' : (v.durum === 'musait' ? 'transparent' : ui.surf2),
             durumFg: gorevde ? '#fff' : (v.durum === 'musait' ? ui.mut : ui.fg),
             sayac: (parseFloat(v.sayac) || 0).toLocaleString('tr-TR') + ' ' + T.birim,
-            meta: [T.ad, v.yil ? v.yil + ' model' : '',
+            meta: [[v.marka, v.model].filter(Boolean).join(' ') || T.ad, v.yil ? v.yil + ' model' : '',
               (parseFloat(v.sayac) || 0).toLocaleString('tr-TR') + ' ' + T.birim].filter(Boolean).join(' · '),
             metaTel: [v.plaka || (T.plaka ? 'plaka girilmedi' : 'plakasız ekipman'), T.ad,
               (parseFloat(v.sayac) || 0).toLocaleString('tr-TR') + ' ' + T.birim].filter(Boolean).join(' · '),
             kimde: gorevde ? (v.ekip + (v.surucu ? ' · ' + v.surucu : '') + (v.is ? ' · ' + v.is : '')) : '',
             kimdeVar: gorevde,
-            muayene: v.muayene
+            muayene: [v.muayene
               ? (kalan == null ? '' : (kalan < 0 ? 'Muayene ' + (-kalan) + ' gün geçti'
                 : (kalan < 45 ? 'Muayeneye ' + kalan + ' gün' : 'Muayene ' + v.muayene.split('-').reverse().join('.'))))
               : (T.plaka ? 'Muayene tarihi girilmedi' : ''),
-            muayeneFg: kalan != null && kalan < 45 ? ui.acc : ui.mut,
+              v.sigorta ? (sigKalan == null ? '' : (sigKalan < 0 ? 'Sigorta ' + (-sigKalan) + ' gün geçti' : (sigKalan < 45 ? 'Sigortaya ' + sigKalan + ' gün' : ''))) : ''].filter(Boolean).join(' · '),
+            sigortaYazi: v.sigorta ? (sigKalan == null ? '' : (sigKalan < 0 ? 'Sigorta ' + (-sigKalan) + ' gün geçti' : (sigKalan < 45 ? 'Sigortaya ' + sigKalan + ' gün' : ''))) : '',
+            muayeneFg: (kalan != null && kalan < 45) || (sigKalan != null && sigKalan < 45) ? ui.acc : ui.mut,
             yil: v.yil ? v.yil + ' model' : '',
             gorevdeMi: gorevde,
             ver: () => this.setState({ aracGorev: { id: v.id, mod: 'ver', ekip: SAHA_EKIP[0] || '', surucu: '', is: '', sayac: v.sayac, durum: v.durum, not: '' } }),
@@ -16647,11 +16755,11 @@ class Component extends DCLogic {
             { n: String(list.length), label: 'Araç ve ekipman', fg: ui.fg },
             { n: String(list.filter(v => v.gorevdeMi).length), label: 'Görevde', fg: ui.fg },
             { n: String((A.list || []).filter(v => v.durum === 'bakimda' || v.durum === 'arizali').length), label: 'Bakımda / arızalı', fg: ui.fg },
-            { n: String(uyari), label: 'Muayene uyarısı', fg: uyari ? ui.acc : ui.fg }
+            { n: String(uyari), label: 'Muayene / sigorta uyarısı', fg: uyari ? ui.acc : ui.fg }
           ],
           list, bos: list.length === 0,
           bosNot: 'Listede araç yok. “Araç ekle” ile kamyon, vinç, kepçe, sondaj makinesi gibi araç ve ekipmanları girin.',
-          yeni: () => this.setState({ aracForm: { ad: '', tur: 'kamyonet', plaka: '', yil: '', sayac: '', muayene: '' } }),
+          yeni: () => this.setState({ aracForm: { ad: '', tur: 'kamyonet', plaka: '', yil: '', sayac: '', muayene: '', sigorta: '', marka: '', model: '' } }),
           form: {
             on: !!af,
             baslik: af && af.id ? 'Araç bilgisi' : 'Yeni araç / ekipman',
@@ -16668,6 +16776,10 @@ class Component extends DCLogic {
             onSayac: e => this.setState({ aracForm: { ...this.state.aracForm, sayac: e.target.value } }),
             muayene: af ? af.muayene : '',
             onMuayene: e => this.setState({ aracForm: { ...this.state.aracForm, muayene: e.target.value } }),
+            sigorta: af ? (af.sigorta || '') : '', marka: af ? (af.marka || '') : '', model: af ? (af.model || '') : '',
+            onSigorta: e => this.setState({ aracForm: { ...this.state.aracForm, sigorta: e.target.value } }),
+            onMarka: e => this.setState({ aracForm: { ...this.state.aracForm, marka: e.target.value } }),
+            onModel: e => this.setState({ aracForm: { ...this.state.aracForm, model: e.target.value } }),
             gunlukVar: !!af && !!af.id,
             gunluk: (!af || !af.id) ? null : (() => {
               const taslak = s.aracGunTaslak || { tarih: '', tur: 'bakim', saat: '', not: '' };
@@ -16920,6 +17032,12 @@ class Component extends DCLogic {
             onTel: e => this.setState({ personelForm: { ...this.state.personelForm, tel: e.target.value } }),
             not: pf ? pf.not : '',
             onNot: e => this.setState({ personelForm: { ...this.state.personelForm, not: e.target.value } }),
+            aracTurleri: Object.entries(ARAC_TUR).map(([k, tt]) => {
+              const on = !!pf && (pf.araclar || []).includes(k);
+              return { ad: tt.ad, kenar: on ? 'var(--color-accent)' : ui.rule, bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.fg,
+                sec: () => { const f0 = this.state.personelForm; const cur = f0.araclar || [];
+                  this.setState({ personelForm: { ...f0, araclar: cur.includes(k) ? cur.filter(z => z !== k) : [...cur, k] } }); } };
+            }),
             durumSec: Object.entries(PERSONEL_DURUM).map(([k, ad]) => ({
               label: ad, ...seg(!!pf && pf.durum === k, () => this.setState({ personelForm: { ...this.state.personelForm, durum: k } }))
             })),
@@ -19246,6 +19364,7 @@ class Component extends DCLogic {
             s0: adim === 0 && f.status !== 'bekleme', s1: adim === 1, s2: adim === 2,
             beklemede: f.status === 'bekleme', bekNeden: (f.ek && f.ek.beklemeNeden) || 'neden belirtilmedi',
             bekle: () => this.setState({ bekleSheet: { id: f.id } }),
+            olay: () => this.setState({ olaySheet: { id: f.id } }),
             devam: () => this.sahaDurum(f, (f.ek && f.ek.oncekiDurum && f.ek.oncekiDurum !== 'bekleme') ? f.ek.oncekiDurum : 'atandi'),
             yolTarifi: () => { if (a && this.yolTarifiVer(a)) this.say(`${a.code} için güzergâh hesaplanıyor…`); },
             vardim: () => this.sahaDurum(f, 'sahada'),
@@ -19328,6 +19447,11 @@ class Component extends DCLogic {
           })(),
           zimmetVar: !!crew && Object.values(((s.ambar || {}).zimmet || {})[crew] || {}).some(v => Number(v) > 0),
           ambarOn,
+          olaySheet: (() => {
+            const olf = s.olaySheet ? (s.faults || []).find(x => x.id === s.olaySheet.id) : null;
+            return { var: !!olf, kapat: () => this.setState({ olaySheet: null }),
+              ariza: () => this.aracOlay(olf, 'ariza'), kaza: () => this.aracOlay(olf, 'kaza') };
+          })(),
           bekleSheet: (() => {
             const bf = s.bekleSheet ? (s.faults || []).find(x => x.id === s.bekleSheet.id) : null;
             return {

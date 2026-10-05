@@ -1920,3 +1920,8 @@ Sürüm 2026.10.05-114.
 - Planlı zaman gelince (uygulama açıkken) ekibe/yönetime bildirim çıkar.
 - İşler > Genel bakış'a "SLA zamanında kapanış" göstergesi (yüzde, aşım gün toplamı, bekleme saati) eklendi.
 - `VERI-SOZLUGU.md`: tablo ve alan açıklamaları.
+
+## 2026.10.05-120 — Araç ve personel kartı, araç arızası/kaza
+- Araç kartı: marka, model, trafik sigortası bitişi eklendi; muayene ve sigortası 45 günden az kalan ya da geçen araçlar listede ve "Muayene / sigorta uyarısı" sayacında işaretlenir. Yönetim rollerine günde bir kez uyarı bildirimi (30 gün kala / geçmişse).
+- Personel kartı: "Kullanabildiği araç türleri" seçimi.
+- Saha: "Araç arızası / kaza" düğmesi — araç "arızalı" olur, araç defterine işlenir, iş ekipten alınıp merkeze devredilir (Beklemede; süre SLA'dan düşer).

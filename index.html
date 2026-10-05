@@ -4339,6 +4339,37 @@ Hareket gir
 </sc-if>
 
 </div>
+<div style="padding:0 18px 14px">
+<sc-if value="{{ faultForm.sla.goster }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid {{ ui.rule }};padding-top:12px;margin-top:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre ve bağlantılar</span>
+<sc-if value="{{ faultForm.sla.bekleme }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Bekleme nedeni</span>
+<select value="{{ faultForm.sla.neden }}" onChange="{{ faultForm.sla.onNeden }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="">Seçin…</option><sc-for list="{{ faultForm.sla.nedenler }}" as="n" hint-placeholder-count="3"><option value="{{ n.v }}">{{ n.v }}</option></sc-for></select></label>
+</sc-if>
+<sc-if value="{{ faultForm.sla.beklemeVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sla.beklemeYazi }}</span>
+</sc-if>
+<sc-if value="{{ faultForm.sla.yonetim }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+<label style="flex:1 1 130px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">SLA süresi (gün)</span>
+<input value="{{ faultForm.sla.gun }}" onChange="{{ faultForm.sla.onGun }}" inputmode="numeric" placeholder="{{ faultForm.sla.varsayilan }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+<label style="flex:1 1 150px;display:flex;align-items:center;gap:8px;min-height:42px;font:600 13px/1.2 var(--font-body)"><input type="checkbox" checked="{{ faultForm.sla.iptal }}" onChange="{{ faultForm.sla.onIptal }}" style="width:20px;height:20px;accent-color:var(--color-accent)"> SLA dışı say</label>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.sla.yonetimDegil }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sla.slaYazi }}</span>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Ana arıza (aynı sorunun ihbarı ise)</span>
+<select value="{{ faultForm.sla.ana }}" onChange="{{ faultForm.sla.onAna }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><sc-for list="{{ faultForm.sla.anaSecenek }}" as="o" hint-placeholder-count="2"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></label>
+<sc-if value="{{ faultForm.sla.bagliVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12.5px/1.45 var(--font-body);color:{{ ui.acc }}">{{ faultForm.sla.bagliYazi }}</span>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Planlı zaman (ileri tarihli iş)</span>
+<input type="datetime-local" value="{{ faultForm.sla.planli }}" onChange="{{ faultForm.sla.onPlanli }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+</div>
+</sc-if>
+</div>
 <div style="flex:1"></div>
 <div style="border-top:1px solid {{ ui.rule }};padding:12px 18px;display:flex;gap:9px">
 <button onClick="{{ saveFault }}" class="btn btn-primary" style="flex:1;justify-content:flex-start;border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:13px 14px">{{ faultForm.cta }}</button>
@@ -4737,11 +4768,29 @@ Hareket gir
 </div>
 <div style="display:flex;justify-content:space-between;font:400 11px/1 var(--font-body);color:{{ ui.mut }};margin:0 0 14px"><span>Atandı</span><span>Sahadayım</span><span>Tamamlandı</span></div>
 
+<sc-if value="{{ saha.bekleSheet.var }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ saha.bekleSheet.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);display:flex;align-items:flex-end">
+<div onClick="{{ saha.bekleSheet.dur }}" style="width:100%;background:{{ ui.surf }};border-radius:20px 20px 0 0;padding:16px 14px 22px;display:flex;flex-direction:column;gap:9px">
+<span style="font:700 16px/1.2 var(--font-heading);margin-bottom:4px">İş neden bekliyor?</span>
+<sc-for list="{{ saha.bekleSheet.liste }}" as="n" hint-placeholder-count="4">
+<button onClick="{{ n.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:13px 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14.5px/1.3 var(--font-body);display:flex;align-items:center">{{ n.ad }}</button>
+</sc-for>
+<button onClick="{{ saha.bekleSheet.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;border-radius:14px;border:1px solid {{ ui.rule }};text-align:center;font:600 14px/44px var(--font-body)">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ saha.is.beklemede }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:10px">
+<div style="border-radius:12px;background:{{ ui.surf2 }};padding:11px 13px;font:600 13.5px/1.4 var(--font-body)">Beklemede — {{ saha.is.bekNeden }}</div>
+<button onClick="{{ saha.is.devam }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">Devam et</button>
+</div>
+</sc-if>
 <sc-if value="{{ saha.is.s0 }}" hint-placeholder-val="{{ true }}">
 <div class="ks-gir" style="display:flex;gap:8px">
 <button onClick="{{ saha.is.yolTarifi }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:50px;padding:0 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14px/50px var(--font-body)">Yol tarifi</button>
 <button onClick="{{ saha.is.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">Sahaya vardım</button>
 </div>
+<button onClick="{{ saha.is.bekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 13.5px/40px var(--font-body);text-align:center">Beklemeye al</button>
 </sc-if>
 
 <sc-if value="{{ saha.is.s1 }}" hint-placeholder-val="{{ false }}">
@@ -4752,6 +4801,7 @@ Hareket gir
 <span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body)">{{ saha.is.onceL }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ saha.is.onceAlt }}</span></span>
 </button>
 <button onClick="{{ saha.is.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center;opacity:{{ saha.is.tamamlaOp }}">İşi tamamla</button>
+<button onClick="{{ saha.is.bekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:44px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 14px/42px var(--font-body);text-align:center">Beklemeye al</button>
 </div>
 </sc-if>
 
@@ -8014,6 +8064,37 @@ Hareket gir
 </sc-if>
 </div>
 </sc-if>
+<div style="margin-bottom:12px">
+<sc-if value="{{ faultForm.sla.goster }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid {{ ui.rule }};padding-top:12px;margin-top:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre ve bağlantılar</span>
+<sc-if value="{{ faultForm.sla.bekleme }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Bekleme nedeni</span>
+<select value="{{ faultForm.sla.neden }}" onChange="{{ faultForm.sla.onNeden }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="">Seçin…</option><sc-for list="{{ faultForm.sla.nedenler }}" as="n" hint-placeholder-count="3"><option value="{{ n.v }}">{{ n.v }}</option></sc-for></select></label>
+</sc-if>
+<sc-if value="{{ faultForm.sla.beklemeVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sla.beklemeYazi }}</span>
+</sc-if>
+<sc-if value="{{ faultForm.sla.yonetim }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+<label style="flex:1 1 130px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">SLA süresi (gün)</span>
+<input value="{{ faultForm.sla.gun }}" onChange="{{ faultForm.sla.onGun }}" inputmode="numeric" placeholder="{{ faultForm.sla.varsayilan }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+<label style="flex:1 1 150px;display:flex;align-items:center;gap:8px;min-height:42px;font:600 13px/1.2 var(--font-body)"><input type="checkbox" checked="{{ faultForm.sla.iptal }}" onChange="{{ faultForm.sla.onIptal }}" style="width:20px;height:20px;accent-color:var(--color-accent)"> SLA dışı say</label>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.sla.yonetimDegil }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sla.slaYazi }}</span>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Ana arıza (aynı sorunun ihbarı ise)</span>
+<select value="{{ faultForm.sla.ana }}" onChange="{{ faultForm.sla.onAna }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><sc-for list="{{ faultForm.sla.anaSecenek }}" as="o" hint-placeholder-count="2"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></label>
+<sc-if value="{{ faultForm.sla.bagliVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12.5px/1.45 var(--font-body);color:{{ ui.acc }}">{{ faultForm.sla.bagliYazi }}</span>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Planlı zaman (ileri tarihli iş)</span>
+<input type="datetime-local" value="{{ faultForm.sla.planli }}" onChange="{{ faultForm.sla.onPlanli }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+</div>
+</sc-if>
+</div>
 <button onClick="{{ saveFault }}" class="btn btn-primary" style="width:100%;justify-content:flex-start;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:14px 16px">{{ faultForm.cta }}</button>
 </div>
 </div>
@@ -8621,6 +8702,9 @@ const TALEP_DURUM = {
 };
 const TALEP_KAPALI = ['cozuldu', 'red', 'arizaya'];
 const TALEP_ONCELIK = ['Acil', 'Yüksek', 'Normal', 'Düşük'];
+// İş beklemeye alınırken seçilen neden — bekleme süresi SLA hedefinden düşülür
+const BEKLEME_NEDEN = ['Dış kurum bekleniyor (elektrik dağıtım, karayolları…)', 'Malzeme bekleniyor',
+  'Hava ya da yol koşulu', 'Abone / muhtar bekleniyor', 'Diğer'];
 
 // KVKK — saklama süreleri. Gün cinsinden; 0 = süresiz sakla.
 // Kurumun kendi politikasına göre Ayarlar > KVKK bölümünden değişir.
@@ -8956,7 +9040,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.05-118';
+const SURUM = '2026.10.05-119';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9104,7 +9188,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    basvurular: [],
+    basvurular: [], bekleSheet: null,
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -9380,7 +9464,7 @@ class Component extends DCLogic {
     window.addEventListener('offline', this._agGitti);
     this._gorunur = () => { if (!document.hidden) this.senkron(true); };
     document.addEventListener('visibilitychange', this._gorunur);
-    this._kuyrukSaat = setInterval(() => this.senkron(true), 60000);
+    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); }, 60000);
     // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
@@ -9500,6 +9584,7 @@ class Component extends DCLogic {
     // Bekleyen arızalar cihazda saklanır (arizaBekleyenYaz)
     if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
     if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (s.ayarBolum === 'entegrasyon' && s.tab === 'ayarlar') this.entegrasyonYenile(); }
+    if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     if (this._telTab !== s.tab) { this._telTab = s.tab; if (s.tab === 'telemetri') this.telemetriYenile(true); }
     // Sunucudan alınan son veri cihaza da yazılır: internetsiz açılışta oradan gelir
     if (s.session && s.sunucu && s.sonEsitleme
@@ -11398,23 +11483,130 @@ class Component extends DCLogic {
   // yansıtmaz. Süre yalnızca hangi işin önce yapılacağını gösterir.
   sureGun(oncelik) { return { 'Acil': 2, 'Yüksek': 5, 'Normal': 15, 'Düşük': 30 }[oncelik] || 15; }
   // Kapanmış kayıtta ve tarihi okunamayan kayıtta süre hesaplanmaz.
+  // SLA: arıza başına süre yönetici tarafından değiştirilebilir ya da SLA dışı
+  // sayılabilir; "Beklemede" (dış kurum, malzeme, hava) süresi hedeften düşülür.
+  beklemeGun(f) {
+    const ek = (f && f.ek) || {};
+    const dk = (ek.beklemeDk || 0) + (ek.beklemeBas ? Math.max(0, (Date.now() - Date.parse(ek.beklemeBas)) / 60000) : 0);
+    return dk / 1440;
+  }
   sureDurum(f) {
     if (!f || KAPALI_DURUM.includes(f.status)) return null;
+    if (f.ek && f.ek.slaIptal) return null;
     const p = String(f.opened || '').split(' ')[0].split('.');
     if (p.length !== 3) return null;
     const bas = new Date(+p[2], +p[1] - 1, +p[0]);
     if (isNaN(bas)) return null;
-    const gun = this.sureGun(f.priority);
-    const hedef = new Date(bas.getTime() + gun * 86400000);
+    const gun = f.ek && f.ek.slaGun != null ? f.ek.slaGun : this.sureGun(f.priority);
+    const hedef = new Date(bas.getTime() + (gun + this.beklemeGun(f)) * 86400000);
     const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
     const kalan = Math.round((hedef - bugun) / 86400000);
     const iki = n => String(n).padStart(2, '0');
     return {
       gun, kalan,
       hedef: iki(hedef.getDate()) + '.' + iki(hedef.getMonth() + 1) + '.' + hedef.getFullYear(),
-      gecikti: kalan < 0, yaklasti: kalan >= 0 && kalan <= 2,
-      etiket: kalan < 0 ? Math.abs(kalan) + ' gün geçti' : (kalan === 0 ? 'bugün' : kalan + ' gün')
+      gecikti: kalan < 0 && f.status !== 'bekleme', yaklasti: kalan >= 0 && kalan <= 2,
+      etiket: f.status === 'bekleme' ? 'beklemede' : kalan < 0 ? Math.abs(kalan) + ' gün geçti' : (kalan === 0 ? 'bugün' : kalan + ' gün')
     };
+  }
+  // Kapanan arızalarda SLA başarı özeti (zamanında kapanış, aşım, bekleme)
+  slaOzet() {
+    const fs = this.state.faults || [];
+    const kapali = fs.filter(f => f.status === 'cozuldu' && f.openedIso && f.closedIso);
+    let zamaninda = 0, asim = 0, bekleme = 0, toplam = 0;
+    for (const f of kapali) {
+      const ek = f.ek || {};
+      const sure = Date.parse(f.closedIso) - Date.parse(f.openedIso);
+      const bek = (ek.beklemeDk || 0) * 60000;
+      bekleme += bek; toplam += sure;
+      if (ek.slaIptal) { zamaninda++; continue; }
+      const hedef = (ek.slaGun != null ? ek.slaGun : this.sureGun(f.priority)) * 86400000;
+      if (sure - bek <= hedef) zamaninda++; else asim += (sure - bek - hedef) / 86400000;
+    }
+    return {
+      say: kapali.length, zamaninda, yuzde: kapali.length ? Math.round(zamaninda / kapali.length * 100) : null,
+      asimGun: Math.round(asim * 10) / 10, beklemeSaat: Math.round(bekleme / 3600000), ortGun: kapali.length ? toplam / kapali.length / 86400000 : null
+    };
+  }
+  // Durum "Beklemede"ye geçince başlangıç yazılır, çıkınca geçen süre toplanır
+  slaTara() {
+    const faults = this.state.faults || [];
+    const onceki = this._durumHaritasi || (this._durumHaritasi = new Map());
+    const yama = new Map();
+    const simdi = new Date().toISOString();
+    for (const f of faults) {
+      const eski = onceki.get(f.id);
+      onceki.set(f.id, f.status);
+      if (eski === undefined || eski === f.status || f.sync !== 'pending') continue;
+      const ek = { ...(f.ek || {}) };
+      if (f.status === 'bekleme' && !ek.beklemeBas) { ek.beklemeBas = simdi; ek.oncekiDurum = eski; yama.set(f.id, ek); }
+      else if (eski === 'bekleme' && f.status !== 'bekleme' && ek.beklemeBas) {
+        ek.beklemeDk = (ek.beklemeDk || 0) + Math.max(0, Math.round((Date.parse(simdi) - Date.parse(ek.beklemeBas)) / 60000));
+        ek.beklemeBas = null; yama.set(f.id, ek);
+      }
+    }
+    if (yama.size) this.setState(st => ({ faults: (st.faults || []).map(x => yama.has(x.id) ? { ...x, ek: yama.get(x.id), ekBekleyen: true } : x) }));
+  }
+  // Arıza ek bilgisini (SLA, bekleme, ana arıza, planlı zaman) sunucuya yazar
+  async arizaEkGonder(id) {
+    const M = this._sb;
+    const f = (this.state.faults || []).find(x => x.id === id);
+    if (!M || !M.arizaEkKaydet || !f || !f.dbId || !f.ek || this.state.offline) return;
+    const r = await M.arizaEkKaydet(f.dbId, f.ek);
+    if (r.ok) this.setState(st => ({ faults: (st.faults || []).map(x => x.id === id ? { ...x, ekBekleyen: false } : x) }));
+    else if (!r.cevrimdisi) {
+      this.duyur((f.no || 'Arıza') + ' SLA/bekleme bilgisi yazılamadı: ' + (r.err || ''), 8000, 'kotu');
+      this.setState(st => ({ faults: (st.faults || []).map(x => x.id === id ? { ...x, ekBekleyen: false } : x) }));
+    }
+  }
+  // Ana arıza çözülünce ona bağlı ihbarlar da kapatılır; bağlı taleplerin vatandaş takip sayfası güncellenir
+  anaCozum(f) {
+    if (!f || f.status !== 'cozuldu' || !f.dbId) return;
+    const cocuk = (this.state.faults || []).filter(x => x.ek && x.ek.anaId === f.dbId && !KAPALI_DURUM.includes(x.status));
+    if (!cocuk.length) return;
+    if (!window.confirm(f.no + ' ana arızasına bağlı ' + cocuk.length + ' ihbar var:\n\n'
+      + cocuk.slice(0, 6).map(x => '• ' + x.no + ' · ' + (x.koy || x.tesisKoy || '')).join('\n')
+      + '\n\nHepsi de “Çözüldü” yapılsın mı? (bildirenlere durum güncellenir)')) return;
+    const ids = new Set(cocuk.map(x => x.id));
+    this.setState(st => ({ faults: (st.faults || []).map(x => ids.has(x.id)
+      ? { ...x, status: 'cozuldu', sync: 'pending', note: ((x.note || x.desc || '') + '\nAna arıza ' + f.no + ' ile birlikte çözüldü.').trim() } : x) }));
+    let liste = [...(this.state.talepler || [])], degisti = false;
+    for (const x of cocuk) {
+      const i = liste.findIndex(tt => tt.arizaNo === x.no && tt.durum !== 'cozuldu');
+      if (i >= 0) { liste[i] = { ...liste[i], durum: 'cozuldu', sonuc: liste[i].sonuc || ('Ana arıza ' + f.no + ' ile birlikte çözüldü.'), guncelleme: this.damga() }; degisti = true; }
+    }
+    if (degisti) this.talepYaz(liste, cocuk.length + ' bağlı ihbar çözüldü olarak işaretlendi.');
+    else this.duyur(cocuk.length + ' bağlı ihbar çözüldü olarak işaretlendi.', 5000, 'iyi');
+    setTimeout(() => this.arizaKuyrukGonder(), 0);
+  }
+  // Planlı işin zamanı gelince (uygulama açıkken) ekibe bildirim gösterilir
+  planliKontrol() {
+    const me = this.state.session;
+    if (!me) return;
+    let goruldu;
+    try { goruldu = JSON.parse(localStorage.getItem('ks-planli-uyari') || '[]'); } catch (e) { goruldu = []; }
+    const simdi = Date.now();
+    const yonetim = ['yonetici', 'mudur', 'muhendis', 'sef'].includes(me.role);
+    for (const f of (this.state.faults || [])) {
+      const pz = f.ek && f.ek.planli ? Date.parse(f.ek.planli) : 0;
+      if (!pz || pz > simdi || KAPALI_DURUM.includes(f.status)) continue;
+      const anahtar = (f.dbId || f.id) + '@' + f.ek.planli;
+      if (goruldu.includes(anahtar)) continue;
+      if (!(yonetim || (me.crew && f.crew === me.crew))) continue;
+      goruldu.push(anahtar);
+      this.duyur('Planlı iş zamanı geldi: ' + (f.no || '') + ' · ' + (f.type || '') + (f.crew && f.crew !== ATANMADI ? ' · ' + f.crew : ''), 12000, 'bilgi',
+        () => this.setState({ tab: 'ariza', panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } }));
+    }
+    try { localStorage.setItem('ks-planli-uyari', JSON.stringify(goruldu.slice(-200))); } catch (e) { /* depolama kapalı */ }
+  }
+  // Ek bilgi değişikliği (SLA süresi, bekleme nedeni, ana arıza, planlı zaman)
+  arizaEkDegis(f, yama) {
+    if (!f) return;
+    const ek = { ...(f.ek || {}), ...yama };
+    if (f.id) this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? { ...x, ek, ekBekleyen: true } : x),
+      faultForm: st.faultForm && st.faultForm.id === f.id ? { ...st.faultForm, ek, ekBekleyen: true } : st.faultForm }));
+    else this.setState(st => ({ faultForm: st.faultForm ? { ...st.faultForm, ek, ekBekleyen: true } : st.faultForm }));
+    if (f.id && f.dbId) setTimeout(() => this.arizaEkGonder(f.id), 0);
   }
   // Çöp kutusunu topluca kalıcı siler — her öğe için ayrı onay sormadan
   async copBosalt(liste) {
@@ -12479,6 +12671,8 @@ class Component extends DCLogic {
       ...(talepDegis ? { talepler: (st.talepler || []).map(t => t.arizaNo === f.no ? { ...t, arizaNo: no } : t) } : {})
     }), res));
     this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults });
+    // SLA / bekleme / ana arıza / planlı zaman bilgisi
+    if (f.ek && (f.ekBekleyen || !f.dbId)) this.arizaEkGonder(yeniId);
     // Cihazda bekleyen fotoğraf/ses dosyaları artık kayda bağlanabilir
     (async () => {
       const d = await this._depoYuk;
@@ -12546,6 +12740,7 @@ class Component extends DCLogic {
     this.denetimYaz('ariza', 'Saha: ' + (STATUS_LABEL[yeni] || yeni), (f.no || '') + ' · ' + (f.type || '')
       + ((g.malzeme || []).length && kapanis ? ' · ' + g.malzeme.map(m => m.ad + ' × ' + m.adet).join(', ') : ''), a ? a.code : '');
     setTimeout(() => this.arizaKuyrukGonder(), 0);
+    if (yeni === 'cozuldu') setTimeout(() => this.anaCozum(g), 400);
     if (yeni === 'cozuldu') {
       // Seçilen malzeme ekip zimmetinden düşülür (kullanıcı adet seçerek onayladı)
       if (this.state.modul.ambar !== false && (g.malzeme || []).length && g.crew && g.crew !== ATANMADI) {
@@ -12766,7 +12961,7 @@ class Component extends DCLogic {
   // Gönderilmemiş arızalar cihazda saklanır: sayfa kapanıp açılsa da kaybolmaz.
   // (Seçilen fotoğraf dosyaları saklanamaz — tarayıcı izin vermez.)
   arizaBekleyenYaz() {
-    const b = (this.state.faults || []).filter(f => f.sync === 'pending')
+    const b = (this.state.faults || []).filter(f => f.sync === 'pending' || f.ekBekleyen)
       .map(f => ({ ...f, photos: (f.photos || []).filter(p => !p.file), sesler: [] }));
     try { localStorage.setItem('ks-ariza-bekleyen', JSON.stringify(b)); } catch (e) { /* depolama kapalı */ }
   }
@@ -13239,6 +13434,7 @@ class Component extends DCLogic {
       await this.notKuyrukGonder();
       this.modulKuyrukDene();
       this.basvuruEsitle();
+      for (const f of (this.state.faults || [])) if (f.ekBekleyen && f.dbId && f.sync !== 'pending') await this.arizaEkGonder(f.id);
       await this.medyaKuyrukGonder();
     } finally { this._senkronda = false; }
   }
@@ -13320,10 +13516,16 @@ class Component extends DCLogic {
     if (!M || !M.tokenOku()) return;
     if (this.state.offline && sessiz) return;
     if (this._anlikYuk) await this._anlikYuk;
-    const [t, a, n] = await Promise.all([
+    const [t, a, n, ekr] = await Promise.all([
       M.tesisListesi(), M.arizaListesi(),
-      M.notListesi ? M.notListesi() : Promise.resolve({ ok: false })
+      M.notListesi ? M.notListesi() : Promise.resolve({ ok: false }),
+      M.arizaEkListesi ? M.arizaEkListesi() : Promise.resolve({ ok: false })
     ]);
+    const ekHarita = new Map();
+    if (ekr && ekr.ok) for (const e of (ekr.data || [])) ekHarita.set(e.ariza_id, {
+      slaGun: e.sla_gun, slaIptal: !!e.sla_iptal, slaNot: e.sla_not || '', beklemeBas: e.bekleme_bas || null,
+      beklemeDk: e.bekleme_dk || 0, beklemeNeden: e.bekleme_neden || '', anaId: e.ana_ariza_id || null, planli: e.planli_zaman || null
+    });
     if (!t.ok) {
       if (!sessiz) this.say(t.cevrimdisi
         ? 'Bağlantı yok — cihazdaki son kopya gösteriliyor. İnternet gelince kendiliğinden güncellenir.'
@@ -13340,7 +13542,7 @@ class Component extends DCLogic {
     const bekleyenF = (this.state.faults || []).filter(f => f.sync === 'pending');
     const faults = a.ok
       ? [...bekleyenF.filter(f => !f.dbId),
-        ...(a.data || []).map(M.arizaSuret).map(x => ({ photos: [], sesler: [], ...x, malzeme: x.malzeme || [], note: x.desc, ilce: x.assetId ? null : x.district }))
+        ...(a.data || []).map(M.arizaSuret).map(x => ({ photos: [], sesler: [], ...x, ek: ekHarita.get(x.dbId) || null, malzeme: x.malzeme || [], note: x.desc, ilce: x.assetId ? null : x.district }))
           .map(x => bekleyenF.find(y => y.dbId === x.dbId) || x)]
       : this.state.faults;
     const kilitli = assets.filter(x => !x.yazilabilir).length;
@@ -17458,7 +17660,13 @@ class Component extends DCLogic {
           { label: 'Bugün gelen', val: String(gelenF.length + gelenT.length), alt: gelenT.length + ' talep · ' + gelenF.length + ' arıza', altC: ui.mut, alarm: false, el: this.kivilcim(gelenSaat, '#0071e3') },
           { label: 'Bugün kapanan', val: String(kapanan.length), alt: (gelenF.length ? '%' + Math.round(kapanan.length / gelenF.length * 100) + ' kapanma' : 'bugün açılan arıza yok'), altC: '#1b7a36', alarm: false, el: this.kivilcim(birikim(saatlik(kapanan, x => x.closed)), yesil) },
           { label: 'Hedef süresi geçen', val: String(geciken.length), alt: sureOn ? (geciken.filter(f => f.priority === 'Acil').length + '’i acil') : 'Hedef süre modülü kapalı', altC: geciken.length ? kirmizi : ui.mut, alarm: geciken.length > 0, el: null },
-          { label: 'Ort. çözüm süresi', val: sureMetin(ort), alt: sureler.length ? 'son ' + sureler.length + ' kapanan arıza' : 'henüz kapanan arıza yok', altC: ui.mut, alarm: false, el: null }
+          { label: 'Ort. çözüm süresi', val: sureMetin(ort), alt: sureler.length ? 'son ' + sureler.length + ' kapanan arıza' : 'henüz kapanan arıza yok', altC: ui.mut, alarm: false, el: null },
+          (() => {
+            const so = this.slaOzet();
+            return { label: 'SLA zamanında kapanış', val: so.yuzde == null ? '—' : '%' + so.yuzde,
+              alt: so.say ? (so.asimGun ? 'aşım toplamı ' + so.asimGun.toLocaleString('tr-TR') + ' gün' : 'aşım yok') + ' · bekleme ' + so.beklemeSaat + ' sa' : 'henüz kapanan arıza yok',
+              altC: so.asimGun ? kirmizi : ui.mut, alarm: false, el: null };
+          })()
         ];
         const durumSay = d => acikF.filter(f => d.includes(f.status));
         const ASAMA = [
@@ -18067,6 +18275,40 @@ class Component extends DCLogic {
         })(),
         kaydetmiyor: !(ff && ff.kayitta),
         crewLocked: !canAssign, crewOpacity: canAssign ? '1' : '.55',
+        sla: (() => {
+          if (!ff) return { goster: false };
+          const ek = ff.ek || {};
+          const yonetimRol = CAN.assign.includes((me || {}).role);
+          const pad = n => String(n).padStart(2, '0');
+          const yerelZaman = iso => { if (!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+          const bekDk = (ek.beklemeDk || 0) + (ek.beklemeBas ? Math.max(0, Math.round((Date.now() - Date.parse(ek.beklemeBas)) / 60000)) : 0);
+          const ilceF = ffAsset ? ffAsset.district : (ff.ilce || ff.district || '');
+          const adaylar = (s.faults || []).filter(x => x.dbId != null && x.dbId !== ff.dbId && !KAPALI_DURUM.includes(x.status)
+            && !(x.ek && x.ek.anaId) && (!ilceF || (x.district || x.ilce || '') === ilceF || !(x.district || x.ilce)));
+          const bagli = ff.dbId ? (s.faults || []).filter(x => x.ek && x.ek.anaId === ff.dbId) : [];
+          const varsayilan = this.sureGun(ff.priority);
+          return {
+            goster: true, yonetim: yonetimRol, yonetimDegil: !yonetimRol,
+            slaYazi: ek.slaIptal ? 'Bu arıza SLA dışı sayılıyor.' : 'SLA süresi: ' + (ek.slaGun != null ? ek.slaGun : varsayilan) + ' gün. Değişikliği yönetici yapar.',
+            gun: ek.slaGun != null ? String(ek.slaGun) : '', varsayilan: String(varsayilan) + ' (öncelikten)',
+            iptal: !!ek.slaIptal,
+            onGun: e => { const v = String(e.target.value || '').trim(); this.arizaEkDegis(ff, { slaGun: v === '' ? null : Math.min(365, Math.max(0, parseInt(v, 10) || 0)) }); },
+            onIptal: () => this.arizaEkDegis(ff, { slaIptal: !ek.slaIptal }),
+            bekleme: ff.status === 'bekleme', neden: ek.beklemeNeden || '', nedenler: BEKLEME_NEDEN.map(v => ({ v })),
+            onNeden: e => this.arizaEkDegis(ff, { beklemeNeden: e.target.value }),
+            beklemeVar: bekDk > 0,
+            beklemeYazi: 'Toplam bekleme: ' + (bekDk >= 120 ? Math.floor(bekDk / 60) + ' saat' : bekDk + ' dk') + ' — hedef süreden düşülür.',
+            ana: ek.anaId ? String(ek.anaId) : '',
+            anaSecenek: [{ v: '', n: 'Yok — bağımsız arıza' },
+              ...(ek.anaId && !adaylar.some(x => x.dbId === ek.anaId) ? [{ v: String(ek.anaId), n: ((s.faults || []).find(x => x.dbId === ek.anaId) || {}).no || ('#' + ek.anaId) }] : []),
+              ...adaylar.slice(0, 40).map(x => ({ v: String(x.dbId), n: x.no + ' · ' + (x.koy || x.tesisKoy || x.district || '') + ' · ' + (x.type || '') }))],
+            onAna: e => this.arizaEkDegis(ff, { anaId: e.target.value ? Number(e.target.value) : null }),
+            bagliVar: bagli.length > 0,
+            bagliYazi: 'Bu ana arızaya bağlı ' + bagli.length + ' ihbar: ' + bagli.slice(0, 5).map(x => x.no).join(', ') + (bagli.length > 5 ? '…' : '') + ' — çözülünce hepsine sorulur.',
+            planli: yerelZaman(ek.planli),
+            onPlanli: e => this.arizaEkDegis(ff, { planli: e.target.value ? new Date(e.target.value).toISOString() : null })
+          };
+        })(),
         assignNote: canAssign
           ? 'Arıza fotoğrafları fault_media tablosunda tutulur — envanter galerisine karışmaz. Atamayı yaptığınızda ekip kendi listesinde görür.'
           : 'Ekip atamasını Arıza Şefi ve üstü değiştirir; arıza personeli atamayı göremez, kendi ekibine düşen işi görür. Arıza fotoğrafları envanter galerisinden ayrı tutulur.',
@@ -18373,6 +18615,7 @@ class Component extends DCLogic {
             queue: [{ id: 'q' + Date.now(), title: `${arizaNo} · yeni arıza`, meta: `${aKod} · ${f.type} · ${(f.photos || []).length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
         }
+        if (f.status === 'cozuldu') setTimeout(() => this.anaCozum({ ...f, no: arizaNo }), 400);
         // Kapanan kayıtta kullanılan malzeme ekip zimmetinden düşülebilir
         if (ambarOn && f.status === 'cozuldu' && (f.malzeme || []).length
           && f.crew && f.crew !== 'Atanmadı') {
@@ -19000,7 +19243,10 @@ class Component extends DCLogic {
               halka: adim === i ? '0 0 0 2px var(--color-accent)' : 'none',
               cizgi: i < 2, cizgiW: adim > i ? '100%' : '0%', esnek: i < 2 ? '1 1 0' : '0 0 auto'
             })),
-            s0: adim === 0, s1: adim === 1, s2: adim === 2,
+            s0: adim === 0 && f.status !== 'bekleme', s1: adim === 1, s2: adim === 2,
+            beklemede: f.status === 'bekleme', bekNeden: (f.ek && f.ek.beklemeNeden) || 'neden belirtilmedi',
+            bekle: () => this.setState({ bekleSheet: { id: f.id } }),
+            devam: () => this.sahaDurum(f, (f.ek && f.ek.oncekiDurum && f.ek.oncekiDurum !== 'bekleme') ? f.ek.oncekiDurum : 'atandi'),
             yolTarifi: () => { if (a && this.yolTarifiVer(a)) this.say(`${a.code} için güzergâh hesaplanıyor…`); },
             vardim: () => this.sahaDurum(f, 'sahada'),
             noktaYazi: f.nokta ? 'Arıza noktası kayıtlı · ±' + (f.noktaDogruluk ?? '?') + ' m' : 'Arıza noktası henüz kaydedilmedi',
@@ -19081,7 +19327,17 @@ class Component extends DCLogic {
             });
           })(),
           zimmetVar: !!crew && Object.values(((s.ambar || {}).zimmet || {})[crew] || {}).some(v => Number(v) > 0),
-          ambarOn
+          ambarOn,
+          bekleSheet: (() => {
+            const bf = s.bekleSheet ? (s.faults || []).find(x => x.id === s.bekleSheet.id) : null;
+            return {
+              var: !!bf, kapat: () => this.setState({ bekleSheet: null }), dur: e => { if (e && e.stopPropagation) e.stopPropagation(); },
+              liste: BEKLEME_NEDEN.map(n => ({ ad: n, sec: () => {
+                this.setState({ bekleSheet: null });
+                if (bf) this.sahaDurum(bf, 'bekleme', { ek: { ...(bf.ek || {}), beklemeNeden: n }, ekBekleyen: true });
+              } }))
+            };
+          })()
         };
       })(),
       isListesi: (() => {

@@ -1912,3 +1912,11 @@ Sürüm 2026.10.05-114.
 ## 2026.10.05-118 — Ayarlar > Entegrasyon
 - Anthropic API anahtarı artık programdan girilir (yalnız yönetici); sunucuda `entegrasyon` tablosunda saklanır, tarayıcıya geri gönderilmez (SQL-entegrasyon.sql, Supabase'e uygulandı).
 - `talep-siniflandir` işlevi (v2) anahtarı Edge secret'tan, yoksa bu tablodan okur. "Dene" düğmesi çalıştığını gösterir.
+
+## 2026.10.05-119 — SLA, bekleme, ana arıza, planlı iş, veri sözlüğü
+- `SQL-ariza-sla.sql` (Supabase'e uygulandı): arıza başına SLA süresi (yalnız yönetici/müdür/mühendis/şef değiştirir) ya da "SLA dışı", bekleme süresi, ana arıza bağlantısı, planlı zaman.
+- "Beklemeye al" (neden seçilerek; telefonda büyük düğme) süreyi durdurur; bekleme süresi hedeften düşülür, "Devam et" önceki duruma döner.
+- Ana arıza çözülünce bağlı ihbarlar için "hepsi çözüldü mü?" sorulur; bağlı talepler çözüldü olur, vatandaşın takip sayfası güncellenir.
+- Planlı zaman gelince (uygulama açıkken) ekibe/yönetime bildirim çıkar.
+- İşler > Genel bakış'a "SLA zamanında kapanış" göstergesi (yüzde, aşım gün toplamı, bekleme saati) eklendi.
+- `VERI-SOZLUGU.md`: tablo ve alan açıklamaları.

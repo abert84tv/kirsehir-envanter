@@ -1958,3 +1958,6 @@ Sürüm 2026.10.05-114.
 - Veri değişmediyse işaretler yeniden kurulmaz; harita çerçevesi tile'ları yakınlaştırma sırasında yüklemez.
 - Pahalı bulanıklık (backdrop-filter) ve sabit arka plan kaldırıldı; yerleşim ölçümü 400 ms yerine 1,5 sn'de bir.
 - Harita karo istekleri 6 sn zaman aşımıyla doğrudan ağa düşer.
+
+## 2026.10.06-129 — Üretimde haritayı engelleyen Leaflet CSS hatası
+- vendor/leaflet.css git satır-sonu dönüşümüyle değişince tarayıcı bütünlük (SRI) denetiminde dosyayı engelliyordu (yalnız yayında; yerelde görünmüyordu). Etiketler kaldırıldı, .gitattributes ile vendor dosyaları dönüşümden muaf.

@@ -17,3 +17,30 @@ body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
 body.dark #bar,body.dark #durum,body.dark #panel,body.dark #alt,body.dark #route,body.dark #menu{
   box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 14px 34px -10px rgba(0,0,0,.65)}
 input:focus,select:focus{outline:none;box-shadow:0 0 0 3px rgba(0,113,227,.22)}
+
+/* Ortak harita işareti (envanter haritası ve Hat Kesiti aynı biçimi kullanır):
+   28 px yuvarlak kare, türe göre renkli çizgi simgesi. Dolu = gönderilmeyi bekliyor,
+   kırmızı nokta = açık arıza, soluk/çizgili = pasif, kesikli çerçeve = referans (ISU) noktası. */
+.ksp{position:relative;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:10px;
+  background:#fff;border:2px solid var(--ksp,#0071e3);color:var(--ksp,#0071e3);box-shadow:0 2px 7px rgba(0,0,0,.28);
+  transition:transform .12s ease,background-color .12s ease}
+.ksp svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.ksp.kuyu{--ksp:#0071e3}.ksp.depo{--ksp:#b45309}.ksp.ag{--ksp:#7b3fbf}.ksp.ges{--ksp:#c08a00}
+.ksp.kaynak{--ksp:#0891b2}.ksp.memba{--ksp:#15803d}
+.ksp.ref{border-style:dashed}
+.ksp.pend{background:var(--ksp);color:#fff}
+.ksp.fault:after{content:'';position:absolute;top:-5px;right:-5px;width:12px;height:12px;border-radius:50%;background:#d70015;border:2px solid #fff}
+.ksp.pasif{filter:grayscale(1);opacity:.62;border-style:dashed}
+.leaflet-marker-icon:hover .ksp{transform:scale(1.14)}
+body.dark .ksp{background:#1c1c1e}
+body.dark .ksp.pend{background:var(--ksp)}
+body.dark .ksp.kuyu{--ksp:#4aa3ff}body.dark .ksp.depo{--ksp:#fbbf24}body.dark .ksp.ag{--ksp:#c4a1f2}
+body.dark .ksp.ges{--ksp:#f5c542}body.dark .ksp.kaynak{--ksp:#22d3ee}body.dark .ksp.memba{--ksp:#4ade80}
+
+.ksp{margin:auto}
+.ksz-ince .ksp{width:12px;height:12px;border-radius:50%;border-width:2px;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.ksz-ince .ksp svg{display:none}
+.ksz-ince .ksp.fault:after{top:-4px;right:-4px;width:8px;height:8px}
+.ksz-ince .ks-lbl,.ksz-ince .ks-tlbl{display:none}
+.ksz-ince .ksp.ref,.ksz-ince .ksp.pasif{border-style:solid}
+.ksz-ince .ksp.ref{width:9px;height:9px;border-width:2px;opacity:.7;box-shadow:none}

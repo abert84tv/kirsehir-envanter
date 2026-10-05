@@ -1,8 +1,8 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.06-125';
+const SURUM = 'ks-2026.10.06-127';
 const KABUK = SURUM + '-kabuk';
-const HARITA = 'ks-harita-karo';
+const HARITA = 'ks-harita-karo-2';
 const KARO_LIMIT = 900;
 
 const ON_YUKLE = [
@@ -65,14 +65,16 @@ async function agOnce(istek, ms) {
   }
 }
 
+// Karolar CORS kipiyle alınır: yanıtın durumu görülebilsin, hatalı (5xx/404) karo önbelleğe girmesin.
+// (Opak yanıt hatalı olsa da "tamam" göründüğünden bozuk karolar kalıcı boşluk bırakıyordu.)
 async function karo(istek) {
   const c = await caches.open(HARITA);
-  const k = await c.match(istek);
+  const k = await c.match(istek.url);
   if (k) return k;
   try {
-    const r = await fetch(istek);
-    if (r && (r.ok || r.type === 'opaque')) {
-      c.put(istek, r.clone()).then(async () => {
+    const r = await fetch(new Request(istek.url, { mode: 'cors', credentials: 'omit' }));
+    if (r && r.ok) {
+      c.put(istek.url, r.clone()).then(async () => {
         const anahtarlar = await c.keys();
         if (anahtarlar.length > KARO_LIMIT) {
           for (const a of anahtarlar.slice(0, anahtarlar.length - KARO_LIMIT)) await c.delete(a);
@@ -81,7 +83,8 @@ async function karo(istek) {
     }
     return r;
   } catch (e) {
-    return Response.error();
+    // CORS kapalıysa doğrudan (önbelleksiz) dene
+    try { return await fetch(istek); } catch (e2) { return Response.error(); }
   }
 }
 

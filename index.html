@@ -58,7 +58,6 @@ h6,.card-kicker{text-transform:none;letter-spacing:-.01em;font-size:12px}
 *{scrollbar-width:thin;scrollbar-color:rgba(128,128,140,.38) transparent}
 body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(0,113,227,.07),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(0,113,227,.05),transparent 58%);background-attachment:fixed}
 html.ks-koyu body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(10,132,255,.16),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(10,132,255,.10),transparent 58%)}
-.scroll{background:transparent!important}
 section,[style*="border-radius:14px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
 [style*="border-radius:16px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
 [style*="border-radius:12px"][style*="border:1px solid"][style*="padding:1"]:not(button):not(input):not(select):not(label):not(span){
@@ -289,6 +288,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" aria-label="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ convBtn.border }};background:{{ convBtn.bg }};color:{{ convBtn.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔<span class="ks-ust-etiket">Koordinat</span></button>
 <button onClick="{{ toggleYardim }}" title="Açıklamaları göster / gizle" aria-label="Yardım" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ yardimKenar }};background:{{ yardimZemin }};color:{{ yardimYazi }};display:flex;align-items:center;justify-content:center;font:700 15px/1 var(--font-heading)">?</button>
 <button onClick="{{ toggleTheme }}" title="Açık / koyu tema" aria-label="Tema" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
+<button onClick="{{ logout }}" title="Çıkış" aria-label="Çıkış" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
 <sc-if value="{{ naAcVar }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ naAc }}" title="Yeni tesis kaydı aç" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/34px var(--font-body);letter-spacing:-.01em" style-hover="background:var(--color-accent-600)">+<span class="ks-ust-etiket"> Yeni tesis</span></button>
 </sc-if>
@@ -4528,9 +4528,16 @@ Hareket gir
 <button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;min-width:46px;padding:0 10px;border-radius:11px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 13.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
 </sc-if>
 <button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-width:46px;height:42px;padding:0 10px;border-radius:11px;border:1px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:600 12px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap">{{ net.short }}</button>
-<button onClick="{{ toggleYardim }}" aria-label="Yardım" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid {{ yardimKenar }};background:{{ yardimZemin }};color:{{ yardimYazi }};font:700 16px/1 var(--font-heading);display:flex;align-items:center;justify-content:center">?</button>
-<button onClick="{{ toggleTheme }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
+<button onClick="{{ telMenu.ac }}" aria-label="Menü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid {{ telMenu.kenar }};background:{{ telMenu.zemin }};color:{{ telMenu.yazi }};display:flex;align-items:center;justify-content:center;font:700 20px/1 var(--font-body)">⋮</button>
 </div>
+<sc-if value="{{ telMenu.acik }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ telMenu.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300"></div>
+<div class="ks-gir" style="position:absolute;right:10px;top:62px;z-index:301;min-width:230px;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};box-shadow:0 18px 44px rgba(0,0,0,.28);padding:6px;display:flex;flex-direction:column">
+<sc-for list="{{ telMenu.ogeler }}" as="o" hint-placeholder-count="5">
+<button onClick="{{ o.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;border-radius:11px;font:600 14.5px/1 var(--font-body);color:{{ o.renk }}"><span style="width:22px;text-align:center;font-size:17px">{{ o.ikon }}</span>{{ o.ad }}</button>
+</sc-for>
+</div>
+</sc-if>
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="position:absolute;left:8px;right:8px;top:100%;margin-top:4px;z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 30px rgba(0,0,0,.2);max-height:280px;overflow:auto;padding:4px">
 <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
@@ -9175,7 +9182,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-125';
+const SURUM = '2026.10.06-127';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9323,7 +9330,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
+    telMenuAcik: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -9915,7 +9922,8 @@ class Component extends DCLogic {
   profilAssets() {
     return (this.state.assets || [])
       .filter(a => a && isFinite(a.lat) && isFinite(a.lon))
-      .map(a => ({ id: a.id, code: a.code, type: a.type, lat: a.lat, lon: a.lon, status: a.status }));
+      .map(a => ({ id: a.id, code: a.code, type: a.type, lat: a.lat, lon: a.lon, status: a.status,
+        pend: a.sync === 'pending', ariza: (this.state.faults || []).some(f => f.assetId === a.id && !KAPALI_DURUM.includes(f.status)) }));
   }
   // Profil ekranında bulunan nokta ve güzergâhı asıl kayda taşır.
   // Nokta seçiliyse yeni tesis formu koordinatı dolu açılır; hat seçiliyse
@@ -9961,7 +9969,11 @@ class Component extends DCLogic {
     if (!w) return;
     try {
       w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
-      w.postMessage({ ks: 'profil', assets: this.profilAssets() }, '*');
+      const kod = {}; (this.state.assets || []).forEach(a => { kod[a.id] = a.code; });
+      const hatlar = [];
+      const tablo = this.state.hatlar || {};
+      for (const id in tablo) for (const x of (tablo[id] || [])) if (x && (x.noktalar || []).length) hatlar.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '' });
+      w.postMessage({ ks: 'profil', assets: this.profilAssets(), hatlar }, '*');
     } catch (e) { /* çerçeve hazır değil */ }
   }
   pushMap() {
@@ -15993,6 +16005,22 @@ class Component extends DCLogic {
       yardimZemin: s.yardim ? 'var(--color-accent)' : 'transparent',
       yardimYazi: s.yardim ? '#fff' : ui.fg,
       toggleYardim: () => this.yardimDegistir(),
+      telMenu: {
+        acik: !!s.telMenuAcik, kenar: s.telMenuAcik ? 'var(--color-accent)' : ui.rule,
+        zemin: s.telMenuAcik ? 'var(--color-accent)' : 'transparent', yazi: s.telMenuAcik ? '#fff' : ui.fg,
+        ac: () => this.setState({ telMenuAcik: !this.state.telMenuAcik }),
+        kapat: () => this.setState({ telMenuAcik: false }),
+        ogeler: (() => {
+          const k = fn => () => { this.setState({ telMenuAcik: false }); fn(); };
+          return [
+            { ikon: '↻', ad: 'Şimdi eşitle / yenile', renk: ui.fg, git: k(() => { this.say('Yenileniyor…'); this.senkron(); this.veriYenile(); }) },
+            { ikon: dark ? '☀' : '☾', ad: dark ? 'Açık tema' : 'Koyu tema', renk: ui.fg, git: k(() => this.temaSec(dark ? 'light' : 'dark')) },
+            { ikon: '?', ad: s.yardim ? 'Açıklamaları gizle' : 'Açıklamaları göster', renk: ui.fg, git: k(() => this.yardimDegistir()) },
+            { ikon: '⚙', ad: 'Ayarlar', renk: ui.fg, git: k(() => this.setState({ tab: 'ayarlar', ayarBolum: null })) },
+            { ikon: '⎋', ad: 'Çıkış', renk: '#d92d20', git: k(() => this.renderVals().logout()) }
+          ];
+        })()
+      },
       toggleTheme: () => this.temaSec(dark ? 'light' : 'dark'),
       onQuery: e => this.setState({ query: e.target.value }),
       onQueryKey: e => {

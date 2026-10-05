@@ -70,7 +70,8 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .panel{position:absolute;z-index:500;background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px}
   #tools{right:12px;top:12px;border:none;background:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
   #tools .body{display:none;flex-direction:column;gap:6px;align-items:stretch;width:168px}
-  #tools.open .body{display:flex}
+  #tools.open .body{display:flex;animation:ksMenuAc .16s ease-out}
+  @keyframes ksMenuAc{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
   #menu{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;
     background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);
     letter-spacing:-.01em;color:var(--color-text)}
@@ -169,6 +170,7 @@ let openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f =>
 let sonFilter = null;
 
 const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true });
+ksPinZoom(map, 12);
 
 // ── zeminler: sokak / uydu / uydu + yer adı
 const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -260,10 +262,7 @@ const ISU_KATMAN = {
   depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)', eslesir: ['depo'] }
 };
 function isuNoktaEkle(isu, lat, lon) {
-  const icon = L.divIcon({
-    className: '', iconSize: [24, 24], iconAnchor: [12, 12],
-    html: `<div class="ks-pin ref ${isu.sinif}">${isu.glyph}</div>`
-  });
+  const icon = ksPin(isu.suzgec, { ref: true });
   L.marker([lat, lon], { icon })
     .bindTooltip(isu.ad, { direction: 'top' })
     .on('click', () => {
@@ -299,12 +298,9 @@ assetLayer.clearLayers();
 markers = [];
 for (const a of assets) {
   const pend = a.sync === 'pending', fault = openFaults.has(a.id), pasif = a.status === 'pasif';
-  const icon = L.divIcon({
-    className: '', iconSize: [24, 24], iconAnchor: [12, 12],
-    html: `<div class="ks-pin${pasif ? ' pasif' : (pend ? ' pend' : '')}${fault && !pasif ? ' fault' : ''}">${TYPES[a.type].glyph}</div>`
-  });
+  const icon = ksPin(a.type, { pasif, pend, fault });
   const mk = L.marker([a.lat, a.lon], { icon })
-    .bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [14, 0], interactive: true })
+    .bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [18, 0], interactive: true })
     .bindPopup(
       `<b>${a.code}</b><br>${TYPES[a.type].kind}<br>${a.village || 'Köy girilmedi'} · ${a.district}` +
       `<br>Yapım yılı: ${a.year || '—'}<br>${a.photos} fotoğraf` +
@@ -473,7 +469,12 @@ document.getElementById('t-labels').onclick = () => { wantLabels = !wantLabels; 
 document.getElementById('t-fit').onclick = () => map.fitBounds(bounds.pad(0.08));
 
 const tools = document.getElementById('tools');
-document.getElementById('menu').onclick = () => tools.classList.toggle('open');
+document.getElementById('menu').onclick = e => { e.stopPropagation(); tools.classList.toggle('open'); };
+// Menü açıkken haritaya, boş bir yere ya da uygulamanın başka bir bölümüne dokunulunca kapanır
+const menuKapat = () => tools.classList.remove('open');
+map.on('click movestart', menuKapat);
+document.addEventListener('pointerdown', e => { if (!tools.contains(e.target)) menuKapat(); });
+window.addEventListener('blur', menuKapat);
 map.on('movestart', () => tools.classList.remove('open'));
 
 // köy konumu işaretleme modu — kullanıcı haritaya bir kez dokunur, konum kaydedilir

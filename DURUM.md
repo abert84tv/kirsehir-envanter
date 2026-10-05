@@ -1944,3 +1944,11 @@ Sürüm 2026.10.05-114.
 - `TELEMETRI-GECIT.md`: Modbus/MQTT cihazlar için geçit örnekleri.
 
 ## 2026.10.06-125 — Çevrimdışı çizilen hatlar bağlantı gelince sunucuya gider
+
+## 2026.10.06-127 — Harita karoları, ortak işaretler, telefon menüsü, çakışma düzeltmesi
+- Harita karoları artık CORS kipiyle alınıp yalnız başarılı olanlar önbelleğe giriyor (hatalı karo kalıcı boşluk bırakıyordu); karo önbelleği sıfırlandı.
+- Ortak harita işareti (`ksPin`): envanter haritası, ISU referansları ve Hat Kesiti aynı simge/renk dilini kullanır; uzaktan küçük nokta, yakında simgeli. Hat Kesiti haritasında tesisler, ISU noktaları ve kayıtlı hatlar da görünür.
+- "Harita menüsü": açılırken yumuşak animasyon, haritaya/boş yere/başka bölüme dokununca kapanır.
+- Telefon üst çubuğu: taşan düğmeler ⋮ menüsüne alındı (yenile, tema, açıklamalar, ayarlar, çıkış); masaüstüne çıkış düğmesi eklendi.
+- "Bütün ekranlar" sayfasında ekranların üst üste binmesi giderildi (v123'te eklenen saydam arka plan kuralı kaldırıldı).
+- Hat Kesiti telefonda üst çubuk iki satıra indirildi.

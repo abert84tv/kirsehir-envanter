@@ -67,30 +67,6 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .ks-dist{background:rgba(29,29,31,.9);border:none;border-radius:13px;color:#fff;
     padding:3px 10px;font:600 12px/1.35 var(--font-body);letter-spacing:-.01em;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .ks-dist:before{display:none}
-  .panel{position:absolute;z-index:500;background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px}
-  #tools{right:12px;top:12px;border:none;background:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-  #tools .body{display:none;flex-direction:column;gap:6px;align-items:stretch;width:168px}
-  #tools.open .body{display:flex;animation:ksMenuAc .16s ease-out}
-  @keyframes ksMenuAc{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
-  #menu{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;
-    background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);
-    letter-spacing:-.01em;color:var(--color-text)}
-  #menu:hover{background:var(--color-neutral-200)}
-  #tools.open #menu{background:var(--color-text);border-color:var(--color-text);color:#fff}
-  #menu .bars{display:flex;flex-direction:column;gap:2.5px}
-  #menu .bars i{display:block;width:13px;height:2px;background:currentColor}
-  #tools button{all:unset;cursor:pointer;padding:8px 11px;background:var(--color-bg);
-    border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;
-    color:var(--color-text);text-align:left}
-  /* #tools button kuralı all:unset ile #menu'nün display:flex'ini siliyordu;
-     çizgiler yazının üstüne iniyordu — burada tek satıra sabitlenir */
-  #tools > #menu{display:flex;align-items:center;gap:8px;padding:9px 12px;white-space:nowrap;text-align:left}
-  #tools button:hover{background:var(--color-neutral-200)}
-  #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
-  #tools .grp{display:flex;border:1px solid var(--color-divider);border-radius:9px;background:var(--color-bg)}
-  #tools .grp button{border:none;border-right:1px solid var(--color-divider);flex:1;text-align:center;padding:8px 9px}
-  #tools .grp button:last-child{border-right:none}
-  #tools .sep{height:5px}
   #route{right:12px;bottom:12px;max-width:280px;padding:0;display:none}
   #route.show{display:block}
   #route .rt-head{background:var(--color-text);color:#fff;padding:7px 10px;
@@ -112,14 +88,11 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
      programın geri kalanıyla uyuşmuyordu. */
   body.dark{background:#000000}
   body.dark .leaflet-container{background:#1c1c1e}
-  body.dark #tools button,body.dark #tools .grp,body.dark #route{background:#1c1c1e;border-color:rgba(255,255,255,.13);color:#f5f5f7}
   body.dark #route .rt-note,body.dark #route .rt-nums span{color:rgba(235,235,245,.62)}
-  body.dark #tools.open #menu{background:#f5f5f7;color:#000000}
   body.dark #route .rt-title,body.dark #route .rt-acts button{color:#f5f5f7}
   body.dark .ks-lbl{background:rgba(28,28,30,.92);border-color:rgba(255,255,255,.13);color:#f5f5f7}
   body.dark .ks-pin{background:#1c1c1e;border-color:#f5f5f7;color:#f5f5f7}
   /* .ks-tiles/.ks-sat karo kısma değerleri artık harita-ortak.css'te */
-  body.dark #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
 </style>
 </head>
 <body>
@@ -160,36 +133,35 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 </div>
 
 <script type="module">
-import * as DATA from './kirsehir-data.js';
-import { buildAssets, TYPES, STATUS_LABEL } from './envanter.js';
-import { ISU_KAYNAK, ISU_MEMBA, ISU_ISUDEPO } from './isu-katmanlar.js';
-
-let { assets, faults } = buildAssets(DATA);
-const KAPALI = ['cozuldu', 'iptal'];
-let openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
-let sonFilter = null;
+import { katmanKur, hatMesafe } from './harita-katman.js';
 
 const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true, preferCanvas: true, zoomSnap: 0.5, zoomDelta: 0.5, wheelPxPerZoomLevel: 90 });
 ksPinZoom(map, 12);
-window.ksHarita = { map, durum: () => ({ canli: canli.size, oge: ogeler.length }), filtre: f => filtreUygula(f) };
+const SUZ_KEY = 'ks-suzgec';
 
-// ── zeminler: sokak / uydu / uydu + yer adı
-const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap katkıcıları', maxZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1
+// Zemin, işaretler, ISU noktaları, hatlar, arıza noktaları ve süzgeç ortak modülden gelir
+// (Hat Kesiti haritasıyla birebir aynı). Burada yalnız tıklama davranışı tanımlıdır.
+const K = katmanKur(map, {
+  tikla(g) {
+    if (g.kind === 'a') {
+      if (navMode) routeTo(g.a);
+      else parent.postMessage({ ks: 'select', id: g.a.id, code: g.a.code }, '*');
+      return;
+    }
+    if (pickName) {
+      const n = pickName; setPick(null);
+      parent.postMessage({ ks: 'picked', name: n, lat: +g.lat.toFixed(6), lon: +g.lon.toFixed(6) }, '*');
+      return;
+    }
+    noktaBirak({ lat: g.lat, lng: g.lon });
+  },
+  arizaAc(f) { parent.postMessage({ ks: 'arizaAc', id: f.id }, '*'); }
 });
-const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 19, className: 'ks-sat', updateWhenZooming: false, keepBuffer: 1
-});
-const satLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Yer adları: Esri', maxZoom: 19, pane: 'shadowPane'
-});
-street.addTo(map);
-let base = 'street';
+window.ksHarita = { map, durum: () => K.durum(), filtre: f => K.setFilter(f) };
+const assetsAl = () => K.assets();
+
 function setBase(kind, sessiz) {
-  base = kind;
-  street.remove(); sat.remove(); satLabels.remove();
-  if (kind === 'street') street.addTo(map);
-  else { sat.addTo(map); if (kind === 'hyb') satLabels.addTo(map); }
+  K.setBase(kind);
   for (const [id, k] of [['b-street', 'street'], ['b-sat', 'sat'], ['b-hyb', 'hyb']])
     document.getElementById(id).classList.toggle('on', k === kind);
   if (!sessiz) parent.postMessage({ ks: 'base', base: kind }, '*');
@@ -198,204 +170,20 @@ document.getElementById('b-street').onclick = () => setBase('street');
 document.getElementById('b-sat').onclick = () => setBase('sat');
 document.getElementById('b-hyb').onclick = () => setBase('hyb');
 
-// ── ilçe merkezleri: kırmızı noktalar istek üzerine kaldırıldı
-// (ilçe adı ve nüfusu Yerleşim ekranında duruyor)
-
-// ── hat güzergâhları: kayıtlara bağlı terfi, isale, şebeke ve enerji hatları
-const HAT_REN = { terfi: '#0071e3', isale: '#201e1d', sebeke: '#6c6763', ag: '#1b6ef3', og: '#7b3fbf', dc: '#c08a00' };
-const HAT_AD = { terfi: 'Terfi hattı', isale: 'İsale hattı', sebeke: 'Şebeke hattı', ag: 'AG enerji hattı', og: 'OG enerji hattı', dc: 'GES DC hattı' };
-const hatLayer = L.layerGroup().addTo(map);
-const HAT_KEY = 'ks-hat-katman';
-const SUZ_KEY = 'ks-suzgec';
-let hatVeri = [], hatAcik = true;
-try { hatAcik = localStorage.getItem(HAT_KEY) !== '0'; } catch (e) { /* depolama kapalı */ }
-function hatMesafe(a, b) {
-  const rd = x => x * Math.PI / 180;
-  const dLat = rd(b[0] - a[0]), dLon = rd(b[1] - a[1]);
-  const s = Math.sin(dLat / 2) ** 2 + Math.cos(rd(a[0])) * Math.cos(rd(b[0])) * Math.sin(dLon / 2) ** 2;
-  return 2 * 6371008.8 * Math.asin(Math.min(1, Math.sqrt(s)));
-}
-const hatKm = v => v >= 1000 ? (v / 1000).toFixed(v < 10000 ? 2 : 1) + ' km' : Math.round(v) + ' m';
-function cizHatlar() {
-  hatLayer.clearLayers();
-  if (!hatAcik) return;
-  for (const h of hatVeri) {
-    const p = (h.noktalar || []).map(x => [+x[0], +x[1]]).filter(x => isFinite(x[0]) && isFinite(x[1]));
-    if (p.length < 2) continue;
-    let uz = 0;
-    for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
-    const renk = HAT_REN[h.tur] || '#201e1d';
-    L.polyline(p, { color: '#fff', weight: 8, opacity: .65 }).addTo(hatLayer);
-    L.polyline(p, { color: renk, weight: 4.5, opacity: .95 })
-      .bindTooltip((HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + ' · ' + hatKm(uz), { sticky: true })
-      .addTo(hatLayer);
-  }
-}
 function hatKatman(ac) {
-  hatAcik = !!ac;
-  document.getElementById('t-hat').classList.toggle('on', hatAcik);
-  try { localStorage.setItem(HAT_KEY, hatAcik ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
-  cizHatlar();
+  K.hatKatman(ac);
+  document.getElementById('t-hat').classList.toggle('on', K.hatAcik());
 }
-hatKatman(hatAcik);
+hatKatman(K.hatAcik());
 document.getElementById('t-hat').onclick = () => {
-  hatKatman(!hatAcik);
+  hatKatman(!K.hatAcik());
   // Tercih uygulamada saklanır: kullanıcı kapattıysa bir dahaki girişte kapalı gelir
-  try { parent.postMessage({ ks: 'hatKatman', on: hatAcik }, '*'); } catch (e) { /* çerçeve yok */ }
+  try { parent.postMessage({ ks: 'hatKatman', on: K.hatAcik() }, '*'); } catch (e) { /* çerçeve yok */ }
 };
+function applyLabels() { document.getElementById('t-labels').classList.toggle('on', K.etiket()); }
+document.getElementById('t-labels').onclick = () => { K.setEtiket(!K.etiket()); applyLabels(); };
+applyLabels();
 
-// ── ISU referans katmanları: ad/açıklama taşımayan salt koordinat noktaları
-// (kaynak, memba, depo — 2026.09.29). Kendi düğmeleri yok; envanterin var olan
-// tür süzgecine (Kuyu/Depo/AG/GES) bağlıdır (bkz. filtreUygula): Depo süzgeci
-// ISU_ISUDEPO'yu, Kaynak/Memba süzgeçleri de ISU_KAYNAK/ISU_MEMBA'yı kapsar.
-// Tıklama mevcut "nokta bırak" akışını kullanır: kart açılır, "yeni kayıt"
-// seçilirse o katmandaki nokta üzerinde çalışılmış olur.
-// Üçü de aynı kuralla kodlanır — statik değil, "eslesir" alanında verilen
-// gerçek tür(ler)e 30 m'den yakın ISU noktası elenir, yalnız aynı fiziksel
-// yerin ikinci bir işareti olmaz; kalan nokta kendi adı ve rengiyle durur.
-// ISU_KAYNAK kuyularla %67, ISU_MEMBA kuyularla %14, ISU_ISUDEPO gerçek depo
-// kayıtlarıyla %87 çakışıyordu (2026.09.29 ölçümü) — bu yüzden üçü de canlı
-// asset listesine göre isuYenile() ile her güncellemede yeniden hesaplanır.
-const ISU_ESIK_M = 30;
-const ISU_KATMAN = {
-  kaynak: { veri: ISU_KAYNAK, suzgec: 'kaynak', sinif: 'ref-kaynak', glyph: 'Kn', ad: 'ISU Kaynak noktası (referans)', eslesir: ['kuyu'] },
-  memba: { veri: ISU_MEMBA, suzgec: 'memba', sinif: 'ref-memba', glyph: 'Mb', ad: 'ISU Memba noktası (referans)', eslesir: ['kuyu'] },
-  depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)', eslesir: ['depo'] }
-};
-// ── Görünüm yöneticisi (2026.10.06): yalnız ekranda görünen işaretler çizilir.
-// Uzaktan (zoom < 12) kayıtlar canvas üzerinde küçük renkli noktalardır (DOM'a hiç dokunmaz);
-// yakınlaşınca ve yalnız ekrandaki en çok DOM_SINIR işaret simgeli çizilir; etiketler 14'ten sonra.
-// Telefonda 900+ DOM işaretini aynı anda döndürmek haritayı kilitliyordu.
-const DOM_ZOOM = 12, DOM_SINIR = 260;
-const TUR_RENK = { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', kaynak: '#0891b2', memba: '#15803d' };
-const goruntuKatman = L.layerGroup().addTo(map);
-const noktaLayer = L.layerGroup().addTo(map);
-let ogeler = [], canli = new Map(), ogeImza = '', gz = null;
-
-function ogeleriKur() {
-  const imza = assets.length + '|' + assets.map(a => a.id + a.type + a.status + a.sync + a.lat + a.lon).join(',').length + '|' + [...openFaults].join(',');
-  if (imza === ogeImza) { ogeAcik(); gorunumGuncelle(); return; }
-  ogeImza = imza;
-  ogeler = [];
-  for (const a of assets) ogeler.push({ key: 'a' + a.id, kind: 'a', tur: a.type, lat: a.lat, lon: a.lon, a });
-  for (const [ad, isu] of Object.entries(ISU_KATMAN)) {
-    const gercekler = assets.filter(a => isu.eslesir.includes(a.type)).map(a => [a.lat, a.lon]);
-    for (const [lat, lon] of isu.veri) {
-      if (gercekler.some(g => hatMesafe([lat, lon], g) < ISU_ESIK_M)) continue;
-      ogeler.push({ key: 'i' + ad + lat + ',' + lon, kind: 'isu', tur: ad, lat, lon, isu });
-    }
-  }
-  goruntuKatman.clearLayers(); canli.clear();
-  ogeAcik();
-  gorunumGuncelle();
-}
-function ogeAcik() {
-  const f = sonFilter;
-  for (const o of ogeler) {
-    o.on = o.kind === 'a'
-      ? (!f || (!!f[o.tur] && (f.pasif !== false || o.a.status !== 'pasif')))
-      : (!!f && !!f[o.isu.suzgec]);
-  }
-}
-function ogeTikla(o) {
-  if (o.kind === 'a') {
-    if (navMode) routeTo(o.a);
-    else parent.postMessage({ ks: 'select', id: o.a.id, code: o.a.code }, '*');
-    return;
-  }
-  if (pickName) {
-    const n = pickName; setPick(null);
-    parent.postMessage({ ks: 'picked', name: n, lat: +o.lat.toFixed(6), lon: +o.lon.toFixed(6) }, '*');
-    return;
-  }
-  noktaBirak({ lat: o.lat, lng: o.lon });
-}
-function isaretYap(o, mod) {
-  const a = o.a;
-  const pasif = o.kind === 'a' && a.status === 'pasif', pend = o.kind === 'a' && a.sync === 'pending';
-  const fault = o.kind === 'a' && openFaults.has(a.id);
-  let mk;
-  if (mod === 'n') {
-    mk = L.circleMarker([o.lat, o.lon], {
-      radius: o.kind === 'a' ? 5 : 3, weight: fault ? 2.5 : 1.5, color: fault ? '#d70015' : '#fff',
-      fillColor: TUR_RENK[o.tur] || '#0071e3', fillOpacity: pasif ? .35 : .95
-    });
-  } else {
-    mk = L.marker([o.lat, o.lon], { icon: ksPin(o.tur, { ref: o.kind === 'isu', pasif, pend, fault }), keyboard: false });
-  }
-  if (o.kind === 'a') {
-    mk.bindPopup(() =>
-      `<b>${a.code}</b><br>${TYPES[a.type].kind}<br>${a.village || 'Köy girilmedi'} · ${a.district}` +
-      `<br>Yapım yılı: ${a.year || '—'}<br>${a.photos} fotoğraf` +
-      (fault ? '<br><b style="color:#0071e3">Açık arıza kaydı var</b>' : '') +
-      (a.coordApprox ? '<br><i>Konum yaklaşık — saha ölçümü bekliyor</i>' : '<br><i>Konum: KML / saha ölçümü</i>'));
-    if (mod === 'e') {
-      mk.bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [18, 0], interactive: true });
-      const tt = mk.getTooltip();
-      if (tt) tt.on('click', () => ogeTikla(o));
-    } else if (mod === 'd') mk.bindTooltip(a.code, { direction: 'right', className: 'ks-lbl', offset: [18, 0] });
-  } else {
-    mk.bindTooltip(o.isu.ad, { direction: 'top' });
-  }
-  // açılır pencere yerine doğrudan seçim: tıklama programa gider (eski davranış)
-  mk.on('click', () => { if (o.kind === 'a') { mk.closePopup(); } ogeTikla(o); });
-  return mk;
-}
-function gorunumGuncelle() {
-  const z = map.getZoom(), dom = z >= DOM_ZOOM;
-  const mod = dom ? (wantLabels && z >= ETIKET_ZOOM ? 'e' : 'd') : 'n';
-  const b = map.getBounds().pad(dom ? .15 : .3), mrk = map.getCenter();
-  let ad = [];
-  for (const o of ogeler) {
-    if (!o.on || (o.kind === 'isu' && !dom)) continue;
-    if (b.contains([o.lat, o.lon])) ad.push(o);
-  }
-  if (dom && ad.length > DOM_SINIR) {
-    ad.forEach(o => { o._d = (o.lat - mrk.lat) ** 2 + (o.lon - mrk.lng) ** 2; });
-    ad.sort((x, y) => x._d - y._d);
-    ad.length = DOM_SINIR;
-  }
-  const hedef = new Set(ad.map(o => o.key));
-  for (const [k, c] of canli) {
-    if (!hedef.has(k) || c.mod !== mod) { goruntuKatman.removeLayer(c.mk); canli.delete(k); }
-  }
-  for (const o of ad) {
-    if (canli.has(o.key)) continue;
-    const mk = isaretYap(o, mod);
-    mk.addTo(goruntuKatman);
-    canli.set(o.key, { mk, mod });
-  }
-}
-function gorunumPlan() { clearTimeout(gz); gz = setTimeout(gorunumGuncelle, 100); }
-map.on('moveend zoomend', gorunumPlan);
-
-let wantLabels = true;
-function cizAssets() {
-  // Arıza noktaları: ekibin sahada kaydettiği koordinat (boru hattı arızası
-  // tesisin yerinde değildir). Açık arızalar kırmızı, dokununca arıza açılır.
-  noktaLayer.clearLayers();
-  for (const f of faults) {
-    if (!f || !f.nokta || KAPALI.includes(f.status)) continue;
-    const yer = f.koy ? f.koy + (f.district ? ' · ' + f.district : '') : (f.district || '');
-    L.circleMarker([f.nokta.lat, f.nokta.lon], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#d70015', fillOpacity: .95 })
-      .bindPopup(`<b>${f.no || 'Arıza'}</b><br>${f.type || ''}<br>${yer}` +
-        `<br><i>Arıza noktası${f.noktaDogruluk != null ? ' · ±' + f.noktaDogruluk + ' m' : ''}</i>`)
-      .on('click', () => parent.postMessage({ ks: 'arizaAc', id: f.id }, '*'))
-      .addTo(noktaLayer);
-  }
-  ogeleriKur();
-}
-function filtreUygula(f) {
-  sonFilter = f;
-  ogeAcik();
-  gorunumGuncelle();
-}
-function applyLabels() {
-  document.getElementById('t-labels').classList.toggle('on', wantLabels);
-  gorunumGuncelle();
-}
-
-const bounds = L.latLngBounds(assets.map(a => [a.lat, a.lon]));
 // açılış görünümü: her zaman Kırşehir il sınırlarını kapsar
 const IL_BOUNDS = L.latLngBounds([38.76, 33.28], [39.80, 34.66]);
 let ilkOturdu = false;
@@ -490,11 +278,8 @@ async function routeTo(a) {
   }
 }
 
-const ETIKET_ZOOM = 14;
-cizAssets();
 
-document.getElementById('t-labels').onclick = () => { wantLabels = !wantLabels; applyLabels(); };
-document.getElementById('t-fit').onclick = () => map.fitBounds(bounds.pad(0.08));
+document.getElementById('t-fit').onclick = () => map.fitBounds(K.bounds().pad(0.08));
 
 const tools = document.getElementById('tools');
 document.getElementById('menu').onclick = e => { e.stopPropagation(); tools.classList.toggle('open'); };
@@ -557,28 +342,20 @@ addEventListener('message', e => {
   if (d.ks === 'pick') setPick(d.name || null);
   if (d.ks === 'go') { if (d.lat) goToMe({ lat: d.lat, lon: d.lon, label: d.label }); else konumBul(); }
   if (d.ks === 'routeTo') {
-    const a = assets.find(x => x.id === d.id)
+    const a = assetsAl().find(x => x.id === d.id)
       || (d.lat ? { id: d.id, code: d.code || 'Yeni kayıt', village: d.village || '', lat: d.lat, lon: d.lon } : null);
     if (a) routeTo(a);
   }
   // Ortak veritabanından gelen kayıtlar: işaretler yeniden çizilir, yoksa
   // programın kimlikleri ile haritanın kimlikleri uyuşmaz ve tıklama boşa gider
-  if (d.ks === 'assets' && Array.isArray(d.assets)) {
-    assets = d.assets;
-    if (Array.isArray(d.faults)) {
-      faults = d.faults;
-      openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
-    }
-    cizAssets();
-  }
+  if (d.ks === 'assets' && Array.isArray(d.assets)) K.setData(d.assets, Array.isArray(d.faults) ? d.faults : null);
   if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) {
-    hatVeri = d.hatlar;
-    cizHatlar();
+    K.setHat(d.hatlar);
   }
   if (d.ks === 'hatKatman') hatKatman(d.on);
   if (d.ks === 'filter') {
     try { localStorage.setItem(SUZ_KEY, JSON.stringify(d.filter)); } catch (e) { /* depolama kapalı */ }
-    filtreUygula(d.filter);
+    K.setFilter(d.filter);
   }
 });
 parent.postMessage({ ks: 'ready' }, '*');

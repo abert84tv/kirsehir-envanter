@@ -4596,13 +4596,13 @@ Hareket gir
 <select value="{{ envKontrol.durumVal }}" onChange="{{ envKontrol.onDurum }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ envKontrol.durumlar }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
 <div style="display:flex;gap:8px;min-width:0">
 <select value="{{ envKontrol.siraVal }}" onChange="{{ envKontrol.onSira }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ envKontrol.siraOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
-<button onClick="{{ envKontrol.yonTik }}" title="Sıra yönünü çevir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center">{{ envKontrol.yon }}</button>
+<button onClick="{{ envKontrol.yonTik }}" title="Sıra yönünü çevir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center">{{ envKontrol.yon }}</button>
 </div>
 </div>
 <div style="display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ envKontrol.sayi }}</span>
 <sc-if value="{{ envKontrol.suzuluyor }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ envKontrol.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center">Temizle</button>
+<button onClick="{{ envKontrol.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center">Temizle</button>
 </sc-if>
 </div>
 </div>
@@ -4639,13 +4639,13 @@ Hareket gir
 <select value="{{ arzKontrol.ekipVal }}" onChange="{{ arzKontrol.onEkip }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ arzKontrol.ekipler }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
 <div style="display:flex;gap:8px;min-width:0">
 <select value="{{ arzKontrol.siraVal }}" onChange="{{ arzKontrol.onSira }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ arzKontrol.siraOpts }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
-<button onClick="{{ arzKontrol.yonTik }}" title="Sıra yönünü çevir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center">{{ arzKontrol.yon }}</button>
+<button onClick="{{ arzKontrol.yonTik }}" title="Sıra yönünü çevir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center">{{ arzKontrol.yon }}</button>
 </div>
 </div>
 <div style="display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ arzKontrol.sayi }}</span>
 <sc-if value="{{ arzKontrol.suzuluyor }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ arzKontrol.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center">Temizle</button>
+<button onClick="{{ arzKontrol.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center">Temizle</button>
 </sc-if>
 </div>
 </div>
@@ -4671,12 +4671,11 @@ Hareket gir
 <!-- profil: mesafe ve yol profili -->
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
-<div style="flex:none;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="font:600 17px/1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Mesafe ve yol profili</div>
+<div style="flex:none;padding:6px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ profil.note }}</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-<button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
-<button onClick="{{ profil.arizali }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:44px;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ profil.arizaLabel }}</button>
+<div style="display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto">
+<button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
+<button onClick="{{ profil.arizali }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ profil.arizaLabel }}</button>
 </div>
 </div>
 <iframe src="profil.html" title="Mesafe ve yol profili (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
@@ -9018,12 +9017,12 @@ const CAN = Object.fromEntries(PERMS.map(([k, , roles]) => [k, roles]));
 // Böylece "stok nerede, envanter nerede" ayrımı menüde de net olur.
 const MENU_GRUP = [
   ['Saha işleri', ['isler', 'kaynaklar']],
-  ['Envanter', ['envanter', 'kesit']],
+  ['Envanter', ['envanter']],
   ['Çözümleme', ['ozet']],
   ['Sistem', ['ayarlar']]
 ];
 // Menüdeki sayfaların tam sırası — grup başlıkları bunun üstüne oturur
-const MENU_SIRA = ['envanter', 'isler', 'kesit', 'kaynaklar', 'ozet', 'ayarlar'];
+const MENU_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet', 'ayarlar'];
 // Ayarlar tek liste: satıra dokununca o bölüm açılır, geri ile listeye dönülür.
 // Başlıklar listeyi üç kümeye ayırır ama her bölüm kendi ekranında durur.
 // 2026.09.30: "Ortak veritabanı ve eşitleme" tek satırda senkronizasyon +
@@ -9129,7 +9128,8 @@ const SUZGEC_TANIM = {
   // yetkisinden miras alır, sekmesi isPano (2026.10).
   isler: [['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
-  envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter']],
+  // Hat kesiti Envanter'in üçüncü görünümü: aynı harita, aynı katmanlar (2026.10.06)
+  envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter'], ['kesit', 'Hat kesiti', 'profil']],
   // "Ekipler" (ekip ve araç panosu) araç yetkisinden miras alır, sekmesi ekipPano
   kaynaklar: [['ekip', 'Ekipler', 'arac', 'ekipPano'], ['malzeme', 'Stok', 'ambar'], ['arac', 'Araç', 'arac'],
     ['telemetri', 'Telemetri', 'ozet', 'telemetri']],
@@ -9139,7 +9139,6 @@ const SUZGEC_TANIM = {
   // ve "Özet" (rapor/gösterge) ile de konu olarak örtüşmüyordu. Yetkileri
   // hâlâ Ayarlar yetkisinden miras alınıyor (üçüncü sütun) — bu hiç değişmedi.
   ozet: [['ozet', 'Özet', 'ozet']],
-  kesit: [['kesit', 'Hat Kesiti', 'profil']],
   ayarlar: [['ayarlar', 'Ayarlar', 'ayarlar'], ['yerlesim', 'Köy konumları', 'yerlesim'],
     ['aktarim', 'İçe ve dışa aktarım', 'aktarim'],
     ['denetim', 'Denetim izi', 'ayarlar', 'denetim'], ['cop', 'Çöp kutusu', 'ayarlar', 'cop']]
@@ -9172,7 +9171,7 @@ const SUZGEC_ESKI_AD = Object.fromEntries(SAYFALAR.map(([sid, label]) => {
 }));
 // "Sayfa yetkileri" panelini artık menüdeki altı grupla aynı sırada göstermek
 // için eski 14 sayfa kimliği, süzgeç haritasındaki grubuna göre toplanır.
-const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayarlar', 'gosterge']
+const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'gosterge']
   .map(sayfa => ({
     ad: SUZGEC_SAYFA_AD[sayfa],
     uyeler: SAYFALAR.filter(([sid]) => SUZGEC_ESKI[sid] && SUZGEC_ESKI[sid].sayfa === sayfa)
@@ -9182,7 +9181,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-129';
+const SURUM = '2026.10.06-130';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9974,6 +9973,10 @@ class Component extends DCLogic {
       const tablo = this.state.hatlar || {};
       for (const id in tablo) for (const x of (tablo[id] || [])) if (x && (x.noktalar || []).length) hatlar.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '' });
       w.postMessage({ ks: 'profil', assets: this.profilAssets(), hatlar }, '*');
+      w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
+      w.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
+      w.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
+      w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
     } catch (e) { /* çerçeve hazır değil */ }
   }
   pushMap() {
@@ -9990,7 +9993,13 @@ class Component extends DCLogic {
       w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
     }
   }
-  toMap(msg) { const w = this.mapWin(); if (w) w.postMessage(msg, '*'); }
+  // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
+  toMap(msg) {
+    const w = this.mapWin(); if (w) w.postMessage(msg, '*');
+    if (['assets', 'hatlar', 'hatKatman', 'filter', 'setBase', 'theme'].includes(msg && msg.ks)) {
+      const p = this.profilWin(); if (p) { try { p.postMessage(msg, '*'); } catch (e) { /* çerçeve yok */ } }
+    }
+  }
 
   yer(a) { return (a.village || 'Köy girilmedi') + ' · ' + a.district; }
   // Açıklama metinleri (ks-bilgi) varsayılan gizlidir; "?" düğmesiyle açılır

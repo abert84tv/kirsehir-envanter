@@ -43,3 +43,32 @@ body.dark .ksp.ges{--ksp:#f5c542}body.dark .ksp.kaynak{--ksp:#22d3ee}body.dark .
 .ksz-ince .ks-lbl,.ksz-ince .ks-tlbl{display:none}
 .ksz-ince .ksp.ref,.ksz-ince .ksp.pasif{border-style:solid}
 .ksz-ince .ksp.ref{width:9px;height:9px;border-width:2px;opacity:.7;box-shadow:none}
+
+/* Harita menüsü (#tools): envanter haritası ve Hat Kesiti ortak */
+  .panel{position:absolute;z-index:500;background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px}
+  #tools{right:12px;top:12px;border:none;background:none;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+  #tools .body{display:none;flex-direction:column;gap:6px;align-items:stretch;width:168px}
+  #tools.open .body{display:flex;animation:ksMenuAc .16s ease-out}
+  @keyframes ksMenuAc{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
+  #menu{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;
+    background:var(--color-bg);border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);
+    letter-spacing:-.01em;color:var(--color-text)}
+  #menu:hover{background:var(--color-neutral-200)}
+  #tools.open #menu{background:var(--color-text);border-color:var(--color-text);color:#fff}
+  #menu .bars{display:flex;flex-direction:column;gap:2.5px}
+  #menu .bars i{display:block;width:13px;height:2px;background:currentColor}
+  #tools button{all:unset;cursor:pointer;padding:8px 11px;background:var(--color-bg);
+    border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;
+    color:var(--color-text);text-align:left}
+  /* #tools button kuralı all:unset ile #menu'nün display:flex'ini siliyordu;
+     çizgiler yazının üstüne iniyordu — burada tek satıra sabitlenir */
+  #tools > #menu{display:flex;align-items:center;gap:8px;padding:9px 12px;white-space:nowrap;text-align:left}
+  #tools button:hover{background:var(--color-neutral-200)}
+  #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+  #tools .grp{display:flex;border:1px solid var(--color-divider);border-radius:9px;background:var(--color-bg)}
+  #tools .grp button{border:none;border-right:1px solid var(--color-divider);flex:1;text-align:center;padding:8px 9px}
+  #tools .grp button:last-child{border-right:none}
+  #tools .sep{height:5px}
+  body.dark #tools button,body.dark #tools .grp,body.dark #route{background:#1c1c1e;border-color:rgba(255,255,255,.13);color:#f5f5f7}
+  body.dark #tools.open #menu{background:#f5f5f7;color:#000000}
+  body.dark #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}

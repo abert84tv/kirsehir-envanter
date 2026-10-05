@@ -1961,3 +1961,8 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.06-129 — Üretimde haritayı engelleyen Leaflet CSS hatası
 - vendor/leaflet.css git satır-sonu dönüşümüyle değişince tarayıcı bütünlük (SRI) denetiminde dosyayı engelliyordu (yalnız yayında; yerelde görünmüyordu). Etiketler kaldırıldı, .gitattributes ile vendor dosyaları dönüşümden muaf.
+
+## 2026.10.06-130 — Envanter ve Hat Kesiti aynı harita
+- `harita-katman.js` (ortak modül): zemin, kayıt işaretleri, ISU noktaları, hatlar, arıza noktaları, süzgeç, etiketler. Envanter haritası ve Hat Kesiti artık BİREBİR aynı katmanları aynı biçimde gösterir; ana programdaki süzgeç/zemin/hat/tema seçimleri ikisine de gider.
+- Hat Kesiti, Envanter'in üçüncü görünümü oldu (Harita | Liste | Hat kesiti) — "Tümü"ne girmeden erişilir. Hat Kesiti haritası da aynı "Harita menüsü"nü kullanır.
+- Telefonda Hat Kesiti: harita ekranın büyük kısmını alır, üst şerit sıkıştırıldı, ölçüm paneli gizlenebilir.

@@ -1,6 +1,6 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.06-129';
+const SURUM = 'ks-2026.10.06-130';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo-2';
 const KARO_LIMIT = 900;
@@ -8,7 +8,7 @@ const KARO_LIMIT = 900;
 const ON_YUKLE = [
   '/', '/harita', '/hat', '/profil',
   '/support.js', '/supabase-baglanti.js', '/kirsehir-data.js', '/envanter.js', '/koyler.js', '/cihaz-depo.js',
-  '/kuyular.js', '/isu-katmanlar.js', '/harita-ortak.js', '/harita-ortak.css',
+  '/kuyular.js', '/isu-katmanlar.js', '/harita-ortak.js', '/harita-katman.js', '/harita-ortak.css',
   '/_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css',
   '/_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/_ds_bundle.js',
   '/vendor/react.production.min.js', '/vendor/react-dom.production.min.js',

@@ -2738,6 +2738,32 @@ Hareket gir
 </div>
 </sc-if>
 
+<sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;max-width:760px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yapay zekâ — talep sınıflandırma</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Gelen talebin iş grubunu, arıza türünü, aciliyetini ve köyünü yapay zekâ önceden belirler; operatör onaylar ya da değiştirir. Anahtar yalnızca sunucuda saklanır, tarayıcıya geri gönderilmez.</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.durumRenk }}">{{ entegrasyon.durum }}</span>
+<sc-if value="{{ entegrasyon.yazar }}" hint-placeholder-val="{{ true }}">
+<input value="{{ entegrasyon.giris }}" onChange="{{ entegrasyon.onGiris }}" type="password" autocomplete="off" placeholder="sk-ant-…" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ entegrasyon.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
+<sc-if value="{{ entegrasyon.dolu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ entegrasyon.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Dene</button>
+<button onClick="{{ entegrasyon.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ entegrasyon.yaziYok }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Anahtarı yalnızca yönetici değiştirebilir.</span>
+</sc-if>
+<sc-if value="{{ entegrasyon.sonucVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ entegrasyon.sonuc }}</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
 <div style="padding:16px 20px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Modüller</div>
@@ -6589,6 +6615,32 @@ Hareket gir
 </sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;display:flex;flex-direction:column;gap:14px;max-width:760px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yapay zekâ — talep sınıflandırma</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Gelen talebin iş grubunu, arıza türünü, aciliyetini ve köyünü yapay zekâ önceden belirler; operatör onaylar ya da değiştirir. Anahtar yalnızca sunucuda saklanır, tarayıcıya geri gönderilmez.</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.durumRenk }}">{{ entegrasyon.durum }}</span>
+<sc-if value="{{ entegrasyon.yazar }}" hint-placeholder-val="{{ true }}">
+<input value="{{ entegrasyon.giris }}" onChange="{{ entegrasyon.onGiris }}" type="password" autocomplete="off" placeholder="sk-ant-…" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ entegrasyon.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
+<sc-if value="{{ entegrasyon.dolu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ entegrasyon.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Dene</button>
+<button onClick="{{ entegrasyon.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ entegrasyon.yaziYok }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Anahtarı yalnızca yönetici değiştirebilir.</span>
+</sc-if>
+<sc-if value="{{ entegrasyon.sonucVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ entegrasyon.sonuc }}</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
 <div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Modüller</div>
@@ -8773,7 +8825,8 @@ const AYAR_LISTE = [
   ]],
   ['Program', [
     ['gorunum', 'Harita ve görünüm', 'Zemin, tema, menü yerleşimi'],
-    ['modul', 'Modüller', 'Kullanılmayan bölümleri kapatın']
+    ['modul', 'Modüller', 'Kullanılmayan bölümleri kapatın'],
+    ['entegrasyon', 'Entegrasyon', 'Yapay zekâ ve dış servis anahtarları']
   ]]
 ];
 // Ayrı sekmesi olan bölümler listeden o sekmeye götürür; yetki üçüncü
@@ -8785,7 +8838,7 @@ const AYAR_TAB_YETKI = { denetim: 'ayarlar', cop: 'ayarlar', yerlesim: 'yerlesim
 // "bildirim" artık kendi gerçek bölümü olduğu için buradan kaldırıldı —
 // eskiden 'veri'ye yönlendiriyordu, şimdi doğrudan kendi bölümüne gider.
 const AYAR_ESKI = {
-  kurum: 'yetki', program: 'gorunum',
+  entegrasyon: 'entegrasyon', kurum: 'yetki', program: 'gorunum',
   yetki: 'yetki', ekip: 'ekip', kvkk: 'kvkk', veri: 'veri',
   gorunum: 'gorunum', modul: 'modul'
 };
@@ -8903,7 +8956,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.05-117';
+const SURUM = '2026.10.05-118';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9052,6 +9105,7 @@ class Component extends DCLogic {
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
     basvurular: [],
+    entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
     // Araç ve ekipman — liste, görev durumu ve hareket dökümü
@@ -9445,6 +9499,7 @@ class Component extends DCLogic {
     const s = this.state;
     // Bekleyen arızalar cihazda saklanır (arizaBekleyenYaz)
     if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
+    if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (s.ayarBolum === 'entegrasyon' && s.tab === 'ayarlar') this.entegrasyonYenile(); }
     if (this._telTab !== s.tab) { this._telTab = s.tab; if (s.tab === 'telemetri') this.telemetriYenile(true); }
     // Sunucudan alınan son veri cihaza da yazılır: internetsiz açılışta oradan gelir
     if (s.session && s.sunucu && s.sonEsitleme
@@ -12944,6 +12999,31 @@ class Component extends DCLogic {
     }
     return yazilan;
   }
+  // ── Ayarlar > Entegrasyon: dış servis anahtarları sunucuda saklanır
+  entegrasyonGuncelle(y) { this.setState(st => ({ entegrasyon: { ...st.entegrasyon, ...y } })); }
+  async entegrasyonYenile() {
+    const M = this._sb;
+    if (!M || !M.entegrasyonListesi || !M.tokenOku() || this.state.offline) return;
+    const r = await M.entegrasyonListesi();
+    this.entegrasyonGuncelle(r.ok
+      ? { yuk: true, hata: '', liste: (r.data || []).map(x => ({ ad: x.ad, son4: x.son4, zaman: x.guncelleme, kim: x.guncelleyen })) }
+      : { yuk: true, hata: r.err || 'Okunamadı.' });
+  }
+  async entegrasyonKaydet(deger) {
+    const r = await this._sb.entegrasyonKaydet('anthropic_api_anahtari', deger);
+    if (!r.ok) return this.duyur(r.err || 'Kaydedilemedi.', 7000, 'kotu');
+    this.denetimYaz('ayar', deger ? 'Yapay zekâ anahtarı kaydedildi' : 'Yapay zekâ anahtarı silindi', 'Entegrasyon', '');
+    this.entegrasyonGuncelle({ giris: '', sonuc: '' });
+    this.duyur(deger ? 'Anahtar sunucuya kaydedildi.' : 'Anahtar silindi — kurala dayalı öneriye dönüldü.', 5000, 'iyi');
+    this.entegrasyonYenile();
+  }
+  async entegrasyonDene() {
+    this.entegrasyonGuncelle({ sonuc: 'Deneniyor…' });
+    const r = await this._sb.aiSiniflandir('Köyün üst mahallesinde boru patlamış, sokakta su akıyor, iki gündür çeşmeden su gelmiyor.');
+    this.entegrasyonGuncelle({ sonuc: r && r.ok
+      ? 'Çalışıyor ✔ — grup: ' + (r.data.grup || '—') + ' · tür: ' + (r.data.tur || '—') + ' · aciliyet: ' + (r.data.oncelik || '—')
+      : 'Yanıt alınamadı: ' + ((r && r.err) || 'bilinmeyen hata') });
+  }
   // ── web başvuruları (bildirim.html): vatandaş / muhtar formundan gelenler
   async basvuruYenile() {
     const M = this._sb;
@@ -15697,7 +15777,7 @@ class Component extends DCLogic {
           bolumAd: ayarAdi(sec),
           geri: () => this.setState({ ayarBolum: null }),
           gorunum: v('gorunum'), veri: v('veri'), yetki: v('yetki'),
-          ekip: v('ekip'), kvkk: v('kvkk'), modul: v('modul'),
+          ekip: v('ekip'), kvkk: v('kvkk'), modul: v('modul'), entegrasyon: v('entegrasyon'),
           bildirim: v('bildirim'), koyeslestir: v('koyeslestir'),
           denetim: tabId === 'denetim', cop: tabId === 'cop'
         };
@@ -17003,6 +17083,24 @@ class Component extends DCLogic {
       // İşler > Genel bakış: talepten kapanışa iş hattı, günün göstergeleri, öncelikli işler
       // Kaynaklar > Ekipler: personel ve araç durumu, ekip yükü, iş haritası
       // (masaüstü ve telefon şablonu ayrı, veri ortak)
+      entegrasyon: (() => {
+        const E = s.entegrasyon || {};
+        if (!(tabId === 'ayarlar' && ayarBolumu(s.ayarBolum) === 'entegrasyon')) return { durum: '', durumRenk: ui.mut, giris: '', yazar: false, yaziYok: false, dolu: false, sonuc: '', sonucVar: false };
+        const x = (E.liste || []).find(i => i.ad === 'anthropic_api_anahtari');
+        const yonetici = !!(me && me.role === 'yonetici');
+        const goster = !!(me && ['yonetici', 'mudur'].includes(me.role));
+        return {
+          giris: E.giris || '', onGiris: e => this.entegrasyonGuncelle({ giris: e.target.value }),
+          yazar: yonetici && !s.offline, yaziYok: !yonetici, dolu: !!x,
+          durum: !goster ? 'Bu bölümü yalnızca yönetici ve müdür görür.' : E.hata ? E.hata
+            : x ? 'Anahtar kayıtlı ✔ (…' + x.son4 + ')' + (x.zaman ? ' · ' + this.damgaCevir(x.zaman) : '') + (x.kim ? ' · ' + x.kim : '')
+            : (E.yuk ? 'Kayıtlı anahtar yok — kurala dayalı öneri kullanılıyor.' : 'Yükleniyor…'),
+          durumRenk: E.hata ? '#d92d20' : x ? '#1b9a4a' : ui.mut,
+          kaydet: () => { const d = (E.giris || '').trim(); if (!d) return this.duyur('Anahtarı yapıştırın.', 4000, 'kotu'); this.entegrasyonKaydet(d); },
+          sil: () => { if (window.confirm('Kayıtlı yapay zekâ anahtarı silinsin mi?')) this.entegrasyonKaydet(''); },
+          dene: () => this.entegrasyonDene(), sonuc: E.sonuc || '', sonucVar: !!E.sonuc
+        };
+      })(),
       webBasvuru: (() => {
         const kopyala = () => {
           const u = location.origin + '/bildirim';

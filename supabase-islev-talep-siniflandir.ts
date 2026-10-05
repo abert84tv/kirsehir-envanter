@@ -5,10 +5,10 @@
 // iş grubu, arıza türü, aciliyet, metinde geçen köy. Operatör ekranına
 // "Yapay zekâ önerisi" olarak gelir; operatör onaylar ya da değiştirir.
 //
-// KURULUM (bir kez):
-//   Supabase > Edge Functions > Secrets: ANTHROPIC_API_KEY = (Anthropic
-//   konsolundan alınan anahtar). Anahtar tarayıcıya hiç gelmez, yalnız bu
-//   işlevde durur. Anahtar yoksa işlev {ok:false, anahtarYok:true} döner ve
+// KURULUM (bir kez): programda Ayarlar > Entegrasyon'a Anthropic API
+//   anahtarını girin (yalnız yönetici). Alternatif: Supabase > Edge Functions >
+//   Secrets: ANTHROPIC_API_KEY. Anahtar tarayıcıya hiç gelmez, yalnız bu
+//   işlevde kullanılır. Anahtar yoksa işlev {ok:false, anahtarYok:true} döner ve
 //   program kurala dayalı öneriyle çalışmayı sürdürür.
 //
 // Güvenlik: yalnız programda oturum açmış kullanıcı çağırabilir (uygulama
@@ -59,8 +59,22 @@ Deno.serve(async (req) => {
   const oj = o.ok ? await o.json() : null;
   if (!oj || (Array.isArray(oj) && !oj.length)) return yanit({ ok: false, err: 'Oturum geçersiz — çıkıp yeniden girin.' }, 401);
 
-  const anahtar = Deno.env.get('ANTHROPIC_API_KEY');
-  if (!anahtar) return yanit({ ok: false, anahtarYok: true, err: 'Yapay zekâ anahtarı kurulmamış (Supabase > Edge Functions > Secrets: ANTHROPIC_API_KEY).' });
+  // Anahtar önce Edge Function secret'ından, yoksa Ayarlar > Entegrasyon'da
+  // girilip sunucudaki entegrasyon tablosunda saklanandan okunur (service role).
+  let anahtar = Deno.env.get('ANTHROPIC_API_KEY');
+  if (!anahtar) {
+    const servis = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (servis) {
+      try {
+        const r = await fetch(url + '/rest/v1/entegrasyon?ad=eq.anthropic_api_anahtari&select=deger', {
+          headers: { apikey: servis, Authorization: 'Bearer ' + servis }
+        });
+        const j = r.ok ? await r.json() : [];
+        if (Array.isArray(j) && j[0] && j[0].deger) anahtar = String(j[0].deger);
+      } catch { /* okunamadı — aşağıda anahtarYok döner */ }
+    }
+  }
+  if (!anahtar) return yanit({ ok: false, anahtarYok: true, err: 'Yapay zekâ anahtarı kurulmamış (Ayarlar > Entegrasyon).' });
 
   const sistem = 'Kırşehir İl Özel İdaresi köy hizmetleri için gelen vatandaş/muhtar başvurularını sınıflandırırsın. '
     + 'Başvuru metni Türkçe, kısa, yazım hatalı ya da sesli mesaj dökümü olabilir. '

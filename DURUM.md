@@ -1908,3 +1908,7 @@ Sürüm 2026.10.05-114.
 - Kötüye kullanıma karşı (SQL-basvuru.sql, Supabase'e uygulandı): gizli bot alanı, IP başına saatte 5 / telefon başına günde 5 başvuru, aynı başvurunun tekrarı yeni kayıt açmaz, kara liste (personel "Spam" düğmesiyle ekler).
 - Personel tarafı: İşler > Gelen ekranında "Web başvuruları" kartı; "Talebe aktar" talebi açar, talep durumu/sonuç notu değiştikçe vatandaşın takip sayfası da güncellenir. "Başvuru bağlantısı" düğmesi adresi kopyalar.
 - Aydınlatma metni taslaktır; kurumun KVKK sorumlusu kontrol etmelidir.
+
+## 2026.10.05-118 — Ayarlar > Entegrasyon
+- Anthropic API anahtarı artık programdan girilir (yalnız yönetici); sunucuda `entegrasyon` tablosunda saklanır, tarayıcıya geri gönderilmez (SQL-entegrasyon.sql, Supabase'e uygulandı).
+- `talep-siniflandir` işlevi (v2) anahtarı Edge secret'tan, yoksa bu tablodan okur. "Dene" düğmesi çalıştığını gösterir.

@@ -1870,3 +1870,21 @@ atayacağım?"
 - Düzeltme: iş emri ekibi güncellenince iş emri paneli kendiliğinden
   açılıyordu.
 Sürüm 2026.10.05-113.
+
+## 2026.10.05 — Hat ekranı, daralan sol çubuk, yardım metinleri, şartname raporu
+
+- Hat çizimi (hat.html): kenar paneli kalktı; harita tüm alanı kaplar, araçlar
+  yüzer (üstte simge çubuğu: çiz/bitir/geri/vazgeç/içe aktar/uydu, altta tür
+  çipleri, "Hatlar" açılır paneli). Önceden telefonda ve dar paneldeki
+  gömülü görünümde harita küçücük kalıyordu.
+- Sol çubuk (masaüstü): 64 px simge şeridi, üzerine gelince 232 px'e açılır
+  (içeriği kaydırmaz, üstüne biner), uzaklaşınca daralır; rozetler kırmızı
+  nokta olur. Harita/ekran alanı 168 px genişledi.
+- Açıklama metinleri: `ks-bilgi` sınıfı varsayılan gizli; üst çubuktaki "?"
+  (masaüstü ve telefon) açar/kapatır, cihazda saklanır (`ks-yardim`).
+  Veri alanı olan ~40 açıklama alanı + 30 sabit cümle etiketlendi; sayfa alt
+  başlığı kalktı; başarı/bilgi bildirimleri ilk cümleyle sınırlı (hata ve
+  uyarılar tam). Boş durum ve uyarı metinleri bilerek korundu.
+- ADESAY şartname karşılaştırma raporu: Desktop\ADESAY_Sartname_Karsilastirma_05102026.docx
+  (7 var, 28 kısmi, 8 yok, 1 yazılım dışı).
+Sürüm 2026.10.05-114.

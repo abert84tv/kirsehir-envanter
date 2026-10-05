@@ -252,7 +252,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 </div>
 <script>
 const KS = { lat: 39.15091, lon: 34.15952 };
-const map = L.map('map', { zoomControl: true, attributionControl: true }).setView([KS.lat, KS.lon], 10);
+const map = L.map('map', { zoomControl: true, attributionControl: true, preferCanvas: true }).setView([KS.lat, KS.lon], 10);
 ksPinZoom(map, 12);
 const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   { maxZoom: 19, attribution: '© OpenStreetMap', className: 'ks-tiles' }).addTo(map);
@@ -595,23 +595,36 @@ function tesisEkle(t) {
   setTimeout(() => uyar(''), 4500);
 }
 
+let cizZ = null;
+function tesisCizPlan() { clearTimeout(cizZ); cizZ = setTimeout(tesisCiz, 120); }
+// Yalnız ekrandaki işaretler çizilir: uzaktan canvas noktası, yakında (zoom ≥ 12) en çok 260 simgeli işaret
 function tesisCiz() {
   tesLayer.clearLayers();
   setTimeout(() => { try { etiketUygula(); } catch (e) { /* henüz kurulmadı */ } }, 0);
   if (!tesAcik) return;
-  for (const t of tesisler) {
-    if (!isFinite(t.lat) || !isFinite(t.lon)) continue;
-    const mk = L.marker([t.lat, t.lon], {
-      icon: ksPin(t.type, { pasif: t.status === 'pasif', pend: t.pend, fault: t.ariza }),
-      zIndexOffset: -200
-    }).bindTooltip(t.code, { permanent: true, direction: 'right', className: 'ks-tlbl', offset: [18, 0], interactive: true });
-    mk._ksLbl = true;
+  const dom = map.getZoom() >= 12, b = map.getBounds().pad(.15), c = map.getCenter();
+  let liste = tesisler.filter(t => isFinite(t.lat) && isFinite(t.lon) && b.contains([t.lat, t.lon]));
+  if (dom && liste.length > 260) {
+    liste.forEach(t => { t._d = (t.lat - c.lat) ** 2 + (t.lon - c.lng) ** 2; });
+    liste = liste.sort((x, y) => x._d - y._d).slice(0, 260);
+  }
+  for (const t of liste) {
+    let mk;
+    if (dom) {
+      mk = L.marker([t.lat, t.lon], {
+        icon: ksPin(t.type, { pasif: t.status === 'pasif', pend: t.pend, fault: t.ariza }), zIndexOffset: -200, keyboard: false
+      }).bindTooltip(t.code, { permanent: true, direction: 'right', className: 'ks-tlbl', offset: [18, 0], interactive: true });
+      mk._ksLbl = true;
+      const tt = mk.getTooltip();
+      if (tt) tt.on('click', () => tesisEkle(t));
+    } else {
+      mk = L.circleMarker([t.lat, t.lon], { radius: 5, weight: t.ariza ? 2.5 : 1.5, color: t.ariza ? '#d70015' : '#fff',
+        fillColor: { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' }[t.type] || '#0071e3', fillOpacity: t.status === 'pasif' ? .35 : .95 });
+    }
     mk.on('click', () => tesisEkle(t));
-    const tt = mk.getTooltip();
-    if (tt) tt.on('click', () => tesisEkle(t));
     mk.addTo(tesLayer);
   }
-  isuCiz();
+  if (dom) isuCiz(b);
 }
 
 // ISU referans noktaları (kaynak, memba, depo) envanter haritasıyla aynı işaretle gösterilir;
@@ -625,11 +638,12 @@ function mesafeM(a, b) {
   const s = Math.sin(dLat / 2) ** 2 + Math.cos(r(a[0])) * Math.cos(r(b[0])) * Math.sin(dLon / 2) ** 2;
   return 2 * 6371008.8 * Math.asin(Math.min(1, Math.sqrt(s)));
 }
-function isuCiz() {
+function isuCiz(b) {
   if (!ISU || !tesAcik) return;
   for (const tur of Object.keys(ISU)) {
     const gercek = tesisler.filter(t => ISU_ESLESIR[tur].includes(t.type)).map(t => [t.lat, t.lon]);
     for (const [lat, lon] of ISU[tur]) {
+      if (b && !b.contains([lat, lon])) continue;
       if (gercek.some(g => mesafeM([lat, lon], g) < 30)) continue;
       L.marker([lat, lon], { icon: ksPin(tur, { ref: true }), zIndexOffset: -300 })
         .bindTooltip(ISU_AD[tur], { direction: 'top' })
@@ -677,6 +691,7 @@ function etiketUygula() {
   if (b) b.classList.toggle('on', etiketAcik);
 }
 map.on('zoomend', etiketUygula);
+map.on('moveend', tesisCizPlan);
 el('lblBtn').onclick = () => { etiketAcik = !etiketAcik; etiketUygula(); };
 
 // Çerçeve dışında açıldıysa yerel envanter dosyasından oku

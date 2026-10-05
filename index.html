@@ -56,7 +56,7 @@ h6,.card-kicker{text-transform:none;letter-spacing:-.01em;font-size:12px}
 /* Panel görünümü (2026.10.06): yumuşak yuvarlak kartlar, cam gibi üst/alt çubuk, ince kaydırma çubuğu,
    belirgin odak halkası. Renkler değişmez; yalnız biçim. Masaüstü ve telefon aynı kuralları kullanır. */
 *{scrollbar-width:thin;scrollbar-color:rgba(128,128,140,.38) transparent}
-body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(0,113,227,.07),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(0,113,227,.05),transparent 58%);background-attachment:fixed}
+body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(0,113,227,.07),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(0,113,227,.05),transparent 58%);}
 html.ks-koyu body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(10,132,255,.16),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(10,132,255,.10),transparent 58%)}
 section,[style*="border-radius:14px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
 [style*="border-radius:16px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
@@ -67,10 +67,10 @@ html.ks-koyu section,html.ks-koyu [style*="border-radius:14px"][style*="border:1
 html.ks-koyu [style*="border-radius:16px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
 html.ks-koyu [style*="border-radius:12px"][style*="border:1px solid"][style*="padding:1"]:not(button):not(input):not(select):not(label):not(span){
  border-color:rgba(255,255,255,.09)!important;background-color:rgba(28,28,30,.66)!important;
- -webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);
+
  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 14px 34px -10px rgba(0,0,0,.6)!important}
-#tel-bas,#tel-nav{-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);background-color:rgba(255,255,255,.80)!important}
-html.ks-koyu #tel-bas,html.ks-koyu #tel-nav{background-color:rgba(28,28,30,.74)!important}
+#tel-bas,#tel-nav{background-color:rgba(255,255,255,.94)!important}
+html.ks-koyu #tel-bas,html.ks-koyu #tel-nav{background-color:rgba(28,28,30,.94)!important}
 [style*="background:var(--color-accent)"][style*="color:#fff"]:not(span):not(div){box-shadow:0 8px 18px -6px rgba(0,113,227,.55);transition:transform .12s,box-shadow .12s}
 [style*="background:var(--color-accent)"][style*="color:#fff"]:not(span):not(div):active{transform:scale(.975);box-shadow:0 3px 8px -4px rgba(0,113,227,.5)}
 button{transition:background-color .14s,border-color .14s,transform .12s}
@@ -9182,7 +9182,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-127';
+const SURUM = '2026.10.06-128';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9584,7 +9584,7 @@ class Component extends DCLogic {
     };
     this._olcKat();
     requestAnimationFrame(this._olcKat);
-    this._katSaat = setInterval(this._olcKat, 400);
+    this._katSaat = setInterval(this._olcKat, 1500);
     window.addEventListener('resize', this._olcKat);
     window.addEventListener('orientationchange', this._olcKat);
     // Bağlantı gelince çevrimdışı kuyruk kendiliğinden boşalır; dakikada bir de denenir

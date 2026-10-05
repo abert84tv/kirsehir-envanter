@@ -1952,3 +1952,9 @@ Sürüm 2026.10.05-114.
 - Telefon üst çubuğu: taşan düğmeler ⋮ menüsüne alındı (yenile, tema, açıklamalar, ayarlar, çıkış); masaüstüne çıkış düğmesi eklendi.
 - "Bütün ekranlar" sayfasında ekranların üst üste binmesi giderildi (v123'te eklenen saydam arka plan kuralı kaldırıldı).
 - Hat Kesiti telefonda üst çubuk iki satıra indirildi.
+
+## 2026.10.06-128 — Harita performansı
+- Envanter ve Hat Kesiti haritaları artık yalnız ekrandaki işaretleri çizer: uzaktan (zoom < 12) canvas üzerinde küçük renkli noktalar, yakında en çok 260 simgeli işaret, etiketler 14'ten sonra. (Önceden 900+ DOM işareti ve 290 kalıcı etiket telefonu kilitliyordu.)
+- Veri değişmediyse işaretler yeniden kurulmaz; harita çerçevesi tile'ları yakınlaştırma sırasında yüklemez.
+- Pahalı bulanıklık (backdrop-filter) ve sabit arka plan kaldırıldı; yerleşim ölçümü 400 ms yerine 1,5 sn'de bir.
+- Harita karo istekleri 6 sn zaman aşımıyla doğrudan ağa düşer.

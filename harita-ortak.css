@@ -9,8 +9,7 @@ body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
 *{scrollbar-width:thin;scrollbar-color:rgba(128,128,140,.38) transparent}
 #bar,#durum,#panel,#alt,#tools>*,#route,#menu,#side,.leaflet-popup-content-wrapper{
   border-radius:18px;
-  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 12px 30px -8px rgba(16,24,40,.22);
-  -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4)}
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 12px 30px -8px rgba(16,24,40,.22);}
 #side{border-radius:0;box-shadow:none}
 .leaflet-bar{border:none!important;border-radius:14px!important;overflow:hidden;box-shadow:0 10px 26px -8px rgba(16,24,40,.28)!important}
 .leaflet-bar a{border-bottom-color:rgba(0,0,0,.07)!important}

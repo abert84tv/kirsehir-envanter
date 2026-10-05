@@ -169,15 +169,16 @@ const KAPALI = ['cozuldu', 'iptal'];
 let openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
 let sonFilter = null;
 
-const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true });
+const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true, preferCanvas: true, zoomSnap: 0.5, zoomDelta: 0.5, wheelPxPerZoomLevel: 90 });
 ksPinZoom(map, 12);
+window.ksHarita = { map, durum: () => ({ canli: canli.size, oge: ogeler.length }), filtre: f => filtreUygula(f) };
 
 // ── zeminler: sokak / uydu / uydu + yer adı
 const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap katkıcıları', maxZoom: 19, className: 'ks-tiles'
+  attribution: '© OpenStreetMap katkıcıları', maxZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1
 });
 const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 19, className: 'ks-sat'
+  attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 19, className: 'ks-sat', updateWhenZooming: false, keepBuffer: 1
 });
 const satLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
   attribution: 'Yer adları: Esri', maxZoom: 19, pane: 'shadowPane'
@@ -261,97 +262,137 @@ const ISU_KATMAN = {
   memba: { veri: ISU_MEMBA, suzgec: 'memba', sinif: 'ref-memba', glyph: 'Mb', ad: 'ISU Memba noktası (referans)', eslesir: ['kuyu'] },
   depo: { veri: ISU_ISUDEPO, suzgec: 'depo', sinif: 'ref-depo', glyph: 'D', ad: 'ISU Depo noktası (referans)', eslesir: ['depo'] }
 };
-function isuNoktaEkle(isu, lat, lon) {
-  const icon = ksPin(isu.suzgec, { ref: true });
-  L.marker([lat, lon], { icon })
-    .bindTooltip(isu.ad, { direction: 'top' })
-    .on('click', () => {
-      if (pickName) {
-        const n = pickName;
-        setPick(null);
-        parent.postMessage({ ks: 'picked', name: n, lat: +lat.toFixed(6), lon: +lon.toFixed(6) }, '*');
-        return;
-      }
-      noktaBirak({ lat, lng: lon });
-    })
-    .addTo(isu.layer);
-}
-for (const isu of Object.values(ISU_KATMAN)) isu.layer = L.layerGroup();
-function isuYenile() {
-  for (const isu of Object.values(ISU_KATMAN)) {
-    isu.layer.clearLayers();
+// ── Görünüm yöneticisi (2026.10.06): yalnız ekranda görünen işaretler çizilir.
+// Uzaktan (zoom < 12) kayıtlar canvas üzerinde küçük renkli noktalardır (DOM'a hiç dokunmaz);
+// yakınlaşınca ve yalnız ekrandaki en çok DOM_SINIR işaret simgeli çizilir; etiketler 14'ten sonra.
+// Telefonda 900+ DOM işaretini aynı anda döndürmek haritayı kilitliyordu.
+const DOM_ZOOM = 12, DOM_SINIR = 260;
+const TUR_RENK = { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', kaynak: '#0891b2', memba: '#15803d' };
+const goruntuKatman = L.layerGroup().addTo(map);
+const noktaLayer = L.layerGroup().addTo(map);
+let ogeler = [], canli = new Map(), ogeImza = '', gz = null;
+
+function ogeleriKur() {
+  const imza = assets.length + '|' + assets.map(a => a.id + a.type + a.status + a.sync + a.lat + a.lon).join(',').length + '|' + [...openFaults].join(',');
+  if (imza === ogeImza) { ogeAcik(); gorunumGuncelle(); return; }
+  ogeImza = imza;
+  ogeler = [];
+  for (const a of assets) ogeler.push({ key: 'a' + a.id, kind: 'a', tur: a.type, lat: a.lat, lon: a.lon, a });
+  for (const [ad, isu] of Object.entries(ISU_KATMAN)) {
     const gercekler = assets.filter(a => isu.eslesir.includes(a.type)).map(a => [a.lat, a.lon]);
     for (const [lat, lon] of isu.veri) {
-      const eslesenVar = gercekler.some(([glat, glon]) => hatMesafe([lat, lon], [glat, glon]) < ISU_ESIK_M);
-      if (!eslesenVar) isuNoktaEkle(isu, lat, lon);
+      if (gercekler.some(g => hatMesafe([lat, lon], g) < ISU_ESIK_M)) continue;
+      ogeler.push({ key: 'i' + ad + lat + ',' + lon, kind: 'isu', tur: ad, lat, lon, isu });
     }
   }
+  goruntuKatman.clearLayers(); canli.clear();
+  ogeAcik();
+  gorunumGuncelle();
 }
-isuYenile();
-
-// ── envanter kayıtları
-const assetLayer = L.layerGroup().addTo(map);
-const noktaLayer = L.layerGroup().addTo(map);
-let markers = [];
-function cizAssets() {
-assetLayer.clearLayers();
-markers = [];
-for (const a of assets) {
-  const pend = a.sync === 'pending', fault = openFaults.has(a.id), pasif = a.status === 'pasif';
-  const icon = ksPin(a.type, { pasif, pend, fault });
-  const mk = L.marker([a.lat, a.lon], { icon })
-    .bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [18, 0], interactive: true })
-    .bindPopup(
+function ogeAcik() {
+  const f = sonFilter;
+  for (const o of ogeler) {
+    o.on = o.kind === 'a'
+      ? (!f || (!!f[o.tur] && (f.pasif !== false || o.a.status !== 'pasif')))
+      : (!!f && !!f[o.isu.suzgec]);
+  }
+}
+function ogeTikla(o) {
+  if (o.kind === 'a') {
+    if (navMode) routeTo(o.a);
+    else parent.postMessage({ ks: 'select', id: o.a.id, code: o.a.code }, '*');
+    return;
+  }
+  if (pickName) {
+    const n = pickName; setPick(null);
+    parent.postMessage({ ks: 'picked', name: n, lat: +o.lat.toFixed(6), lon: +o.lon.toFixed(6) }, '*');
+    return;
+  }
+  noktaBirak({ lat: o.lat, lng: o.lon });
+}
+function isaretYap(o, mod) {
+  const a = o.a;
+  const pasif = o.kind === 'a' && a.status === 'pasif', pend = o.kind === 'a' && a.sync === 'pending';
+  const fault = o.kind === 'a' && openFaults.has(a.id);
+  let mk;
+  if (mod === 'n') {
+    mk = L.circleMarker([o.lat, o.lon], {
+      radius: o.kind === 'a' ? 5 : 3, weight: fault ? 2.5 : 1.5, color: fault ? '#d70015' : '#fff',
+      fillColor: TUR_RENK[o.tur] || '#0071e3', fillOpacity: pasif ? .35 : .95
+    });
+  } else {
+    mk = L.marker([o.lat, o.lon], { icon: ksPin(o.tur, { ref: o.kind === 'isu', pasif, pend, fault }), keyboard: false });
+  }
+  if (o.kind === 'a') {
+    mk.bindPopup(() =>
       `<b>${a.code}</b><br>${TYPES[a.type].kind}<br>${a.village || 'Köy girilmedi'} · ${a.district}` +
       `<br>Yapım yılı: ${a.year || '—'}<br>${a.photos} fotoğraf` +
       (fault ? '<br><b style="color:#0071e3">Açık arıza kaydı var</b>' : '') +
-      (a.coordApprox ? '<br><i>Konum yaklaşık — saha ölçümü bekliyor</i>' : '<br><i>Konum: KML / saha ölçümü</i>')
-    )
-    .on('click', () => {
-      if (navMode) routeTo(a);
-      else parent.postMessage({ ks: 'select', id: a.id, code: a.code }, '*');
-    });
-  mk.addTo(assetLayer);
-  // etiket de dokunma alsın: sahada parmakla işaretten çok etikete basılıyor
-  const tt = mk.getTooltip();
-  if (tt) tt.on('click', () => {
-    if (navMode) routeTo(a);
-    else parent.postMessage({ ks: 'select', id: a.id, code: a.code }, '*');
-  });
-  markers.push(mk);
+      (a.coordApprox ? '<br><i>Konum yaklaşık — saha ölçümü bekliyor</i>' : '<br><i>Konum: KML / saha ölçümü</i>'));
+    if (mod === 'e') {
+      mk.bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [18, 0], interactive: true });
+      const tt = mk.getTooltip();
+      if (tt) tt.on('click', () => ogeTikla(o));
+    } else if (mod === 'd') mk.bindTooltip(a.code, { direction: 'right', className: 'ks-lbl', offset: [18, 0] });
+  } else {
+    mk.bindTooltip(o.isu.ad, { direction: 'top' });
+  }
+  // açılır pencere yerine doğrudan seçim: tıklama programa gider (eski davranış)
+  mk.on('click', () => { if (o.kind === 'a') { mk.closePopup(); } ogeTikla(o); });
+  return mk;
 }
-// Arıza noktaları: ekibin sahada kaydettiği koordinat (boru hattı arızası
-// tesisin yerinde değildir). Açık arızalar kırmızı, dokununca arıza açılır.
-noktaLayer.clearLayers();
-for (const f of faults) {
-  if (!f || !f.nokta || KAPALI.includes(f.status)) continue;
-  const yer = f.koy ? f.koy + (f.district ? ' · ' + f.district : '') : (f.district || '');
-  L.circleMarker([f.nokta.lat, f.nokta.lon], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#d70015', fillOpacity: .95 })
-    .bindPopup(`<b>${f.no || 'Arıza'}</b><br>${f.type || ''}<br>${yer}` +
-      `<br><i>Arıza noktası${f.noktaDogruluk != null ? ' · ±' + f.noktaDogruluk + ' m' : ''}</i>`)
-    .on('click', () => parent.postMessage({ ks: 'arizaAc', id: f.id }, '*'))
-    .addTo(noktaLayer);
+function gorunumGuncelle() {
+  const z = map.getZoom(), dom = z >= DOM_ZOOM;
+  const mod = dom ? (wantLabels && z >= ETIKET_ZOOM ? 'e' : 'd') : 'n';
+  const b = map.getBounds().pad(dom ? .15 : .3), mrk = map.getCenter();
+  let ad = [];
+  for (const o of ogeler) {
+    if (!o.on || (o.kind === 'isu' && !dom)) continue;
+    if (b.contains([o.lat, o.lon])) ad.push(o);
+  }
+  if (dom && ad.length > DOM_SINIR) {
+    ad.forEach(o => { o._d = (o.lat - mrk.lat) ** 2 + (o.lon - mrk.lng) ** 2; });
+    ad.sort((x, y) => x._d - y._d);
+    ad.length = DOM_SINIR;
+  }
+  const hedef = new Set(ad.map(o => o.key));
+  for (const [k, c] of canli) {
+    if (!hedef.has(k) || c.mod !== mod) { goruntuKatman.removeLayer(c.mk); canli.delete(k); }
+  }
+  for (const o of ad) {
+    if (canli.has(o.key)) continue;
+    const mk = isaretYap(o, mod);
+    mk.addTo(goruntuKatman);
+    canli.set(o.key, { mk, mod });
+  }
 }
-isuYenile();
-applyLabels();
-if (sonFilter) filtreUygula(sonFilter);
-}
+function gorunumPlan() { clearTimeout(gz); gz = setTimeout(gorunumGuncelle, 100); }
+map.on('moveend zoomend', gorunumPlan);
 
+let wantLabels = true;
+function cizAssets() {
+  // Arıza noktaları: ekibin sahada kaydettiği koordinat (boru hattı arızası
+  // tesisin yerinde değildir). Açık arızalar kırmızı, dokununca arıza açılır.
+  noktaLayer.clearLayers();
+  for (const f of faults) {
+    if (!f || !f.nokta || KAPALI.includes(f.status)) continue;
+    const yer = f.koy ? f.koy + (f.district ? ' · ' + f.district : '') : (f.district || '');
+    L.circleMarker([f.nokta.lat, f.nokta.lon], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#d70015', fillOpacity: .95 })
+      .bindPopup(`<b>${f.no || 'Arıza'}</b><br>${f.type || ''}<br>${yer}` +
+        `<br><i>Arıza noktası${f.noktaDogruluk != null ? ' · ±' + f.noktaDogruluk + ' m' : ''}</i>`)
+      .on('click', () => parent.postMessage({ ks: 'arizaAc', id: f.id }, '*'))
+      .addTo(noktaLayer);
+  }
+  ogeleriKur();
+}
 function filtreUygula(f) {
   sonFilter = f;
-  for (let i = 0; i < assets.length; i++) {
-    const on = !!f[assets[i].type] && (f.pasif !== false || assets[i].status !== 'pasif');
-    const has = assetLayer.hasLayer(markers[i]);
-    if (on && !has) assetLayer.addLayer(markers[i]);
-    if (!on && has) assetLayer.removeLayer(markers[i]);
-  }
-  for (const isu of Object.values(ISU_KATMAN)) {
-    const on = !!f[isu.suzgec];
-    const has = map.hasLayer(isu.layer);
-    if (on && !has) isu.layer.addTo(map);
-    if (!on && has) isu.layer.remove();
-  }
-  applyLabels();
+  ogeAcik();
+  gorunumGuncelle();
+}
+function applyLabels() {
+  document.getElementById('t-labels').classList.toggle('on', wantLabels);
+  gorunumGuncelle();
 }
 
 const bounds = L.latLngBounds(assets.map(a => [a.lat, a.lon]));
@@ -449,20 +490,7 @@ async function routeTo(a) {
   }
 }
 
-// ── etiket görünürlüğü: yakınlaşınca kayıt etiketleri açılır
 const ETIKET_ZOOM = 14;
-let wantLabels = true;
-function applyLabels() {
-  // Etiketler 14. kademeden sonra okunur — hat kesiti ekranıyla aynı eşik
-  const show = wantLabels && map.getZoom() >= ETIKET_ZOOM;
-  for (const mk of markers) {
-    const tt = mk.getTooltip();
-    if (!tt || !assetLayer.hasLayer(mk)) continue;
-    tt.setOpacity(show ? 1 : 0);
-  }
-  document.getElementById('t-labels').classList.toggle('on', wantLabels);
-}
-map.on('zoomend', applyLabels);
 cizAssets();
 
 document.getElementById('t-labels').onclick = () => { wantLabels = !wantLabels; applyLabels(); };

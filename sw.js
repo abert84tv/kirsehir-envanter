@@ -1,6 +1,6 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.06-127';
+const SURUM = 'ks-2026.10.06-128';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo-2';
 const KARO_LIMIT = 900;
@@ -72,7 +72,12 @@ async function karo(istek) {
   const k = await c.match(istek.url);
   if (k) return k;
   try {
-    const r = await fetch(new Request(istek.url, { mode: 'cors', credentials: 'omit' }));
+    // 6 sn içinde yanıt gelmezse (zayıf çekim) bekletmeden doğrudan ağa düşülür
+    const ac = new AbortController();
+    const zt = setTimeout(() => ac.abort(), 6000);
+    let r;
+    try { r = await fetch(new Request(istek.url, { mode: 'cors', credentials: 'omit', signal: ac.signal })); }
+    finally { clearTimeout(zt); }
     if (r && r.ok) {
       c.put(istek.url, r.clone()).then(async () => {
         const anahtarlar = await c.keys();

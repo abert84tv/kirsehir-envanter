@@ -3966,6 +3966,12 @@ Hareket gir
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sesli not</span>
 <span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Yazmak yerine konuşun</span>
 </div>
+<sc-for list="{{ faultForm.kayitSes }}" as="ks" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:6px;border-radius:12px;border:1px solid #34c759;padding:8px 10px;margin-top:8px">
+<span style="font:600 11.5px/1.3 var(--font-body);color:#1b7a36">Kayıtlı sesli not · {{ ks.meta }}</span>
+{{ ks.player }}
+</div>
+</sc-for>
 <sc-for list="{{ faultForm.sesler }}" as="sn" hint-placeholder-count="0">
 <div style="display:flex;flex-direction:column;gap:8px;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 11px">
 <div style="display:flex;align-items:center;gap:10px">
@@ -7174,6 +7180,12 @@ Hareket gir
 <div style="background:{{ ui.surf }};border-radius:16px;padding:14px">
 <div style="font:700 15px/1 var(--font-heading);margin-bottom:10px">Not</div>
 <textarea value="{{ faultForm.note }}" onChange="{{ onFaultNote }}" rows="3" placeholder="{{ faultForm.sade.notYer }}" style="all:unset;box-sizing:border-box;display:block;width:100%;border-radius:12px;border:1px solid {{ ui.rule }};padding:11px 12px;font:400 15px/1.45 var(--font-body);background:{{ ui.bg }}"></textarea>
+<sc-for list="{{ faultForm.kayitSes }}" as="ks" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:6px;border-radius:12px;border:1px solid #34c759;padding:8px 10px;margin-top:8px">
+<span style="font:600 11.5px/1.3 var(--font-body);color:#1b7a36">Kayıtlı sesli not · {{ ks.meta }}</span>
+{{ ks.player }}
+</div>
+</sc-for>
 <sc-for list="{{ faultForm.sesler }}" as="sn" hint-placeholder-count="0">
 <div style="display:flex;align-items:center;gap:9px;margin-top:8px;border-radius:12px;border:1px solid {{ ui.rule }};padding:6px 10px">
 <span style="font:600 13px/1 ui-monospace,Menlo,monospace">{{ sn.sure }}</span>
@@ -7200,6 +7212,40 @@ Hareket gir
 </div>
 </sc-if>
 
+
+<sc-if value="{{ faultForm.sade.isEmri.goster }}" hint-placeholder-val="{{ false }}">
+<div style="background:{{ ui.surf }};border-radius:16px;padding:14px">
+<div style="font:700 15px/1 var(--font-heading);margin-bottom:8px">İş emri ve atama</div>
+<sc-if value="{{ faultForm.sade.isEmri.toggleVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.sade.isEmri.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:46px;width:100%">
+<span style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--color-accent);background:{{ faultForm.sade.isEmri.toggleBg }};color:{{ faultForm.sade.isEmri.toggleFg }};font:700 16px/22px var(--font-body);text-align:center">✓</span>
+<span style="font:600 14px/1.35 var(--font-body)">Kaydedince iş emri aç ve yukarıdaki ekibe ata</span>
+</button>
+</sc-if>
+<sc-if value="{{ faultForm.sade.isEmri.ieVar }}" hint-placeholder-val="{{ false }}">
+<div style="font:700 14px/1.3 var(--font-body);color:{{ faultForm.sade.isEmri.durumC }}">{{ faultForm.sade.isEmri.durum }}</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.isEmri.ekipSatir }}</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.isEmri.aracSatir }}</div>
+</sc-if>
+<sc-if value="{{ faultForm.sade.isEmri.yetkiNotVar }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sade.isEmri.yetkiNot }}</div>
+</sc-if>
+<sc-if value="{{ faultForm.sade.isEmri.araclarVar }}" hint-placeholder-val="{{ false }}">
+<div style="font:600 12px/1 var(--font-body);color:{{ ui.mut }};margin:12px 0 8px">Araç (isteğe bağlı — müsaitler önde)</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ faultForm.sade.isEmri.araclar }}" as="a" hint-placeholder-count="4">
+<button onClick="{{ a.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:42px;padding:0 12px;border-radius:12px;border:1.5px solid {{ a.kenar }};background:{{ a.bg }};color:{{ a.fg }};font:600 13px/42px var(--font-body);opacity:{{ a.op }}">{{ a.l }}</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.sade.isEmri.aksiyonVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.sade.isEmri.aksiyon }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:12px;min-height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">{{ faultForm.sade.isEmri.aksiyonL }}</button>
+</sc-if>
+<sc-if value="{{ faultForm.sade.isEmri.panelVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.sade.isEmri.panelAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;margin-top:8px;min-height:38px;font:600 13px/38px var(--font-body);color:{{ ui.acc }}">İş emri ayrıntısını aç →</button>
+</sc-if>
+</div>
+</sc-if>
 <button onClick="{{ faultForm.sade.ayrinti }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:center;min-height:40px;font:600 13px/40px var(--font-body);color:{{ ui.acc }}">Ayrıntılı form — malzeme, süre, iş emri</button>
 </div>
 
@@ -7363,6 +7409,12 @@ Hareket gir
 
 <div style="display:flex;flex-direction:column;gap:8px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sesli not</span>
+<sc-for list="{{ faultForm.kayitSes }}" as="ks" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:6px;border-radius:12px;border:1px solid #34c759;padding:8px 10px;margin-top:8px">
+<span style="font:600 11.5px/1.3 var(--font-body);color:#1b7a36">Kayıtlı sesli not · {{ ks.meta }}</span>
+{{ ks.player }}
+</div>
+</sc-for>
 <sc-for list="{{ faultForm.sesler }}" as="sn" hint-placeholder-count="0">
 <div style="display:flex;flex-direction:column;gap:8px;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 11px">
 <div style="display:flex;align-items:center;gap:9px">
@@ -8379,7 +8431,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.01-112';
+const SURUM = '2026.10.05-113';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10612,6 +10664,47 @@ class Component extends DCLogic {
     this.duyur(`${noR.data} iş emri oluşturuldu` +
       (f.crew && f.crew !== ATANMADI ? ` — ${f.crew} ekibine atandı.` : ' — ekip ataması bekliyor.'), 7000, 'iyi');
   }
+  // Arıza için iş emri aç ve ekibe (varsa araçlara) ata — tek adım. Tesissiz
+  // (şebeke) arızada da çalışır. Arızanın ekibi ve durumu da eşitlenir.
+  async isEmriAcSade(f, o) {
+    o = o || {};
+    const M = this._sb;
+    const rol = this.state.session && this.state.session.role;
+    if (!CAN.assign.includes(rol)) return this.say('İş emrini yönetici, müdür, mühendis ya da şef açar.', true);
+    if (!M || !M.tokenOku()) return this.say('İş emri için ortak veritabanına bağlı olmanız gerekir.', true);
+    if (!f || !f.dbId) return this.say('Arıza henüz sunucuya yazılmadı — birkaç saniye sonra yeniden deneyin.', true);
+    if (this.isEmriBul(f.dbId)) return this.say('Bu arıza için zaten bir iş emri var.', true);
+    const crew = o.crew && o.crew !== ATANMADI ? o.crew : null;
+    const a = f.assetId ? (this.state.assets || []).find(x => x.id === f.assetId) : null;
+    const grup = arizaGrubu(f, a);
+    const tur = { su: 'su', kuyu: 'su', depo: 'su', elektrik: 'elektrik', ges: 'elektrik', kanal: 'kanal' }[grup] || 'su';
+    this.say('İş emri hazırlanıyor…');
+    const noR = await M.numaraAl('isemri');
+    if (!noR.ok) return this.say(noR.err || 'İş emri numarası alınamadı.', true);
+    const havuz = (this.state.arac && this.state.arac.list) || [];
+    const araclar = (o.araclar || []).map(id => { const v = havuz.find(x => x.id === id); return v ? { id: v.id, plaka: v.plaka, ad: v.ad } : { id }; });
+    const r = await M.isEmriKaydet({
+      no: noR.data, arizaDbId: f.dbId, tesisDbId: a && a.dbId != null ? a.dbId : null,
+      type: tur, altSistem: grup, priority: f.priority || 'Normal',
+      desc: f.note || f.desc || '', crew, araclar, status: crew ? 'atandi' : 'acik',
+      planlananMalzeme: (f.malzeme || []).map(mz => ({ malzeme: mz.ad, adet: mz.adet || 1, birim: mz.birim }))
+    });
+    if (!r.ok) return this.say(r.err || 'İş emri oluşturulamadı.', true);
+    await this.isEmriYenile();
+    if (crew) this.arizaEkipYaz(f, crew);
+    this.denetimYaz('is_emri', 'İş emri oluşturuldu', noR.data + ' · ' + (crew || 'ekip atanmadı') + (araclar.length ? ' · ' + araclar.length + ' araç' : ''), f.no || '');
+    this.duyur(noR.data + ' iş emri oluşturuldu' + (crew ? ' — ' + crew + ' ekibine atandı' + (araclar.length ? ', ' + araclar.length + ' araç ayrıldı' : '') + '.' : ' — ekip ataması bekliyor.'), 8000, 'iyi');
+  }
+  // Arızanın ekibini eşitler (iş emri ataması sonrası): açıksa "atandı" olur
+  arizaEkipYaz(f, crew) {
+    if (!f) return;
+    const yeniDurum = f.status === 'acik' || f.status === 'yeniden' ? 'atandi' : f.status;
+    this.setState(st => ({
+      faults: (st.faults || []).map(x => x.id === f.id ? { ...x, crew, status: yeniDurum, sync: 'pending' } : x),
+      faultForm: st.faultForm && st.faultForm.id === f.id ? { ...st.faultForm, crew, status: yeniDurum } : st.faultForm
+    }));
+    setTimeout(() => this.arizaKuyrukGonder(), 0);
+  }
   async isEmriKapatVer(baglIsEmri, f) {
     const M = this._sb;
     if (!M || !M.tokenOku() || !baglIsEmri) return;
@@ -10644,7 +10737,10 @@ class Component extends DCLogic {
     });
     if (!r.ok) return this.say(r.err || 'Kaydedilemedi.', true);
     await this.isEmriYenile();
-    this.setState({ isEmriPanel: { ...this.state.isEmriPanel, ekipForm: null } });
+    if (this.state.isEmriPanel) this.setState({ isEmriPanel: { ...this.state.isEmriPanel, ekipForm: null } });
+    // Arızanın kendi ekibi de aynı olsun
+    const af = (this.state.faults || []).find(x => x.dbId === secili.arizaDbId);
+    if (af && ekip && af.crew !== ekip) this.arizaEkipYaz(af, ekip);
     this.denetimYaz('is_emri', 'İş emri ataması güncellendi', secili.no,
       (ekip || 'ekip yok') + (araclarObj.length ? ' · ' + araclarObj.length + ' araç' : ''));
     this.duyur(`${secili.no} ${ekip ? ekip + ' ekibine atandı.' : 'güncellendi.'}`, 6000, 'iyi');
@@ -11695,8 +11791,11 @@ class Component extends DCLogic {
   async arizaFotoYenile(arizaDbId) {
     const M = this._sb;
     if (!M || !M.tokenOku() || !arizaDbId || !M.arizaFotoListesi) return;
-    const r = await M.arizaFotoListesi(arizaDbId);
-    if (r.ok) this.setState(st => ({ fotolar: { ...st.fotolar, ['a' + arizaDbId]: r.data } }));
+    const [r, sn] = await Promise.all([M.arizaFotoListesi(arizaDbId), M.arizaSesListesi ? M.arizaSesListesi(arizaDbId) : Promise.resolve({ ok: false })]);
+    this.setState(st => ({
+      fotolar: r.ok ? { ...st.fotolar, ['a' + arizaDbId]: r.data } : st.fotolar,
+      kayitliSesler: sn.ok ? { ...st.kayitliSesler, ['a' + arizaDbId]: sn.data } : st.kayitliSesler
+    }));
   }
   // Arıza kaydını sunucuya yazar. 2026.10.01'e kadar arızalar hiç sunucuya
   // gitmiyordu (arizaKaydet tanımlıydı ama çağrılmıyordu): kayıt yalnız
@@ -11759,6 +11858,11 @@ class Component extends DCLogic {
       ...(talepDegis ? { talepler: (st.talepler || []).map(t => t.arizaNo === f.no ? { ...t, arizaNo: no } : t) } : {})
     }), res));
     this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults });
+    // "Kaydedince iş emri aç ve ekibe ata" işaretliyse (telefon sade ekran)
+    if (f.iseEmri === true && !f.dbId) {
+      this.setState(st => ({ faults: (st.faults || []).map(x => x.id === yeniId ? { ...x, iseEmri: false } : x) }));
+      this.isEmriAcSade(yeni, { crew: f.crew, araclar: f.aracSec || [] });
+    }
     // Kayıtla birlikte seçilen fotoğraf ve sesli notlar arıza kimliği belli
     // olunca yüklenir — arıza kanıtı sayılsınlar diye
     const md = (this._arizaMedya || {})[id];
@@ -11769,9 +11873,16 @@ class Component extends DCLogic {
           if (n) this.duyur(`${n} arıza fotoğrafı ${no} kaydına yüklendi.`, 5000, 'iyi');
         });
       }
-      for (const sn of (md.sesler || [])) {
-        const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
-        M.sesYukle(sn.blob, a ? a.dbId : null, a ? a.code : no, sec, 'Arıza sesli notu · ' + (ASAMA_AD[sn.asama] || ASAMA_AD.once), dbId);
+      if ((md.sesler || []).length) {
+        (async () => {
+          let n = 0;
+          for (const sn of md.sesler) {
+            const sec = (sn.sure || '0:00').split(':').reduce((t, v) => t * 60 + (+v || 0), 0);
+            const r = await M.sesYukle(sn.blob, a ? a.dbId : null, a ? a.code : no, sec, 'Arıza sesli notu · ' + (ASAMA_AD[sn.asama] || ASAMA_AD.once), dbId);
+            if (r && r.ok) n++;
+          }
+          if (n) { this.arizaFotoYenile(dbId); this.duyur(n + ' sesli not ' + no + ' kaydına yüklendi.', 5000, 'iyi'); }
+        })();
       }
     }
     return yeni;
@@ -14978,14 +15089,14 @@ class Component extends DCLogic {
             ...[...new Set(liste.map(x => x.district).filter(Boolean))].sort().map(d => ({ ad: d, deger: d }))],
           ilce: ilceF2, onIlce: e => this.setState({ isEmriPanel: { ...ip, ilceF: e.target.value } }),
           liste: gorunen.map(x => ({
-            no: x.no, tesis: x.tesisKod || '—', tur: x.type,
+            no: x.no, tesis: x.tesisKod || (x.koy ? x.koy + ' (şebeke)' : '—'), tur: x.type,
             oncelik: x.priority, durum: IS_EMRI_DURUM[x.status] || x.status,
             ekip: x.crew || 'ekip atanmadı', tarih: (x.acildi || '').slice(0, 10),
             ac: () => this.setState({ isEmriPanel: { ...ip, id: x.dbId } })
           })),
           listeBos: !gorunen.length,
           secili: !secili ? null : {
-            no: secili.no, tesis: secili.tesisKod || '—', tur: secili.type,
+            no: secili.no, tesis: secili.tesisKod || (secili.koy ? secili.koy + ' (şebeke)' : '—'), tur: secili.type,
             altSistem: secili.altSistem || '—', oncelik: secili.priority,
             aciklama: secili.desc || '—', durum: IS_EMRI_DURUM[secili.status] || secili.status,
             ekip: secili.crew || 'Atanmadı',
@@ -16389,7 +16500,7 @@ class Component extends DCLogic {
         // kendiliğinden seçili geliyordu, sahada fark edilmeden yanlış tesise
         // arıza açılabilirdi
         const a = sel || (s.device === 'phone' ? null : s.assets[0]);
-        this.setState({ panel: 'ariza', tab: s.device === 'phone' ? s.tab : 'ariza', faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: a ? a.id : null, type: FAULT_TYPES[a ? a.type : 'kuyu'][0], priority: 'Yüksek', status: 'acik', crew: canAssign ? CREWS[0] : (me && me.crew) || CREWS[0], note: '', hours: '', photos: [] } });
+        this.setState({ panel: 'ariza', tab: s.device === 'phone' ? s.tab : 'ariza', faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: a ? a.id : null, type: FAULT_TYPES[a ? a.type : 'kuyu'][0], priority: 'Yüksek', status: 'acik', crew: canAssign ? CREWS[0] : (me && me.crew) || CREWS[0], note: '', hours: '', photos: [], iseEmri: s.device === 'phone' && canAssign ? true : undefined } });
       },
       // Açık arıza varken doğrudan yeni kayıt açılmaz: mükerrer kaydı önlemek
       // için önce var olan sorulur.
@@ -16502,6 +16613,61 @@ class Component extends DCLogic {
               kenar: ff.priority === p ? PRC[p] : ui.rule, sec: () => yaz({ priority: p })
             })),
             ekipVar: canAssign, ekipAltVar: canAssign && yeni,
+            // İş emri ve atama: ekip + araç seç, tek düğmeyle iş emri aç ve ata
+            isEmri: (() => {
+              const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
+              const goster = canAssign || !!ie;
+              const ieKapali = !!ie && ['kapatildi', 'iptal', 'tamamlandi'].includes(ie.status);
+              const havuz = ((s.arac && s.arac.list) || []).slice().sort((a, b) => (a.durum === 'musait' ? 0 : 1) - (b.durum === 'musait' ? 0 : 1));
+              const secili = ff.aracSec || (ie ? (ie.araclar || []).map(x => x.id) : []);
+              const crewVar = !!(ff.crew && ff.crew !== ATANMADI);
+              const toggleOn = ff.iseEmri === true;
+              const duzenlenir = canAssign && !ieKapali && (ie || !yeni || toggleOn);
+              let aksiyon = null;
+              if (!yeni && !ie && canAssign) aksiyon = {
+                l: 'İş emri oluştur ve ekibe ata',
+                run: () => {
+                  const f1 = this.state.faultForm;
+                  if (!f1.dbId) return this.say('Arıza henüz sunucuya yazılmadı — birkaç saniye sonra yeniden deneyin.', true);
+                  if (!(f1.crew && f1.crew !== ATANMADI)) return this.say('Önce yukarıdan ekip seçin.', true);
+                  this.isEmriAcSade(f1, { crew: f1.crew, araclar: f1.aracSec || [] });
+                }
+              };
+              if (ie && !ieKapali && canAssign) aksiyon = {
+                l: 'Atamayı güncelle (ekip + araç)',
+                run: () => {
+                  const f1 = this.state.faultForm;
+                  if (!(f1.crew && f1.crew !== ATANMADI)) return this.say('Önce yukarıdan ekip seçin.', true);
+                  this.isEmriAtaKaydet(this.isEmriBul(f1.dbId), { ekip: f1.crew, araclar: f1.aracSec || (ie.araclar || []).map(x => x.id) });
+                }
+              };
+              return {
+                goster, yeni, ieVar: !!ie,
+                durum: ie ? ie.no + ' · ' + (IS_EMRI_DURUM[ie.status] || ie.status) : (yeni ? '' : 'Bu arıza için iş emri yok'),
+                durumC: ie ? (ieKapali ? '#1b7a36' : ui.acc) : ui.mut,
+                ekipSatir: ie ? 'Ekip: ' + (ie.crew || 'atanmadı') + (ie.atayan ? ' · atayan ' + ie.atayan : '') : '',
+                aracSatir: ie ? 'Araç: ' + ((ie.araclar || []).map(a => a.plaka || a.ad).join(', ') || 'yok') : '',
+                toggleVar: yeni && canAssign, toggleOn,
+                toggleBg: toggleOn ? 'var(--color-accent)' : 'transparent', toggleFg: toggleOn ? '#fff' : 'transparent',
+                toggle: () => yaz({ iseEmri: !toggleOn }),
+                araclarVar: duzenlenir && havuz.length > 0,
+                araclar: havuz.map(a => {
+                  const sec = secili.includes(a.id);
+                  const yok = a.durum && a.durum !== 'musait';
+                  return {
+                    l: (a.plaka || a.ad) + (yok ? ' · ' + (ARAC_DURUM[a.durum] || a.durum) : ''),
+                    bg: sec ? 'var(--color-accent)' : ui.surf, fg: sec ? '#fff' : ui.fg, kenar: sec ? 'var(--color-accent)' : ui.rule,
+                    op: yok && !sec ? '.55' : '1',
+                    sec: () => yaz({ aracSec: sec ? secili.filter(x => x !== a.id) : [...secili, a.id] })
+                  };
+                }),
+                aksiyonVar: !!aksiyon, aksiyonL: aksiyon ? aksiyon.l : '', aksiyon: aksiyon ? aksiyon.run : () => {},
+                yetkiNot: 'İş emrini ekip atama yetkisi olan şef/müdür açar.',
+                yetkiNotVar: !canAssign && !ie,
+                panelAc: () => { if (ie) this.setState({ panel: 'yok', faultForm: null, isEmriPanel: { id: ie.dbId } }); },
+                panelVar: !!ie
+              };
+            })(),
             ekipYazi: ff.crew && ff.crew !== ATANMADI ? ff.crew : 'Ekip atanmadı',
             // Var olan arızanın kayıt bilgisi: ekip, açan, öncelik, hedef süre,
             // iş emri ve bu arızanın denetim izindeki hareketleri
@@ -16569,12 +16735,13 @@ class Component extends DCLogic {
         sadeyeDonVar: s.device === 'phone',
         title: ff ? (ff.id ? ff.no : 'Yeni arıza kaydı') : 'Yeni arıza kaydı',
         sub: ffAsset ? `${ffAsset.code} · ${this.yer(ffAsset)} · ${TYPES[ffAsset.type].kind}` : 'Kayıt seçin',
-        hasAsset: !!ffAsset,
+        hasAsset: !!ffAsset || !!(ff && ff.id),
         koord: ffAsset ? `${ffAsset.lat.toFixed(5)} , ${ffAsset.lon.toFixed(5)}` : '',
         haritada: () => ffAsset && this.flyTo(ffAsset.lat, ffAsset.lon, 16),
         yolTarifi: () => {
-          if (!ffAsset) return;
-          if (this.yolTarifiVer(ffAsset)) this.say(`${ffAsset.code} için yol tarifi çizildi. Telefon navigasyonuna aktarmak için haritadaki “Telefonda aç” düğmesini kullanın.`);
+          const hedef = ffAsset || (ff && ff.nokta ? { id: 'ariza-' + ff.id, code: ff.no || 'Arıza noktası', village: ff.koy || '', lat: ff.nokta.lat, lon: ff.nokta.lon } : null);
+          if (!hedef) return this.say('Bu arızanın tesisi ya da kayıtlı noktası yok — yol tarifi için nokta gerekir.', true);
+          if (this.yolTarifiVer(hedef)) this.say(`${hedef.code} için yol tarifi çizildi. Telefon navigasyonuna aktarmak için haritadaki “Telefonda aç” düğmesini kullanın.`);
         },
         isEmriLabel: (() => {
           if (!ff || !ff.dbId) return 'İş emri';
@@ -16583,11 +16750,11 @@ class Component extends DCLogic {
           return 'İş Emri: ' + ie.no + (ie.status === 'kapatildi' ? ' ✓' : ' · ' + (ie.crew || 'ekip bekliyor'));
         })(),
         isEmri: () => {
-          if (!ffAsset || !ff) return;
+          if (!ff) return;
           if (!CAN.assign.includes(s.session.role)) return this.say('İş emri oluşturma yetkiniz yok.');
           const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
           if (ie) return this.setState({ isEmriPanel: { id: ie.dbId } });
-          this.isEmriAc(ff, ffAsset);
+          this.isEmriAcSade(ff, { crew: ff.crew, araclar: ff.aracSec || [] });
         },
         assetId: ff ? ff.assetId : '', type: ff ? ff.type : '',
         typeOptions: ff ? this.arizaFormYer(ff, ffAsset).turSecenek : FAULT_TYPES.kuyu,
@@ -16622,7 +16789,13 @@ class Component extends DCLogic {
           }
           const kayit = ff && ff.dbId ? (liste || []).filter(x => x.arizaDbId === ff.dbId) : [];
           const yeni = ff ? (ff.photos || []).length : 0;
+          const sesListe = ff && ff.dbId ? (s.kayitliSesler || {})['a' + ff.dbId] : null;
           return {
+            kayitSes: (sesListe || []).map(x => ({
+              player: this.audioEl(x.url),
+              meta: [x.yukleyen, x.sure ? Math.floor(x.sure / 60) + ':' + String(x.sure % 60).padStart(2, '0') : '', x.yuklendi ? this.damgaCevir(x.yuklendi) : ''].filter(Boolean).join(' · ')
+            })),
+            kayitSesVar: !!(sesListe && sesListe.length),
             kayitFoto: kayit.map(x => ({
               img: this.imgEl(x.url, 'Arıza fotoğrafı'),
               etiket: /Sonrası/.test(x.aciklama || '') ? 'Sonrası' : (/Öncesi/.test(x.aciklama || '') ? 'Öncesi' : 'Kayıtta')
@@ -16865,7 +17038,12 @@ class Component extends DCLogic {
       },
       onFaultType: e => this.setState({ faultForm: { ...this.state.faultForm, type: e.target.value } }),
       onFaultNote: e => this.setState({ faultForm: { ...this.state.faultForm, note: e.target.value } }),
-      onFaultCrew: e => this.setState({ faultForm: { ...this.state.faultForm, crew: e.target.value } }),
+      onFaultCrew: e => {
+        const c = e.target.value, f0 = this.state.faultForm;
+        // Ekip atanınca açık arıza "Atandı", ekip kalkınca yeniden "Açık"
+        const durum = c && c !== ATANMADI ? (f0.status === 'acik' ? 'atandi' : f0.status) : (f0.status === 'atandi' ? 'acik' : f0.status);
+        this.setState({ faultForm: { ...f0, crew: c, status: durum } });
+      },
       onFaultHours: e => this.setState({ faultForm: { ...this.state.faultForm, hours: e.target.value } }),
       addFaultPhoto: () => this.arizaFotoSec(false),
       cekFaultPhoto: () => this.arizaFotoSec(true),

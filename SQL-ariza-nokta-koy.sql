@@ -166,3 +166,48 @@ $function$;
 grant execute on function public.ariza_kaydet(uuid, bigint, text, bigint, text, ariza_oncelik, ariza_durum, text, text, jsonb, numeric, text, text, text, double precision, double precision, numeric) to anon, authenticated;
 grant execute on function public.ariza_listesi(uuid) to anon, authenticated;
 grant execute on function public.ariza_foto_listesi(uuid, bigint) to anon, authenticated;
+
+-- 2026.10.05 (göç ariza_ses_listesi_isemri_koy)
+-- Arızaya bağlı sesli notlar (tesissiz arıza dahil) ve iş emri listesinde
+-- tesissiz arızanın ilçe/köyü.
+create or replace function public.ariza_ses_listesi(p_token uuid, p_ariza_id bigint)
+ returns table(id bigint, tesis_id bigint, ariza_id bigint, adres text, aciklama text, boyut integer, sure integer, yukleyen text, yuklendi timestamptz, yazilabilir boolean)
+ language plpgsql security definer set search_path to 'public'
+as $function$
+declare k kullanicilar;
+begin
+  k := oturum_sahibi(p_token);
+  if k.id is null then raise exception 'Oturum geçersiz — çıkıp yeniden girin.'; end if;
+  return query
+    select f.id, f.tesis_id, f.ariza_id, f.adres, f.aciklama, f.boyut, f.sure,
+           kim(f.yukleyen_k), f.yuklendi, yazabilir(k, f.ilce)
+      from foto f
+     where f.silindi is null and f.ariza_id = p_ariza_id and f.tur = 'ses'
+     order by f.yuklendi desc;
+end;
+$function$;
+grant execute on function public.ariza_ses_listesi(uuid, bigint) to anon, authenticated;
+
+drop function if exists public.is_emri_listesi(uuid);
+create function public.is_emri_listesi(p_token uuid)
+ returns table(id bigint, no text, talep_id text, ariza_id bigint, tesis_id bigint, tesis_kod text, ilce text,
+   tur text, alt_sistem text, oncelik text, aciklama text, ekip text, araclar jsonb, durum text,
+   planlanan_malzeme jsonb, kullanilan_malzeme jsonb, toplam_saat numeric, acan text, acildi timestamptz,
+   atayan text, atandi_zaman timestamptz, kapatan text, kapandi timestamptz, surum integer, koy text)
+ language plpgsql security definer set search_path to 'public'
+as $function$
+begin
+  perform oturum_sahibi(p_token);
+  return query
+    select e.id, e.no, e.talep_id, e.ariza_id, e.tesis_id, t.kod, coalesce(t.ilce, a.ilce),
+           e.tur, e.alt_sistem, e.oncelik, e.aciklama, e.ekip, e.araclar, e.durum,
+           e.planlanan_malzeme, e.kullanilan_malzeme, e.toplam_saat,
+           kim(e.acan_k), e.acildi, kim(e.atayan_k), e.atandi_zaman,
+           kim(e.kapatan_k), e.kapandi, e.surum, coalesce(a.koy, t.koy)
+      from is_emirleri e
+      left join tesis t on t.id = e.tesis_id
+      left join ariza a on a.id = e.ariza_id
+     order by e.acildi desc;
+end;
+$function$;
+grant execute on function public.is_emri_listesi(uuid) to anon, authenticated;

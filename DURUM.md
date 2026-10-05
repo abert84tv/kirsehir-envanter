@@ -1849,3 +1849,24 @@ açan + zaman, öncelik, hedef süre (açıksa), iş emri, kapanış, noktayı a
 "Bu arızanın hareketleri" (denetim izinden). Yeni arıza sunucu numarası
 alınca "Arıza numarası verildi AR-1xx → ARZ-…" iz satırı düşer; geçici
 numarayla yazılmış satırlar da arızaya bağlanır. Sürüm 2026.10.01-112.
+
+## 2026.10.05 — Sesli notlar görünmüyordu; iş emri + ekibe atama sadeleştirildi
+
+Kullanıcı: "Ses kaydı yaptım ama gözükmüyor; iş emrini nasıl oluşturup ekibe
+atayacağım?"
+- Ses: yükleme çalışıyordu (foto tablosunda tur='ses', 3 kayıt) ama sade
+  ekran ve formlar yalnız o an kaydedilen sesi gösteriyordu; kayıtlı sesler
+  tesis kartında kalmıştı. `ariza_ses_listesi` ile arızaya bağlı sesler
+  (tesissiz dahil) okunur, her üç formda "Kayıtlı sesli not" oynatıcısıyla
+  görünür. Ses yüklemesi bitince liste tazelenir.
+- İş emri: düğme yalnız "Ayrıntılı form"daydı ve tesissiz arızada hiç
+  yoktu. Telefon sade ekranda "İş emri ve atama" kartı (ekip atama yetkisi
+  olanlara): yeni arızada "Kaydedince iş emri aç ve ekibe ata" (varsayılan
+  açık) + araç seçimi (müsaitler önde) → tek kayıtla arıza + iş emri + ekip
+  + araç; var olan arızada "İş emri oluştur ve ekibe ata" ya da "Atamayı
+  güncelle (ekip + araç)". Arızanın ekibi/durumu iş emriyle eşitlenir,
+  ekip seçilince açık arıza "Atandı" olur. Tesissiz (şebeke) arızada da
+  iş emri açılır; liste ve panelde köy görünür.
+- Düzeltme: iş emri ekibi güncellenince iş emri paneli kendiliğinden
+  açılıyordu.
+Sürüm 2026.10.05-113.

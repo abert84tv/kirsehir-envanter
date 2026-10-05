@@ -1896,3 +1896,9 @@ Sürüm 2026.10.05-114.
 - İnternet yokken açılış: son girişin profili + son veri cihazdan okunur; giriş ekranında beklenmez. İnternet gelince oturum sunucuda doğrulanır.
 - Bağlantı kendiliğinden algılanır (kopunca "çevrimdışı", gelince "gönderiliyor"); bekleyen tesis değişikliği, not, arıza, ambar, modül, fotoğraf ve ses sırayla gönderilir. Üst şeritte bekleyen sayısı görünür.
 - Çevrimdışı çözülen arızanın iş emri, arıza sunucuya yazılınca kapanır.
+
+## 2026.10.05-116 — Telemetri altyapısı ve arayüzü
+- `SQL-telemetri.sql` (Supabase'e uygulandı): cihaz, ölçüm, son değer, kural, alarm tabloları; cihaz kodu + anahtarla çalışan `telemetri_yaz` ucu; eşik kuralından alarm açma/kapama; 90 gün sonra eski ölçümlerin silinmesi.
+- Cihaz tarafı: PLC/GSM modem/Node-RED/ESP32 `POST /rest/v1/rpc/telemetri_yaz` ile ölçüm gönderir (internetsiz kalan toplayıcı eski zaman damgasıyla sonradan gönderebilir). MQTT/Modbus için aracı bir geçit gerekir (geçit aynı ucu çağırır).
+- Arayüz: Ekip, Araç, Ambar > Telemetri. Cihaz kartları (son değerler, veri geliyor/sessiz), ölçüm grafiği (6 sa–30 gün), alarmlar (Gördüm / Arızaya çevir), eşik kuralları, cihaz ekleme ve anahtar yenileme (yalnız yönetici, müdür, mühendis).
+- Sahte veri yok: arayüz boş başlar, cihaz bağlandıkça dolar.

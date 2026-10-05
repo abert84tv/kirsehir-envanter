@@ -1925,3 +1925,5 @@ Sürüm 2026.10.05-114.
 - Araç kartı: marka, model, trafik sigortası bitişi eklendi; muayene ve sigortası 45 günden az kalan ya da geçen araçlar listede ve "Muayene / sigorta uyarısı" sayacında işaretlenir. Yönetim rollerine günde bir kez uyarı bildirimi (30 gün kala / geçmişse).
 - Personel kartı: "Kullanabildiği araç türleri" seçimi.
 - Saha: "Araç arızası / kaza" düğmesi — araç "arızalı" olur, araç defterine işlenir, iş ekipten alınıp merkeze devredilir (Beklemede; süre SLA'dan düşer).
+
+## 2026.10.05-121 — Ambar hareket formu: önce → işlem → sonra kontrol satırı

@@ -1,0 +1,8 @@
+-- cop_temizle(uuid): "delete from _gecen;" WHERE'siz olduğu için Supabase
+-- "DELETE requires a WHERE clause" hatası veriyor; çöp kutusu temizliği hiç
+-- çalışmıyor (uygulama her yenilemede 400 alıyor). Tek satırlık düzeltme:
+-- SQL Editor'de, SQL-cop-kutusu.sql içindeki cop_temizle(p_token uuid)
+-- tanımında şu satırı
+--     delete from _gecen;
+-- şununla değiştirip fonksiyonu yeniden çalıştırın:
+--     delete from _gecen where id is not null;

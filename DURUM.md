@@ -1888,3 +1888,11 @@ Sürüm 2026.10.05-113.
 - ADESAY şartname karşılaştırma raporu: Desktop\ADESAY_Sartname_Karsilastirma_05102026.docx
   (7 var, 28 kısmi, 8 yok, 1 yazılım dışı).
 Sürüm 2026.10.05-114.
+
+## 2026.10.05-115 — İnternetsiz çalışma (çevrimdışı)
+- Programın ihtiyaç duyduğu kütüphaneler (React, Leaflet, supabase-js) `vendor/` klasörüne alındı; artık dış siteye bağlı değil.
+- `sw.js` servis çalışanı + `manifest.webmanifest`: uygulama telefona "yüklenebilir", internet yokken açılır. Harita karoları gezildikçe cihaza saklanır (en çok 900).
+- `cihaz-depo.js` (IndexedDB): çevrimdışı çekilen fotoğraf/sesler ve sunucudan son alınan veri (tesis, arıza, iş emri, not) cihazda durur.
+- İnternet yokken açılış: son girişin profili + son veri cihazdan okunur; giriş ekranında beklenmez. İnternet gelince oturum sunucuda doğrulanır.
+- Bağlantı kendiliğinden algılanır (kopunca "çevrimdışı", gelince "gönderiliyor"); bekleyen tesis değişikliği, not, arıza, ambar, modül, fotoğraf ve ses sırayla gönderilir. Üst şeritte bekleyen sayısı görünür.
+- Çevrimdışı çözülen arızanın iş emri, arıza sunucuya yazılınca kapanır.

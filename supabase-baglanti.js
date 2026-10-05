@@ -11,9 +11,18 @@ let sb = null, yukleniyor = null;
 async function istemci() {
   if (sb) return sb;
   if (!yukleniyor) {
-    yukleniyor = import('https://esm.sh/@supabase/supabase-js@2')
+    // Kütüphane projeyle birlikte ./vendor içinde durur; böylece internet
+    // yokken de yüklenir (service worker önbelleğe alır).
+    yukleniyor = new Promise((res, rej) => {
+      if (window.supabase && window.supabase.createClient) return res(window.supabase);
+      const s = document.createElement('script');
+      s.src = new URL('./vendor/supabase.js', import.meta.url).href;
+      s.onload = () => (window.supabase && window.supabase.createClient) ? res(window.supabase) : rej(new Error('yok'));
+      s.onerror = () => rej(new Error('yüklenemedi'));
+      document.head.appendChild(s);
+    })
       .then(m => { sb = m.createClient(URL_, ANON, { auth: { persistSession: false } }); return sb; })
-      .catch(() => null);
+      .catch(() => { yukleniyor = null; return null; });
   }
   return yukleniyor;
 }
@@ -234,7 +243,7 @@ export function isEmriSuret(r) {
   return {
     id: 'i' + r.id, dbId: r.id, no: r.no, talepId: r.talep_id,
     arizaDbId: r.ariza_id, tesisDbId: r.tesis_id, tesisKod: r.tesis_kod,
-    district: r.ilce, type: r.tur, altSistem: r.alt_sistem,
+    district: r.ilce, koy: r.koy || '', type: r.tur, altSistem: r.alt_sistem,
     priority: r.oncelik, desc: r.aciklama || '', crew: r.ekip || '',
     araclar: r.araclar || [], status: r.durum,
     planlananMalzeme: r.planlanan_malzeme || [],
@@ -363,6 +372,15 @@ export async function sesListesi(tesisDbId) {
   })) };
 }
 
+// Arızaya bağlı sesli notlar (tesissiz arıza dahil)
+export async function arizaSesListesi(arizaDbId) {
+  const r = await cagir('ariza_ses_listesi', { p_token: tokenOku(), p_ariza_id: arizaDbId });
+  if (!r.ok) return r;
+  return { ok: true, data: (r.data || []).map(f => ({
+    id: f.id, tesisDbId: f.tesis_id, arizaDbId: f.ariza_id ?? null, anahtar: f.adres, url: fotoAdres(f.adres),
+    sure: f.sure, boyut: f.boyut, yukleyen: f.yukleyen, yuklendi: f.yuklendi, yazilabilir: f.yazilabilir !== false
+  })) };
+}
 // Arızaya bağlı fotoğraflar (tesissiz arıza dahil)
 export async function arizaFotoListesi(arizaDbId) {
   const r = await cagir('ariza_foto_listesi', { p_token: tokenOku(), p_ariza_id: arizaDbId });

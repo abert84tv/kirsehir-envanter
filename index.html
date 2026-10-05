@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#1f57a6">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -8447,7 +8451,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.05-114';
+const SURUM = '2026.10.05-115';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -8807,6 +8811,17 @@ class Component extends DCLogic {
       const v = parseInt(localStorage.getItem('ks-saat-farki') || '0', 10);
       return isNaN(v) ? 0 : v;
     })();
+    // Cihaz deposu (IndexedDB) ve çevrimdışı çalışma için servis çalışanı
+    this._depoYuk = import('./cihaz-depo.js').then(d => {
+      this._depo = d; d.kaliciIste(); this.bekleyenEkYenile(); return d;
+    }).catch(() => null);
+    // Sunucudan son alınan veride gönderilmemiş tesis değişikliği varsa veriYenile onu ezmesin
+    this._anlikYuk = this._depoYuk.then(d => d ? d.anlikOku('anlik') : null).then(an => {
+      this._anlikBekleyen = an && an.v ? (an.v.assets || []).filter(a => a && a.dbId != null && a.sync === 'pending') : [];
+    }).catch(() => { this._anlikBekleyen = []; });
+    try {
+      if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('/sw.js').catch(() => {});
+    } catch (e) { /* desteklenmiyor */ }
     this._sbYuk = import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return M; });
     this._sbYuk.catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
     // Kayıtlı oturum anahtarı varsa sunucuda doğrulanır ve giriş ekranı hiç
@@ -8838,9 +8853,25 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._olcKat);
     window.addEventListener('orientationchange', this._olcKat);
     // Bağlantı gelince çevrimdışı kuyruk kendiliğinden boşalır; dakikada bir de denenir
-    this._agGeldi = () => this.kuyrukGonder(true);
+    // Bağlantı kendiliğinden izlenir: kopunca "çevrimdışı"na geçer, gelince bekleyen
+    // her şey (tesis, not, arıza, ambar, modül, fotoğraf) sırayla gönderilir. Üst
+    // şeritten elle çevrimdışına alınmışsa kendiliğinden çıkılmaz.
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) this.setState({ offline: true });
+    this._agGitti = () => {
+      if (this.state.offline) return;
+      this.setState({ offline: true });
+      this.duyur('İnternet kesildi — çalışmaya devam edin, kayıtlar telefonda saklanıyor.', 5000, 'bilgi');
+    };
+    this._agGeldi = () => {
+      if (this._elleCevrimdisi) return;
+      if (this.state.offline) { this.setState({ offline: false }); this.duyur('İnternet geldi — bekleyen kayıtlar gönderiliyor.', 4500, 'iyi'); }
+      setTimeout(() => this.senkron(true), 1500);
+    };
     window.addEventListener('online', this._agGeldi);
-    this._kuyrukSaat = setInterval(() => this.kuyrukGonder(true), 60000);
+    window.addEventListener('offline', this._agGitti);
+    this._gorunur = () => { if (!document.hidden) this.senkron(true); };
+    document.addEventListener('visibilitychange', this._gorunur);
+    this._kuyrukSaat = setInterval(() => this.senkron(true), 60000);
     // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
@@ -8871,7 +8902,10 @@ class Component extends DCLogic {
       const yerel = this.yerelTesisOku();
       const kod = new Set(assets.map(x => String(x.code || '').toUpperCase()));
       const bekleyen = yerel.filter(x => !kod.has(String(x.code || '').toUpperCase()));
-      this.setState({ data: m, assets: [...bekleyen, ...assets], faults, center: { lat: 39.16, lon: 34.12 } },
+      // Çevrimdışı açılışta cihazdaki son sunucu kopyası zaten yüklendi: örnek veriyle ezilmez
+      this.setState(this._anlikUygulandi
+        ? { data: m, center: { lat: 39.16, lon: 34.12 } }
+        : { data: m, assets: [...bekleyen, ...assets], faults, center: { lat: 39.16, lon: 34.12 } },
         () => { this.fotoNiyetGeriYukle(); this.kodDenetle(); this.ekKoyYenile(); });
     });
     this._msg = e => {
@@ -8955,6 +8989,13 @@ class Component extends DCLogic {
     const s = this.state;
     // Bekleyen arızalar cihazda saklanır (arizaBekleyenYaz)
     if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
+    // Sunucudan alınan son veri cihaza da yazılır: internetsiz açılışta oradan gelir
+    if (s.session && s.sunucu && s.sonEsitleme
+        && (this._snapA !== s.assets || this._snapF !== s.faults || this._snapN !== s.notes || this._snapI !== s.isEmirleri)) {
+      this._snapA = s.assets; this._snapF = s.faults; this._snapN = s.notes; this._snapI = s.isEmirleri;
+      clearTimeout(this._snapT);
+      this._snapT = setTimeout(() => this.anlikKaydet(), 2500);
+    }
     if (s.session) {
       const imza = JSON.stringify([s.mapBase, s.theme, s.navMode, s.filter, s.hatKatman,
         s.bildirimKanal, s.bildirimEsik, s.conv.sys, s.conv.zone, s.tab, s.detailTab,
@@ -8979,7 +9020,7 @@ class Component extends DCLogic {
       setTimeout(() => this.hatGonder(), 120);
     }
     // Çevrimdışıdan çıkıldı: bekleyen modül verisi sunucuya gider
-    if (prev.offline && !this.state.offline) setTimeout(() => this.modulKuyrukDene(), 1200);
+    if (prev.offline && !this.state.offline) setTimeout(() => this.senkron(true), 1200);
     // Profil haritası: sekme açılınca ve kayıt listesi değişince tesisler yenilenir
     if (this.state.tab === 'profil'
       && (prev.tab !== 'profil' || prev.assets !== this.state.assets)) {
@@ -8994,6 +9035,8 @@ class Component extends DCLogic {
   componentWillUnmount() {
     removeEventListener('message', this._msg);
     if (this._agGeldi) window.removeEventListener('online', this._agGeldi);
+    if (this._agGitti) window.removeEventListener('offline', this._agGitti);
+    if (this._gorunur) document.removeEventListener('visibilitychange', this._gorunur);
     clearInterval(this._kuyrukSaat);
     clearInterval(this._veriSaat);
     clearTimeout(this._t); clearTimeout(this._f); clearTimeout(this._d);
@@ -10732,14 +10775,20 @@ class Component extends DCLogic {
   async isEmriKapatVer(baglIsEmri, f) {
     const M = this._sb;
     if (!M || !M.tokenOku() || !baglIsEmri) return;
-    const saat = parseFloat(f.hours) || null;
-    const r = await M.isEmriKapat(baglIsEmri.dbId,
-      (f.malzeme || []).map(mz => ({ malzeme: mz.ad, adet: mz.adet || 1, birim: mz.birim })),
-      saat, f.note || null);
-    if (r.ok) {
-      await this.isEmriYenile();
-      this.denetimYaz('is_emri', 'İş emri kapatıldı', baglIsEmri.no, f.no || '');
-    }
+    // Aynı iş emri iki yoldan (form + bağlantı gelince eşitleme) kapatılmasın
+    this._ieKapaniyor = this._ieKapaniyor || new Set();
+    if (this._ieKapaniyor.has(baglIsEmri.dbId)) return;
+    this._ieKapaniyor.add(baglIsEmri.dbId);
+    try {
+      const saat = parseFloat(f.hours) || null;
+      const r = await M.isEmriKapat(baglIsEmri.dbId,
+        (f.malzeme || []).map(mz => ({ malzeme: mz.ad, adet: mz.adet || 1, birim: mz.birim })),
+        saat, f.note || null);
+      if (r.ok) {
+        await this.isEmriYenile();
+        this.denetimYaz('is_emri', 'İş emri kapatıldı', baglIsEmri.no, f.no || '');
+      }
+    } finally { this._ieKapaniyor.delete(baglIsEmri.dbId); }
   }
   // İş Emirleri panelindeki ekip+araç atama formu — madde 4/5/9.
   async isEmriAtaKaydet(secili, ekipForm) {
@@ -10916,6 +10965,7 @@ class Component extends DCLogic {
       yeniDurum === 'pasif' ? 'Tesis hizmet dışı olarak işaretlendi.' : 'Tesis yeniden hizmete alındı.');
     if (a.dbId && this._sb && this._sb.tokenOku() && !this.state.offline) {
       this._sb.tesisKaydet(yeni).then(r => {
+        if (!r.ok && r.cevrimdisi) return this.tesisBekle(yeni.id);
         if (!r.ok) return this.say(r.err || 'Durum sunucuya yazılamadı.', true);
         this.veriYenile(true);
       });
@@ -11059,6 +11109,7 @@ class Component extends DCLogic {
     // sayfa yenilenince bir sonraki kişiyi kendiliğinden içeri alır
     const M = this._sb;
     if (M) { M.cikis(); M.tokenYaz(null); }
+    try { localStorage.removeItem('ks-oturum-profil'); } catch (e) { /* depolama kapalı */ }
     this.setState({
       session: null, autoLogin: false, remember: false,
       loginUser: '', loginPw: '', loginErr: '', tab: 'harita',
@@ -11655,23 +11706,56 @@ class Component extends DCLogic {
   // ── veritabanı bağlantısı
   async anahtarlaGir(M) {
     if (!M.tokenOku()) return;
-    const r = await M.oturumAc();
-    if (!r.ok) { if (!r.cevrimdisi) M.tokenYaz(null); return; }
+    // İnternet yoksa ya da sunucu 7 sn içinde yanıt vermezse (köyde zayıf çekim)
+    // oturum cihazdaki kopyadan açılır; giriş ekranında beklenmez.
+    let r;
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) r = { ok: false, cevrimdisi: true };
+    else r = await Promise.race([M.oturumAc(), new Promise(res => setTimeout(() => res({ ok: false, cevrimdisi: true }), 7000))]);
+    if (!r.ok) {
+      if (!r.cevrimdisi) { M.tokenYaz(null); return; }
+      return this.cevrimdisiAc();
+    }
     const u = M.suret(r.data);
     if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' } });
     this.oturumKur(u, true);
   }
-  oturumKur(u, sunucudan) {
+  // Çevrimdışı açılış: son başarılı girişin profili ve sunucudan son alınan veri cihazdan okunur
+  async cevrimdisiAc() {
+    let u = null;
+    try { u = JSON.parse(localStorage.getItem('ks-oturum-profil') || 'null'); } catch (e) { /* bozuk kayıt */ }
+    if (!u || !u.user || u.mustChange) return;
+    const d = await this._depoYuk;
+    const an = d ? await d.anlikOku('anlik') : null;
+    const v = an && an.v && an.v.user === u.user ? an.v : null;
+    this._yerelOturum = true;
+    if (v) {
+      this._anlikUygulandi = true;
+      const bekF = (this.state.faults || []).filter(f => f.sync === 'pending');
+      const faults = [...bekF.filter(f => !f.dbId),
+        ...(v.faults || []).map(x => bekF.find(y => y.dbId && y.dbId === x.dbId) || x)];
+      const kod = new Set((v.assets || []).map(x => String(x.code || '').toUpperCase()));
+      const yerel = this.yerelTesisOku().filter(x => !kod.has(String(x.code || '').toUpperCase()));
+      await new Promise(res => this.setState({
+        assets: [...yerel, ...(v.assets || [])], faults, notes: { ...this.state.notes, ...(v.notes || {}) },
+        isEmirleri: v.isEmirleri || [], sonEsitleme: v.zaman || this.damga()
+      }, res));
+    }
+    this.oturumKur(u, true, true);
+    this.duyur(v ? 'İnternet yok — telefondaki son kayıtlarla açıldı. Yaptığınız her şey saklanır, internet gelince kendiliğinden gider.'
+      : 'İnternet yok — telefonda kayıtlı veri bulunamadı. Bir kez internetle girip veriyi yükleyin.', 7000, v ? 'bilgi' : 'kotu');
+  }
+  oturumKur(u, sunucudan, yerel) {
     this._prefYuklendi = true;
+    if (sunucudan && !yerel) { try { localStorage.setItem('ks-oturum-profil', JSON.stringify(u)); } catch (e) { /* depolama kapalı */ } }
     this.setState({
       session: u, role: ROLE_LABEL[u.role] || u.role, autoLogin: !!sunucudan,
       loginUser: u.user, loginErr: '', pwForm: null,
-      sunucu: !!sunucudan, tab: 'harita', ...this.prefOku(u)
+      sunucu: !!sunucudan, tab: 'harita', ...(yerel ? { offline: true } : {}), ...this.prefOku(u)
     }, () => {
       this.denetimYaz('oturum', 'Giriş yapıldı',
         (ROLE_LABEL[u.role] || u.role) + ' · ' + (sunucudan ? 'ortak veritabanı' : 'cihaz kopyası'), u.user);
       this.prefUygula();
-      if (sunucudan) {
+      if (sunucudan && !yerel) {
         this.usersYenile();
         // "Giriş yap" her açılışta elle basılıyor (gerçek otomatik giriş yok —
         // bkz. componentDidMount, yalnız alanları dolduruyor). Bu yüzden
@@ -11805,7 +11889,7 @@ class Component extends DCLogic {
       // envanter fotoğrafından ayrı işler (bkz. cop_temizle, KVKK politikası).
       // Aşama (öncesi/sonrası) yeni sütun açmadan aciklama metnine eklenir.
       const r = await M.fotoYukle(p.file, tesisDbId, kod, 'Arıza kaydı · ' + (ASAMA_AD[p.asama] || ASAMA_AD.once), arizaDbId);
-      if (r.ok) ok++;
+      if (r.ok) { ok++; p.yuklendi = true; }
       try { URL.revokeObjectURL(p.url); } catch (e) {}
     }
     if (ok) { if (tesisDbId) this.fotoYenile(tesisDbId); if (arizaDbId) this.arizaFotoYenile(arizaDbId); }
@@ -11882,6 +11966,16 @@ class Component extends DCLogic {
       ...(talepDegis ? { talepler: (st.talepler || []).map(t => t.arizaNo === f.no ? { ...t, arizaNo: no } : t) } : {})
     }), res));
     this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults });
+    // Cihazda bekleyen fotoğraf/ses dosyaları artık kayda bağlanabilir
+    (async () => {
+      const d = await this._depoYuk;
+      if (d) { await d.medyaRefDegis(id, yeniId); this.medyaGonder(yeniId); }
+    })();
+    // Çevrimdışıyken çözülen arızanın bağlı iş emri şimdi kapanır
+    if (yeni.status === 'cozuldu') {
+      const ie = this.isEmriBul(dbId);
+      if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, yeni), 500);
+    }
     // "Kaydedince iş emri aç ve ekibe ata" işaretliyse (telefon sade ekran)
     if (f.iseEmri === true && !f.dbId) {
       this.setState(st => ({ faults: (st.faults || []).map(x => x.id === yeniId ? { ...x, iseEmri: false } : x) }));
@@ -12055,22 +12149,106 @@ class Component extends DCLogic {
       sf[f.id] = { ...k, [asama]: k[asama] + ek.length };
       this.setState({ sahaFoto: sf });
       const a = (this.state.assets || []).find(x => x.id === f.assetId);
+      const beklet = async (liste) => {
+        // Önce telefonun deposuna (sayfa kapansa da kalır); depolama kapalıysa bellekte tutulur
+        const kalici = await this.medyaBirak('ariza', f.id, a ? a.code : f.no, { photos: liste });
+        if (!kalici) {
+          this._arizaMedya = this._arizaMedya || {};
+          const md = this._arizaMedya[f.id] || { photos: [], sesler: [] };
+          md.photos = [...md.photos, ...liste];
+          this._arizaMedya[f.id] = md;
+          this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? { ...x, sync: 'pending' } : x) }));
+        }
+        this.duyur(`${ASAMA_AD[asama]} fotoğrafı telefonda — internet gelince yüklenecek.`, 5000);
+      };
       if (f.dbId && !this.state.offline && this._sb) {
         this.arizaFotoGonder(ek, a ? a.dbId : null, a ? a.code : f.no, f.dbId).then(n => {
-          this.duyur(n ? `${ASAMA_AD[asama]} fotoğrafı ${f.no} kaydına yüklendi.` : 'Fotoğraf yüklenemedi — bağlantıyı kontrol edip yeniden çekin.', 5000, n ? 'iyi' : 'kotu');
+          if (n === ek.length) return this.duyur(`${ASAMA_AD[asama]} fotoğrafı ${f.no} kaydına yüklendi.`, 5000, 'iyi');
+          beklet(ek.filter(p => !p.yuklendi));
         });
       } else {
-        this._arizaMedya = this._arizaMedya || {};
-        const md = this._arizaMedya[f.id] || { photos: [], sesler: [] };
-        md.photos = [...md.photos, ...ek];
-        this._arizaMedya[f.id] = md;
-        // Kayıt yeniden gönderilecek ki fotoğraf da onunla gitsin
-        this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? { ...x, sync: 'pending' } : x) }));
-        this.duyur(`${ASAMA_AD[asama]} fotoğrafı cihazda — kayıt sunucuya yazılınca yüklenecek.`, 5000);
+        beklet(ek);
       }
     };
     document.body.appendChild(inp);
     inp.click();
+  }
+  // Çevrimdışı çekilen fotoğraf ve sesler IndexedDB'de durur; sayfa kapansa da
+  // kaybolmaz, internet gelince ve kayıt sunucuya yazılınca kendiliğinden yüklenir.
+  // Depolama kapalıysa false döner (çağıran bellekteki eski yola düşer).
+  async medyaBirak(hedef, ref, kod, ek) {
+    const d = await this._depoYuk;
+    if (!d) return false;
+    let tamam = true;
+    for (const p of (ek.photos || [])) {
+      if (!p.file) continue;
+      const id = await d.medyaEkle({ hedef, ref, kod, tur: 'foto', blob: p.file, ad: p.file.name || '', asama: p.asama || 'once', kb: p.kb || 0 });
+      if (id == null || id === true) tamam = false; else p.idbId = id;
+    }
+    for (const sn of (ek.sesler || [])) {
+      if (!sn.blob) continue;
+      const id = await d.medyaEkle({ hedef, ref, kod, tur: 'ses', blob: sn.blob, sure: sn.sure || '0:00', asama: sn.asama || 'once' });
+      if (id == null || id === true) tamam = false; else sn.idbId = id;
+    }
+    this.bekleyenEkYenile();
+    return tamam;
+  }
+  // Tek arızanın cihazda bekleyen dosyalarını yükler (arıza sunucuya yazılmışsa)
+  async medyaGonder(ref) {
+    const d = await this._depoYuk, M = this._sb;
+    if (!d || !M || !M.tokenOku() || this.state.offline) return 0;
+    const f = (this.state.faults || []).find(x => x.id === ref);
+    if (!f || !f.dbId) return 0;
+    const a = f.assetId ? (this.state.assets || []).find(x => x.id === f.assetId) : null;
+    const tesisDbId = a ? a.dbId : null, kod = a ? a.code : f.no;
+    this._medyaUcta = this._medyaUcta || new Set();
+    const liste = (await d.medyaListe()).filter(x => x.hedef === 'ariza' && x.ref === ref && !this._medyaUcta.has(x.id));
+    let foto = 0, ses = 0;
+    for (const m of liste) {
+      this._medyaUcta.add(m.id);
+      try {
+        let r;
+        if (m.tur === 'foto') r = await M.fotoYukle(m.blob, tesisDbId, kod, 'Arıza kaydı · ' + (ASAMA_AD[m.asama] || ASAMA_AD.once), f.dbId);
+        else {
+          const sec = String(m.sure || '0:00').split(':').reduce((tt, v) => tt * 60 + (+v || 0), 0);
+          r = await M.sesYukle(m.blob, tesisDbId, kod, sec, 'Arıza sesli notu · ' + (ASAMA_AD[m.asama] || ASAMA_AD.once), f.dbId);
+        }
+        if (r && r.ok) { await d.medyaSil(m.id); m.tur === 'foto' ? foto++ : ses++; }
+        else if (r && r.cevrimdisi) break;
+      } catch (e) { break; } finally { this._medyaUcta.delete(m.id); }
+    }
+    this.bekleyenEkYenile();
+    if (foto || ses) {
+      this.arizaFotoYenile(f.dbId);
+      this.duyur((foto ? foto + ' fotoğraf' : '') + (foto && ses ? ' ve ' : '') + (ses ? ses + ' sesli not' : '') + ' ' + f.no + ' kaydına yüklendi.', 5000, 'iyi');
+    }
+    return foto + ses;
+  }
+  // Bağlantı gelince: bekleyen bütün arıza ve tesis dosyaları
+  async medyaKuyrukGonder() {
+    const d = await this._depoYuk, M = this._sb;
+    if (!d || !M || !M.tokenOku() || this.state.offline) return;
+    const liste = await d.medyaListe();
+    if (!liste.length) { this.bekleyenEkYenile(); return; }
+    for (const ref of [...new Set(liste.filter(x => x.hedef === 'ariza').map(x => x.ref))]) await this.medyaGonder(ref);
+    // tesis fotoğrafları: kayıt kodundan sunucudaki tesis bulunur
+    const tes = liste.filter(x => x.hedef === 'tesis');
+    const kodlar = [...new Set(tes.map(x => x.kod))];
+    this._medyaUcta = this._medyaUcta || new Set();
+    for (const kod of kodlar) {
+      const a = (this.state.assets || []).find(x => x.dbId != null && String(x.code).toUpperCase() === String(kod).toUpperCase());
+      if (!a) continue;
+      let n = 0;
+      for (const m of tes.filter(x => x.kod === kod && !this._medyaUcta.has(x.id))) {
+        this._medyaUcta.add(m.id);
+        try {
+          const r = await M.fotoYukle(m.blob, a.dbId, a.code);
+          if (r && r.ok) { await d.medyaSil(m.id); n++; } else if (r && r.cevrimdisi) break;
+        } catch (e) { break; } finally { this._medyaUcta.delete(m.id); }
+      }
+      if (n) { this.fotoYenile(a.dbId); this.duyur(n + ' fotoğraf ' + a.code + ' kaydına yüklendi.', 5000, 'iyi'); }
+    }
+    this.bekleyenEkYenile();
   }
   // Gönderilmemiş arızalar cihazda saklanır: sayfa kapanıp açılsa da kaybolmaz.
   // (Seçilen fotoğraf dosyaları saklanamaz — tarayıcı izin vermez.)
@@ -12122,10 +12300,8 @@ class Component extends DCLogic {
     const sel = this.state.assets.find(a => a.id === this.state.selected);
     if (!sel) return;
     if (!this.yazabilir(sel)) return this.kilitUyar(sel);
-    if (!this._sb || !this._sb.tokenOku() || !sel.dbId) {
-      this.say(!sel.dbId && this._sb && this._sb.tokenOku()
-        ? `${sel.code} henüz ortak veritabanında değil — fotoğraf oraya yazılamıyor. Üst şeritteki ${this.state.sunucu ? 'Yenile' : 'Bağlan'} düğmesine basıp kayıtları veritabanından çekin, sonra tekrar deneyin.`
-        : 'Fotoğraf yüklemek için ortak veritabanı bağlantısı gerekiyor. Üst şeritteki BAĞLAN düğmesine basın; internet yoksa bağlantı gelince yeniden deneyin.', true);
+    if (!this._sb || !this._sb.tokenOku()) {
+      this.say('Fotoğraf yüklemek için bir kez giriş yapmış olmanız gerekiyor.', true);
       setTimeout(() => this.setState({ toast: null }), 9000);
       return;
     }
@@ -12159,19 +12335,30 @@ class Component extends DCLogic {
     };
     inp.click();
   }
+  // İnternet yoksa (ya da kayıt henüz sunucuda değilse) fotoğraf telefonun deposunda bekler
+  async fotoBeklet(sel, dosyalar) {
+    const kalici = await this.medyaBirak('tesis', sel.id, sel.code, { photos: dosyalar.map(file => ({ file, kb: Math.round(file.size / 1024) })) });
+    this.duyur(kalici
+      ? dosyalar.length + ' fotoğraf telefonda — internet gelince ' + sel.code + ' kaydına yüklenecek.'
+      : 'Fotoğraf telefonda saklanamadı — internet olan yerde yeniden çekin.', 6000, kalici ? 'bilgi' : 'kotu');
+  }
   async fotoGonder(sel, list) {
     const M = this._sb;
+    if (this.state.offline || !sel.dbId) return this.fotoBeklet(sel, list);
     this.setState({ fotoYuk: { toplam: list.length, biten: 0, kod: sel.code } });
     let ok = 0, kb = 0, hata = '';
-    for (const f of list) {
+    for (let i = 0; i < list.length; i++) {
+      const f = list[i];
       const r = await M.fotoYukle(f, sel.dbId, sel.code);
       if (r.ok) { ok++; kb += Math.round((r.data.boyut || 0) / 1024); }
+      else if (r.cevrimdisi) { this.setState({ fotoYuk: null }); await this.fotoBeklet(sel, list.slice(i)); break; }
       else if (!hata) hata = r.err;
       this.setState({ fotoYuk: { toplam: list.length, biten: ok, kod: sel.code } });
     }
     this.setState({ fotoYuk: null });
     await this.fotoYenile(sel.dbId);
     this.veriYenile(true);
+    if (!ok && !hata) return;
     if (!ok) {
       this.say(hata || 'Fotoğraf yüklenemedi.', true);
       setTimeout(() => this.setState({ toast: null }), 9000);
@@ -12253,9 +12440,10 @@ class Component extends DCLogic {
     const bekleyen = (this.state.assets || []).filter(a =>
       a && !a.dbId && a.elle === true && a.code && a.type
       && !sunucuKod.has(String(a.code).toUpperCase()));
-    if (!bekleyen.length) return 0;
+    const duzenlenen = (this.state.assets || []).filter(a => a && a.dbId != null && a.sync === 'pending');
+    if (!bekleyen.length && !duzenlenen.length) return 0;
     this._gonderiyor = true;
-    let yazilan = 0, kilitli = 0, hata = '';
+    let yazilan = 0, kilitli = 0, hata = '', kes = false;
     for (const a of bekleyen) {
       if (!this.yazabilir(a)) { kilitli++; continue; }
       let r;
@@ -12264,9 +12452,27 @@ class Component extends DCLogic {
         yazilan++;
         this.iz(a.id, 'Sunucuya yazıldı', 'Çevrimdışı kuyruktan kendiliğinden gönderildi.');
       } else if (r && r.cevrimdisi) {
-        break;
+        kes = true; break;
       } else if (!hata) {
         hata = (r && r.err) || 'Sunucuya yazılamadı.';
+      }
+    }
+    // Çevrimdışıyken değiştirilen mevcut kayıtlar (alan, aktiflik) de aynı kuyruktan gider
+    for (const a of kes ? [] : duzenlenen) {
+      if (!this.yazabilir(a)) { kilitli++; continue; }
+      let r;
+      try { r = await M.tesisKaydet(a); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+      if (r && r.ok) {
+        yazilan++;
+        this.iz(a.id, 'Sunucuya yazıldı', 'Çevrimdışı yapılan değişiklik gönderildi.');
+        this.setState(st => ({ assets: (st.assets || []).map(x => x.id === a.id ? { ...x, sync: 'synced' } : x) }));
+      } else if (r && r.cevrimdisi) {
+        break;
+      } else {
+        // Sunucu reddetti (başkası bu arada değiştirmiş olabilir): sonsuz denemeye girmez, kullanıcıya söylenir
+        this.setState(st => ({ assets: (st.assets || []).map(x => x.id === a.id ? { ...x, sync: 'synced' } : x) }));
+        this.duyur(a.code + ' değişikliği gönderilemedi: ' + ((r && r.err) || 'sunucu reddetti') + ' Sunucudaki güncel hâli yüklenecek.', 9000, 'kotu');
+        yazilan++;
       }
     }
     if (yazilan) await this.veriYenile(true);
@@ -12280,9 +12486,100 @@ class Component extends DCLogic {
     }
     return yazilan;
   }
+  // Bağlantı varken bekleyen her şeyi sırayla gönderir:
+  // tesis değişiklikleri → notlar → arıza/ambar/modül → fotoğraf ve sesler
+  async senkron(sessiz) {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || !this.state.session || this.state.offline) return;
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
+    if (this._senkronda) return;
+    this._senkronda = true;
+    try {
+      if (this._yerelOturum && !(await this.oturumDogrula())) return;
+      await this.kuyrukGonder(sessiz);
+      await this.notKuyrukGonder();
+      this.modulKuyrukDene();
+      await this.medyaKuyrukGonder();
+    } finally { this._senkronda = false; }
+  }
+  // Çevrimdışı açılan oturum internet gelince sunucuda doğrulanır
+  async oturumDogrula() {
+    const M = this._sb;
+    const r = await Promise.race([M.oturumAc(), new Promise(res => setTimeout(() => res({ ok: false, cevrimdisi: true }), 8000))]);
+    if (r.ok) {
+      this._yerelOturum = false;
+      const u = M.suret(r.data);
+      try { localStorage.setItem('ks-oturum-profil', JSON.stringify(u)); } catch (e) { /* depolama kapalı */ }
+      this.usersYenile();
+      this.modulGirisEsitle();
+      await this.veriYenile(true);
+      return true;
+    }
+    if (!r.cevrimdisi) {
+      M.tokenYaz(null);
+      try { localStorage.removeItem('ks-oturum-profil'); } catch (e) { /* depolama kapalı */ }
+      this._yerelOturum = false;
+      this.setState({
+        session: null, autoLogin: false, panel: 'yok', faultForm: null, selected: null, tab: 'harita',
+        loginErr: 'Oturum süresi dolmuş — şifrenizi girin. Telefondaki bekleyen kayıtlar korunuyor, girişten sonra gönderilir.'
+      });
+    }
+    return false;
+  }
+  // Sunucudan alınan son veri cihaza yazılır (çevrimdışı açılış için)
+  anlikKaydet() {
+    const s = this.state;
+    if (!this._depo || !s.session) return;
+    const varlik = (s.assets || []).filter(a => a && (a.dbId != null || a.elle === true));
+    if (!varlik.length) return;
+    try {
+      const v = JSON.parse(JSON.stringify({
+        user: s.session.user, assets: varlik,
+        faults: (s.faults || []).map(f => ({ ...f, photos: (f.photos || []).filter(x => !x.file), sesler: [] })),
+        notes: s.notes || {}, isEmirleri: s.isEmirleri || [], zaman: s.sonEsitleme
+      }));
+      this._depo.anlikYaz('anlik', v);
+    } catch (e) { /* yazılamadı — bir sonraki değişiklikte yeniden denenir */ }
+  }
+  // Gönderilmeyi bekleyen kayıt sayısı (üst şerit rozeti için)
+  bekleyenEkYenile() {
+    const not = this.notKuyrukOku().length;
+    const d = this._depo;
+    (d ? d.medyaSay() : Promise.resolve(0)).then(medya => {
+      const e = this.state.bekleyenEk || {};
+      if (e.not !== not || e.medya !== medya) this.setState({ bekleyenEk: { not, medya } });
+    });
+  }
+  notKuyrukOku() {
+    try { const v = JSON.parse(localStorage.getItem('ks-not-kuyruk') || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+  }
+  notKuyrukYaz(l) {
+    try { localStorage.setItem('ks-not-kuyruk', JSON.stringify(l)); } catch (e) { /* depolama kapalı */ }
+    this.bekleyenEkYenile();
+  }
+  async notKuyrukGonder() {
+    const M = this._sb;
+    const l = this.notKuyrukOku();
+    if (!l.length || !M) return;
+    const kalan = []; let n = 0;
+    for (let i = 0; i < l.length; i++) {
+      let r;
+      try { r = await M.notEkle(l[i].dbId, l[i].metin); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+      if (r && r.ok) n++;
+      else if (r && r.cevrimdisi) { kalan.push(...l.slice(i)); break; }
+    }
+    this.notKuyrukYaz(kalan);
+    if (n) this.veriYenile(true);
+  }
+  // Bağlantı koptuğu için gönderilemeyen tesis değişikliği: "bekliyor" işaretlenir
+  tesisBekle(id) {
+    this.setState(st => ({ assets: (st.assets || []).map(x => x.id === id ? { ...x, sync: 'pending' } : x) }));
+  }
   async veriYenile(sessiz) {
     const M = this._sb;
     if (!M || !M.tokenOku()) return;
+    if (this.state.offline && sessiz) return;
+    if (this._anlikYuk) await this._anlikYuk;
     const [t, a, n] = await Promise.all([
       M.tesisListesi(), M.arizaListesi(),
       M.notListesi ? M.notListesi() : Promise.resolve({ ok: false })
@@ -12293,7 +12590,11 @@ class Component extends DCLogic {
         : t.err, true);
       return;
     }
-    const assets = (t.data || []).map(M.tesisSuret);
+    // Gönderilmemiş (çevrimdışı yapılmış) tesis değişiklikleri sunucudaki eski hâliyle ezilmez
+    const yerelBek = new Map([...(this._anlikBekleyen || []),
+      ...(this.state.assets || []).filter(x => x && x.dbId != null && x.sync === 'pending')].map(x => [x.dbId, x]));
+    this._anlikBekleyen = [];
+    const assets = (t.data || []).map(M.tesisSuret).map(x => yerelBek.get(x.dbId) ? { ...yerelBek.get(x.dbId), surum: x.surum } : x);
     // Sunucuya henüz yazılmamış (pending) arızalar korunur: yenisi listeye
     // eklenir, değiştirilmişi sunucudaki eski hâlinin yerine geçer
     const bekleyenF = (this.state.faults || []).filter(f => f.sync === 'pending');
@@ -12336,6 +12637,7 @@ class Component extends DCLogic {
     this.copYenile().then(() => this.kodDenetle());
     this.isEmriYenile();
     if (bekleyenF.length) setTimeout(() => this.arizaKuyrukGonder(), 300);
+    if (assets.some(x => x.sync === 'pending')) setTimeout(() => this.kuyrukGonder(true), 600);
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider
     this.toMap({ ks: 'assets', assets: birlesik, faults });
     if (!sessiz) {
@@ -13194,6 +13496,8 @@ class Component extends DCLogic {
     const sel = s.assets.find(a => a.id === s.selected);
     const pendA = s.assets.filter(a => a.sync === 'pending');
     const pendF = s.faults.filter(f => f.sync === 'pending');
+    const bekleyenSay = pendA.length + pendF.length + (s.ambarKuyruk || []).length + Object.keys(s.modulKuyruk || {}).length
+      + ((s.bekleyenEk || {}).not || 0) + ((s.bekleyenEk || {}).medya || 0);
     const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
 
     // markers
@@ -13674,6 +13978,8 @@ class Component extends DCLogic {
         // kimse yeniden giremez, sayfa yenilense de.
         const M = this._sb;
         if (M) { M.cikis(); M.tokenYaz(null); }
+        try { localStorage.removeItem('ks-oturum-profil'); } catch (e) { /* depolama kapalı */ }
+        this._yerelOturum = false;
         let sv = null;
         try { sv = JSON.parse(localStorage.getItem(SES_KEY) || 'null'); } catch (e) { /* depolama kapalı */ }
         this._bekleyenHat = null;
@@ -14477,13 +14783,13 @@ class Component extends DCLogic {
         };
       })(),
       net: s.offline
-        ? { label: 'Çevrimdışı', badge: 'Çevrimdışı', short: 'Off', fill: 'var(--color-uyari)', border: 'var(--color-uyari)', ink: '#fff',
+        ? { label: 'Çevrimdışı', badge: 'Çevrimdışı' + (bekleyenSay ? ' · ' + bekleyenSay : ''), short: 'Off', fill: 'var(--color-uyari)', border: 'var(--color-uyari)', ink: '#fff',
           nokta: 'ks-kapali', yazi: 'var(--color-uyari)', zemin: dark ? 'rgba(255,69,58,.14)' : 'var(--color-uyari-100)',
           ipucu: 'Çevrimdışı — kayıtlar cihazda bekler. Dokununca çevrimiçine döner.' }
-        : { label: '4G', badge: s.sunucu ? 'Canlı' : 'Çevrim içi', short: 'On', fill: 'transparent', border: ui.rule, ink: ui.mut,
+        : { label: '4G', badge: bekleyenSay ? 'Gönderiliyor · ' + bekleyenSay : (s.sunucu ? 'Canlı' : 'Çevrim içi'), short: 'On', fill: 'transparent', border: ui.rule, ink: ui.mut,
           nokta: '', yazi: dark ? '#30d158' : '#1b7a36', zemin: dark ? 'rgba(48,209,88,.12)' : 'rgba(52,199,89,.12)',
           ipucu: s.sunucu ? 'Ortak veritabanına bağlı — değişiklikler herkese anında gider.' : 'İnternet var; ortak veritabanı bağlantısı bekleniyor.' },
-      toggleNet: () => { const off = !s.offline; this.setState({ offline: off }); this.say(off ? 'Çevrimdışı — kayıtlar IndexedDB’de tutulacak.' : 'Bağlantı geldi — arka plan eşitlemesi hazır.'); },
+      toggleNet: () => { const off = !s.offline; this._elleCevrimdisi = off; this.setState({ offline: off }); if (!off) setTimeout(() => this.senkron(true), 1200); this.say(off ? 'Çevrimdışı — kayıtlar IndexedDB’de tutulacak.' : 'Bağlantı geldi — arka plan eşitlemesi hazır.'); },
       yardimKenar: s.yardim ? 'var(--color-accent)' : ui.rule,
       yardimZemin: s.yardim ? 'var(--color-accent)' : 'transparent',
       yardimYazi: s.yardim ? '#fff' : ui.fg,
@@ -17180,13 +17486,18 @@ class Component extends DCLogic {
         // kaydedilince aynı fotoğraf ikinci kez yükleniyordu (2026.10.01).
         const sesler = (f.sesler || []).filter(x => x.blob);
         const bekleyen = (f.photos || []).filter(p => p.file);
-        if (sesler.length || bekleyen.length) {
-          this._arizaMedya = this._arizaMedya || {};
-          const md = this._arizaMedya[yeniId] || { photos: [], sesler: [] };
-          this._arizaMedya[yeniId] = { photos: [...md.photos, ...bekleyen], sesler: [...md.sesler, ...sesler] };
-        }
         this.setState(st => ({ faults: (st.faults || []).map(x => x.id === yeniId ? { ...x, photos: (x.photos || []).filter(p => !p.file), sesler: [] } : x) }));
-        setTimeout(() => this.arizaKuyrukGonder(), 0);
+        if (sesler.length || bekleyen.length) {
+          // Dosyalar önce telefonun deposuna yazılır, sonra kayıt gönderilir
+          this.medyaBirak('ariza', yeniId, ffAsset ? ffAsset.code : arizaNo, { photos: bekleyen, sesler }).then(kalici => {
+            if (!kalici) {
+              this._arizaMedya = this._arizaMedya || {};
+              const md = this._arizaMedya[yeniId] || { photos: [], sesler: [] };
+              this._arizaMedya[yeniId] = { photos: [...md.photos, ...bekleyen], sesler: [...md.sesler, ...sesler] };
+            }
+            this.arizaKuyrukGonder();
+          });
+        } else setTimeout(() => this.arizaKuyrukGonder(), 0);
         // Seçilen fotoğraf ve sesler kayıt sunucuya yazılınca yüklenir (arizaGonder)
         if (bekleyen.length && (s.offline || !this._sb)) {
           this.say(`${bekleyen.length} fotoğraf cihazda bekliyor — ${s.offline ? 'bağlantı gelince' : 'kayıt veritabanına yazıldıktan sonra'} yüklenecek.`, true);
@@ -18192,9 +18503,12 @@ class Component extends DCLogic {
         if (!id) return;
         const metin = (s.notes[id] || '').trim();
         this.iz(id, 'Not güncellendi', metin.slice(0, 90));
-        if (metin && sel && sel.dbId && this._sb && this._sb.tokenOku() && !s.offline) {
-          this._sb.notEkle(sel.dbId, metin).then(r => {
+        if (metin && sel && sel.dbId && this._sb && this._sb.tokenOku()) {
+          const beklet = () => this.notKuyrukYaz([...this.notKuyrukOku(), { dbId: sel.dbId, kod: sel.code, metin, t: Date.now() }]);
+          if (s.offline) beklet();
+          else this._sb.notEkle(sel.dbId, metin).then(r => {
             if (r && r.ok) this.veriYenile(true);
+            else if (r && r.cevrimdisi) beklet();
             else this.say((r && r.err) || 'Not sunucuya yazılamadı.', true);
           });
         }
@@ -18352,7 +18666,7 @@ class Component extends DCLogic {
             if (yerDegisti) this.iz(a.id, 'Köy bilgisi düzeltildi', `${a.village || '(boş)'} → ${koy || '(boş)'} · ${ilce}`);
             this.iz(a.id, 'Alanlar güncellendi', dolu + ' alan dolu');
             if (yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline) {
-              this._sb.tesisKaydet(yeni).then(() => this.veriYenile(true));
+              this._sb.tesisKaydet(yeni).then(r => { if (r && !r.ok && r.cevrimdisi) this.tesisBekle(yeni.id); else this.veriYenile(true); });
             }
             this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
           }

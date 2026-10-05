@@ -53,6 +53,30 @@ h6,.card-kicker{text-transform:none;letter-spacing:-.01em;font-size:12px}
 .table td{border-bottom:1px solid var(--color-divider);padding:12px}
 .table tbody tr:hover{background:rgba(0,113,227,.05)}
 .btn{font-weight:600;letter-spacing:-.01em}
+/* Panel görünümü (2026.10.06): yumuşak yuvarlak kartlar, cam gibi üst/alt çubuk, ince kaydırma çubuğu,
+   belirgin odak halkası. Renkler değişmez; yalnız biçim. Masaüstü ve telefon aynı kuralları kullanır. */
+*{scrollbar-width:thin;scrollbar-color:rgba(128,128,140,.38) transparent}
+body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(0,113,227,.07),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(0,113,227,.05),transparent 58%);background-attachment:fixed}
+html.ks-koyu body{background-image:radial-gradient(1100px 560px at 88% -12%,rgba(10,132,255,.16),transparent 62%),radial-gradient(900px 520px at -10% 112%,rgba(10,132,255,.10),transparent 58%)}
+.scroll{background:transparent!important}
+section,[style*="border-radius:14px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
+[style*="border-radius:16px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
+[style*="border-radius:12px"][style*="border:1px solid"][style*="padding:1"]:not(button):not(input):not(select):not(label):not(span){
+ border-radius:20px!important;border-color:rgba(16,24,40,.07)!important;
+ box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 1px 2px rgba(16,24,40,.04),0 12px 30px -8px rgba(16,24,40,.10)!important}
+html.ks-koyu section,html.ks-koyu [style*="border-radius:14px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
+html.ks-koyu [style*="border-radius:16px"][style*="border:1px solid"]:not(button):not(input):not(select):not(label):not(span),
+html.ks-koyu [style*="border-radius:12px"][style*="border:1px solid"][style*="padding:1"]:not(button):not(input):not(select):not(label):not(span){
+ border-color:rgba(255,255,255,.09)!important;background-color:rgba(28,28,30,.66)!important;
+ -webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);
+ box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 14px 34px -10px rgba(0,0,0,.6)!important}
+#tel-bas,#tel-nav{-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);background-color:rgba(255,255,255,.80)!important}
+html.ks-koyu #tel-bas,html.ks-koyu #tel-nav{background-color:rgba(28,28,30,.74)!important}
+[style*="background:var(--color-accent)"][style*="color:#fff"]:not(span):not(div){box-shadow:0 8px 18px -6px rgba(0,113,227,.55);transition:transform .12s,box-shadow .12s}
+[style*="background:var(--color-accent)"][style*="color:#fff"]:not(span):not(div):active{transform:scale(.975);box-shadow:0 3px 8px -4px rgba(0,113,227,.5)}
+button{transition:background-color .14s,border-color .14s,transform .12s}
+input:focus,select:focus,textarea:focus{outline:none!important;border-color:var(--color-accent)!important;box-shadow:0 0 0 3px rgba(0,113,227,.22)!important}
+.table tbody tr{transition:background-color .12s}
 @page{size:A4;margin:12mm}
 @media print{
  body{background:#fff}
@@ -513,7 +537,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <sc-if value="{{ tab.isPano }}" hint-placeholder-val="{{ false }}">
 <div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};padding:18px 22px 22px;display:flex;flex-direction:column;gap:14px">
 
-<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
 <sc-for list="{{ pano.kpis }}" as="k" hint-placeholder-count="4">
 <div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;align-items:flex-end;gap:10px;min-width:0">
 <div style="flex:1;min-width:0">
@@ -9097,7 +9121,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-122';
+const SURUM = '2026.10.06-123';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9643,6 +9667,7 @@ class Component extends DCLogic {
     if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
     if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (s.ayarBolum === 'entegrasyon' && s.tab === 'ayarlar') this.entegrasyonYenile(); }
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
+    try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     if (this._telTab !== s.tab) { this._telTab = s.tab; if (s.tab === 'telemetri') this.telemetriYenile(true); }
     // Sunucudan alınan son veri cihaza da yazılır: internetsiz açılışta oradan gelir
     if (s.session && s.sunucu && s.sonEsitleme
@@ -9732,7 +9757,9 @@ class Component extends DCLogic {
     const a = (this.state.assets || []).find(x => x.id === assetId);
     if (!M || !M.hatKaydet || !M.tokenOku() || !a || !a.dbId || this.state.offline) return;
     M.hatKaydet(a.dbId, (liste || []).map(x => ({
-      tur: x.tur, noktalar: x.noktalar, aciklama: x.aciklama || null
+      tur: x.tur, noktalar: x.noktalar,
+      // Boru çapı ve malzemesi açıklama alanına "Ø110 mm · PE100 · not" biçiminde yazılır
+      aciklama: [x.cap ? 'Ø' + x.cap + ' mm' : '', x.malzeme || '', x.aciklama || ''].filter(Boolean).join(' · ') || null
     }))).then(r => {
       if (r.ok) return;
       this.duyur(r.cevrimdisi
@@ -9757,7 +9784,10 @@ class Component extends DCLogic {
       (tablo[id] = tablo[id] || []).push({
         id: 'h' + x.id, dbId: x.id, tur: x.tur,
         noktalar: (x.noktalar || []).map(p => [+p[0], +p[1]]),
-        aciklama: x.aciklama || ''
+        ...(() => {
+          const m = /^Ø(\d+) mm(?: · ([^·]+?))?(?: · (.*))?$/.exec(String(x.aciklama || ''));
+          return m ? { cap: +m[1], malzeme: (m[2] || '').trim(), aciklama: m[3] || '' } : { aciklama: x.aciklama || '' };
+        })()
       });
     }
     const sunucudakiKayit = new Set((this.state.assets || []).filter(a => a.dbId != null).map(a => a.id));
@@ -10637,8 +10667,23 @@ class Component extends DCLogic {
       if (toplam + zim > 0 && toplam <= esik) kritikler.push(ad + ' ' + toplam + ' ' + kalem.birim);
     }
     if (kritikler.length) {
+      // Satın alma uyarısı: kritik kalem sipariş listesine kendiliğinden eklenir
+      const liste = [...(this.state.siparis || [])];
+      const eklenen = [];
+      for (const ad of dus) {
+        const kalem = this.katalogBul(ad);
+        if (!kalem || liste.some(x => x.malzeme === ad)) continue;
+        const toplam = this.ambarToplam(ad, ambarObj);
+        const esik = Number(kalem.esik) || KRITIK_ESIK[kalem.birim] || 2;
+        if (!(toplam <= esik && toplam + this.ambarZimmetToplam(ad, ambarObj) > 0)) continue;
+        liste.push({ id: 's' + Date.now() + Math.random().toString(36).slice(2, 5), malzeme: ad, adet: this.siparisOneri(ad),
+          birim: kalem.birim, ekleyen: 'Otomatik (kritik stok)', damga: this.damga(), otomatik: true });
+        eklenen.push(ad);
+      }
+      if (eklenen.length) this.siparisYaz(liste);
       setTimeout(() => this.duyur('Kritik stok seviyesi: ' + kritikler.join(', ')
-        + '. Ambara giriş girilmesi gerekiyor.', 9000, 'kotu'), 600);
+        + (eklenen.length ? '. Satın alma için sipariş listesine eklendi.' : '. Ambara giriş girilmesi gerekiyor.'), 9000, 'kotu',
+        () => this.setState({ tab: 'ambar' })), 600);
     }
   }
   // Tek hareket: giriş, çıkış, zimmet, iade, sarf. Eksi mevcuda düşürmez.
@@ -12306,7 +12351,7 @@ class Component extends DCLogic {
   // Dosyadan içe aktarma — 2026.10.01'e kadar bu fonksiyon dosyayı hiç okumuyor,
   // her seferinde aynı 12 uydurma satırı ilçe merkezlerinin yanına koyuyordu.
   makeImport(source) {
-    const kabul = /KML|Earth/i.test(source) ? '.kml,.kmz' : (/GPX/i.test(source) ? '.gpx' : '.csv,.txt');
+    const kabul = /KML|Earth/i.test(source) ? '.kml,.kmz' : (/GPX/i.test(source) ? '.gpx' : '.csv,.txt,.xlsx,.xls');
     let inp = this._impInput;
     if (!inp) {
       inp = document.createElement('input');
@@ -12393,7 +12438,19 @@ class Component extends DCLogic {
       }).filter(Boolean);
     }
     // CSV / TXT: ayraç ; , veya sekme; başlıkta enlem/lat ve boylam/lon sütunu aranır
-    const satirlar = (await dosya.text()).replace(/^﻿/, '').split(/\r?\n/).filter(x => x.trim());
+    // Excel (.xlsx/.xls): ilk sayfa okunup CSV mantığına verilir (kütüphane yalnız gerektiğinde yüklenir)
+    let metinSatirlar = null;
+    if (/\.xlsx?$/i.test(ad)) {
+      if (!window.XLSX) await new Promise((res, rej) => {
+        const sc = document.createElement('script');
+        sc.src = './vendor/xlsx.mini.min.js'; sc.onload = res; sc.onerror = () => rej(new Error('Excel okuyucu yüklenemedi (internet gerekebilir)'));
+        document.head.appendChild(sc);
+      });
+      const wb = window.XLSX.read(new Uint8Array(await dosya.arrayBuffer()), { type: 'array' });
+      const rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: '' });
+      metinSatirlar = rows.map(r => r.map(v => String(v).replace(/;/g, ',')).join(';'));
+    }
+    const satirlar = (metinSatirlar ? metinSatirlar.join(String.fromCharCode(10)) : await dosya.text()).replace(/^\ufeff/, '').split(/\r?\n/).filter(x => x.trim());
     if (satirlar.length < 2) return [];
     const ayrac = [';', '\t', ','].find(a => satirlar[0].split(a).length > 1) || ',';
     const bas = satirlar[0].split(ayrac).map(x => norm(x.trim().replace(/^"|"$/g, '')));

@@ -1,6 +1,6 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.06-122';
+const SURUM = 'ks-2026.10.06-123';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo';
 const KARO_LIMIT = 900;
@@ -12,7 +12,7 @@ const ON_YUKLE = [
   '/_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css',
   '/_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/_ds_bundle.js',
   '/vendor/react.production.min.js', '/vendor/react-dom.production.min.js',
-  '/vendor/supabase.js', '/vendor/leaflet.js', '/vendor/leaflet.css',
+  '/vendor/supabase.js', '/vendor/xlsx.mini.min.js', '/vendor/leaflet.js', '/vendor/leaflet.css',
   '/vendor/images/layers.png', '/vendor/images/layers-2x.png', '/vendor/images/marker-icon.png',
   '/vendor/images/marker-icon-2x.png', '/vendor/images/marker-shadow.png',
   '/manifest.webmanifest', '/icon-192.png'

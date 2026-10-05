@@ -1932,3 +1932,9 @@ Sürüm 2026.10.05-114.
 - `cop_temizle` WHERE hatası Supabase'te düzeltildi; çöp kutusu temizliği çalışıyor.
 - Ayarlar > Entegrasyon: Google Gemini (ücretsiz anahtar), Anthropic, Telegram bot anahtarı. `talep-siniflandir` v3 Gemini'yi de destekler.
 - `telegram-basvuru` işlevi: Telegram'dan yazan vatandaşın mesajı web başvurusu olur, takip kodu alır, konum paylaşabilir, /durum KOD ile sorgular.
+
+## 2026.10.06-123 — Panel görünümü, Excel içe aktarma, hat çapı, kritik stok → sipariş
+- Tasarım: renkler aynı; her sayfada (masaüstü, telefon, harita/hat/profil) yuvarlak yumuşak kartlar, cam gibi üst/alt çubuk, ince kaydırma, belirgin odak halkası, koyu temada saydam kartlar.
+- Dış veri aktarımı Excel (.xlsx/.xls) dosyasını okur (SheetJS, yalnız gerektiğinde yüklenir).
+- Hat çizimi: her hat için boru çapı (mm) ve malzeme girilir (Çap düğmesi); sunucuya açıklama alanıyla yazılır.
+- Kritik stoğa düşen kalem sipariş listesine kendiliğinden eklenir (satın alma uyarısı).

@@ -3,3 +3,17 @@
    harita karolarının ne kadar kısılacağı artık tek yerden değişir. */
 body.dark .ks-tiles{filter:saturate(.6) brightness(.72) contrast(1.05)}
 body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
+
+/* Panel görünümü (2026.10.06) — ana pencereyle aynı dil: yuvarlak, yumuşak gölge, ince kaydırma çubuğu.
+   Renkler değişmez. */
+*{scrollbar-width:thin;scrollbar-color:rgba(128,128,140,.38) transparent}
+#bar,#durum,#panel,#alt,#tools>*,#route,#menu,#side,.leaflet-popup-content-wrapper{
+  border-radius:18px;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 12px 30px -8px rgba(16,24,40,.22);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4)}
+#side{border-radius:0;box-shadow:none}
+.leaflet-bar{border:none!important;border-radius:14px!important;overflow:hidden;box-shadow:0 10px 26px -8px rgba(16,24,40,.28)!important}
+.leaflet-bar a{border-bottom-color:rgba(0,0,0,.07)!important}
+body.dark #bar,body.dark #durum,body.dark #panel,body.dark #alt,body.dark #route,body.dark #menu{
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 14px 34px -10px rgba(0,0,0,.65)}
+input:focus,select:focus{outline:none;box-shadow:0 0 0 3px rgba(0,113,227,.22)}

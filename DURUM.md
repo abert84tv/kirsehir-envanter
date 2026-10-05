@@ -1927,3 +1927,8 @@ Sürüm 2026.10.05-114.
 - Saha: "Araç arızası / kaza" düğmesi — araç "arızalı" olur, araç defterine işlenir, iş ekipten alınıp merkeze devredilir (Beklemede; süre SLA'dan düşer).
 
 ## 2026.10.05-121 — Ambar hareket formu: önce → işlem → sonra kontrol satırı
+
+## 2026.10.06-122 — Çöp kutusu düzeltmesi, ücretsiz yapay zekâ (Gemini), Telegram botu
+- `cop_temizle` WHERE hatası Supabase'te düzeltildi; çöp kutusu temizliği çalışıyor.
+- Ayarlar > Entegrasyon: Google Gemini (ücretsiz anahtar), Anthropic, Telegram bot anahtarı. `talep-siniflandir` v3 Gemini'yi de destekler.
+- `telegram-basvuru` işlevi: Telegram'dan yazan vatandaşın mesajı web başvurusu olur, takip kodu alır, konum paylaşabilir, /durum KOD ile sorgular.

@@ -59,22 +59,21 @@ Deno.serve(async (req) => {
   const oj = o.ok ? await o.json() : null;
   if (!oj || (Array.isArray(oj) && !oj.length)) return yanit({ ok: false, err: 'Oturum geçersiz — çıkıp yeniden girin.' }, 401);
 
-  // Anahtar önce Edge Function secret'ından, yoksa Ayarlar > Entegrasyon'da
-  // girilip sunucudaki entegrasyon tablosunda saklanandan okunur (service role).
-  let anahtar = Deno.env.get('ANTHROPIC_API_KEY');
-  if (!anahtar) {
-    const servis = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    if (servis) {
-      try {
-        const r = await fetch(url + '/rest/v1/entegrasyon?ad=eq.anthropic_api_anahtari&select=deger', {
-          headers: { apikey: servis, Authorization: 'Bearer ' + servis }
-        });
-        const j = r.ok ? await r.json() : [];
-        if (Array.isArray(j) && j[0] && j[0].deger) anahtar = String(j[0].deger);
-      } catch { /* okunamadı — aşağıda anahtarYok döner */ }
-    }
-  }
-  if (!anahtar) return yanit({ ok: false, anahtarYok: true, err: 'Yapay zekâ anahtarı kurulmamış (Ayarlar > Entegrasyon).' });
+  // Anahtar önce Edge Function secret'ından, yoksa Ayarlar > Entegrasyon'da girilip
+  // sunucudaki entegrasyon tablosunda saklanandan okunur (service role).
+  // Anthropic anahtarı varsa o, yoksa ücretsiz Google Gemini anahtarı kullanılır.
+  const servis = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const tablodan = async (ad: string) => {
+    if (!servis) return '';
+    try {
+      const r = await fetch(url + '/rest/v1/entegrasyon?ad=eq.' + ad + '&select=deger', { headers: { apikey: servis, Authorization: 'Bearer ' + servis } });
+      const j = r.ok ? await r.json() : [];
+      return Array.isArray(j) && j[0] && j[0].deger ? String(j[0].deger) : '';
+    } catch { return ''; }
+  };
+  const anahtar = Deno.env.get('ANTHROPIC_API_KEY') || await tablodan('anthropic_api_anahtari');
+  const gemini = anahtar ? '' : (Deno.env.get('GEMINI_API_KEY') || await tablodan('gemini_api_anahtari'));
+  if (!anahtar && !gemini) return yanit({ ok: false, anahtarYok: true, err: 'Yapay zekâ anahtarı kurulmamış (Ayarlar > Entegrasyon).' });
 
   const sistem = 'Kırşehir İl Özel İdaresi köy hizmetleri için gelen vatandaş/muhtar başvurularını sınıflandırırsın. '
     + 'Başvuru metni Türkçe, kısa, yazım hatalı ya da sesli mesaj dökümü olabilir. '
@@ -85,22 +84,39 @@ Deno.serve(async (req) => {
     + '\nYalnız şu JSON nesnesini döndür, başka hiçbir şey yazma: '
     + '{"grup": "...", "tur": "...", "oncelik": "Acil|Yüksek|Normal|Düşük", "koy": "..." | null, "ilce": "..." | null, "ozet": "en çok 12 kelimelik özet", "gerekce": "kısa gerekçe"}';
 
-  let ai: Response;
-  try {
-    ai = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': anahtar, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001', max_tokens: 300, system: sistem,
-        messages: [{ role: 'user', content: 'Başvuru metni:\n"""\n' + metin + '\n"""' }]
-      })
-    });
-  } catch (e) {
-    return yanit({ ok: false, err: 'Yapay zekâ servisine ulaşılamadı.' }, 502);
+  const kullaniciMetni = 'Başvuru metni:' + String.fromCharCode(10) + '"""' + String.fromCharCode(10) + metin + String.fromCharCode(10) + '"""';
+  let yazi = '';
+  if (anahtar) {
+    let ai: Response;
+    try {
+      ai = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'x-api-key': anahtar, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001', max_tokens: 300, system: sistem,
+          messages: [{ role: 'user', content: kullaniciMetni }]
+        })
+      });
+    } catch (e) { return yanit({ ok: false, err: 'Yapay zekâ servisine ulaşılamadı.' }, 502); }
+    if (!ai.ok) return yanit({ ok: false, err: 'Yapay zekâ servisi hata verdi (' + ai.status + ').' }, 502);
+    const aj = await ai.json();
+    yazi = (aj.content || []).map((c: { text?: string }) => c.text || '').join('').trim();
+  } else {
+    let ai: Response;
+    try {
+      ai = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=' + encodeURIComponent(gemini), {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: sistem }] },
+          contents: [{ role: 'user', parts: [{ text: kullaniciMetni }] }],
+          generationConfig: { maxOutputTokens: 400, temperature: 0.1, responseMimeType: 'application/json' }
+        })
+      });
+    } catch (e) { return yanit({ ok: false, err: 'Yapay zekâ servisine ulaşılamadı.' }, 502); }
+    if (!ai.ok) return yanit({ ok: false, err: 'Gemini hata verdi (' + ai.status + ') — anahtarı ve kotayı kontrol edin.' }, 502);
+    const aj = await ai.json();
+    yazi = ((aj.candidates || [])[0]?.content?.parts || []).map((c: { text?: string }) => c.text || '').join('').trim();
   }
-  if (!ai.ok) return yanit({ ok: false, err: 'Yapay zekâ servisi hata verdi (' + ai.status + ').' }, 502);
-  const aj = await ai.json();
-  const yazi = (aj.content || []).map((c: { text?: string }) => c.text || '').join('').trim();
   let sonuc: Record<string, unknown>;
   try { sonuc = JSON.parse(yazi.slice(yazi.indexOf('{'), yazi.lastIndexOf('}') + 1)); }
   catch { return yanit({ ok: false, err: 'Yapay zekâ yanıtı okunamadı.' }, 502); }

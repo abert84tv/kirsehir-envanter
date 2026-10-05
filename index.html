@@ -2753,27 +2753,29 @@ Hareket gir
 <sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
 <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;max-width:760px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<sc-for list="{{ entegrasyon.kartlar }}" as="k" hint-placeholder-count="3">
 <div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
-<span style="font:700 15px/1.2 var(--font-heading)">Yapay zekâ — talep sınıflandırma</span>
-<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Gelen talebin iş grubunu, arıza türünü, aciliyetini ve köyünü yapay zekâ önceden belirler; operatör onaylar ya da değiştirir. Anahtar yalnızca sunucuda saklanır, tarayıcıya geri gönderilmez.</span>
-<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.durumRenk }}">{{ entegrasyon.durum }}</span>
+<span style="font:700 15px/1.2 var(--font-heading)">{{ k.baslik }}</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ k.aciklama }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ k.durumRenk }}">{{ k.durum }}</span>
 <sc-if value="{{ entegrasyon.yazar }}" hint-placeholder-val="{{ true }}">
-<input value="{{ entegrasyon.giris }}" onChange="{{ entegrasyon.onGiris }}" type="password" autocomplete="off" placeholder="sk-ant-…" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
+<input value="{{ k.giris }}" onChange="{{ k.onGiris }}" type="password" autocomplete="off" placeholder="{{ k.ipucu }}" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onClick="{{ entegrasyon.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
-<sc-if value="{{ entegrasyon.dolu }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ entegrasyon.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Dene</button>
-<button onClick="{{ entegrasyon.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
+<button onClick="{{ k.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
+<sc-if value="{{ k.dolu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ k.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">{{ k.deneAd }}</button>
+<button onClick="{{ k.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
 </sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ k.sonucVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ k.sonuc }}</div>
+</sc-if>
+</div>
+</sc-for>
 <sc-if value="{{ entegrasyon.yaziYok }}" hint-placeholder-val="{{ false }}">
 <span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Anahtarı yalnızca yönetici değiştirebilir.</span>
 </sc-if>
-<sc-if value="{{ entegrasyon.sonucVar }}" hint-placeholder-val="{{ false }}">
-<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ entegrasyon.sonuc }}</div>
-</sc-if>
-</div>
 </div>
 </sc-if>
 <sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
@@ -6713,27 +6715,29 @@ Hareket gir
 <sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
 <div style="padding:13px 14px;display:flex;flex-direction:column;gap:14px;max-width:760px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<sc-for list="{{ entegrasyon.kartlar }}" as="k" hint-placeholder-count="3">
 <div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
-<span style="font:700 15px/1.2 var(--font-heading)">Yapay zekâ — talep sınıflandırma</span>
-<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Gelen talebin iş grubunu, arıza türünü, aciliyetini ve köyünü yapay zekâ önceden belirler; operatör onaylar ya da değiştirir. Anahtar yalnızca sunucuda saklanır, tarayıcıya geri gönderilmez.</span>
-<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.durumRenk }}">{{ entegrasyon.durum }}</span>
+<span style="font:700 15px/1.2 var(--font-heading)">{{ k.baslik }}</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ k.aciklama }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ k.durumRenk }}">{{ k.durum }}</span>
 <sc-if value="{{ entegrasyon.yazar }}" hint-placeholder-val="{{ true }}">
-<input value="{{ entegrasyon.giris }}" onChange="{{ entegrasyon.onGiris }}" type="password" autocomplete="off" placeholder="sk-ant-…" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
+<input value="{{ k.giris }}" onChange="{{ k.onGiris }}" type="password" autocomplete="off" placeholder="{{ k.ipucu }}" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<button onClick="{{ entegrasyon.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
-<sc-if value="{{ entegrasyon.dolu }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ entegrasyon.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Dene</button>
-<button onClick="{{ entegrasyon.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
+<button onClick="{{ k.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
+<sc-if value="{{ k.dolu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ k.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">{{ k.deneAd }}</button>
+<button onClick="{{ k.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
 </sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ k.sonucVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ k.sonuc }}</div>
+</sc-if>
+</div>
+</sc-for>
 <sc-if value="{{ entegrasyon.yaziYok }}" hint-placeholder-val="{{ false }}">
 <span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Anahtarı yalnızca yönetici değiştirebilir.</span>
 </sc-if>
-<sc-if value="{{ entegrasyon.sonucVar }}" hint-placeholder-val="{{ false }}">
-<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ entegrasyon.sonuc }}</div>
-</sc-if>
-</div>
 </div>
 </sc-if>
 <sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
@@ -9093,7 +9097,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'kesit', 'ayar
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.05-121';
+const SURUM = '2026.10.06-122';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -13309,20 +13313,25 @@ class Component extends DCLogic {
       ? { yuk: true, hata: '', liste: (r.data || []).map(x => ({ ad: x.ad, son4: x.son4, zaman: x.guncelleme, kim: x.guncelleyen })) }
       : { yuk: true, hata: r.err || 'Okunamadı.' });
   }
-  async entegrasyonKaydet(deger) {
-    const r = await this._sb.entegrasyonKaydet('anthropic_api_anahtari', deger);
+  async entegrasyonKaydet(ad, deger) {
+    const r = await this._sb.entegrasyonKaydet(ad, deger);
     if (!r.ok) return this.duyur(r.err || 'Kaydedilemedi.', 7000, 'kotu');
-    this.denetimYaz('ayar', deger ? 'Yapay zekâ anahtarı kaydedildi' : 'Yapay zekâ anahtarı silindi', 'Entegrasyon', '');
-    this.entegrasyonGuncelle({ giris: '', sonuc: '' });
-    this.duyur(deger ? 'Anahtar sunucuya kaydedildi.' : 'Anahtar silindi — kurala dayalı öneriye dönüldü.', 5000, 'iyi');
+    this.denetimYaz('ayar', deger ? 'Entegrasyon anahtarı kaydedildi' : 'Entegrasyon anahtarı silindi', ad, '');
+    this.entegrasyonGuncelle({ girisler: { ...(this.state.entegrasyon.girisler || {}), [ad]: '' }, sonuclar: { ...(this.state.entegrasyon.sonuclar || {}), [ad]: '' } });
+    this.duyur(deger ? 'Anahtar sunucuya kaydedildi.' : 'Anahtar silindi.', 5000, 'iyi');
     this.entegrasyonYenile();
   }
-  async entegrasyonDene() {
-    this.entegrasyonGuncelle({ sonuc: 'Deneniyor…' });
+  async entegrasyonDene(ad) {
+    const yaz = m => this.entegrasyonGuncelle({ sonuclar: { ...(this.state.entegrasyon.sonuclar || {}), [ad]: m } });
+    yaz('Deneniyor…');
+    if (ad === 'telegram_bot_anahtari') {
+      const r = await this._sb.telegramKur();
+      return yaz(r && r.ok ? 'Bot bağlandı ✔ — Telegram’da @' + (r.kullanici || 'bot') + ' botuna yazan herkesin mesajı Gelen > Web başvuruları’na düşer.' : 'Bağlanamadı: ' + ((r && r.err) || 'bilinmeyen hata'));
+    }
     const r = await this._sb.aiSiniflandir('Köyün üst mahallesinde boru patlamış, sokakta su akıyor, iki gündür çeşmeden su gelmiyor.');
-    this.entegrasyonGuncelle({ sonuc: r && r.ok
+    yaz(r && r.ok
       ? 'Çalışıyor ✔ — grup: ' + (r.data.grup || '—') + ' · tür: ' + (r.data.tur || '—') + ' · aciliyet: ' + (r.data.oncelik || '—')
-      : 'Yanıt alınamadı: ' + ((r && r.err) || 'bilinmeyen hata') });
+      : 'Yanıt alınamadı: ' + ((r && r.err) || 'bilinmeyen hata'));
   }
   // ── web başvuruları (bildirim.html): vatandaş / muhtar formundan gelenler
   async basvuruYenile() {
@@ -13369,7 +13378,7 @@ class Component extends DCLogic {
     const me = this.state.session;
     if (!me) return;
     this.talepKaydet({
-      ad: b.ad, tel: b.tel, sifat: b.sifat === 'muhtar' ? 'muhtar' : 'vatandas', kanal: 'web', ilce: b.ilce, koy: b.koy,
+      ad: b.ad, tel: b.tel, sifat: b.sifat === 'muhtar' ? 'muhtar' : 'vatandas', kanal: b.konu === 'Telegram bildirimi' ? 'telegram' : 'web', ilce: b.ilce, koy: b.koy,
       konu: b.konu, aciklama: b.aciklama + (b.lat != null ? '\n[Bildirimdeki konum: ' + b.lat + ', ' + b.lon + ']' : ''),
       kvkkOnay: true, takip: b.takip
     });
@@ -17414,20 +17423,32 @@ class Component extends DCLogic {
       // (masaüstü ve telefon şablonu ayrı, veri ortak)
       entegrasyon: (() => {
         const E = s.entegrasyon || {};
-        if (!(tabId === 'ayarlar' && ayarBolumu(s.ayarBolum) === 'entegrasyon')) return { durum: '', durumRenk: ui.mut, giris: '', yazar: false, yaziYok: false, dolu: false, sonuc: '', sonucVar: false };
-        const x = (E.liste || []).find(i => i.ad === 'anthropic_api_anahtari');
+        if (!(tabId === 'ayarlar' && ayarBolumu(s.ayarBolum) === 'entegrasyon')) return { kartlar: [], yazar: false, yaziYok: false };
         const yonetici = !!(me && me.role === 'yonetici');
         const goster = !!(me && ['yonetici', 'mudur'].includes(me.role));
+        const KARTLAR = [
+          ['gemini_api_anahtari', 'Yapay zekâ — Google Gemini (ücretsiz)', 'Gelen talebi önceden sınıflandırır. aistudio.google.com/apikey adresinden Google hesabıyla ücretsiz anahtar alınır (kredi kartı istemez).', 'AIza…', 'Dene'],
+          ['anthropic_api_anahtari', 'Yapay zekâ — Anthropic Claude (ücretli API)', 'Varsa Gemini yerine bu kullanılır. Anahtar console.anthropic.com adresinden alınır; kullandıkça ücretlenir.', 'sk-ant-…', 'Dene'],
+          ['telegram_bot_anahtari', 'Telegram botu (ücretsiz)', 'Vatandaş Telegram’dan yazınca bildirim kendiliğinden başvuru olur ve takip kodu alır. Telegram’da @BotFather ile bot açıp anahtarı buraya yapıştırın, sonra “Botu bağla”ya basın.', '123456:ABC…', 'Botu bağla']
+        ];
         return {
-          giris: E.giris || '', onGiris: e => this.entegrasyonGuncelle({ giris: e.target.value }),
-          yazar: yonetici && !s.offline, yaziYok: !yonetici, dolu: !!x,
-          durum: !goster ? 'Bu bölümü yalnızca yönetici ve müdür görür.' : E.hata ? E.hata
-            : x ? 'Anahtar kayıtlı ✔ (…' + x.son4 + ')' + (x.zaman ? ' · ' + this.damgaCevir(x.zaman) : '') + (x.kim ? ' · ' + x.kim : '')
-            : (E.yuk ? 'Kayıtlı anahtar yok — kurala dayalı öneri kullanılıyor.' : 'Yükleniyor…'),
-          durumRenk: E.hata ? '#d92d20' : x ? '#1b9a4a' : ui.mut,
-          kaydet: () => { const d = (E.giris || '').trim(); if (!d) return this.duyur('Anahtarı yapıştırın.', 4000, 'kotu'); this.entegrasyonKaydet(d); },
-          sil: () => { if (window.confirm('Kayıtlı yapay zekâ anahtarı silinsin mi?')) this.entegrasyonKaydet(''); },
-          dene: () => this.entegrasyonDene(), sonuc: E.sonuc || '', sonucVar: !!E.sonuc
+          yazar: yonetici && !s.offline, yaziYok: !yonetici,
+          kartlar: KARTLAR.map(([ad, baslik, aciklama, ipucu, deneAd]) => {
+            const x = (E.liste || []).find(i => i.ad === ad);
+            const sonuc = (E.sonuclar || {})[ad] || '';
+            return {
+              baslik, aciklama, ipucu, deneAd, dolu: !!x,
+              durum: !goster ? 'Bu bölümü yalnızca yönetici ve müdür görür.' : E.hata ? E.hata
+                : x ? 'Anahtar kayıtlı ✔ (…' + x.son4 + ')' + (x.zaman ? ' · ' + this.damgaCevir(x.zaman) : '') + (x.kim ? ' · ' + x.kim : '')
+                : (E.yuk ? 'Anahtar girilmemiş.' : 'Yükleniyor…'),
+              durumRenk: E.hata ? '#d92d20' : x ? '#1b9a4a' : ui.mut,
+              giris: (E.girisler || {})[ad] || '',
+              onGiris: e => this.entegrasyonGuncelle({ girisler: { ...(this.state.entegrasyon.girisler || {}), [ad]: e.target.value } }),
+              kaydet: () => { const d = String((E.girisler || {})[ad] || '').trim(); if (!d) return this.duyur('Anahtarı yapıştırın.', 4000, 'kotu'); this.entegrasyonKaydet(ad, d); },
+              sil: () => { if (window.confirm('Kayıtlı anahtar silinsin mi?')) this.entegrasyonKaydet(ad, ''); },
+              dene: () => this.entegrasyonDene(ad), sonuc, sonucVar: !!sonuc
+            };
+          })
         };
       })(),
       webBasvuru: (() => {

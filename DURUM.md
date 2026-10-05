@@ -1938,3 +1938,7 @@ Sürüm 2026.10.05-114.
 - Dış veri aktarımı Excel (.xlsx/.xls) dosyasını okur (SheetJS, yalnız gerektiğinde yüklenir).
 - Hat çizimi: her hat için boru çapı (mm) ve malzeme girilir (Çap düğmesi); sunucuya açıklama alanıyla yazılır.
 - Kritik stoğa düşen kalem sipariş listesine kendiliğinden eklenir (satın alma uyarısı).
+
+## 2026.10.06-124 — Ek ekip ve sıralı alt işler, telemetri geçit rehberi
+- İş emrine ek ekipler ve sırayla yapılacak alt işler (SQL: is_emri_ek). Önceki alt iş bitmeden sıradaki "bekleniyor" görünür.
+- `TELEMETRI-GECIT.md`: Modbus/MQTT cihazlar için geçit örnekleri.

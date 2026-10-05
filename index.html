@@ -4571,9 +4571,11 @@ Hareket gir
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
 <div class="scroll" style="position:relative;flex:none;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:9px 12px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
-<sc-if value="{{ telGecis.var }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ telGecis.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.bg }};color:{{ ui.fg }};border:1px solid {{ ui.rule }}">{{ telGecis.label }}</button>
-</sc-if>
+<div style="position:sticky;left:-12px;z-index:3;flex:none;display:flex;align-items:center;gap:6px;background:{{ ui.surf }};padding:0 8px 0 12px;margin:0 -2px 0 -12px;box-shadow:8px 0 8px -6px rgba(0,0,0,.12)">
+<sc-for list="{{ telGecis.liste }}" as="tg" hint-placeholder-count="2">
+<button onClick="{{ tg.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.bg }};color:{{ ui.fg }};border:1px solid {{ ui.rule }}">{{ tg.label }}</button>
+</sc-for>
+</div>
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
 <button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;text-align:center;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.telBg }};color:{{ f.telFg }};border:1px solid {{ ui.rule }}">{{ f.label }}</button>
 </sc-for>
@@ -9181,7 +9183,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-130';
+const SURUM = '2026.10.06-131';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -18172,8 +18174,10 @@ class Component extends DCLogic {
       telGecis: (() => {
         const g = aktifGrup;
         const z = g && g.suz.find(x => x.hedef !== tabId);
-        return z ? { var: true, label: z.ad, go: () => this.setState({ tab: z.hedef }) }
-          : { var: false, label: '', go: () => {} };
+        const digerleri = g ? g.suz.filter(x => x.hedef !== tabId) : [];
+        return z ? { var: true, label: z.ad, go: () => this.setState({ tab: z.hedef }),
+          liste: digerleri.map(x => ({ label: x.ad, go: () => this.setState({ tab: x.hedef }) })) }
+          : { var: false, label: '', go: () => {}, liste: [] };
       })(),
       // Kuyruk artık sayfa değil, üst çubukta gösterge
       kuyrukG: (() => {

@@ -1966,3 +1966,6 @@ Sürüm 2026.10.05-114.
 - `harita-katman.js` (ortak modül): zemin, kayıt işaretleri, ISU noktaları, hatlar, arıza noktaları, süzgeç, etiketler. Envanter haritası ve Hat Kesiti artık BİREBİR aynı katmanları aynı biçimde gösterir; ana programdaki süzgeç/zemin/hat/tema seçimleri ikisine de gider.
 - Hat Kesiti, Envanter'in üçüncü görünümü oldu (Harita | Liste | Hat kesiti) — "Tümü"ne girmeden erişilir. Hat Kesiti haritası da aynı "Harita menüsü"nü kullanır.
 - Telefonda Hat Kesiti: harita ekranın büyük kısmını alır, üst şerit sıkıştırıldı, ölçüm paneli gizlenebilir.
+
+## 2026.10.06-131 — Telefonda harita ekranından Hat kesitine geçiş
+- Envanter haritasında "Liste" ve "Hat kesiti" geçiş düğmeleri süzgeç şeridine sabitlendi (şerit kaysa da görünür kalır).

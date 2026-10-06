@@ -1,0 +1,115 @@
+<sc-if value="{{ tab.islem }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">İşlem başlat</h2>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">Sahada dört senaryo var: yeni tesis kurmak, mevcut tesise girmek, bilgi güncellemek, fotoğraf eklemek. Hepsi aynı kaydı ve aynı eşitleme kuyruğunu kullanır.</div>
+</div>
+
+<sc-if value="{{ scen.picker }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+<sc-for list="{{ scenarios }}" as="sc" hint-placeholder-count="4">
+<button onClick="{{ sc.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:7px;padding:20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};border-left:4px solid {{ sc.border }};text-align:left" style-hover="background:{{ ui.surf }}">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ sc.badgeFg }}">{{ sc.badge }}</span>
+<span style="font:600 20px/1.1 var(--font-heading);letter-spacing:-.022em;color:{{ sc.fg }}">{{ sc.title }}</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ sc.desc }}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ scen.isNew }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px 20px;max-width:720px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:12px">
+<button onClick="{{ scen.back }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 12px">← Senaryolar</button>
+<span style="font:600 17px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">Yeni tesis kaydı · {{ newAsset.code }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tesis türü</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ newAsset.typeBtns }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;padding:11px 8px;background:{{ t.bg }};color:{{ t.fg }};border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<span style="font:600 13px/1 var(--font-body);letter-spacing:-.01em">{{ t.label }}</span>
+<span style="font:400 11.5px/1.2 var(--font-body);opacity:.8">{{ t.sub }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:12px">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ newAsset.district }}" onChange="{{ onNaDistrict }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ newAsset.districts }}" as="d" hint-placeholder-count="7">
+<option value="{{ d }}">{{ d }}</option>
+</sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy / yerleşim</span>
+<select value="{{ newAsset.village }}" onChange="{{ onNaVillage }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<option value="">Seçin…</option>
+<sc-for list="{{ newAsset.villages }}" as="v" hint-placeholder-count="6">
+<option value="{{ v }}">{{ v }}</option>
+</sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Yapım yılı</span>
+<input value="{{ newAsset.year }}" onChange="{{ onNaYear }}" inputmode="numeric" placeholder="Bilinmiyorsa boş" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+</div>
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:14px;display:flex;align-items:center;gap:16px">
+<button onClick="{{ grabLocation }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:74px;height:74px;background:var(--color-accent);color:#fff;font:700 17px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;flex:none">GİT</button>
+<div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Konum (standart saha konumu)</span>
+<span style="font:700 17px/1.2 ui-monospace,Menlo,monospace;color:{{ newAsset.coordColor }}">{{ newAsset.coordText }}</span>
+<span style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">{{ newAsset.coordNote }}</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Durum</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ newAsset.durumSec }}" as="o" hint-placeholder-count="2">
+<button onClick="{{ o.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 8px;background:{{ o.bg }};color:{{ o.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">{{ o.label }}</button>
+</sc-for>
+</div>
+<span class="ks-bilgi" style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Pasif kayıt envanterde durur, hizmet dışı sayılır ve raporlarda ayrı gösterilir.</span>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Not</span>
+<textarea value="{{ newAsset.note }}" onChange="{{ onNaNote }}" rows="2" placeholder="Erişim yolu, muhtar bilgisi, eksik ölçüm" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13.5px/1.45 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tesis fotoğrafı · {{ newAsset.photoCount }}</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ addNaPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
+<sc-for list="{{ newAsset.photos }}" as="p" hint-placeholder-count="0">
+<div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">{{ p.img }}</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;gap:10px;border-top:1px solid {{ ui.rule }};padding-top:14px">
+<button onClick="{{ saveNewAsset }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:14px 18px;justify-content:center">{{ newAsset.cta }}</button>
+<button onClick="{{ scen.back }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 16px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ scen.isList }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid {{ ui.rule }}">
+<button onClick="{{ scen.back }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 12px">← Senaryolar</button>
+<span style="font:600 17px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ scen.listTitle }}</span>
+</div>
+<div class="ks-bilgi" style="padding:11px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ scen.listNote }}</div>
+<sc-for list="{{ scenList }}" as="a" hint-placeholder-count="8">
+<button onClick="{{ a.tap }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:13px;width:100%;padding:12px 20px;border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
+<span style="flex:none;width:26px;height:26px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ a.glyph }}</span>
+<span style="font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};width:150px">{{ a.code }}</span>
+<span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ a.meta }}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+</div>
+</sc-if>

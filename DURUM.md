@@ -2028,3 +2028,6 @@ Sürüm 2026.10.05-114.
 
 ## Güvenlik düzeltmesi (2026-10-06, sürüm değişmedi)
 - Supabase'in "tablo herkese açık" uyarısı: alt_sistem_kategori tablosunda RLS kapalıydı (anonim okuyup yazabiliyordu) → kapatıldı. Ayrıca kullanılmayan v_eksik_bilgi / v_ilce_ozet görünümleri anonim okumaya kapatıldı, parametresiz cop_temizle() anonim çağrıya kapatıldı. Şu an public şemada RLS'siz tablo yok. Ayrıntı: SQL-guvenlik-duzeltme-2026-10-06.sql
+
+## Modüler yapı — Faz 0 (2026-10-07)
+- `index.html` artık `src/` klasöründen `node build.js` ile üretiliyor (20 bin satırlık tek parça → 21 modül klasörü + sabitler + stil + kabuk). Vercel yayında `buildCommand: node build.js` çalıştırır. Çıktı eskisiyle satır satır aynı (yalnız yöntem/özellik sırası modüle göre gruplandı). `duman-testi.js` index.html'in güncel olduğunu da denetler. Ayrıntı ve sıradaki adımlar: `MODUL-ILERLEME.md`, `src/README.md`.

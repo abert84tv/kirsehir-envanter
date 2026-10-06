@@ -1,0 +1,27 @@
+<sc-if value="{{ ayar.yetki }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Roller ve yetkiler</div>
+<div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ perm.note }}</div>
+<sc-for list="{{ perm.roleList }}" as="r" hint-placeholder-count="5">
+<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid {{ ui.rule }};background:{{ r.bg }}">
+<span style="flex:none;width:22px;height:22px;background:var(--color-accent);color:#fff;font:600 12px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ r.rank }}</span>
+<span style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font:600 13.5px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ r.label }} · {{ r.count }}</span>
+<span style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ r.desc }}</span>
+</span>
+<span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ r.mark }}</span>
+</div>
+</sc-for>
+<div style="border-top:1px solid {{ ui.rule }};padding-top:10px;margin-top:6px">
+<sc-for list="{{ perm.rows }}" as="p" hint-placeholder-count="10">
+<div style="display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid {{ ui.rule }};background:{{ p.bg }}">
+<span style="flex:1;font:400 12.5px/1.3 var(--font-body);color:{{ ui.fg }}">{{ p.label }}</span>
+<sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="5">
+<span style="width:20px;text-align:center;font:600 13px/1 var(--font-body);color:{{ c.c }}">{{ c.v }}</span>
+</sc-for>
+</div>
+</sc-for>
+<div style="display:flex;justify-content:flex-end;padding-top:8px;font:600 10px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sütunlar: yönetici · müdür · mühendis · şef · personel</div>
+</div>
+</div>
+</sc-if>

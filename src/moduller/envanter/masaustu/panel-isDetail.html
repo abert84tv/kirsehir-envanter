@@ -1,0 +1,394 @@
+<sc-if value="{{ panel.isDetail }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 62px 16px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+<div style="min-width:0">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">{{ detail.kind }}</div>
+<div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+<div style="font:600 23px/1.05 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em">{{ detail.code }}</div>
+<span style="flex:none;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:5px 7px;border-radius:10px;border:1px solid {{ detail.aktif.kenar }};background:{{ detail.aktif.bg }};color:{{ detail.aktif.fg }}">{{ detail.aktif.etiket }}</span>
+<sc-if value="{{ detail.aktif.gorunur }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ detail.aktif.tik }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:6px 8px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ detail.aktif.dugme }}</button>
+</sc-if>
+</div>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">{{ detail.meta }}</div>
+<sc-if value="{{ detail.acikAriza }}" hint-placeholder-val="{{ false }}">
+<span class="ks-nabiz" style="margin-top:8px;font:700 11px/1 var(--font-body);padding:4px 8px;border-radius:7px;background:var(--color-uyari-100);color:var(--color-uyari-700)">{{ detail.arizaEt }}</span>
+</sc-if>
+</div>
+</div>
+<div class="ks-gir" style="padding:12px 18px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+<button onClick="{{ routeToSel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.pin }}Yol tarifi</button>
+<button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--color-uyari);font:600 11px/1 var(--font-body)">{{ ikonlar.uyariKucuk }}Arıza aç</button>
+<button onClick="{{ detail.fotoSekme }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.kamera }}Fotoğraf</button>
+<button onClick="{{ editDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.acc }};font:600 11px/1 var(--font-body)">{{ ikonlar.kalemOrta }}Düzenle</button>
+</div>
+<div style="border-radius:10px;background:{{ ui.surf2 }};padding:10px 12px">
+<div style="display:flex;align-items:baseline;gap:6px;font:400 12px/1.2 var(--font-body);color:{{ ui.mut }}">
+<b style="color:{{ ui.fg }}">Kayıt tamlığı %{{ detail.tam }}</b><span>· {{ detail.eksik }} alan eksik</span>
+<span style="flex:1"></span>
+<button onClick="{{ editDetail }}" style="all:unset;cursor:pointer;color:{{ ui.acc }};font:700 12px/1 var(--font-body)">Tamamla</button>
+</div>
+<div style="height:6px;border-radius:3px;background:{{ ui.rule }};overflow:hidden;margin-top:8px"><div style="height:6px;width:{{ detail.tamW }};background:{{ detail.tamC }};border-radius:3px;transition:width .6s ease"></div></div>
+</div>
+</div>
+<sc-if value="{{ kilit.on }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--color-accent);background:var(--color-accent-100)">
+<span style="flex:none;font:600 13px/1.2 var(--font-body);color:var(--color-accent-700)">KİLİT</span>
+<span style="flex:1;font:400 12px/1.45 var(--font-body);color:var(--color-accent-700)">{{ kilit.text }}</span>
+</div>
+</sc-if>
+<div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ detail.tabs }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:10px 12px;font:600 11px/1.2 var(--font-body);letter-spacing:-.01em;background:{{ t.bg }};color:{{ t.fg }};border-right:1px solid {{ ui.rule }}">{{ t.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ detail.showFields }}" hint-placeholder-val="{{ true }}">
+<div>
+<sc-if value="{{ detail.hasNote }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 18px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }};display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Saha notu</span>
+<button onClick="{{ detail.gitNote }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:6px 8px">Düzenle</button>
+</div>
+<div style="font:400 13px/1.55 var(--font-body);color:{{ ui.fg }};white-space:pre-wrap">{{ detail.noteText }}</div>
+</div>
+</sc-if>
+<sc-for list="{{ detail.rows }}" as="r" hint-placeholder-count="8">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:10px 18px;border-bottom:1px solid {{ ui.rule }};background:{{ r.bg }}">
+<span style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }};max-width:54%">{{ r.label }}</span>
+<span style="font:600 13.5px/1.35 var(--font-body);color:{{ r.color }};text-align:right">{{ r.value }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ detail.showGecmis }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.gecmisNot }}</div>
+<sc-for list="{{ detail.gecmis }}" as="g" hint-placeholder-count="3">
+<div style="padding:12px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+<span style="font:600 13.5px/1.2 var(--font-heading);color:{{ g.fg }}">{{ g.ne }}</span>
+<span style="font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.mut }}">{{ g.t }}</span>
+</div>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ g.kim }}</span>
+<sc-if value="{{ g.hasDetay }}" hint-placeholder-val="{{ false }}">
+<span style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.fg }};border-left:1px solid {{ ui.rule }};padding-left:9px;margin-top:2px">{{ g.detay }}</span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ detail.showTests }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.testNote }}</div>
+<sc-if value="{{ detail.chart.show }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 18px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:10px">Yıllara göre karşılaştırma</div>
+<svg viewBox="0 0 600 150" style="width:100%;height:auto;display:block">
+<line x1="26" y1="128" x2="574" y2="128" stroke="{{ ui.rule }}" stroke-width="2"></line>
+<sc-for list="{{ detail.chart.bars }}" as="b" hint-placeholder-count="2">
+<rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" fill="{{ ui.fg }}"></rect>
+</sc-for>
+<polyline points="{{ detail.chart.poly }}" fill="none" stroke="var(--color-accent)" stroke-width="3"></polyline>
+<sc-for list="{{ detail.chart.bars }}" as="b" hint-placeholder-count="2">
+<circle cx="{{ b.ox }}" cy="{{ b.oy }}" r="4" fill="var(--color-accent)"></circle>
+</sc-for>
+<sc-for list="{{ detail.chart.bars }}" as="b" hint-placeholder-count="2">
+<text x="{{ b.lx }}" y="{{ b.ly }}" text-anchor="middle" fill="{{ ui.mut }}" style="font:600 12.5px var(--font-body)">{{ b.label }}</text>
+</sc-for>
+<sc-for list="{{ detail.chart.bars }}" as="b" hint-placeholder-count="2">
+<text x="{{ b.lx }}" y="{{ b.vy }}" text-anchor="middle" fill="{{ ui.fg }}" style="font:600 12.5px var(--font-body)">{{ b.val }}</text>
+</sc-for>
+</svg>
+<div style="display:flex;gap:16px;margin-top:8px;font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">
+<span>{{ detail.chart.maxLabel }}</span>
+<span>{{ detail.chart.minLabel }}</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ testForm.open }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 18px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:11px">
+<div style="font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Yeni deneme ölçümü</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Statik seviye (m)</span>
+<input value="{{ testForm.statik }}" onChange="{{ onTestStatik }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Dinamik seviye (m)</span>
+<input value="{{ testForm.dinamik }}" onChange="{{ onTestDinamik }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Debi (l/s)</span>
+<input value="{{ testForm.debi }}" onChange="{{ onTestDebi }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre (saat)</span>
+<input value="{{ testForm.sure }}" onChange="{{ onTestSure }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Toparlanma (dk)</span>
+<input value="{{ testForm.toparlanma }}" onChange="{{ onTestToparlanma }}" inputmode="decimal" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<div style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;border-radius:10px;border:1px solid var(--color-accent);padding:9px 11px">
+<span style="flex:none;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Düşüm · özgül debi</span>
+<span style="flex:1;text-align:right;font:600 14px/1.25 ui-monospace,Menlo,monospace;color:{{ ui.acc }};min-width:0">{{ testForm.dusum }} · {{ testForm.ozgul }}</span>
+</div>
+</div>
+<label style="display:flex;flex-direction:column;gap:4px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Deneme notu</span>
+<textarea value="{{ testForm.note }}" onChange="{{ onTestNote }}" rows="2" placeholder="Kesintisiz mi, hangi pompayla, kum geldi mi, seviye ne zaman oturdu" style="all:unset;box-sizing:border-box;width:100%;min-width:0;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px;font:400 13px/1.45 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+<sc-if value="{{ testForm.hasWarn }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid var(--color-uyari-200);background:var(--color-uyari-100);color:var(--color-uyari-700);padding:9px 11px;font:600 12.5px/1.4 var(--font-body)">{{ testForm.warn }}</div>
+</sc-if>
+<div style="display:flex;gap:8px">
+<button onClick="{{ saveTest }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 16px;justify-content:center">Denemeyi kaydet</button>
+<button onClick="{{ closeTestForm }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ detail.testsEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:20px 18px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu kuyuda henüz deneme ölçümü yok.</div>
+</sc-if>
+<sc-for list="{{ detail.tests }}" as="t" hint-placeholder-count="2">
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};border-left:4px solid {{ t.pendC }}">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px">
+<span style="font:600 14px/1.1 var(--font-heading);color:{{ ui.fg }}">{{ t.date }} · {{ t.by }}</span>
+<span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ t.pend }}</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px 12px">
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Statik</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.statik }}</span></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Dinamik</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.dinamik }}</span></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Düşüm</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.dusum }}</span></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Debi</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ t.debi }}</span></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Özgül debi</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ t.ozgul }}</span></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.sure }}</span></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Toparlanma</span><span style="font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ t.toparlanma }}</span></span>
+</div>
+<div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};margin-top:8px">{{ t.note }}</div>
+<sc-if value="{{ t.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ t.sil }}" title="Bu deneme ölçümünü sil" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:9px;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 2px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">{{ ikonlar.copKucuk }} Ölçümü sil</button>
+</sc-if>
+</div>
+</sc-for>
+<div style="padding:14px 18px">
+<button onClick="{{ openTestForm }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 16px">+ Deneme ölçümü ekle</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ detail.showBakim }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 16px;border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Periyodik bakım</span>
+<span style="font:600 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ bakimKayit.periyot }}</span>
+<span style="font:600 12.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ bakimKayit.durum }}</span>
+</div>
+<div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ bakimKayit.note }}</div>
+</div>
+<sc-if value="{{ bakimKayit.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-bottom:1px solid var(--color-accent);background:{{ ui.surf }};display:flex;flex-direction:column;gap:11px">
+<div style="font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Yeni bakım kaydı</div>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Bakım tarihi</span>
+<input value="{{ bakimKayit.tarih }}" onChange="{{ bakimKayit.onTarih }}" type="date" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Yapılan iş</span>
+<textarea value="{{ bakimKayit.is }}" onChange="{{ bakimKayit.onIs }}" rows="3" placeholder="Pompa çekildi, çekvalf değişti, pano temizlendi, klor dolduruldu…" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:400 13.5px/1.5 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kullanılan malzeme</span>
+<input value="{{ bakimKayit.malzeme }}" onChange="{{ bakimKayit.onMalzeme }}" placeholder="2 boy kolon borusu, 1 termik röle" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:400 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Not</span>
+<input value="{{ bakimKayit.notu }}" onChange="{{ bakimKayit.onNotu }}" placeholder="Sonraki bakımda dikkat edilecek" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:400 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ bakimKayit.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:14px 18px;justify-content:center;min-height:50px">Bakımı kaydet</button>
+<button onClick="{{ bakimKayit.foto }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 15px;min-height:50px">Fotoğraf çek</button>
+<button onClick="{{ bakimKayit.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 15px;min-height:50px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ bakimKayit.bos }}" hint-placeholder-val="{{ true }}">
+<div style="padding:20px 16px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu tesiste kayıtlı bakım yok. İlk bakımı girdiğinizde takvim buradan işlemeye başlar.</div>
+</sc-if>
+<sc-for list="{{ bakimKayit.liste }}" as="b" hint-placeholder-count="0">
+<div style="padding:13px 16px;border-bottom:1px solid {{ ui.rule }};border-left:4px solid var(--color-accent)">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px">
+<span style="font:600 14px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ b.tarih }}</span>
+<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">{{ b.kim }}</span>
+</div>
+<div style="font:400 13px/1.5 var(--font-body);color:{{ ui.fg }}">{{ b.is }}</div>
+<sc-if value="{{ b.hasMalzeme }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-top:4px">Malzeme: {{ b.malzeme }}</div>
+</sc-if>
+<button onClick="{{ b.sil }}" title="Bu bakım kaydını sil" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:8px;display:flex;align-items:center;gap:6px;min-height:44px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}" style-hover="color:var(--color-accent)">{{ ikonlar.copKucuk }} Kaydı sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ bakimKayit.yazabilir }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 16px">
+<button onClick="{{ bakimKayit.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 16px;min-height:52px" style-hover="background:var(--color-accent);color:#fff">+ Bakım kaydı ekle</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ detail.showHat }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;flex:none">
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Hat güzergâhları</span>
+<span style="display:flex;align-items:center;gap:8px">
+<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ detail.hat.sayi }}</span>
+<button onClick="{{ detail.hat.ac }}" title="Çizim haritasını tam ekranda aç" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:6px 8px;min-height:32px;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Büyük harita</button>
+</span>
+</div>
+<div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.hat.note }}</div>
+<sc-if value="{{ detail.hat.varMi }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ detail.hat.rows }}" as="ht" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:none;width:22px;height:0;border-top:4px solid {{ ht.renk }}"></span>
+<span style="flex:1;min-width:0;font:600 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ ht.ad }}</span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ ht.nokta }}</span>
+<span style="font:600 12.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ ht.uzunluk }}</span>
+</div>
+</sc-for>
+</div>
+<button onClick="{{ detail.hat.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Bu kaydın hatlarını sil</button>
+</sc-if>
+</div>
+<div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+<button onClick="{{ detail.hat.ac }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:16px 18px;justify-content:flex-start">Haritada çiz — tam ekran</button>
+<span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.hat.acNote }}</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ detail.showNote }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+<div style="font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Serbest not / açıklama</div>
+<textarea value="{{ detail.noteText }}" onChange="{{ onNote }}" rows="9" placeholder="{{ detail.notePlaceholder }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:400 13.5px/1.55 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<span style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ detail.noteMeta }}</span>
+<button onClick="{{ saveNote }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:12px 16px;justify-content:center">Notu kaydet</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ detail.showMedia }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 18px">
+<sc-if value="{{ detail.foto.izgara }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<sc-for list="{{ detail.foto.list }}" as="p" hint-placeholder-count="0">
+<div style="aspect-ratio:1;border-radius:10px;border:1px solid {{ ui.rule }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+{{ p.img }}
+<button onClick="{{ p.ac }}" title="Büyüt — tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;inset:0"></button>
+<span style="position:absolute;left:0;right:0;bottom:0;background:rgba(32,30,29,.82);color:#fff;font:600 9.5px/1.4 var(--font-body);padding:3px 5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.meta }}</span>
+<button onClick="{{ p.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:5px;left:5px;width:26px;height:26px;background:rgba(32,30,29,.82);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">{{ ikonlar.indirKucuk }}</button>
+<sc-if value="{{ p.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ p.sil }}" title="Fotoğrafı sil" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:5px;right:5px;width:26px;height:26px;background:rgba(32,30,29,.82);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">{{ ikonlar.copKucuk }}</button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ detail.foto.bos }}" hint-placeholder-val="{{ false }}">
+<div style="border:2px dashed {{ ui.rule }};padding:22px 16px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu kayıtta henüz fotoğraf yok. Sahada çektiğiniz kareler burada, herkesin görebileceği şekilde durur.</div>
+</sc-if>
+<sc-if value="{{ detail.foto.yukleniyor }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:12px;border-radius:10px;border:1px solid var(--color-uyari-200);background:var(--color-uyari-100);color:var(--color-uyari-700);padding:12px 14px;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em">{{ detail.foto.yukText }}</div>
+</sc-if>
+<sc-if value="{{ detail.foto.kilitli }}" hint-placeholder-val="{{ false }}">
+<div class="ks-bilgi" style="margin-top:12px;font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.foto.note }}</div>
+</sc-if>
+<sc-for list="{{ detail.foto.sesler }}" as="sn" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:7px;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 11px;margin-top:9px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:none;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Sesli not</span>
+<span style="flex:1;min-width:0;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sn.meta }}</span>
+<button onClick="{{ sn.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}" style-hover="color:var(--color-accent)">↓ İndir</button>
+<sc-if value="{{ sn.silinir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}" style-hover="color:var(--color-accent)">Sil</button>
+</sc-if>
+</div>
+{{ sn.player }}
+</div>
+</sc-for>
+<sc-if value="{{ detail.foto.eklenebilir }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:8px;margin-top:12px">
+<button onClick="{{ detail.foto.cek }}" class="btn btn-primary" style="flex:1;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Fotoğraf çek</button>
+<button onClick="{{ detail.foto.galeri }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px" style-hover="background:var(--color-accent);color:#fff">Galeriden seç</button>
+</div>
+<div class="ks-bilgi" style="margin-top:9px;font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ detail.foto.note }}</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ detail.showFaults }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:5px">
+<span style="font:600 12.5px/1.3 var(--font-heading);color:{{ detail.arizaOzet.fg }}">{{ detail.arizaOzet.baslik }}</span>
+<span style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">{{ detail.arizaOzet.alt }}</span>
+</div>
+<sc-if value="{{ detail.arizaOzet.acikVar }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 18px;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ detail.arizaOzet.ac }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;min-height:46px;padding:0 14px;justify-content:flex-start">{{ detail.arizaOzet.acAd }}</button>
+<button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px;display:block;width:100%;text-align:left" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ detail.arizaOzet.yeniLabel }}</button>
+</div>
+</sc-if>
+<sc-for list="{{ detail.faults }}" as="f" hint-placeholder-count="1">
+<button onClick="{{ f.tap }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;padding:12px 18px;border-bottom:1px solid {{ ui.rule }};text-align:left">
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:4px">
+<span style="width:7px;height:7px;background:{{ f.dot }}"></span>
+<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }}">{{ f.type }}</span>
+</div>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ f.line }}</div>
+</button>
+</sc-for>
+<sc-if value="{{ detail.arizaOzet.acikYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 18px">
+<button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px;display:block;width:100%;text-align:left">{{ detail.arizaOzet.yeniLabel }}</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<div style="flex:1"></div>
+<sc-if value="{{ koyDuzelt.on }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 18px;border-top:1px solid var(--color-accent);background:{{ ui.surf }};display:flex;flex-direction:column;gap:10px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Köy ve ilçe düzelt</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ koyDuzelt.ilce }}" onChange="{{ koyDuzelt.onIlce }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ koyDuzelt.ilceler }}" as="i" hint-placeholder-count="7"><option value="{{ i.n }}">{{ i.n }}</option></sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy / yerleşim</span>
+<input value="{{ koyDuzelt.koy }}" onChange="{{ koyDuzelt.onKoy }}" list="ks-koy-mas" placeholder="Köy adını yazın" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<datalist id="ks-koy-mas">
+<sc-for list="{{ koyDuzelt.koyler }}" as="k" hint-placeholder-count="0"><option value="{{ k.n }}"></option></sc-for>
+</datalist>
+</label>
+<div style="display:flex;gap:8px">
+<button onClick="{{ koyDuzelt.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:13px 18px;justify-content:center">Kaydet</button>
+<button onClick="{{ koyDuzelt.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<div style="border-top:1px solid {{ ui.rule }};padding:12px 18px 0;display:flex;gap:9px">
+<button onClick="{{ routeToSel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px;text-align:left">Yol tarifi — buraya git</button>
+<button onClick="{{ goToSel }}" title="Kaydın bulunduğu noktaya git" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.pin }} Tesise git</button>
+</div>
+<div style="padding:12px 18px;display:flex;gap:9px;flex-wrap:wrap">
+<button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1;justify-content:flex-start;border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:13px 14px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
+<button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Tesis kartı</button>
+<sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Sil</button>
+</sc-if>
+<button onClick="{{ closeDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Kapat</button>
+</div>
+</sc-if>

@@ -1,2 +1,4 @@
 vendor/* -text
 *.png binary
+src/** text eol=lf
+build.js text eol=lf

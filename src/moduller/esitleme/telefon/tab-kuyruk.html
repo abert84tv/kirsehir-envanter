@@ -1,0 +1,29 @@
+<sc-if value="{{ tab.kuyruk }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Eşitleme kuyruğu</div>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ queue.summary }}</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ queue.stats }}" as="s" hint-placeholder-count="3">
+<div style="padding:12px;border-right:1px solid {{ ui.rule }}">
+<div style="font:600 22px/1 var(--font-heading);letter-spacing:-.022em;color:{{ s.color }}">{{ s.n }}</div>
+<div style="font:600 10px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-top:5px">{{ s.label }}</div>
+</div>
+</sc-for>
+</div>
+<sc-for list="{{ queue.items }}" as="q" hint-placeholder-count="3">
+<div style="display:flex;gap:11px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};align-items:flex-start">
+<span style="width:8px;height:8px;margin-top:5px;background:{{ q.dot }};flex:none"></span>
+<span style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font:600 13.5px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ q.title }}</span>
+<span style="font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ q.meta }}</span>
+</span>
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ q.dot }}">{{ q.state }}</span>
+</div>
+</sc-for>
+<div style="padding:14px">
+<button onClick="{{ syncNow }}" class="btn btn-primary" style="width:100%;justify-content:flex-start;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:14px 16px;opacity:{{ queue.canSync }}">{{ queue.cta }}</button>
+</div>
+</div>
+</sc-if>

@@ -1,0 +1,70 @@
+<sc-if value="{{ tab.bakim }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Bakım takvimi</h2>
+<div class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:700px">{{ bakim.note }}</div>
+</div>
+<div style="display:flex;border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ bakim.stats }}" as="st" hint-placeholder-count="4">
+<div style="flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:4px">
+<span style="font:600 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ bakim.gecikenlerVar }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Geciken bakımlar</div>
+<sc-for list="{{ bakim.gecikenler }}" as="b" hint-placeholder-count="6">
+<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ b.bg }}">
+<button onClick="{{ b.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;display:flex;align-items:center;gap:14px;min-width:0;text-align:left">
+<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:126px;flex:none">{{ b.code }}</span>
+<span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};width:180px;flex:none">{{ b.place }}</span>
+<span style="font:600 12.5px/1 var(--font-body);color:{{ b.fg }};width:120px;flex:none">{{ b.label }}</span>
+<span style="flex:1;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ b.son }} · {{ b.hedef }} · {{ b.per }}</span>
+</button>
+<button onClick="{{ b.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Yol tarifi</button>
+<sc-if value="{{ b.canDone }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ b.done }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Yapıldı</button>
+</sc-if>
+</div>
+</sc-for>
+</sc-if>
+<sc-if value="{{ bakim.yaklasanlarVar }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">30 gün içinde sırası gelenler</div>
+<sc-for list="{{ bakim.yaklasanlar }}" as="b" hint-placeholder-count="6">
+<div style="display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }}">
+<button onClick="{{ b.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;display:flex;align-items:center;gap:14px;min-width:0;text-align:left">
+<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:126px;flex:none">{{ b.code }}</span>
+<span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};width:180px;flex:none">{{ b.place }}</span>
+<span style="font:600 12.5px/1 var(--font-body);color:{{ b.fg }};width:120px;flex:none">{{ b.label }}</span>
+<span style="flex:1;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ b.son }} · {{ b.hedef }} · {{ b.per }}</span>
+</button>
+<button onClick="{{ b.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Yol tarifi</button>
+<sc-if value="{{ b.canDone }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ b.done }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Yapıldı</button>
+</sc-if>
+</div>
+</sc-for>
+</sc-if>
+<sc-if value="{{ bakim.kayitsizVar }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:14px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Bakım kaydı olmayanlar</span>
+<span style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ bakim.kayitsizNot }}</span>
+</div>
+<sc-for list="{{ bakim.kayitsiz }}" as="b" hint-placeholder-count="10">
+<div style="display:flex;align-items:center;gap:14px;padding:10px 20px;border-bottom:1px solid {{ ui.rule }}">
+<button onClick="{{ b.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;display:flex;align-items:center;gap:14px;min-width:0;text-align:left">
+<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:126px;flex:none">{{ b.code }}</span>
+<span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};width:180px;flex:none">{{ b.place }}</span>
+<span style="flex:1;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ b.kind }} · {{ b.per }} · {{ b.hedef }}</span>
+</button>
+<button onClick="{{ b.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Yol tarifi</button>
+<sc-if value="{{ b.canDone }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ b.done }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Bugün yapıldı</button>
+</sc-if>
+</div>
+</sc-for>
+</sc-if>
+<div style="height:16px"></div>
+</div>
+</sc-if>

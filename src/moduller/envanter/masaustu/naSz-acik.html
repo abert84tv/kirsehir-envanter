@@ -1,0 +1,145 @@
+<sc-if value="{{ naSz.acik }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:80;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
+<div class="ks-gir" role="dialog" aria-label="Yeni tesis kaydı" style="width:640px;max-width:100%;max-height:100%;display:flex;flex-direction:column;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);overflow:hidden">
+<div style="flex:none;padding:18px 22px 12px;border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Yeni tesis kaydı</span>
+<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">Kaydedince verilecek kod: <b style="color:{{ ui.fg }}">{{ naSz.kod }}</b></span>
+<button onClick="{{ naSz.kapat }}" aria-label="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;width:30px;height:30px;border-radius:50%;background:{{ ui.surf2 }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center">{{ ikonlar.kapat }}</button>
+</div>
+<div style="display:flex;align-items:center;margin-top:14px">
+<sc-for list="{{ naSz.adimlar }}" as="a" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;flex:1 1 0">
+<span style="flex:none;width:24px;height:24px;border-radius:50%;background:{{ a.bg }};color:{{ a.fg }};box-shadow:{{ a.halka }};display:flex;align-items:center;justify-content:center;font:700 11.5px/1 var(--font-body)">{{ a.ic }}</span>
+<span style="flex:none;margin-left:8px;font:600 12.5px/1 var(--font-body);color:{{ a.tc }}">{{ a.l }}</span>
+<sc-if value="{{ a.cizgi }}" hint-placeholder-val="{{ true }}">
+<span style="flex:1;height:3px;margin:0 12px;border-radius:2px;background:{{ ui.surf2 }};overflow:hidden;display:block"><span style="display:block;height:3px;width:{{ a.cizgiW }};background:var(--color-accent);transition:width .45s ease"></span></span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div class="scroll" style="flex:1;min-height:0;overflow-y:auto;padding:18px 22px">
+<sc-if value="{{ naSz.a1 }}" hint-placeholder-val="{{ true }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+<sc-for list="{{ naSz.turler }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:14px;padding:12px;background:{{ t.bg }};box-shadow:{{ t.halka }};display:flex;flex-direction:column;gap:6px">
+<span style="width:30px;height:30px;border-radius:9px;background:var(--color-accent);color:#fff;font:700 12px/30px var(--font-body);text-align:center">{{ t.glyph }}</span>
+<span style="font:700 13.5px/1.2 var(--font-body)">{{ t.label }}</span>
+<span style="font:400 11px/1.2 var(--font-body);color:{{ ui.mut }}">{{ t.sub }}</span>
+</button>
+</sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<label style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">İlçe
+<select value="{{ newAsset.district }}" onChange="{{ onNaDistrict }}" style="height:40px;border-radius:10px;border:1px solid {{ ui.rule }};padding:0 10px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<sc-for list="{{ newAsset.districts }}" as="d" hint-placeholder-count="7">
+<option value="{{ d }}">{{ d }}</option>
+</sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Köy / yerleşim
+<select value="{{ newAsset.village }}" onChange="{{ onNaVillage }}" style="height:40px;border-radius:10px;border:1px solid {{ ui.rule }};padding:0 10px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<option value="">Seçin…</option>
+<sc-for list="{{ newAsset.villages }}" as="v" hint-placeholder-count="6">
+<option value="{{ v }}">{{ v }}</option>
+</sc-for>
+</select>
+</label>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ naSz.a2 }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:2px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ naSz.yollar }}" as="y" hint-placeholder-count="3">
+<button onClick="{{ y.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:8px 6px;border-radius:8px;background:{{ y.bg }};box-shadow:{{ y.golge }};color:{{ y.fg }};font:600 12.5px/1 var(--font-body)">{{ y.l }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ naSz.yGps }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;background:{{ ui.surf2 }}">
+<button onClick="{{ grabLocation }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:72px;height:72px;border-radius:18px;background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.gpsBuyuk }}</button>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.fg }}"><b>Cihaz GPS’i</b> — sahada tesisin başındayken kullanın. Ofisteyseniz GPS ofisin konumunu verir; o durumda “Haritadan seç” ya da “Koordinat yaz” kullanın.</span>
+</div>
+</sc-if>
+<sc-if value="{{ naSz.yHarita }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;background:{{ ui.surf2 }}">
+<button onClick="{{ naSz.haritadaSec }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:72px;height:72px;border-radius:18px;background:var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.pinBuyuk }}</button>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.fg }}"><b>Haritadan seç</b> — pencere küçülür, haritada tesisin yerine çift tıklayın; form kaldığı yerden açılır. Uydu altlığı daha isabetli seçim sağlar.</span>
+</div>
+</sc-if>
+<sc-if value="{{ naSz.yYaz }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<label style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Enlem (WGS84)
+<input value="{{ naSz.latTxt }}" onChange="{{ naSz.onLat }}" inputmode="decimal" placeholder="39.30321" style="height:40px;border-radius:10px;border:1px solid {{ ui.rule }};padding:0 10px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Boylam (WGS84)
+<input value="{{ naSz.lonTxt }}" onChange="{{ naSz.onLon }}" inputmode="decimal" placeholder="33.68512" style="height:40px;border-radius:10px;border:1px solid {{ ui.rule }};padding:0 10px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<span class="ks-bilgi" style="grid-column:1 / -1;font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">ITRF96 / ED50 ya da derece-dakika biçimi için üst çubuktaki “Koordinat” aracında dönüştürüp buraya yapıştırın.</span>
+</div>
+</sc-if>
+<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:{{ naSz.konumZemin }}">
+<span style="flex:none;width:10px;height:10px;border-radius:50%;background:{{ naSz.konumNokta }}"></span>
+<div style="flex:1;min-width:0">
+<div style="font:700 13px/1.3 ui-monospace,Menlo,monospace">{{ naSz.konumTxt }}</div>
+<div style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:2px">{{ naSz.konumNot }}</div>
+</div>
+</div>
+<sc-if value="{{ naSz.yakinVar }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="padding:12px 14px;border-radius:12px;background:var(--color-bekle-100);border:1px solid rgba(178,80,0,.3)">
+<div style="font:700 13px/1.35 var(--font-body);color:var(--color-bekle)">{{ naSz.yakinTxt }}</div>
+<div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.fg }};margin-top:3px">Envanter büyüdükçe en sık hata mükerrer kayıt. Aynı tesisse mevcut kaydı açın.</div>
+<div style="display:flex;gap:8px;margin-top:10px">
+<button onClick="{{ naSz.yakinAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:7px 12px;border-radius:8px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body)">Mevcut kaydı aç</button>
+<button onClick="{{ naSz.yakinOnay }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:7px 12px;border-radius:8px;background:{{ naSz.onayBg }};color:{{ naSz.onayFg }};font:600 12.5px/1 var(--font-body)">{{ naSz.onayL }}</button>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ naSz.a3 }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<label style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Yapım yılı
+<input value="{{ newAsset.year }}" onChange="{{ onNaYear }}" inputmode="numeric" placeholder="Bilinmiyorsa boş" style="height:40px;border-radius:10px;border:1px solid {{ naSz.yilBr }};padding:0 10px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+<span style="font:400 11.5px/1.3 var(--font-body);color:{{ naSz.yilNotC }}">{{ naSz.yilNot }}</span>
+</label>
+<div style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Durum
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden;height:40px">
+<sc-for list="{{ newAsset.durumSec }}" as="o" hint-placeholder-count="2">
+<button onClick="{{ o.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;background:{{ o.bg }};color:{{ o.fg }};font:600 12.5px/40px var(--font-body)">{{ o.label }}</button>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Tesis fotoğrafı · {{ newAsset.photoCount }}</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ addNaPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:72px;height:72px;border-radius:12px;border:1.5px dashed var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:6px">Fotoğraf ekle</button>
+<sc-for list="{{ newAsset.photos }}" as="p" hint-placeholder-count="0">
+<div class="ks-gir" style="width:72px;height:72px;border-radius:12px;border:1px solid {{ ui.rule }};overflow:hidden">{{ p.img }}</div>
+</sc-for>
+</div>
+</div>
+<label style="display:flex;flex-direction:column;gap:6px;font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Not
+<textarea value="{{ newAsset.note }}" onChange="{{ onNaNote }}" rows="2" placeholder="Erişim yolu, muhtar bilgisi, eksik ölçüm" style="border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 10px;font:400 13.5px/1.45 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+</div>
+</sc-if>
+</div>
+
+<div style="flex:none;display:flex;align-items:center;gap:10px;padding:14px 22px;border-top:1px solid {{ ui.rule }}">
+<span style="flex:1;min-width:0;font:400 12px/1.35 var(--font-body);color:{{ naSz.uyariC }}">{{ naSz.uyari }}</span>
+<sc-if value="{{ naSz.geriVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ naSz.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:40px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 13px/38px var(--font-body)">Geri</button>
+</sc-if>
+<button onClick="{{ naSz.ileri }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:40px;padding:0 20px;border-radius:10px;background:{{ naSz.ileriBg }};opacity:{{ naSz.ileriOp }};color:#fff;font:700 13px/40px var(--font-body)">{{ naSz.ileriL }}</button>
+</div>
+</div>
+</div>
+</sc-if>

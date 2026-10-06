@@ -1,0 +1,114 @@
+<sc-if value="{{ tab.ozet }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Özet</div>
+<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy sayıları, eksik bilgiler, bu hafta, yakınımdaki tesisler.</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
+<div style="padding:10px 12px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:46px">
+<span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ st.label }}</span>
+<span style="font:700 20px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ st.n }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:13px 10px">Excel</button>
+<button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body);padding:13px 10px">PDF rapor</button>
+</div>
+<div style="display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ ozet.sekmeSecTel }}" as="sk" hint-placeholder-count="2">
+<button onClick="{{ sk.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 8px;border-radius:10px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;background:{{ sk.bg }};color:{{ sk.fg }}">{{ sk.ad }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>
+<sc-for list="{{ ozet.near }}" as="n" hint-placeholder-count="8">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
+<span style="font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }};width:56px">{{ n.km }}</span>
+<span style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
+<span style="font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ n.code }}</span>
+<span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ n.place }}</span>
+</span>
+<button onClick="{{ n.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);padding:10px 11px">Tarif</button>
+</div>
+</sc-for>
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Eksik bilgisi olan kayıtlar</div>
+<sc-for list="{{ ozet.missing }}" as="m" hint-placeholder-count="10">
+<button onClick="{{ m.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
+<span style="font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ m.code }} · {{ m.count }}</span>
+<span style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ m.place }} — {{ m.fields }}</span>
+</button>
+</sc-for>
+<div style="border-bottom:1px solid {{ ui.rule }}">
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
+<span style="font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Aktif / pasif dağılımı</span>
+<span class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};flex:1 1 280px;min-width:0">{{ ozet.aktiflik.note }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }}">
+<span style="flex:1;min-width:0;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tür</span>
+<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Aktif</span>
+<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Pasif</span>
+<span style="width:56px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Toplam</span>
+</div>
+<sc-for list="{{ ozet.aktiflik.satir }}" as="r" hint-placeholder-count="4">
+<div style="padding:10px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:1;min-width:0;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ r.tur }}</span>
+<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.aktif }}</span>
+<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.acc }}">{{ r.pasif }}</span>
+<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ r.toplam }}</span>
+</div>
+<div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }};position:relative">
+<span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.barW }};background:var(--color-accent);border-radius:3px"></span>
+</div>
+</div>
+</sc-for>
+<div style="padding:11px 14px;display:flex;align-items:center;gap:10px;background:{{ ui.surf }}">
+<span style="flex:1;min-width:0;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.tur }} · {{ ozet.aktiflik.toplam.oran }} aktif</span>
+<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
+<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
+<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ ozet.aktiflik.toplam.toplam }}</span>
+</div>
+</div>
+<div style="padding:12px 14px;border-top:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">İlçe bazında</div>
+<sc-for list="{{ ozet.districts }}" as="d" hint-placeholder-count="7">
+<div style="padding:10px 14px;border-top:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ d.name }}</span>
+<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ d.n }}</span>
+<span style="font:600 12px/1 var(--font-body);color:{{ d.missFg }}">{{ d.miss }}</span>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ ozet.ekipSekmesi }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Ekip performansı</div>
+<sc-if value="{{ ozet.ekipPerfYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ozet.ekipPerfBos }}</div>
+</sc-if>
+<sc-for list="{{ ozet.ekipPerf }}" as="ep" hint-placeholder-count="0">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:4px">
+<span style="font:600 13px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ ep.ad }}</span>
+<span style="font:600 12px/1.3 var(--font-body);color:{{ ep.satir1Fg }}">{{ ep.satir1 }}</span>
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ep.satir2 }}</span>
+<div style="height:5px;background:{{ ui.surf2 }};width:100%">
+<div style="height:5px;width:{{ ep.barW }};background:var(--color-accent)"></div>
+</div>
+</div>
+</sc-for>
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Tekrarlayan arızalar</div>
+<sc-for list="{{ ozet.tekrar }}" as="t" hint-placeholder-count="0">
+<button onClick="{{ t.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
+<span style="font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ t.code }} · {{ t.n }}</span>
+<span style="font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ t.place }} · {{ t.tur }}</span>
+<span style="font:600 11.5px/1.3 var(--font-body);color:{{ t.acikFg }}">son {{ t.son }} · {{ t.acik }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ ozet.tekrarYok }}" hint-placeholder-val="{{ true }}">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ ozet.tekrarBos }}</div>
+</sc-if>
+</sc-if>
+<div style="height:14px"></div>
+</div>
+</sc-if>

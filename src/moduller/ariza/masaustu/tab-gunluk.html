@@ -1,0 +1,22 @@
+<sc-if value="{{ tab.gunluk }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Bugün</h2>
+<div style="font:600 12.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ isListesi.who }} · {{ isListesi.date }}</div>
+<div style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};margin-top:4px;max-width:640px">{{ isListesi.note }}</div>
+</div>
+<sc-if value="{{ isListesi.empty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:22px 20px;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Bugün için bekleyen iş yok.</div>
+</sc-if>
+<sc-for list="{{ isListesi.items }}" as="it" hint-placeholder-count="8">
+<button onClick="{{ it.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:16px;width:100%;padding:13px 20px;border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
+<span style="flex:none;width:96px;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ it.kindFg }}">{{ it.kind }}</span>
+<span style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font:600 14px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ it.title }}</span>
+<span style="font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ it.meta }}</span>
+</span>
+</button>
+</sc-for>
+<div style="height:16px"></div>
+</div>
+</sc-if>

@@ -1,0 +1,79 @@
+<sc-if value="{{ tab.yerlesim }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="padding:14px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Yerleşimler</h2>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ province.line }}</div>
+</div>
+<div class="ks-bilgi" style="border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }};padding:11px 20px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ province.note }}</div>
+<div style="padding:14px 16px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Nüfus ve hayvan varlığını yükle</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:720px">{{ yerlesimYukleme.note }}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ yerlesimYukleme.ornek }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 15px;min-height:50px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.indir }} Örnek dosya</button>
+<button onClick="{{ yerlesimYukleme.yukle }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:14px 18px;justify-content:center;min-height:50px">Dosya yükle (CSV)</button>
+<button onClick="{{ yerlesimYukleme.temizle }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:14px 15px;min-height:50px">Yüklenen veriyi sil</button>
+</div>
+<div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">Başlık satırı okunur — sütun sırası önemli değil. Tanınan başlıklar: Köy / Yerleşim · İlçe · Nüfus · Yıl · Büyükbaş · Küçükbaş. TÜİK ekstresi gibi ilçe adının yalnızca grubun ilk satırında yazıldığı dosyalar da olduğu gibi yüklenir; ayraç noktalı virgül, virgül veya sekme olabilir ve Türkçe karakterli (ANSI/Windows) kayıtlar da okunur. Köy adındaki “Köy”, “Belde”, “Mahallesi” ekleri eşleştirmede yok sayılır.</div>
+</div>
+<div style="padding:14px 16px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Köy / mahalle ekle</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:720px">{{ koyEkle.note }}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+<label style="display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ koyEkle.ilce }}" onChange="{{ koyEkle.onIlce }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+<option value="">Seçin…</option>
+<sc-for list="{{ koyEkle.ilceler }}" as="d" hint-placeholder-count="7">
+<option value="{{ d.id }}">{{ d.name }}</option>
+</sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px;flex:1 1 200px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy / mahalle adı</span>
+<input value="{{ koyEkle.ad }}" onChange="{{ koyEkle.onAd }}" placeholder="Örnek: Yenice mahallesi" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px;flex:0 1 130px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Enlem (varsa)</span>
+<input value="{{ koyEkle.lat }}" onChange="{{ koyEkle.onLat }}" placeholder="39.15091" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px;flex:0 1 130px;min-width:0">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Boylam (varsa)</span>
+<input value="{{ koyEkle.lon }}" onChange="{{ koyEkle.onLon }}" placeholder="34.15952" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<button onClick="{{ koyEkle.ekle }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:0 18px;min-height:46px;justify-content:center">Listeye ekle</button>
+</div>
+<sc-if value="{{ koyEkle.varMi }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};display:flex;flex-direction:column">
+<div style="padding:9px 12px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ koyEkle.sayi }}</div>
+<sc-for list="{{ koyEkle.rows }}" as="r" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1;min-width:0;font:600 13px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="font:600 12.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ r.ilce }}</span>
+<span style="font:600 12px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.mut }}">{{ r.koord }}</span>
+<button onClick="{{ r.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Sil</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<table class="table" style="width:100%;font-size:12px">
+<thead><tr style="background:{{ ui.surf2 }}">
+<th style="text-align:left;color:{{ ui.fg }}">Yerleşim</th><th style="text-align:left;color:{{ ui.fg }}">İlçe</th><th style="text-align:left;color:{{ ui.fg }}">Nüfus</th>
+<th style="text-align:left;color:{{ ui.fg }}">Büyükbaş</th><th style="text-align:left;color:{{ ui.fg }}">Küçükbaş</th><th style="text-align:left;color:{{ ui.fg }}">Envanter</th><th style="text-align:left;color:{{ ui.fg }}">Kaynak</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{ settlements }}" as="s" hint-placeholder-count="12">
+<tr style="background:{{ s.rowBg }}">
+<td style="font-weight:{{ s.weight }};color:{{ ui.fg }}">{{ s.name }}</td>
+<td style="color:{{ ui.mut }}">{{ s.district }}</td>
+<td style="color:{{ s.numColor }};font-weight:{{ s.weight }}">{{ s.pop }}</td>
+<td style="color:{{ s.numColor }}">{{ s.buyukbas }}</td>
+<td style="color:{{ s.numColor }}">{{ s.kucukbas }}</td>
+<td style="color:{{ ui.fg }}">{{ s.inv }}</td>
+<td style="color:{{ ui.mut }};font-size:10.5px">{{ s.src }}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</sc-if>

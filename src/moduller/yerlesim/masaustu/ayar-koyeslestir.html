@@ -1,0 +1,20 @@
+<sc-if value="{{ ayar.koyeslestir }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap">
+<div style="flex:1;min-width:220px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Kayıtlara köy adı ata</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:600px">{{ vFill.note }}</div>
+<div style="font:600 12px/1.5 var(--font-body);color:{{ ui.acc }};margin-top:6px">{{ vSaved }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;flex:none">
+<button onClick="{{ vFill.run }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 16px;text-align:center">{{ vFill.label }}</button>
+<button onClick="{{ vClear }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 13px;text-align:center">Elle işaretlenmiş konumları temizle</button>
+</div>
+</div>
+<div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px">
+<div>
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Yeni tesis kur</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:600px">Kayıtta olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açar. Sahadaysanız daha kısa yol: haritada boş bir noktaya dokunun, çıkan şeritten “Buraya tesis kur”.</div>
+</div>
+<button onClick="{{ yeniTesisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 16px" style-hover="background:var(--color-accent);color:#fff">Yeni tesis kaydı aç</button>
+</div>
+</sc-if>

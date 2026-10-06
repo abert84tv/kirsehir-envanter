@@ -1,0 +1,52 @@
+<sc-if value="{{ ayar.denetim }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Denetim izi</div>
+<div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ denetimEkran.not }}</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ denetimEkran.stats }}" as="st" hint-placeholder-count="4">
+<div style="width:50%;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<span style="font:600 21px/1 var(--font-heading);letter-spacing:-.022em;color:{{ st.fg }}">{{ st.n }}</span>
+<span style="font:600 10.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ st.label }}</span>
+</div>
+</sc-for>
+</div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:10px">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ara</span>
+<input value="{{ denetimEkran.q }}" onChange="{{ denetimEkran.onQ }}" type="search" placeholder="işlem, kayıt kodu, kişi" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kullanıcı</span>
+<select value="{{ denetimEkran.kim }}" onChange="{{ denetimEkran.onKim }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<option value="">Hepsi</option>
+<sc-for list="{{ denetimEkran.kimler }}" as="k" hint-placeholder-count="3">
+<option value="{{ k }}">{{ k }}</option>
+</sc-for>
+</select>
+</label>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<sc-for list="{{ denetimEkran.sinifSec }}" as="c" hint-placeholder-count="9">
+<button onClick="{{ c.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ c.bg }};color:{{ c.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em">{{ c.label }}</button>
+</sc-for>
+</div>
+<button onClick="{{ denetimEkran.csv }}" class="btn btn-primary" style="width:100%;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:14px 15px;justify-content:flex-start">CSV indir</button>
+</div>
+<sc-if value="{{ denetimEkran.bos }}" hint-placeholder-val="{{ true }}">
+<div style="padding:13px 14px;font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ denetimEkran.bosNot }}</div>
+</sc-if>
+<sc-for list="{{ denetimEkran.satirlar }}" as="r" hint-placeholder-count="0">
+<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="flex:none;font:600 11px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ r.sinifFg }}">{{ r.sinif }}</span>
+<span style="flex:1;min-width:0;font:400 11.5px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.mut }};text-align:right">{{ r.t }}</span>
+</div>
+<span style="font:600 12.5px/1.3 var(--font-body);color:{{ ui.fg }}">{{ r.ne }} · {{ r.kapsam }}</span>
+<span style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ r.detay }}</span>
+<span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ r.kim }} · {{ r.nereden }}</span>
+</div>
+</sc-for>
+<div style="padding:11px 14px;font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ denetimEkran.fazla }}</div>
+</div>
+</sc-if>

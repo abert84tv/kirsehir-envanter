@@ -1,0 +1,24 @@
+<sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
+<div style="flex:none;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:8px;padding:7px 10px">
+<div style="flex:1;min-width:0;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="3">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
+</sc-for>
+</div>
+<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 10px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 12.5px/1 var(--font-body)">Süzgeç</button>
+<button onClick="{{ telSuz.aracTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 10px;border-radius:11px;border:1px solid {{ telSuz.aracKenar }};background:{{ telSuz.aracZemin }};color:{{ telSuz.aracYazi }};font:600 12.5px/1 var(--font-body);display:flex;align-items:center;gap:4px">Araç <span style="font-size:10px">{{ telSuz.aracOk }}</span></button>
+<button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
+</div>
+<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<iframe src="profil.html" title="Mesafe ve yol profili (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
+</div>
+</sc-if>

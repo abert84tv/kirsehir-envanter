@@ -23,6 +23,15 @@ function dosyaVarMi(rel) {
   return fs.existsSync(path.join(ROOT, rel.replace(/^\//, '')));
 }
 
+// 0) index.html, src/ klasöründen derlenir; güncel mi?
+console.log('0) index.html derlemesi (src/ -> index.html)');
+try {
+  execFileSync(process.execPath, [path.join(ROOT, 'build.js'), '--kontrol'], { stdio: 'pipe' });
+  basari('index.html, src/ ile uyumlu');
+} catch (e) {
+  basarisiz('index.html güncel değil — "node build.js" çalıştırın. ' + String((e.stderr || e.stdout || e.message)).trim().split(/\r?\n/)[0]);
+}
+
 // 1) HTML dosyalarındaki gömülü <script> bloklarının sözdizimi
 console.log('1) Gömülü <script> sözdizimi');
 const htmlDosyalari = ['index.html', 'harita.html', 'profil.html', 'hat.html'];

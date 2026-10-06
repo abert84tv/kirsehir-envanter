@@ -1,0 +1,62 @@
+<sc-if value="{{ tab.aktarim }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+<div>
+<h2 style="font:600 19px/1 var(--font-heading);letter-spacing:-.022em;margin:0 0 5px">Dış veri aktarımı</h2>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};max-width:640px">Elinizdeki toplu nokta listesini bir kerede içeri alır: dosya okunur, noktalar listelenir, her noktaya kuyu / depo / AG / GES işaretlenir, sonra kaydedilir. Bu ekran çalışma ekranlarında durmaz — Ayarlar’dan girilir, çoğunlukla bir kez kullanılır.</div>
+</div>
+<button onClick="{{ goSettings }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 13px">Ayarlar</button>
+</div>
+
+<sc-if value="{{ imp.step1 }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">1 · Kaynağı seçin</div>
+<div style="display:grid;grid-template-columns:1fr 1fr">
+<sc-for list="{{ imp.sources }}" as="sr" hint-placeholder-count="4">
+<button onClick="{{ sr.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:18px 20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
+<span style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sr.label }}</span>
+<span style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ sr.desc }}</span>
+</button>
+</sc-for>
+</div>
+<div class="ks-bilgi" style="padding:16px 20px;font:400 12.5px/1.6 var(--font-body);color:{{ ui.mut }};max-width:700px">Dosyada olması gereken en az şu üç şey: <b style="color:{{ ui.fg }}">ad</b>, <b style="color:{{ ui.fg }}">enlem</b>, <b style="color:{{ ui.fg }}">boylam</b>. Varsa köy, ilçe, yapım yılı ve not da okunur; tür (kuyu/depo) dosyada olmasa da olur — bir sonraki adımda işaretlenir. Google Earth’te noktalarınız klasörlere ayrılmışsa klasör adı tür tahmini için kullanılır.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ imp.step2 }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;justify-content:space-between;gap:14px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">2 · Tür işaretle — {{ imp.source }}</span>
+<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ imp.count }} · {{ imp.typedCount }}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;padding:12px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};align-items:center">
+<button onClick="{{ imp.selectAll }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Tümünü seç</button>
+<button onClick="{{ imp.selectNone }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">Seçimi bırak</button>
+<sc-for list="{{ imp.bulk }}" as="b" hint-placeholder-count="4">
+<button onClick="{{ b.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">{{ b.label }}</button>
+</sc-for>
+</div>
+<sc-for list="{{ imp.rows }}" as="r" hint-placeholder-count="12">
+<div style="display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ r.rowBg }}">
+<button onClick="{{ r.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:22px;text-align:center;font:700 15px/1 var(--font-body);color:{{ ui.acc }}">{{ r.check }}</button>
+<span style="font:600 13.5px/1.15 var(--font-heading);color:{{ ui.fg }};width:150px">{{ r.name }}</span>
+<span style="font:400 12.5px/1.2 var(--font-body);color:{{ ui.mut }};width:180px">{{ r.place }}</span>
+<span style="font:600 12.5px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.mut }};width:150px">{{ r.coord }}</span>
+<span style="flex:1;font:600 12.5px/1.2 var(--font-body);color:{{ r.typeFg }}">{{ r.typeLabel }}</span>
+<span style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};flex:none">
+<sc-for list="{{ r.types }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:8px 11px;background:{{ t.bg }};color:{{ t.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">{{ t.label }}</button>
+</sc-for>
+</span>
+</div>
+</sc-for>
+<div style="padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<button onClick="{{ imp.save }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:14px 18px;justify-content:center">İşaretlenenleri envantere kaydet</button>
+<button onClick="{{ imp.back }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px 16px">Başka dosya</button>
+<span style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ imp.untypedNote }} Aktarılan kayıtta yalnızca ad, konum, köy ve ilçe dolu olur; teknik alanlar ve deneme değerleri sahada girilir.</span>
+</div>
+</div>
+</sc-if>
+<div style="height:16px"></div>
+</div>
+</sc-if>

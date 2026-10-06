@@ -1,0 +1,181 @@
+<sc-if value="{{ tab.gunluk }}" hint-placeholder-val="{{ false }}">
+<div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="background:{{ ui.surf }};padding:16px 16px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="flex:1;min-width:0">
+<div style="font:700 21px/1.2 var(--font-heading);letter-spacing:-.01em">{{ saha.selam }}</div>
+<div style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:2px">{{ saha.alt }}</div>
+</div>
+<sc-if value="{{ saha.konumVar }}" hint-placeholder-val="{{ false }}">
+<span style="display:flex;align-items:center;gap:6px;font:600 11.5px/1 var(--font-body);color:#1f8a3d"><span class="ks-canli"></span>Konum</span>
+</sc-if>
+<sc-if value="{{ saha.konumYok }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ saha.konumAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12px/1 var(--font-body);color:{{ ui.acc }};display:flex;align-items:center">Konumumu al</button>
+</sc-if>
+<span style="flex:none;width:34px;height:34px;border-radius:50%;background:#ff9f0a;color:#fff;font:700 12px/34px var(--font-body);text-align:center">{{ saha.ini }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:14px;background:{{ ui.surf2 }};border-radius:14px;padding:10px 12px">
+<span style="position:relative;flex:none;width:44px;height:44px"><svg width="44" height="44" viewBox="0 0 44 44" style="display:block" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="{{ ui.rule }}" stroke-width="5"></circle><circle cx="22" cy="22" r="18" fill="none" stroke="#34c759" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ saha.halka }}" transform="rotate(-90 22 22)" style="transition:stroke-dasharray .8s ease"></circle></svg><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 11.5px/1 var(--font-body)">{{ saha.bitti }}/{{ saha.toplam }}</span></span>
+<div style="flex:1;min-width:0">
+<div style="font:600 13.5px/1.3 var(--font-body)">{{ saha.ozet }}</div>
+<div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:1px">{{ saha.ozetAlt }}</div>
+</div>
+</div>
+</div>
+
+<div style="padding:14px 14px 18px">
+<sc-if value="{{ saha.basariVar }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="background:{{ ui.surf }};border-radius:18px;padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 1px 0 rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.06)">
+<div class="ks-pop" style="width:76px;height:76px;border-radius:50%;background:#34c759;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(52,199,89,.35)"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="ks-tik" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<div style="font:700 17px/1.2 var(--font-heading)">{{ saha.basariBaslik }}</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ saha.basariMetin }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ saha.isGoster }}" hint-placeholder-val="{{ true }}">
+<div class="ks-gir" style="position:relative;overflow:hidden;background:{{ ui.surf }};border-radius:18px;padding:16px;box-shadow:0 1px 0 rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.06)">
+<div style="display:flex;align-items:center;gap:8px">
+<span class="{{ saha.is.prSinif }}" style="font:700 11px/1 var(--font-body);padding:4px 9px;border-radius:7px;background:{{ saha.is.prBg }};color:{{ saha.is.prFg }}">{{ saha.is.pr }}</span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ saha.is.no }}</span>
+<span style="flex:1"></span>
+<span style="font:700 11.5px/1 var(--font-body);color:{{ saha.is.sureC }}">{{ saha.is.sure }}</span>
+</div>
+<div style="font:700 20px/1.25 var(--font-heading);letter-spacing:-.01em;margin-top:10px">{{ saha.is.baslik }}</div>
+<div style="font:400 13px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ saha.is.tesis }}</div>
+<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;font:400 12px/1.2 var(--font-body)">
+<span style="display:flex;align-items:center;gap:5px;background:{{ ui.surf2 }};padding:6px 9px;border-radius:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.4"></circle></svg>{{ saha.is.mesafe }}</span>
+<span style="display:flex;align-items:center;gap:5px;background:{{ ui.surf2 }};padding:6px 9px;border-radius:8px;min-width:0;max-width:100%"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ saha.is.not }}</span></span>
+</div>
+
+<div style="display:flex;align-items:center;margin:18px 4px 6px">
+<sc-for list="{{ saha.is.adimlar }}" as="a" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;flex:{{ a.esnek }}">
+<span style="width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font:700 11.5px/1 var(--font-body);background:{{ a.bg }};color:{{ a.fg }};box-shadow:{{ a.halka }};transition:background .3s,box-shadow .3s">{{ a.ic }}</span>
+<sc-if value="{{ a.cizgi }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;height:3px;background:{{ ui.rule }};border-radius:2px;margin:0 6px;overflow:hidden"><div style="height:3px;width:{{ a.cizgiW }};background:var(--color-accent);transition:width .6s ease"></div></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;font:400 11px/1 var(--font-body);color:{{ ui.mut }};margin:0 0 14px"><span>Atandı</span><span>Sahadayım</span><span>Tamamlandı</span></div>
+
+<sc-if value="{{ saha.olaySheet.var }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ saha.olaySheet.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);display:flex;align-items:flex-end">
+<div onClick="{{ saha.bekleSheet.dur }}" style="width:100%;background:{{ ui.surf }};border-radius:20px 20px 0 0;padding:16px 14px 22px;display:flex;flex-direction:column;gap:9px">
+<span style="font:700 16px/1.2 var(--font-heading)">Ne oldu?</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">İş ekipten alınır ve merkeze devredilir; araç arızalı olarak işaretlenir.</span>
+<button onClick="{{ saha.olaySheet.ariza }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:13px 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14.5px/1.3 var(--font-body)">Araç arızalandı</button>
+<button onClick="{{ saha.olaySheet.kaza }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:13px 16px;border-radius:14px;background:{{ ui.surf2 }};color:#d92d20;font:600 14.5px/1.3 var(--font-body)">Kaza oldu</button>
+<button onClick="{{ saha.olaySheet.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;border-radius:14px;border:1px solid {{ ui.rule }};text-align:center;font:600 14px/44px var(--font-body)">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ saha.bekleSheet.var }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ saha.bekleSheet.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);display:flex;align-items:flex-end">
+<div onClick="{{ saha.bekleSheet.dur }}" style="width:100%;background:{{ ui.surf }};border-radius:20px 20px 0 0;padding:16px 14px 22px;display:flex;flex-direction:column;gap:9px">
+<span style="font:700 16px/1.2 var(--font-heading);margin-bottom:4px">İş neden bekliyor?</span>
+<sc-for list="{{ saha.bekleSheet.liste }}" as="n" hint-placeholder-count="4">
+<button onClick="{{ n.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:13px 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14.5px/1.3 var(--font-body);display:flex;align-items:center">{{ n.ad }}</button>
+</sc-for>
+<button onClick="{{ saha.bekleSheet.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;border-radius:14px;border:1px solid {{ ui.rule }};text-align:center;font:600 14px/44px var(--font-body)">Vazgeç</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ saha.is.beklemede }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:10px">
+<div style="border-radius:12px;background:{{ ui.surf2 }};padding:11px 13px;font:600 13.5px/1.4 var(--font-body)">Beklemede — {{ saha.is.bekNeden }}</div>
+<button onClick="{{ saha.is.devam }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">Devam et</button>
+</div>
+</sc-if>
+<sc-if value="{{ saha.is.s0 }}" hint-placeholder-val="{{ true }}">
+<div class="ks-gir" style="display:flex;gap:8px">
+<button onClick="{{ saha.is.yolTarifi }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:50px;padding:0 16px;border-radius:14px;background:{{ ui.surf2 }};font:600 14px/50px var(--font-body)">Yol tarifi</button>
+<button onClick="{{ saha.is.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center">Sahaya vardım</button>
+</div>
+<button onClick="{{ saha.is.bekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 13.5px/40px var(--font-body);text-align:center">Beklemeye al</button>
+<button onClick="{{ saha.is.olay }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};color:#d92d20;font:600 13.5px/40px var(--font-body);text-align:center">Araç arızası / kaza</button>
+</sc-if>
+
+<sc-if value="{{ saha.is.s1 }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font:600 12.5px/1.3 var(--font-body);color:{{ saha.is.noktaC }}"><span style="flex:1">{{ saha.is.noktaYazi }}</span><button onClick="{{ saha.is.noktaAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.acc }};font:600 12.5px/36px var(--font-body)">{{ saha.is.noktaL }}</button></div>
+<button onClick="{{ saha.is.fotoOnce }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;border:1.5px dashed {{ saha.is.onceKenar }};background:{{ saha.is.onceZemin }};border-radius:12px;padding:11px 12px;margin-bottom:10px">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ saha.is.onceIk }};color:#fff;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body)">{{ saha.is.onceL }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ saha.is.onceAlt }}</span></span>
+</button>
+<button onClick="{{ saha.is.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;border-radius:14px;background:var(--color-accent);color:#fff;font:700 15px/50px var(--font-body);text-align:center;opacity:{{ saha.is.tamamlaOp }}">İşi tamamla</button>
+<button onClick="{{ saha.is.bekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:44px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 14px/42px var(--font-body);text-align:center">Beklemeye al</button>
+<button onClick="{{ saha.is.olay }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px solid {{ ui.rule }};color:#d92d20;font:600 13.5px/40px var(--font-body);text-align:center">Araç arızası / kaza</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.is.s2 }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir">
+<button onClick="{{ saha.is.fotoSonra }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;border:1.5px dashed {{ saha.is.sonraKenar }};background:{{ saha.is.sonraZemin }};border-radius:12px;padding:11px 12px;margin-bottom:12px">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ saha.is.sonraIk }};color:#fff;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body)">{{ saha.is.sonraL }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">İş bittikten sonraki hâli</span></span>
+</button>
+<sc-if value="{{ saha.ambarOn }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="font:700 12.5px/1.3 var(--font-body);margin-bottom:6px">Kullanılan malzeme <span style="font-weight:500;color:{{ ui.mut }}">· ekip zimmetinden düşülür</span></div>
+<sc-for list="{{ saha.is.mz }}" as="m" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:500 13px/1.3 var(--font-body)">{{ m.ad }}</div><div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.elde }}</div></div>
+<button onClick="{{ m.eksi }}" aria-label="Azalt" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:50%;background:{{ ui.surf2 }};font:400 20px/36px var(--font-body);text-align:center">−</button>
+<span style="width:30px;text-align:center;font:700 15px/1 var(--font-body);color:{{ m.c }}">{{ m.n }}</span>
+<button onClick="{{ m.arti }}" aria-label="Artır" style="all:unset;box-sizing:border-box;cursor:pointer;width:36px;height:36px;border-radius:50%;background:rgba(0,113,227,.12);color:{{ ui.acc }};font:400 20px/36px var(--font-body);text-align:center">+</button>
+</div>
+</sc-for>
+<sc-if value="{{ saha.is.mzYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:8px 0;border-top:1px solid {{ ui.rule }};font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ saha.is.mzYokNot }}</div>
+</sc-if>
+</div>
+</sc-if>
+<textarea value="{{ saha.is.kapNot }}" onChange="{{ saha.is.onKapNot }}" rows="2" placeholder="Kısa not (isteğe bağlı) — ne yapıldı" style="all:unset;box-sizing:border-box;display:block;width:100%;margin-top:10px;border-radius:12px;border:1px solid {{ ui.rule }};padding:10px 12px;font:400 14px/1.4 var(--font-body);background:{{ ui.bg }}"></textarea>
+<button onClick="{{ saha.is.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:50px;margin-top:12px;border-radius:14px;background:{{ saha.is.kapatBg }};color:#fff;font:700 15px/50px var(--font-body);text-align:center;opacity:{{ saha.is.kapatOp }}">{{ saha.is.kapatL }}</button>
+<button onClick="{{ saha.is.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;height:42px;margin-top:6px;border-radius:12px;font:600 13px/42px var(--font-body);color:{{ ui.mut }};text-align:center">Vazgeç</button>
+</div>
+</sc-if>
+<button onClick="{{ saha.is.formAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;margin:12px auto 0;font:600 12px/1 var(--font-body);color:{{ ui.acc }}">Kaydın tamamını aç</button>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.isYok }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="background:{{ ui.surf }};border-radius:18px;padding:28px 18px;text-align:center">
+<div class="ks-pop" style="width:60px;height:60px;margin:0 auto 10px;border-radius:50%;background:#34c759;display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="ks-tik" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<div style="font:700 17px/1.2 var(--font-heading)">{{ saha.bosBaslik }}</div>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:4px">{{ saha.bosAlt }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.sonrakiVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;align-items:baseline;gap:8px;margin:18px 4px 8px"><span style="font:700 15px/1 var(--font-heading)">Sıradaki işler</span><span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">dokunun, o iş açılır</span></div>
+<div style="background:{{ ui.surf }};border-radius:16px;overflow:hidden">
+<sc-for list="{{ saha.sonraki }}" as="j" hint-placeholder-count="3">
+<button onClick="{{ j.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:none;width:28px;height:28px;border-radius:50%;background:{{ ui.surf2 }};font:700 12px/28px var(--font-body);text-align:center">{{ j.sira }}</span>
+<span style="flex:1;min-width:0"><span style="display:block;font:600 13.5px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ j.baslik }}</span><span style="display:block;font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ j.tesis }}</span></span>
+<span style="flex:none;text-align:right"><span style="display:inline-block;font:700 10.5px/1 var(--font-body);padding:3px 7px;border-radius:6px;background:{{ j.prBg }};color:{{ j.prFg }}">{{ j.pr }}</span><span style="display:block;font:400 11px/1.2 var(--font-body);color:{{ ui.mut }};margin-top:3px">{{ j.mesafe }}</span></span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ saha.zimmetVar }}" hint-placeholder-val="{{ false }}">
+<div>
+<div style="display:flex;align-items:baseline;gap:8px;margin:18px 4px 8px"><span style="font:700 15px/1 var(--font-heading)">Zimmetim</span><span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">ekibin üstündeki malzeme</span></div>
+<div style="background:{{ ui.surf }};border-radius:16px;overflow:hidden">
+<sc-for list="{{ saha.zimmet }}" as="z" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:600 13.5px/1.3 var(--font-body)">{{ z.ad }}</div><div style="font:400 11.5px/1.3 var(--font-body);color:{{ z.notC }}">{{ z.not }}</div></div>
+<span style="font:700 16px/1 var(--font-body);color:{{ z.c }}">{{ z.n }} <span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }}">{{ z.birim }}</span></span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>

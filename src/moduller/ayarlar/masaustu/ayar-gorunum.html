@@ -1,0 +1,60 @@
+<sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:1fr 1fr">
+<div style="padding:16px 20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Harita zemini</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">Uydu fotoğrafı Esri World Imagery’den gelir; “Uydu + ad” katmanı köy ve yol adlarını uydunun üstüne bindirir.</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setBase.street.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setBase.street.bg }};color:{{ setBase.street.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Sokak</button>
+<button onClick="{{ setBase.sat.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setBase.sat.bg }};color:{{ setBase.sat.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Uydu</button>
+<button onClick="{{ setBase.hyb.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setBase.hyb.bg }};color:{{ setBase.hyb.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Uydu + ad</button>
+</div>
+</div>
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ulaşım / yol tarifi modu</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">Açıkken haritada bir kayda dokunmak kaydı açmaz, konumunuzdan o tesise karayolu güzergâhı çizer.</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setNav.on.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setNav.on.bg }};color:{{ setNav.on.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Açık</button>
+<button onClick="{{ setNav.off.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setNav.off.bg }};color:{{ setNav.off.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Kapalı</button>
+</div>
+</div>
+<div style="padding:16px 20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Görünüm</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">Koyu tema sahada gece kullanımı için; harita karoları da birlikte kısılır.</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setTheme.light.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setTheme.light.bg }};color:{{ setTheme.light.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Açık</button>
+<button onClick="{{ setTheme.dark.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setTheme.dark.bg }};color:{{ setTheme.dark.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Koyu</button>
+</div>
+</div>
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Bağlantı</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">Çevrimdışıyken kayıtlar cihazda tutulur; bağlantı gelince kuyruk sırayla eşitlenir.</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setNet.on.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setNet.on.bg }};color:{{ setNet.on.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Çevrim içi</button>
+<button onClick="{{ setNet.off.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setNet.off.bg }};color:{{ setNet.off.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Çevrim dışı</button>
+</div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr">
+<div style="padding:16px 20px;border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ekran düzeni</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ setDevice.note }}</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setDevice.auto.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setDevice.auto.bg }};color:{{ setDevice.auto.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Otomatik</button>
+<button onClick="{{ setDevice.desktop.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setDevice.desktop.bg }};color:{{ setDevice.desktop.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Bilgisayar</button>
+<button onClick="{{ setDevice.phone.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 6px;background:{{ setDevice.phone.bg }};color:{{ setDevice.phone.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Telefon</button>
+</div>
+</div>
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Bu cihazda kayıtlı giriş</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ forgetNote }}</div>
+<sc-if value="{{ hasSavedLogin }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ forgetLogin }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:11px 13px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Kayıtlı girişi sil</button>
+</sc-if>
+</div>
+</div>
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ayarlar hatırlanıyor</div>
+<div class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ prefNote }}</div>
+<button onClick="{{ prefReset }}" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 13px">Varsayılana döndür</button>
+</div>
+</sc-if>

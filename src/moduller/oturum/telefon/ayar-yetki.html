@@ -1,0 +1,127 @@
+<sc-if value="{{ ayar.yetki }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+<div style="flex:1;min-width:0">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Kullanıcılar ve roller</div>
+<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">{{ kullanici.note }}</div>
+</div>
+</div>
+<sc-if value="{{ kullanici.ekleGoster }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kullanici.ekle }}" class="btn btn-primary" style="width:100%;justify-content:center;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px;min-height:52px;margin-bottom:11px">+ Yeni kullanıcı</button>
+</sc-if>
+<sc-if value="{{ kullanici.formOn }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid var(--color-accent);margin-bottom:12px">
+<div style="padding:11px 12px;background:var(--color-accent);color:#fff;display:flex;align-items:center;gap:10px">
+<span style="flex:1;font:600 12px/1 var(--font-body);letter-spacing:-.01em">{{ kullanici.form.baslik }}</span>
+<button onClick="{{ kullanici.form.iptal }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.55);color:#fff">{{ ikonlar.kapat }}</button>
+</div>
+<div style="padding:13px 12px;display:flex;flex-direction:column;gap:11px;background:{{ ui.surf }}">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ad soyad</span>
+<input value="{{ kullanici.form.name }}" onChange="{{ kullanici.form.onName }}" placeholder="Örnek: Ahmet Bertan" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kullanıcı adı</span>
+<input value="{{ kullanici.form.user }}" onChange="{{ kullanici.form.onUser }}" placeholder="a.bertan" autocapitalize="none" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ kullanici.form.userNote }}</span>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Unvan / görev</span>
+<input value="{{ kullanici.form.unvan }}" onChange="{{ kullanici.form.onUnvan }}" placeholder="İnşaat teknikeri" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Telefon</span>
+<input value="{{ kullanici.form.tel }}" onChange="{{ kullanici.form.onTel }}" inputmode="tel" placeholder="0555 000 00 00" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe / sorumluluk bölgesi</span>
+<select value="{{ kullanici.form.bolge }}" onChange="{{ kullanici.form.onBolge }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;min-height:48px">
+<option value="">Tüm il</option>
+<sc-for list="{{ kullanici.form.ilceler }}" as="i" hint-placeholder-count="7">
+<option value="{{ i.n }}">{{ i.n }}</option>
+</sc-for>
+</select>
+</label>
+<sc-if value="{{ kullanici.form.yeni }}" hint-placeholder-val="{{ true }}">
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Başlangıç şifresi</span>
+<input value="{{ kullanici.form.pw }}" onChange="{{ kullanici.form.onPw }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid var(--color-accent);padding:13px;font:700 15px/1 ui-monospace,Menlo,monospace;letter-spacing:-.01em;color:{{ ui.fg }};background:{{ ui.bg }};min-height:48px">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Program bir şifre üretti. Kişiye iletin; ilk girişinde kendi şifresini belirler.</span>
+</label>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Rol</span>
+<div style="display:flex;flex-direction:column;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ kullanici.form.roller }}" as="r" hint-placeholder-count="5">
+<button onClick="{{ r.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;text-align:left;padding:14px 12px;background:{{ r.bg }};color:{{ r.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;border-bottom:1px solid {{ ui.rule }};min-height:50px">{{ r.label }}</button>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ kullanici.form.hasErr }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid var(--color-uyari-200);background:var(--color-uyari-100);color:var(--color-uyari-700);padding:11px 12px;font:600 12.5px/1.4 var(--font-body)">{{ kullanici.form.err }}</div>
+</sc-if>
+<div style="display:flex;gap:8px">
+<button onClick="{{ kullanici.form.kaydet }}" class="btn btn-primary" style="flex:1;justify-content:center;border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:15px;min-height:52px">Kaydet</button>
+<button onClick="{{ kullanici.form.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 16px;min-height:52px">Vazgeç</button>
+</div>
+</div>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ kullanici.rows }}" as="u" hint-placeholder-count="5">
+<div style="display:flex;flex-direction:column;gap:9px;padding:12px;border-bottom:1px solid {{ ui.rule }};background:{{ u.bg }}">
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+<span style="font:600 14px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ u.name }} {{ u.mark }}</span>
+<span style="font:600 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }}">{{ u.user }}</span>
+<span style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ u.role }} · {{ u.ozet }}</span>
+<span style="font:600 11px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ u.durumRenk }}">{{ u.durum }}</span>
+</div>
+<sc-if value="{{ u.duzenlenir }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<button onClick="{{ u.edit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">Düzenle</button>
+<button onClick="{{ u.sifre }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">Şifre sıfırla</button>
+<button onClick="{{ u.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ u.kapatLabel }}</button>
+<sc-if value="{{ u.silinebilir }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ u.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ ikonlar.copKucuk }} Sil</button>
+</sc-if>
+<button onClick="{{ u.yetkiAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ u.yetkiLabel }}</button>
+</div>
+<sc-if value="{{ u.yetkiAcik }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;display:flex;flex-direction:column;gap:9px">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ u.yetkiBaslik }}</div>
+<div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ u.yetkiNot }}</div>
+<sc-for list="{{ u.sayfalar }}" as="grp" hint-placeholder-count="6">
+<div style="font:700 9.5px/1 var(--font-body);letter-spacing:.02em;text-transform:uppercase;color:{{ ui.mut }};margin-top:8px">{{ grp.ad }}</div>
+<sc-for list="{{ grp.suzgecler }}" as="p" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1;min-width:0;font:600 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ p.label }}</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};flex:none">
+<sc-for list="{{ p.secenekler }}" as="o" hint-placeholder-count="3">
+<button onClick="{{ o.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:0 11px;min-height:44px;display:flex;align-items:center;background:{{ o.bg }};color:{{ o.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">{{ o.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</sc-for>
+<div style="border-top:1px solid {{ ui.rule }};padding-top:9px;display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Rol yetkileri ve istisnalar</span>
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">{{ u.role }} · {{ u.istisnaSayi }}</span>
+</div>
+<sc-for list="{{ u.istisnalar }}" as="y" hint-placeholder-count="10">
+<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid {{ ui.rule }}">
+<button onClick="{{ y.tik }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid {{ y.kutuKenar }};background:{{ y.kutuBg }};color:{{ y.kutuFg }};font:600 13px/1 var(--font-body)">{{ y.isaret }}</button>
+<span style="flex:1;min-width:0;font:600 12.5px/1.3 var(--font-body);color:{{ ui.fg }}">{{ y.ad }}</span>
+<span style="flex:none;font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ y.durumFg }}">{{ y.durum }}</span>
+</div>
+</sc-for>
+<div class="ks-bilgi" style="font:400 11.5px/1.5 var(--font-body);color:{{ ui.mut }}">Kutu işaretli ise yetki açık. Rol paketinden farklı bıraktığınız satırlar istisna olarak kaydedilir; rolü değiştirdiğinizde istisnalar korunur. Kayıt silme / arşivleme ve kullanıcı yönetimi role bağlıdır, istisna kabul etmez.</div>
+</div>
+</div>
+</sc-if>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>

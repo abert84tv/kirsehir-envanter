@@ -1,0 +1,119 @@
+<sc-if value="{{ tab.ekipPano }}" hint-placeholder-val="{{ false }}">
+<div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};padding:12px 12px 18px;display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;gap:12px">
+<div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};padding:0 2px">{{ ekipPano.baslikAlt }}</div>
+
+<section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 12px">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font:700 24px/1 var(--font-heading)">{{ ekipPano.perTop }}</span><span style="font:600 13px/1 var(--font-body)">personel</span></div>
+<sc-if value="{{ ekipPano.perVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;margin:10px 0;gap:2px">
+<sc-for list="{{ ekipPano.perSeg }}" as="g" hint-placeholder-count="4">
+<div onClick="{{ g.sec }}" style="height:12px;width:{{ g.w }};background:{{ g.c }};opacity:{{ g.op }};transition:opacity .2s"></div>
+</sc-for>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ ekipPano.perSeg }}" as="g" hint-placeholder-count="4">
+<button onClick="{{ g.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:34px;padding:0 10px;border-radius:9px;border:1px solid {{ g.kenar }};background:{{ g.bg }};font:400 12.5px/1 var(--font-body)"><span style="width:8px;height:8px;border-radius:50%;background:{{ g.c }}"></span>{{ g.l }} <b>{{ g.n }}</b></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ ekipPano.perYok }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:8px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Personel havuzu boş. Kişiler Ayarlar > Ekipler bölümünden eklenir.</div>
+</sc-if>
+</section>
+
+<section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 12px">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font:700 24px/1 var(--font-heading)">{{ ekipPano.aracTop }}</span><span style="font:600 13px/1 var(--font-body)">araç ve ekipman</span></div>
+<sc-if value="{{ ekipPano.aracVar }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;margin:10px 0;gap:2px">
+<sc-for list="{{ ekipPano.aracSeg }}" as="g" hint-placeholder-count="4">
+<div onClick="{{ g.sec }}" style="height:12px;width:{{ g.w }};background:{{ g.c }};opacity:{{ g.op }};transition:opacity .2s"></div>
+</sc-for>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ ekipPano.aracSeg }}" as="g" hint-placeholder-count="4">
+<button onClick="{{ g.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:34px;padding:0 10px;border-radius:9px;border:1px solid {{ g.kenar }};background:{{ g.bg }};font:400 12.5px/1 var(--font-body)"><span style="width:8px;height:8px;border-radius:50%;background:{{ g.c }}"></span>{{ g.l }} <b>{{ g.n }}</b></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</section>
+
+<div style="display:flex;align-items:baseline;gap:8px;padding:4px 2px 0">
+<span style="font:700 16px/1 var(--font-heading)">Ekipler</span>
+<sc-if value="{{ ekipPano.secVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ekipPano.secKaldir }}" style="all:unset;cursor:pointer;margin-left:auto;font:600 12px/1 var(--font-body);padding:7px 10px;border-radius:8px;background:{{ ui.fg }};color:{{ ui.surf }}">{{ ekipPano.secAd }} ×</button>
+</sc-if>
+</div>
+<div style="font:400 11.5px/1.35 var(--font-body);color:{{ ekipPano.ekipNotC }};padding:0 2px;margin-top:-6px">{{ ekipPano.ekipNot }}</div>
+<sc-for list="{{ ekipPano.ekipler }}" as="e" hint-placeholder-count="4">
+<div style="border-radius:14px;padding:12px;background:{{ e.zemin }};box-shadow:{{ e.halka }};display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:7px;min-width:0">
+<div style="display:flex;align-items:center;gap:6px;min-width:0">
+<span style="font:700 14px/1.2 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.ad }}</span>
+<sc-if value="{{ e.nobetci }}" hint-placeholder-val="{{ false }}"><span style="flex:none;font:700 10px/1 var(--font-body);padding:3px 6px;border-radius:5px;background:rgba(175,82,222,.14);color:#8e3fb8">nöbetçi</span></sc-if>
+<span style="flex:1"></span>
+<span style="flex:none;font:700 10.5px/1 var(--font-body);padding:4px 7px;border-radius:6px;background:{{ e.yukBg }};color:{{ e.yukFg }}">{{ e.yukL }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;font:400 12px/1.3 var(--font-body);min-width:0"><span style="width:7px;height:7px;border-radius:50%;background:{{ e.isC }};flex:none"></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ e.is }}</span></div>
+<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+<sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3">
+<span title="{{ u.title }}" style="width:26px;height:26px;border-radius:50%;background:{{ ui.surf }};font:700 10px/26px var(--font-body);text-align:center;box-shadow:0 0 0 2px {{ ui.surf }},0 0 0 4px {{ u.c }};margin:0 5px 0 2px;opacity:{{ u.op }}">{{ u.ini }}</span>
+</sc-for>
+<span style="flex:1"></span>
+<span style="font:600 11px/1 var(--font-body);color:{{ e.kisiC }}">{{ e.kisi }}</span>
+</div>
+<div style="font:500 11.5px/1.2 var(--font-body);color:{{ e.aracC }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Araç: {{ e.arac }}</div>
+<div style="height:5px;border-radius:3px;background:{{ ui.rule }};overflow:hidden"><div style="height:5px;width:{{ e.yukW }};background:{{ e.yukC }};border-radius:3px"></div></div>
+</button>
+<button onClick="{{ e.isler }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:32px;font:600 12.5px/32px var(--font-body);color:{{ ui.acc }}">İşlerini aç →</button>
+</div>
+</sc-for>
+<sc-if value="{{ ekipPano.ekipYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px 12px;border-radius:14px;background:{{ ui.surf }};text-align:center;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Henüz ekip tanımlı değil.</div>
+</sc-if>
+
+<section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:12px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font:700 15px/1 var(--font-heading)">İş haritası</span><span style="flex:1"></span><span class="ks-canli"></span></div>
+<div class="ks-bilgi" style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-bottom:8px">{{ ekipPano.haritaNot }}</div>
+<div style="position:relative;height:{{ ekipPano.haritaH }};border-radius:10px;background:{{ ui.surf2 }};overflow:hidden">
+<sc-for list="{{ ekipPano.tesisNokta }}" as="t" hint-placeholder-count="0">
+<span style="position:absolute;left:{{ t.x }};top:{{ t.y }};width:3px;height:3px;border-radius:50%;background:{{ ui.mut }};opacity:.45"></span>
+</sc-for>
+<sc-for list="{{ ekipPano.ilceEt }}" as="i" hint-placeholder-count="0">
+<span style="position:absolute;left:{{ i.x }};top:{{ i.y }};transform:translate(-50%,-140%);font:600 10px/1 var(--font-body);color:{{ ui.mut }};white-space:nowrap;pointer-events:none">{{ i.ad }}</span>
+</sc-for>
+<sc-for list="{{ ekipPano.isNokta }}" as="v" hint-placeholder-count="0">
+<span class="{{ v.sinif }}" title="{{ v.title }}" style="left:{{ v.x }};top:{{ v.y }};width:{{ v.d }};height:{{ v.d }};background:{{ v.c }};color:{{ v.c }};opacity:{{ v.op }}"></span>
+</sc-for>
+</div>
+<div style="font:400 11px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:7px">Araç takip (GPS) bağlantısı henüz yok.</div>
+</section>
+
+<section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};overflow:hidden">
+<div style="display:flex;align-items:center;gap:8px;padding:12px 12px 8px">
+<span style="font:700 15px/1 var(--font-heading)">Araç filosu</span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ ekipPano.filoSay }}</span>
+<span style="flex:1"></span>
+<sc-if value="{{ ekipPano.vfVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ekipPano.vfKaldir }}" style="all:unset;cursor:pointer;font:600 12px/1 var(--font-body);padding:7px 10px;border-radius:8px;background:{{ ui.fg }};color:{{ ui.surf }}">Süzgeç ×</button>
+</sc-if>
+</div>
+<sc-for list="{{ ekipPano.filo }}" as="a" hint-placeholder-count="4">
+<button onClick="{{ a.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-top:1px solid {{ ui.rule }};background:{{ a.zemin }}">
+<span style="flex:1;min-width:0">
+<span style="display:flex;align-items:baseline;gap:6px"><span style="font:700 13px/1.25 var(--font-body);white-space:nowrap">{{ a.plaka }}</span><span style="font:400 11px/1.25 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.tip }}</span></span>
+<span style="display:block;font:500 12px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.kim }}</span>
+<span style="display:block;font:400 11px/1.3 var(--font-body);color:{{ a.muC }}">{{ a.muL }}</span>
+</span>
+<span style="flex:none;font:700 10.5px/1 var(--font-body);padding:4px 7px;border-radius:6px;background:{{ a.dBg }};color:{{ a.dFg }}">{{ a.durum }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ ekipPano.filoYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 12px;border-top:1px solid {{ ui.rule }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Bu süzgece uyan araç yok.</div>
+</sc-if>
+</section>
+</div>
+</sc-if>

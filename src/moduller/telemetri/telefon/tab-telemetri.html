@@ -1,0 +1,203 @@
+<sc-if value="{{ tab.telemetri }}" hint-placeholder-val="{{ false }}">
+<div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};padding:12px 12px 18px;display:flex;flex-direction:column;gap:14px">
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:stretch">
+<sc-for list="{{ telemetri.ozet }}" as="o" hint-placeholder-count="4">
+<div style="flex:1 1 110px;border-radius:12px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:12px 14px;display:flex;flex-direction:column;gap:5px">
+<span style="font:700 24px/1 var(--font-heading);color:{{ o.renk }}">{{ o.sayi }}</span>
+<span style="font:500 12px/1.2 var(--font-body);color:{{ ui.mut }}">{{ o.ad }}</span>
+</div>
+</sc-for>
+<sc-if value="{{ telemetri.yazar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ telemetri.cihazEkle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 130px;min-height:52px;padding:0 16px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/52px var(--font-body);text-align:center">+ Cihaz ekle</button>
+</sc-if>
+</div>
+
+<sc-if value="{{ telemetri.hataVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:12px;border:1px solid #d92d20;background:{{ ui.surf }};padding:12px 14px;font:500 13px/1.45 var(--font-body);color:#d92d20">{{ telemetri.hata }}</div>
+</sc-if>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ telemetri.sekmeler }}" as="s" hint-placeholder-count="3">
+<button onClick="{{ s.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 16px;border-radius:19px;border:1px solid {{ s.kenar }};background:{{ s.bg }};color:{{ s.fg }};font:600 13px/36px var(--font-body)">{{ s.ad }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ telemetri.sekCihaz }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ telemetri.cihazYok }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:22px 18px;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+<span style="font:700 16px/1.2 var(--font-heading)">Henüz bağlı cihaz yok</span>
+<span class="ks-bilgi" style="font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Kuyu, depo ya da terfideki sensör / PLC / veri toplayıcı, kendisine verilen anahtarla internet üzerinden ölçüm gönderir. “Cihaz ekle” ile bir cihaz tanımlayın; size adres ve anahtar gösterilir.</span>
+</div>
+</sc-if>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+<sc-for list="{{ telemetri.kartlar }}" as="c" hint-placeholder-count="3">
+<div onClick="{{ c.sec }}" style="cursor:pointer;border-radius:14px;background:{{ ui.surf }};border:2px solid {{ c.kenar }};padding:14px 16px;display:flex;flex-direction:column;gap:9px;min-width:0">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="width:10px;height:10px;border-radius:50%;background:{{ c.renk }};flex:none"></span>
+<span style="flex:1;min-width:0;font:700 15px/1.2 var(--font-heading);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.ad }}</span>
+<sc-if value="{{ c.alarmVar }}" hint-placeholder-val="{{ false }}">
+<span style="flex:none;font:700 11.5px/1 var(--font-body);color:#fff;background:#d92d20;border-radius:9px;padding:4px 7px">{{ c.alarm }} alarm</span>
+</sc-if>
+</div>
+<span style="font:500 12.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ c.yer }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ c.degerler }}" as="d" hint-placeholder-count="3">
+<span style="font:600 12.5px/1 var(--font-body);padding:6px 9px;border-radius:8px;background:{{ ui.bg }};border:1px solid {{ ui.rule }}"><span style="color:{{ ui.mut }};font-weight:500">{{ d.kanal }}</span> {{ d.v }}</span>
+</sc-for>
+</div>
+<span style="font:500 12px/1.2 var(--font-body);color:{{ c.renk }}">{{ c.durum }} · {{ c.son }}</span>
+</div>
+</sc-for>
+</div>
+
+<sc-if value="{{ telemetri.detayVar }}" hint-placeholder-val="{{ false }}">
+<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="flex:1 1 160px;min-width:0;font:700 16px/1.2 var(--font-heading)">{{ telemetri.detay.ad }}</span>
+<button onClick="{{ telemetri.detay.baglanti }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12.5px/32px var(--font-body)">Bağlantı</button>
+<sc-if value="{{ telemetri.yazar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ telemetri.detay.duzenle }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12.5px/32px var(--font-body)">Düzenle</button>
+<button onClick="{{ telemetri.detay.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 12px;border-radius:9px;border:1px solid #d92d20;color:#d92d20;font:600 12.5px/32px var(--font-body)">Sil</button>
+</sc-if>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ telemetri.kanallar }}" as="k" hint-placeholder-count="3">
+<button onClick="{{ k.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 13px;border-radius:17px;border:1px solid {{ k.kenar }};background:{{ k.bg }};color:{{ k.fg }};font:600 12.5px/32px var(--font-body)">{{ k.ad }}</button>
+</sc-for>
+<span style="flex:1"></span>
+<sc-for list="{{ telemetri.saatler }}" as="h" hint-placeholder-count="3">
+<button onClick="{{ h.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:34px;padding:0 11px;border-radius:9px;border:1px solid {{ h.kenar }};background:{{ h.bg }};color:{{ h.fg }};font:600 12.5px/32px var(--font-body)">{{ h.ad }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ telemetri.grafik.var }}" hint-placeholder-val="{{ true }}">
+<svg viewBox="0 0 600 150" preserveAspectRatio="none" style="width:100%;height:160px;display:block;border-radius:8px;background:{{ ui.bg }}">
+<polygon points="{{ telemetri.grafik.alan }}" fill="var(--color-accent)" opacity=".13"></polygon>
+<polyline points="{{ telemetri.grafik.cizgi }}" fill="none" stroke="var(--color-accent)" stroke-width="2" vector-effect="non-scaling-stroke"></polyline>
+</svg>
+<div style="display:flex;gap:16px;flex-wrap:wrap;font:500 12.5px/1.2 var(--font-body);color:{{ ui.mut }}">
+<span>En düşük <b style="color:{{ ui.fg }}">{{ telemetri.grafik.mn }}</b></span>
+<span>Ortalama <b style="color:{{ ui.fg }}">{{ telemetri.grafik.ort }}</b></span>
+<span>En yüksek <b style="color:{{ ui.fg }}">{{ telemetri.grafik.mx }}</b></span>
+<span>{{ telemetri.grafik.birim }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ telemetri.grafik.yok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px 4px;font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">{{ telemetri.grafik.yokMetin }}</div>
+</sc-if>
+</section>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ telemetri.sekAlarm }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ telemetri.alarmYok }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:20px 18px;font:500 14px/1.4 var(--font-body);color:{{ ui.mut }}">Son 7 günde alarm yok.</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ telemetri.alarmlar }}" as="a" hint-placeholder-count="3">
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:5px solid {{ a.renk }};padding:12px 14px;display:flex;flex-direction:column;gap:8px">
+<span style="font:700 14px/1.3 var(--font-heading)">{{ a.mesaj }}</span>
+<span style="font:500 12.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ a.tesis }} {{ a.acildi }} · <b style="color:{{ a.renk }}">{{ a.durum }}</b></span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-if value="{{ a.onayBekler }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ a.onayla }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/36px var(--font-body)">Gördüm</button>
+</sc-if>
+<sc-if value="{{ a.arizaDugme }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ a.ariza }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:38px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/38px var(--font-body)">Arızaya çevir</button>
+</sc-if>
+<sc-if value="{{ a.arizaVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12.5px/38px var(--font-body);color:{{ ui.mut }}">Arıza açıldı</span>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ telemetri.sekKural }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ telemetri.yazar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ telemetri.kuralEkle }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;height:40px;padding:0 18px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13.5px/40px var(--font-body)">+ Kural ekle</button>
+</sc-if>
+<sc-if value="{{ telemetri.kuralYok }}" hint-placeholder-val="{{ false }}">
+<div class="ks-bilgi" style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:18px;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Kural, bir ölçümün sınırı aşınca alarm vermesini sağlar. Örnek: seviye &lt; 12 m, basınç &gt; 8 bar.</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ telemetri.kurallar }}" as="r" hint-placeholder-count="3">
+<div style="border-radius:12px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:11px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<span style="width:9px;height:9px;border-radius:50%;background:{{ r.renk }};flex:none"></span>
+<span style="flex:1 1 200px;min-width:0;font:600 13.5px/1.3 var(--font-body)">{{ r.cihaz }} · {{ r.kosul }}</span>
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }}">{{ r.onem }}</span>
+<sc-if value="{{ telemetri.yazar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ r.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:32px;padding:0 12px;border-radius:8px;border:1px solid #d92d20;color:#d92d20;font:600 12px/30px var(--font-body)">Sil</button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ telemetri.kuralFormAcik }}" hint-placeholder-val="{{ false }}">
+<section style="border-radius:14px;background:{{ ui.surf }};border:2px solid var(--color-accent);padding:14px 16px;display:flex;flex-direction:column;gap:11px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yeni kural</span>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Cihaz</span>
+<select value="{{ telemetri.kuralForm.cihaz }}" onChange="{{ telemetri.kuralForm.onCihaz }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><sc-for list="{{ telemetri.cihazSecenek }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Ölçüm adı (kanal)</span>
+<input value="{{ telemetri.kuralForm.kanal }}" onChange="{{ telemetri.kuralForm.onKanal }}" list="tel-kanallar" placeholder="seviye" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)">
+<datalist id="tel-kanallar"><sc-for list="{{ telemetri.kanalOneri }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}"></option></sc-for></datalist></label>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<label style="flex:1 1 110px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Koşul</span>
+<select value="{{ telemetri.kuralForm.op }}" onChange="{{ telemetri.kuralForm.onOp }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="&lt;">altına düşerse (&lt;)</option><option value="&gt;">üstüne çıkarsa (&gt;)</option><option value="&lt;=">eşit ya da altı (&lt;=)</option><option value="&gt;=">eşit ya da üstü (&gt;=)</option></select></label>
+<label style="flex:1 1 110px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Sınır değer</span>
+<input value="{{ telemetri.kuralForm.esik }}" onChange="{{ telemetri.kuralForm.onEsik }}" inputmode="decimal" placeholder="12" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+<label style="flex:1 1 110px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Önem</span>
+<select value="{{ telemetri.kuralForm.onem }}" onChange="{{ telemetri.kuralForm.onOnem }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="uyari">Uyarı</option><option value="kritik">Kritik</option></select></label>
+</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{ telemetri.kuralForm.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:44px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body);text-align:center">Kaydet</button>
+<button onClick="{{ telemetri.kuralForm.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 14px/42px var(--font-body)">Vazgeç</button>
+</div>
+</section>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{ telemetri.formAcik }}" hint-placeholder-val="{{ false }}">
+<section style="border-radius:14px;background:{{ ui.surf }};border:2px solid var(--color-accent);padding:14px 16px;display:flex;flex-direction:column;gap:11px">
+<span style="font:700 15px/1.2 var(--font-heading)">{{ telemetri.form.baslik }}</span>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Cihaz adı</span>
+<input value="{{ telemetri.form.ad }}" onChange="{{ telemetri.form.onAd }}" placeholder="Güzler kuyusu panosu" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Cihaz kodu (cihazın göndereceği ad)</span>
+<input value="{{ telemetri.form.kod }}" onChange="{{ telemetri.form.onKod }}" placeholder="KUYU-12-PLC" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px ui-monospace,Menlo,monospace"></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Bağlı tesis (kod yazın ya da listeden seçin)</span>
+<input value="{{ telemetri.form.tesis }}" onChange="{{ telemetri.form.onTesis }}" list="tel-tesisler" placeholder="KS-KUYU-0001" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)">
+<datalist id="tel-tesisler"><sc-for list="{{ telemetri.tesisOneri }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></datalist></label>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<label style="flex:1 1 120px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Tür</span>
+<select value="{{ telemetri.form.tur }}" onChange="{{ telemetri.form.onTur }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="kuyu">Kuyu</option><option value="depo">Depo</option><option value="terfi">Terfi</option><option value="sebeke">Şebeke</option><option value="ges">GES</option><option value="ag">AG hattı</option><option value="genel">Genel</option></select></label>
+<label style="flex:1 1 120px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Bağlantı</span>
+<select value="{{ telemetri.form.protokol }}" onChange="{{ telemetri.form.onProtokol }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="http">İnternet (HTTP)</option><option value="mqtt">MQTT köprüsü</option><option value="modbus">Modbus geçidi</option><option value="diger">Diğer</option></select></label>
+<label style="flex:1 1 120px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Veri aralığı (dk)</span>
+<input value="{{ telemetri.form.dk }}" onChange="{{ telemetri.form.onDk }}" inputmode="numeric" placeholder="15" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{ telemetri.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;height:44px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body);text-align:center">Kaydet</button>
+<button onClick="{{ telemetri.form.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 14px/42px var(--font-body)">Vazgeç</button>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ telemetri.baglantiAcik }}" hint-placeholder-val="{{ false }}">
+<section style="border-radius:14px;background:{{ ui.surf }};border:2px solid #1b9a4a;padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<span style="font:700 15px/1.2 var(--font-heading)">{{ telemetri.baglanti.baslik }}</span>
+<sc-if value="{{ telemetri.baglanti.yeniAnahtar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:#fff4e5;color:#7a4a00;padding:10px 12px;font:600 13px/1.4 var(--font-body)">Cihaz anahtarı yalnızca şimdi gösterilir — cihaza girip not alın. Kaybolursa “Anahtarı yenile” ile yenisi üretilir.</div>
+</sc-if>
+<pre style="margin:0;white-space:pre-wrap;word-break:break-all;font:500 12.5px/1.55 ui-monospace,Menlo,monospace;background:{{ ui.bg }};border:1px solid {{ ui.rule }};border-radius:10px;padding:12px">{{ telemetri.baglanti.metin }}</pre>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ telemetri.baglanti.kopyala }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:40px;padding:0 18px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13.5px/40px var(--font-body)">Kopyala</button>
+<sc-if value="{{ telemetri.yazar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ telemetri.baglanti.yenile }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:40px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/38px var(--font-body)">Anahtarı yenile</button>
+</sc-if>
+<button onClick="{{ telemetri.baglanti.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:40px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/38px var(--font-body)">Kapat</button>
+</div>
+</section>
+</sc-if>
+
+</div>
+</sc-if>

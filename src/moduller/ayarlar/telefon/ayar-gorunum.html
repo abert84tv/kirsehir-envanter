@@ -1,0 +1,39 @@
+<sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:9px">Harita zemini</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setBase.street.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setBase.street.bg }};color:{{ setBase.street.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Sokak</button>
+<button onClick="{{ setBase.sat.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setBase.sat.bg }};color:{{ setBase.sat.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Uydu</button>
+<button onClick="{{ setBase.hyb.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setBase.hyb.bg }};color:{{ setBase.hyb.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">Uydu + ad</button>
+</div>
+</div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:9px">Yol tarifi modu</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setNav.on.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setNav.on.bg }};color:{{ setNav.on.fg }};font:600 12px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">Açık</button>
+<button onClick="{{ setNav.off.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setNav.off.bg }};color:{{ setNav.off.fg }};font:600 12px/1 var(--font-body)">Kapalı</button>
+</div>
+</div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:9px">Görünüm ve bağlantı</div>
+<div style="display:flex;gap:8px">
+<div style="flex:1;display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setTheme.light.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setTheme.light.bg }};color:{{ setTheme.light.fg }};font:600 12px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">Açık</button>
+<button onClick="{{ setTheme.dark.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setTheme.dark.bg }};color:{{ setTheme.dark.fg }};font:600 12px/1 var(--font-body)">Koyu</button>
+</div>
+<div style="flex:1;display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setNet.on.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setNet.on.bg }};color:{{ setNet.on.fg }};font:600 12px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">Ç.İçi</button>
+<button onClick="{{ setNet.off.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setNet.off.bg }};color:{{ setNet.off.fg }};font:600 12px/1 var(--font-body)">Ç.Dışı</button>
+</div>
+</div>
+</div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ekran düzeni</div>
+<div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ setDevice.note }}</div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ setDevice.auto.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.auto.bg }};color:{{ setDevice.auto.fg }};font:600 12px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">Otomatik</button>
+<button onClick="{{ setDevice.desktop.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.desktop.bg }};color:{{ setDevice.desktop.fg }};font:600 12px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">Bilgisayar</button>
+<button onClick="{{ setDevice.phone.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:12px 4px;background:{{ setDevice.phone.bg }};color:{{ setDevice.phone.fg }};font:600 12px/1 var(--font-body)">Telefon</button>
+</div>
+</div>
+</sc-if>

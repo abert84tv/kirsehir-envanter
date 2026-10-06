@@ -1,0 +1,40 @@
+<sc-if value="{{ panel.isConv }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;justify-content:space-between;align-items:center;background:{{ ui.surf }}">
+<span style="font:600 19px/1.05 var(--font-heading);letter-spacing:-.022em">Koordinat dönüşümü</span>
+<button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:700 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center">×</button>
+</div>
+<div style="padding:14px">
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:14px">
+<sc-for list="{{ convSystems }}" as="c" hint-placeholder-count="2">
+<button onClick="{{ c.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:11px 12px;font:600 12px/1.2 var(--font-body);letter-spacing:-.01em;background:{{ c.bg }};color:{{ c.fg }};border-right:1px solid {{ ui.rule }}">{{ c.label }}</button>
+</sc-for>
+</div>
+<div style="display:flex;gap:10px;margin-bottom:12px">
+<label style="flex:1;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sağa (Y)</span>
+<input value="{{ conv.e }}" onChange="{{ onConvE }}" inputmode="decimal" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 15px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.surf }}">
+</label>
+<label style="width:96px;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Dilim</span>
+<select value="{{ conv.zone }}" onChange="{{ onConvZone }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 15px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer">
+<option value="11">11 · 33°</option>
+<option value="12">12 · 36°</option>
+</select>
+</label>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px;margin-bottom:15px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Yukarı (X)</span>
+<input value="{{ conv.n }}" onChange="{{ onConvN }}" inputmode="decimal" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 15px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.surf }}">
+</label>
+<div style="border-top:1px solid var(--color-accent);padding-top:11px">
+<sc-for list="{{ conv.out }}" as="o" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 0;border-bottom:1px solid {{ ui.rule }}">
+<span style="font:600 11px/1.3 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ o.label }}</span>
+<span style="font:600 13.5px/1.3 ui-monospace,Menlo,monospace;color:{{ ui.fg }};text-align:right">{{ o.value }}</span>
+</div>
+</sc-for>
+<div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};margin:11px 0 13px">{{ conv.note }}</div>
+<button onClick="{{ flyToConv }}" class="btn btn-primary" style="width:100%;justify-content:flex-start;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:14px 16px">Haritada göster</button>
+</div>
+</div>
+</sc-if>

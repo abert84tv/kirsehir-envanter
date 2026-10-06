@@ -1,0 +1,37 @@
+<sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
+<div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="flex:1 1 240px;min-width:200px;display:flex"><input value="{{ envKontrol.q }}" onChange="{{ envKontrol.onQ }}" placeholder="Ara — kod, köy, alan" style="all:unset;box-sizing:border-box;width:100%;border-radius:9px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 10px;min-height:36px"></input></div>
+<div style="flex:0 0 auto;min-width:150px;display:flex"><select value="{{ envKontrol.turVal }}" onChange="{{ envKontrol.onTur }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.turler }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+<div style="flex:0 0 auto;min-width:170px;display:flex"><select value="{{ envKontrol.ilceVal }}" onChange="{{ envKontrol.onIlceF }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.ilceler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+<div style="flex:0 0 auto;min-width:140px;display:flex"><select value="{{ envKontrol.aktiflikVal }}" onChange="{{ envKontrol.onAktiflik }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:7px 8px;min-height:34px"><sc-for list="{{ envKontrol.aktiflikler }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+<div style="flex:0 0 auto;min-width:170px;display:flex"><select value="{{ envKontrol.durumVal }}" onChange="{{ envKontrol.onDurum }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.durumlar }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
+</div>
+<table class="table" style="width:100%;font-size:12px">
+<thead>
+<tr style="background:{{ ui.surf2 }}">
+<th onClick="{{ envKontrol.h.code.tik }}" title="Koda göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Kod{{ envKontrol.h.code.ok }}</th>
+<th onClick="{{ envKontrol.h.type.tik }}" title="Türe göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Tür{{ envKontrol.h.type.ok }}</th>
+<th onClick="{{ envKontrol.h.place.tik }}" title="Köy / ilçeye göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Köy / İlçe{{ envKontrol.h.place.ok }}</th>
+<th onClick="{{ envKontrol.h.year.tik }}" title="Yıla göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Yapım yılı{{ envKontrol.h.year.ok }}</th>
+<th onClick="{{ envKontrol.h.photos.tik }}" title="Fotoğraf sayısına göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Fotoğraf{{ envKontrol.h.photos.ok }}</th>
+<th onClick="{{ envKontrol.h.aktiflik.tik }}" title="Aktif / pasif durumuna göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Durum{{ envKontrol.h.aktiflik.ok }}</th>
+<th onClick="{{ envKontrol.h.status.tik }}" title="Eşitleme durumuna göre sırala" style="text-align:left;color:{{ ui.fg }};cursor:pointer;user-select:none;white-space:nowrap">Eşitleme{{ envKontrol.h.status.ok }}</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ list }}" as="a" hint-placeholder-count="10">
+<tr onClick="{{ a.tap }}" style="cursor:pointer;background:{{ a.rowBg }}">
+<td style="font-weight:700;color:{{ ui.fg }}">{{ a.code }}</td>
+<td style="color:{{ ui.fg }}">{{ a.typeLabel }}</td>
+<td style="color:{{ ui.mut }}">{{ a.place }}</td>
+<td style="color:{{ ui.fg }}">{{ a.year }}</td>
+<td style="color:{{ ui.mut }}">{{ a.photos }}</td>
+<td><span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.aBg }};color:{{ a.aFg }};border-radius:10px;border:1px solid {{ a.aBorder }}">{{ a.aLabel }}</span></td>
+<td><span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.sBg }};color:{{ a.sFg }};border-radius:10px;border:1px solid {{ a.sBorder }}">{{ a.sLabel }}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</sc-if>

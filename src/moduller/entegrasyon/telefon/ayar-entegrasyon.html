@@ -1,0 +1,46 @@
+<sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;display:flex;flex-direction:column;gap:14px;max-width:760px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<sc-if value="{{ entegrasyon.uyari.var }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;background:{{ ui.surf }};border:2px solid var(--color-accent);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yeni başvuru uyarısı</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.sesRenk }}">{{ entegrasyon.uyari.ses }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.bildirimRenk }}">{{ entegrasyon.uyari.bildirim }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.telegramRenk }}">{{ entegrasyon.uyari.telegram }}</span>
+<sc-if value="{{ entegrasyon.uyari.kodVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:600 13px/1.5 ui-monospace,Menlo,monospace;word-break:break-word">{{ entegrasyon.uyari.kod }}</div>
+</sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ entegrasyon.uyari.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Sesi ve uyarıyı dene</button>
+<button onClick="{{ entegrasyon.uyari.izinIste }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Bildirim izni iste</button>
+<sc-if value="{{ entegrasyon.uyari.telVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ entegrasyon.uyari.kodGetir }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Telegram kodunu göster</button>
+</sc-if>
+</div>
+</div>
+</sc-if>
+<sc-for list="{{ entegrasyon.kartlar }}" as="k" hint-placeholder-count="3">
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
+<span style="font:700 15px/1.2 var(--font-heading)">{{ k.baslik }}</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ k.aciklama }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ k.durumRenk }}">{{ k.durum }}</span>
+<sc-if value="{{ entegrasyon.yazar }}" hint-placeholder-val="{{ true }}">
+<input value="{{ k.giris }}" onChange="{{ k.onGiris }}" type="password" autocomplete="off" placeholder="{{ k.ipucu }}" style="all:unset;box-sizing:border-box;width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px ui-monospace,Menlo,monospace">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ k.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Anahtarı kaydet</button>
+<sc-if value="{{ k.dolu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ k.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">{{ k.deneAd }}</button>
+<button onClick="{{ k.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid #d92d20;color:#d92d20;font:600 13.5px/42px var(--font-body)">Anahtarı sil</button>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ k.sonucVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:500 13px/1.5 var(--font-body)">{{ k.sonuc }}</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ entegrasyon.yaziYok }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Anahtarı yalnızca yönetici değiştirebilir.</span>
+</sc-if>
+</div>
+</sc-if>

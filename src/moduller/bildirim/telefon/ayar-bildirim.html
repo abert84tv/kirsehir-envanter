@@ -1,0 +1,63 @@
+<sc-if value="{{ ayar.bildirim }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Arıza bildirimi</div>
+<div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ bildirim.note }}</div>
+<span style="display:block;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-bottom:6px">Kanal</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:11px">
+<sc-for list="{{ bildirim.kanallar }}" as="k" hint-placeholder-count="3">
+<button onClick="{{ k.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:13px 4px;background:{{ k.bg }};color:{{ k.fg }};font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;min-height:48px;display:flex;align-items:center;justify-content:center">{{ k.label }}</button>
+</sc-for>
+</div>
+<span style="display:block;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-bottom:6px">Hangi arızalarda</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:11px">
+<sc-for list="{{ bildirim.esikler }}" as="k" hint-placeholder-count="3">
+<button onClick="{{ k.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:13px 4px;background:{{ k.bg }};color:{{ k.fg }};font:600 11px/1.2 var(--font-body);letter-spacing:-.01em;min-height:48px;display:flex;align-items:center;justify-content:center">{{ k.label }}</button>
+</sc-for>
+</div>
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:11px 12px;display:flex;flex-direction:column;gap:5px;margin-bottom:11px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Gidecek mesaj</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.fg }}">{{ bildirim.ornek }}</span>
+</div>
+<button onClick="{{ bildirim.test }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:14px;min-height:50px">Örnek metni göster</button>
+<div style="margin-top:16px;border-top:1px solid {{ ui.rule }};padding-top:14px;display:flex;flex-direction:column;gap:11px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Gerçek gönderim — sunucu bağlantısı</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:780px">{{ bildirim.gercek.kurulum }}</span>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Gönderim</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};width:fit-content">
+<sc-for list="{{ bildirim.gercek.acKapa }}" as="k" hint-placeholder-count="2">
+<button onClick="{{ k.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;padding:0 18px;background:{{ k.bg }};color:{{ k.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">{{ k.label }}</button>
+</sc-for>
+</div>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px;max-width:640px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sunucu işlevi adresi</span>
+<input value="{{ bildirim.gercek.url }}" onChange="{{ bildirim.gercek.onUrl }}" placeholder="https://xxxx.supabase.co/functions/v1/mesaj-gonder" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 12.5px/1.3 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+</label>
+<label style="display:flex;flex-direction:column;gap:5px;max-width:280px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ekip şefi telefonu</span>
+<input value="{{ bildirim.gercek.sefTel }}" onChange="{{ bildirim.gercek.onSefTel }}" inputmode="tel" placeholder="0532 000 00 00" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }};min-height:46px">
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Her arıza bildirimi ekibin yanı sıra bu numaraya da gider.</span>
+</label>
+<span style="font:600 12.5px/1.5 var(--font-body);color:{{ bildirim.gercek.durumFg }};max-width:780px">{{ bildirim.gercek.durum }}</span>
+<button onClick="{{ bildirim.gercek.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;justify-content:center;display:flex;align-items:center;min-height:48px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px" style-hover="background:var(--color-accent);color:#fff">Bağlantıyı dene</button>
+<sc-if value="{{ bildirim.gercek.kuyrukVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:13px 14px;display:flex;flex-direction:column;gap:9px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Gönderilemeyen mesajlar</span>
+<span style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Bağlantı ya da yapılandırma yüzünden çıkamayan mesajlar burada bekler. Sorun giderildikten sonra “Kuyruğu gönder” ile yeniden denenir.</span>
+<sc-for list="{{ bildirim.gercek.kuyruk }}" as="m" hint-placeholder-count="0">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:8px;display:flex;flex-direction:column;gap:2px">
+<span style="font:600 12.5px/1.3 var(--font-body);color:{{ ui.fg }}">{{ m.kapsam }}</span>
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ m.meta }}</span>
+<span style="font:400 12px/1.45 var(--font-body);color:{{ ui.acc }}">{{ m.hata }}</span>
+</div>
+</sc-for>
+<div style="display:flex;gap:9px;flex-wrap:wrap">
+<button onClick="{{ bildirim.gercek.kuyrukGonder }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12px/1 var(--font-body);padding:12px 15px;justify-content:flex-start">Kuyruğu gönder</button>
+<button onClick="{{ bildirim.gercek.kuyrukSil }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px">Kuyruğu sil</button>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>

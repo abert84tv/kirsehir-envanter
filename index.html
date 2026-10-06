@@ -87,6 +87,7 @@ html.ks-tam #tel-bas,html.ks-tam #tel-nav{display:none!important}
 }
 :root{--tel-bas:58px;--tel-nav:60px}
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+@keyframes ksAlarm{0%,100%{background:#d92d20}50%{background:#7f1d1d}}
 @keyframes bildirimGir{from{opacity:0;transform:translate3d(0,-22px,0) scale(.94)}to{opacity:1;transform:none}}
 @keyframes pulse{0%{opacity:.55;transform:scale(1)}70%{opacity:0;transform:scale(2.6)}100%{opacity:0;transform:scale(2.6)}}
 @keyframes nefes{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
@@ -3734,9 +3735,9 @@ Hareket gir
 </sc-if>
 
 <sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ksAlarm .9s ease-in-out infinite">
 <span style="flex:none;font:700 24px/1">🔔</span>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span></button>
+<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span><span style="font:700 12px/1.3 var(--font-body)">{{ basvuruBanner.sesNot }}</span></button>
 <button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
 <button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
 </div>
@@ -8392,9 +8393,9 @@ Hareket gir
 <!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ksAlarm .9s ease-in-out infinite">
 <span style="flex:none;font:700 24px/1">🔔</span>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span></button>
+<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span><span style="font:700 12px/1.3 var(--font-body)">{{ basvuruBanner.sesNot }}</span></button>
 <button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
 <button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
 </div>
@@ -9279,7 +9280,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-140';
+const SURUM = '2026.10.06-141';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9715,7 +9716,7 @@ class Component extends DCLogic {
       } catch (e) { /* ses yok */ }
     };
     ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, this._sesAc, { passive: true }));
-    this._uyariTekrar = setInterval(() => { if (this.state.basvuruUyari) this.uyariSesi(); }, 20000);
+    this._uyariTekrar = setInterval(() => { if (this.state.basvuruUyari) this.uyariSesi(); }, 6000);
     this._basvuruSaat = setInterval(() => { if (this.state.session && !document.hidden) this.basvuruYenile(); }, 30000);
     // Tarayıcı bildirimi izni, ilk dokunuşta bir kez istenir (izin yalnız kullanıcı hareketiyle sorulabilir)
     this._izinIste = () => { try { if (typeof Notification !== 'undefined' && Notification.permission === 'default' && this.state.session) Notification.requestPermission(); } catch (e) { /* desteklenmiyor */ } document.removeEventListener('pointerdown', this._izinIste); };
@@ -13679,39 +13680,53 @@ class Component extends DCLogic {
     if (!me || me.role === 'izleyici' || !duyurulacak.length) return;
     const b = duyurulacak[0], fazla = duyurulacak.length - 1;
     const metin = (b.konu || 'Yeni başvuru') + ' · ' + b.koy + (b.ilce ? ' (' + b.ilce + ')' : '') + (fazla ? ' — ve ' + fazla + ' başvuru daha' : '');
-    // Her şeyin üstünde duran kalıcı şerit: kullanıcı açana ya da susturana kadar kalır, ses 20 sn'de bir tekrarlanır
-    this.setState(st => ({ basvuruUyari: { n: (st.basvuruUyari ? st.basvuruUyari.n : 0) + duyurulacak.length, metin } }));
+    // Her şeyin üstünde duran kalıcı şerit: operatör tıklayana kadar kalır, ses 6 sn'de bir tekrarlanır
     this.uyariSesi();
+    this.setState(st => ({ basvuruUyari: { n: (st.basvuruUyari ? st.basvuruUyari.n : 0) + duyurulacak.length, metin } }));
     try {
       if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-        const n = new Notification('Yeni başvuru — Kırşehir Envanter', { body: metin, tag: 'ks-basvuru', renotify: true });
+        const n = new Notification('Yeni başvuru — Kırşehir Envanter', { body: metin, tag: 'ks-basvuru', renotify: true, requireInteraction: true });
         n.onclick = () => { try { window.focus(); } catch (e) { /* odak yok */ } this.setState({ tab: 'talep' }); n.close(); };
       }
     } catch (e) { /* bildirim desteklenmiyor */ }
     // Sekme başlığı, kullanıcı geri dönene kadar yanıp söner
-    if (typeof document !== 'undefined' && document.hidden) {
-      const ad = document.title || 'Kırşehir Envanter'; let a = false;
+    if (typeof document !== 'undefined') {
+      const ad = document.title && !/Yeni başvuru!/.test(document.title) ? document.title : 'Kırşehir Envanter'; let a = false;
       clearInterval(this._baslikSaat);
-      this._baslikSaat = setInterval(() => { a = !a; document.title = a ? '(' + duyurulacak.length + ') Yeni başvuru!' : ad; if (!document.hidden) { clearInterval(this._baslikSaat); document.title = ad; } }, 1000);
+      this._baslikSaat = setInterval(() => {
+        if (!this.state.basvuruUyari) { clearInterval(this._baslikSaat); document.title = ad; return; }
+        a = !a; document.title = a ? '🔔 YENİ BAŞVURU!' : ad;
+      }, 900);
     }
   }
-  // Kısa iki tonlu uyarı sesi (dosya gerekmez)
+  // Yüksek sesli alarm (dosya gerekmez): karışık kare+testere dalgası, tam ses, ~2 sn siren
   uyariSesi() {
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       this._ac = this._ac || new AC();
-      const c = this._ac; if (c.state === 'suspended') c.resume();
-      if (c.state === 'closed') return;
-      [[880, 0], [1175, .22], [880, .5], [1175, .72]].forEach(([f, t]) => {
-        const o = c.createOscillator(), g = c.createGain();
-        o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(c.destination);
-        const b = c.currentTime + t;
-        g.gain.setValueAtTime(0, b); g.gain.linearRampToValueAtTime(.35, b + .02); g.gain.linearRampToValueAtTime(0, b + .2);
-        o.start(b); o.stop(b + .22);
-      });
+      const c = this._ac;
+      const cal = () => {
+        const cikis = c.createDynamicsCompressor();   // tepeleri sıkıştırır: ortalama ses yükselir, bozulmaz
+        cikis.threshold.value = -24; cikis.ratio.value = 12; cikis.attack.value = .003; cikis.release.value = .1;
+        const ana = c.createGain(); ana.gain.value = 1.4; cikis.connect(ana); ana.connect(c.destination);
+        const t0 = c.currentTime + .03;
+        // 8 vuruş, iki ton arasında gidip gelir (siren)
+        for (let k = 0; k < 8; k++) {
+          const f = k % 2 ? 1319 : 988, b = t0 + k * .26;
+          [['square', f, .55], ['sawtooth', f * 2, .25]].forEach(([tur, fr, v]) => {
+            const o = c.createOscillator(), g = c.createGain();
+            o.type = tur; o.frequency.value = fr; o.connect(g); g.connect(cikis);
+            g.gain.setValueAtTime(0, b); g.gain.linearRampToValueAtTime(v, b + .01); g.gain.setValueAtTime(v, b + .21); g.gain.linearRampToValueAtTime(0, b + .25);
+            o.start(b); o.stop(b + .26);
+          });
+        }
+      };
+      // Bağlam uykudaysa uyanır uyanmaz çalınır (önceki sürümde sesin geç gelmesi buradandı)
+      if (c.state === 'running') cal();
+      else if (c.state === 'suspended') c.resume().then(cal).catch(() => {});
     } catch (e) { /* ses çalınamadı (tarayıcı izni) */ }
-    try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) { /* titreşim yok */ }
+    try { if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 400]); } catch (e) { /* titreşim yok */ }
   }
   // Talebin durumu değişince başvurunun takip sayfası da güncellenir
   async basvuruEsitle() {
@@ -15973,6 +15988,7 @@ class Component extends DCLogic {
         const u = s.basvuruUyari;
         return {
           show: !!u && !!s.session, baslik: u ? (u.n > 1 ? u.n + ' yeni başvuru geldi' : 'Yeni başvuru geldi') : '', metin: u ? u.metin : '',
+          sesNot: s.sesAcik ? '' : 'Ses kapalı görünüyor — ekrana bir kez dokunun',
           ac: () => { this.setState({ basvuruUyari: null, tab: 'talep' }); },
           kapat: () => this.setState({ basvuruUyari: null })
         };

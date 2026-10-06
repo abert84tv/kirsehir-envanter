@@ -2010,3 +2010,7 @@ Sürüm 2026.10.05-114.
 - Yeni başvuruda ekranın en üstünde kırmızı şerit çıkar; kullanıcı "Gelen'i aç" ya da ✕ diyene kadar kalır, ses 20 sn'de bir tekrarlanır. Ses kilidi her dokunuşta açılır.
 - Ayarlar > Entegrasyon > "Yeni başvuru uyarısı" kartı: ses / tarayıcı bildirimi / Telegram durumunu gösterir; "Sesi ve uyarıyı dene", "Bildirim izni iste", "Telegram kodunu göster".
 - Uygulama kapalıyken de uyarı: bota "/yonetici KOD" yazan sohbete her yeni başvuruda (web formu ya da Telegram) bot mesaj atar → telefonda bildirim sesi. "/yonetici CIK" ile çıkılır. Sunucu: pg_net + vatandas_basvuru tetikleyicisi, edge function telegram-basvuru v3.
+
+## 2026.10.06-141 — Başvuru alarmı: yüksek ses, tıklanana kadar
+- Alarm sesi yeniden yazıldı: kare+testere dalgalı ~2 sn siren, tam ses seviyesi (tepe ≈ %95, bozulmadan). Ses artık görsel uyarıdan önce başlatılır; ses bağlamı uykudaysa uyanır uyanmaz çalar (3-4 sn gecikme buradandı).
+- Operatör "Gelen'i aç" ya da ✕'e basana kadar: kırmızı şerit yanıp söner, ses 6 sn'de bir tekrar eder, sekme başlığı "🔔 YENİ BAŞVURU!" yanıp söner, tarayıcı bildirimi (requireInteraction) kapanmaz.

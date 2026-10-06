@@ -749,6 +749,11 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <button onClick="{{ profil.arizali }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ profil.arizaLabel }}</button>
 </div>
 </div>
+<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+</sc-for>
+</div>
 <iframe src="profil.html" title="Mesafe ve yol profili" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 </div>
 </sc-if>
@@ -4699,9 +4704,17 @@ Hareket gir
 <button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
 </sc-for>
 </div>
-<button onClick="{{ telSuz.aracTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.aracKenar }};background:{{ telSuz.aracZemin }};color:{{ telSuz.aracYazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Araçlar <span style="font-size:10px">{{ telSuz.aracOk }}</span></button>
+<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 10px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 12.5px/1 var(--font-body)">Süzgeç</button>
+<button onClick="{{ telSuz.aracTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 10px;border-radius:11px;border:1px solid {{ telSuz.aracKenar }};background:{{ telSuz.aracZemin }};color:{{ telSuz.aracYazi }};font:600 12.5px/1 var(--font-body);display:flex;align-items:center;gap:4px">Araç <span style="font-size:10px">{{ telSuz.aracOk }}</span></button>
 <button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
 </div>
+<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+</sc-for>
+</div>
+</sc-if>
 <sc-if value="{{ telSuz.aracAcik }}" hint-placeholder-val="{{ false }}">
 <div class="ks-gir" style="display:flex;gap:8px;padding:0 10px 9px;overflow-x:auto">
 <button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:40px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
@@ -9212,7 +9225,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-135';
+const SURUM = '2026.10.06-136';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10015,6 +10028,12 @@ class Component extends DCLogic {
   }
   pushMap() {
     try { localStorage.setItem('ks-suzgec', JSON.stringify(this.state.filter)); } catch (e) { /* depolama kapalı */ }
+    const pw = this.profilWin();
+    if (pw) { try {
+      pw.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
+      pw.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
+      pw.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
+    } catch (e) { /* çerçeve yok */ } }
     const w = this.mapWin(); if (!w) return;
     w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
     w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');

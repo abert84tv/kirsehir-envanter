@@ -1984,3 +1984,6 @@ Sürüm 2026.10.05-114.
 ## 2026.10.06-135 — Telefonda büyük harita
 - Hat kesiti telefonda harita ekranının ~%75-80ini alır: başlık ve araç şeridi kapalı; "Araçlar ▾" ile açılır (Seçili kaydı nokta yap, köy arama, Nokta ekle…); ölçüm paneli alt çubuktan açılır (mesafe ve nokta sayısı kapalıyken de görünür).
 - Harita ve Hat kesiti ekranlarında ⤢ düğmesi: üst arama ve alt menü gizlenir, harita tam ekran olur (⤡ ile geri).
+
+## 2026.10.06-136 — Hat kesitinde süzgeç
+- Hat kesiti ekranında da Envanter haritasındaki süzgeç (Tümü, Kuyu, Depo, AG, GES, Pasifler, ISU Kaynak, ISU Memba) var (masaüstünde şerit, telefonda "Süzgeç" düğmesi); seçimler iki haritaya birlikte uygulanır.

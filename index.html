@@ -9148,7 +9148,7 @@ const SUZGEC_TANIM = {
   isler: [['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Planlı', 'bakim']],
   // Hat kesiti Envanter'in üçüncü görünümü: aynı harita, aynı katmanlar (2026.10.06)
-  envanter: [['harita', 'Harita', 'harita'], ['liste', 'Liste', 'envanter'], ['kesit', 'Hat kesiti', 'profil']],
+  envanter: [['harita', 'Harita', 'harita'], ['kesit', 'Hat kesiti', 'profil'], ['liste', 'Liste', 'envanter']],
   // "Ekipler" (ekip ve araç panosu) araç yetkisinden miras alır, sekmesi ekipPano
   kaynaklar: [['ekip', 'Ekipler', 'arac', 'ekipPano'], ['malzeme', 'Stok', 'ambar'], ['arac', 'Araç', 'arac'],
     ['telemetri', 'Telemetri', 'ozet', 'telemetri']],
@@ -9200,7 +9200,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-133';
+const SURUM = '2026.10.06-134';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -18157,8 +18157,7 @@ class Component extends DCLogic {
         // yalnızca burada, GÖRÜNEN hap listesi Ayarlar'da tek girdiye
         // süzülüyor; tek gerçek erişim yolu artık sayfa içindeki liste.
         let gorunenSuz = g.id === 'ayarlar' ? g.suz.filter(z => z.hedef === 'ayarlar') : g.suz;
-        // Telefonda Liste görünümü kaldırıldı: kayıt bulmak için üstteki arama kutusu (köy, kod, koordinat) yeter.
-        if (s.device === 'phone' && g.id === 'envanter' && tabId !== 'envanter') gorunenSuz = gorunenSuz.filter(z => z.hedef !== 'envanter');
+
         if (gorunenSuz.length < 2) return { acik: false, telAcik: false, baslik: '', alt: '', suzgecler: [] };
         const z0 = g.suz.find(z => z.hedef === tabId);
         return {

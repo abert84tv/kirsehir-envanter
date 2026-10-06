@@ -1978,3 +1978,5 @@ Sürüm 2026.10.05-114.
 ## 2026.10.06-133 — Koyu tema sadeleşti, telefonda Liste kalktı
 - Koyu tema zemini saf siyahtan (#000) yumuşak koyu griye (#121214) alındı; arama kutuları/şeritler artık siyah delik gibi durmuyor. Harita denetimleri (yakınlaştırma, künye, açılır pencere) koyu temada koyu. Arıza düğmesi beyaz/siyah yerine kart rengi.
 - Telefonda Envanter > Liste görünümü geçiş çubuğundan kaldırıldı (üstteki arama kutusu aynı işi görüyor); masaüstünde duruyor.
+
+## 2026.10.06-134 — Geçiş sırası Harita | Hat kesiti | Liste; telefonda Liste geri geldi. Koyu tema yumuşak gri zeminle kaldı.

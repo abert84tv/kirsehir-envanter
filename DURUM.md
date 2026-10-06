@@ -2039,3 +2039,10 @@ Sürüm 2026.10.05-114.
 ## 2026.10.07-145 — Modüler yapı tamamlandı
 - Kod tabanı artık modüler: `src/moduller/` altında 21 modül (şablon masaüstü+telefon, yöntemler, görünüm modeli, bağlantı işlevleri, SQL, edge function); `index.html` ve `supabase-baglanti.js` `node build.js` ile üretilir, Vercel yayında aynısını çalıştırır. Davranış değişmedi: 20 sekme × masaüstü/telefon için görünüm modeli çıktısı eski tek parça sürümle karşılaştırıldı, fark yok. Araçlar: `modul-bilgi.js`, `yeni-modul.js`, `duman-testi.js` (derleme + modül yapısı). Kılavuz: `src/README.md`.
 - Masaüstü/telefon eşdeğerlik kontrolü (2026-10-07): `esdeger-kontrol.js` iki tarafın eylem bağlarını karşılaştırır, yeni tek taraflı bağ varsa duman-testi hata verir (özellik yalnız bir tarafa eklenip öteki unutulmasın). Mevcut 115 fark nedenleriyle `src/esdeger-bilinen.json`'da; 10 tanesi "EKSİK ADAYI" (telefonda işçilik girişi, Özet ilçe/zaman süzgeci, arıza "Haritada göster", ekip panosu kısayolları, tesis kartı Fotoğraf kısayolu...). Davranış değişmedi.
+
+## 2026.10.07-146 — Telefona eklenen eksikler (masaüstü/telefon eşdeğerliği)
+- Özet > **Rapor** sekmesi telefonda da var (Bugün/Hafta/Ay/Yıl/Tümü/Özel, ilçe seçimi, özel tarih aralığı, köy bazlı arızalar ve malzeme maliyeti).
+- Telefondaki ayrıntılı arıza formuna **işçilik (₺)** girişi ve maliyet kutusuna işçilik hücresi eklendi.
+- Telefondaki Ekip panosuna **Araç defteri** ve **Ekip ve personel düzenle** kısayolları eklendi.
+- Eşdeğerlik kontrolündeki 10 "eksik adayı"ndan 7'si giderildi, 3'ü bilerek farklı olarak nedenleriyle kayda geçti (Haritada göster, tesis kartı Fotoğraf kısayolu, günlük iş listesi — telefonda eşdeğer akış var).
+- "642 gün gecikti" bakım satırı: şu an hiçbir tesiste bakım tarihi yok (291 tesisin 291'i "kayıt yok") — o satır büyük olasılıkla bir cihazda girilmiş deneme verisiydi, sunucuda yok.

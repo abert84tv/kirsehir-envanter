@@ -1,6 +1,12 @@
 <sc-if value="{{ tab.ekipPano }}" hint-placeholder-val="{{ false }}">
 <div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};padding:12px 12px 18px;display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;gap:12px">
 <div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};padding:0 2px">{{ ekipPano.baslikAlt }}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ ekipPano.aracDefteri }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:46px;display:flex;align-items:center;justify-content:center;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)">Araç defteri</button>
+<sc-if value="{{ ekipPano.ayarYetki }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ ekipPano.ekipDuzenle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 180px;min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--color-accent);color:#fff;font:600 13px/1 var(--font-body)">Ekip ve personel düzenle</button>
+</sc-if>
+</div>
 
 <section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 12px">
 <div style="display:flex;align-items:baseline;gap:8px"><span style="font:700 24px/1 var(--font-heading)">{{ ekipPano.perTop }}</span><span style="font:600 13px/1 var(--font-body)">personel</span></div>

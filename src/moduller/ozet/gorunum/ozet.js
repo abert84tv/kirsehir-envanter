@@ -245,9 +245,8 @@
             .map(([k, ad]) => ({
               ad, ...seg((s.ozetSekme || 'envanter') === k, () => this.setState({ ozetSekme: k }))
             })),
-          // Telefonda "Rapor" sekmesi yok — esnek tarih raporu ve köy bazlı
-          // malzeme maliyeti masaüstüne özgü (zaten öyleydi, bu turda taşınmadı).
-          sekmeSecTel: [['envanter', 'Envanter'], ['ekip', 'Ekip ve arıza']]
+          // Telefonda da üç sekme: Rapor (esnek tarih raporu, köy bazlı arıza ve malzeme maliyeti) 2026-10-07'de eklendi
+          sekmeSecTel: [['envanter', 'Envanter'], ['ekip', 'Ekip ve arıza'], ['rapor', 'Rapor']]
             .map(([k, ad]) => ({
               ad, ...seg((s.ozetSekme || 'envanter') === k, () => this.setState({ ozetSekme: k }))
             })),

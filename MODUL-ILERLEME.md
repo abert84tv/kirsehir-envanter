@@ -22,14 +22,10 @@ mantık (yöntemler), görünüm modeli. `node build.js` bunları birleştirip *
 - [x] **Faz 2** — `supabase-baglanti.js` src/baglanti/ + modül parçalarından derleniyor; SQL `src/moduller/<m>/sql/`, edge function `islev/` altında; `SQL-INDEKS.md` (2026-10-07)
 - [x] **Faz 3** — her modülde `modul.json`; `modul-bilgi.js` (tablo/bağımlılık); duman-testi: modul.json + yetim dosya denetimi (2026-10-07)
 - [x] **Faz 4** — `yeni-modul.js` (ekle/`--kaldir`, kullanılıyorsa reddeder) + `src/README.md` kılavuzu; ekle→kaldır döngüsü index.html'i bayt bayt aynı bıraktığı doğrulandı (2026-10-07)
-- [ ] **Faz 5** — DURUM.md / README güncellemesi, son tam doğrulama, kullanıcıya rapor
+- [x] **Faz 5** — son doğrulama: 20 sekme × masaüstü/telefon `renderVals()` çıktısı orijinal (e1d861a) ile karşılaştırıldı — fark yok (yalnız canlı denetim sayacı); README güncellendi; sürüm 2026.10.07-145 (2026-10-07)
 
 ## SIRADAKİ ADIM
-**Faz 5 (son):** (1) Tarayıcıda uçtan uca tarama: localhost:5176 — masaüstü (geniş) ve telefon (resize_window mobile) düzeninde bütün sekmeleri sırayla aç (`logic.setState({tab})`), `renderVals()` hatasız, konsolda hata yok; yöntem/anahtar karşılaştırması (index.html'in src/'den önceki sürümüyle: `git show 55a060d:index.html`);
-(2) canlı (kirsehir-envanter.vercel.app) = yerel `index.html` bayt eşitliği ve Vercel "success";
-(3) `DURUM.md` ve kök `README.md`'ye "kod yapısı" bölümü (`src/README.md`'ye yönlendir; yeni sürüm artırma yolu: `src/sabitler/11-genel.js` SURUM + `sw.js` SURUM, sonra `node build.js`);
-(4) hafızadaki `modular-yapi-gorevi.md` durumunu "tamamlandı" yap; kullanıcıya özet rapor yaz;
-(5) zamanlanmış görevi kapat: `update_scheduled_task` taskId `kirsehir-modul-donusumu-devam`, enabled=false.
+**TAMAMLANDI.** Bütün Faz'lar bitti; zamanlanmış görev kapatıldı. Yeni özellikler `src/README.md` kılavuzuyla eklenir.
 
 ## Notlar
 - Dahil işaretleri: `<!--@dahil yol-->` (HTML), `//@dahil yol` (JS), `/*@dahil yol*/` (CSS); yol `src/`'ye göre.

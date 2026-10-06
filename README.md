@@ -57,8 +57,12 @@ paylaşılan kod tekrarı ve `vercel.json` 404 hataları, 2026.09.14–15).
 
 ## 3. Teknik yapı
 
-- Tek dosyalık uygulama: `index.html` içinde bir bileşen sınıfı (React sınıf
-  bileşeni mantığı) + şablon. Derleyici, paket yöneticisi, npm bağımlılığı yok.
+- **Modüler kaynak (2026-10-07):** uygulama `src/` klasöründe modüllere ayrılmıştır (`src/moduller/<ad>/` — şablon masaüstü+telefon,
+  yöntemler, görünüm modeli, SQL, edge function). `index.html` ve `supabase-baglanti.js` **üretilen** dosyalardır: `node build.js`
+  ile `src/`'den derlenir (Vercel de yayında çalıştırır; npm bağımlılığı yok, yalnız Node). Ayrıntı ve özellik ekleme/çıkarma kılavuzu:
+  `src/README.md`; ilerleme kaydı: `MODUL-ILERLEME.md`; modül bağımlılıkları: `node modul-bilgi.js --bagimlilik`.
+  **`index.html`'i elle düzenlemeyin** — değişiklik `src/`'de yapılır, sonra `node build.js && node duman-testi.js`.
+- Çalışma zamanında hâlâ tek dosya: `index.html` içinde bir bileşen sınıfı + şablon; derleyici/paket yöneticisi yok.
 - Stil **satır içi**; ortak değerler tasarım sisteminin `var(--*)` token'larından
   gelir. Ayrı CSS sınıf katmanı yoktur.
 - Harita ayrı belge (`harita.html`) ve `postMessage` ile yönetilir:

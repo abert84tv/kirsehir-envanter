@@ -2025,3 +2025,6 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.06-144 — Masaüstü sağ panelde üstte sabit çıkış
 - Tesis kartı (kuyu/depo/AG/GES), arıza formu ve koordinat dönüşümü panellerinde sağ üstte sabit ✕ düğmesi: panel aşağı kaydırılsa da görünür, ilgili paneli kapatır. Alttaki "Kapat" düğmeleri yerinde. Arıza panelinde üstte çıkış yoktu; eklendi.
+
+## Güvenlik düzeltmesi (2026-10-06, sürüm değişmedi)
+- Supabase'in "tablo herkese açık" uyarısı: alt_sistem_kategori tablosunda RLS kapalıydı (anonim okuyup yazabiliyordu) → kapatıldı. Ayrıca kullanılmayan v_eksik_bilgi / v_ilce_ozet görünümleri anonim okumaya kapatıldı, parametresiz cop_temizle() anonim çağrıya kapatıldı. Şu an public şemada RLS'siz tablo yok. Ayrıntı: SQL-guvenlik-duzeltme-2026-10-06.sql

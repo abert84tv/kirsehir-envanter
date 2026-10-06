@@ -9660,203 +9660,16 @@ class Component extends DCLogic {
     if (this._olcKat) { window.removeEventListener('resize', this._olcKat); window.removeEventListener('orientationchange', this._olcKat); }
   }
   componentDidMount() {
-    let dm = 'auto';
-    try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
-    this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm, users: this.usersOku() });
-    try {
-      const yv = JSON.parse(localStorage.getItem('ks-yerlesim-veri') || 'null');
-      if (yv && typeof yv === 'object') this.setState({ yerlesimVeri: yv });
-      const ht = JSON.parse(localStorage.getItem('ks-hatlar') || 'null');
-      if (ht && typeof ht === 'object') this.setState({ hatlar: ht }, () => setTimeout(() => this.hatlariYolla(), 900));
-      const ek = JSON.parse(localStorage.getItem('ks-ek-koyler') || 'null');
-      if (ek && typeof ek === 'object') this.setState({ ekKoyler: ek });
-    } catch (e) { /* depolama kapalı */ }
-    // Son bilinen saat farkı: çevrimdışı açılışta da doğru damga üretilsin
-    this._saatFarki = (() => {
-      const v = parseInt(localStorage.getItem('ks-saat-farki') || '0', 10);
-      return isNaN(v) ? 0 : v;
-    })();
-    // Cihaz deposu (IndexedDB) ve çevrimdışı çalışma için servis çalışanı
-    this._depoYuk = import('./cihaz-depo.js').then(d => {
-      this._depo = d; d.kaliciIste(); this.bekleyenEkYenile(); return d;
-    }).catch(() => null);
-    // Sunucudan son alınan veride gönderilmemiş tesis değişikliği varsa veriYenile onu ezmesin
-    this._anlikYuk = this._depoYuk.then(d => d ? d.anlikOku('anlik') : null).then(an => {
-      this._anlikBekleyen = an && an.v ? (an.v.assets || []).filter(a => a && a.dbId != null && a.sync === 'pending') : [];
-    }).catch(() => { this._anlikBekleyen = []; });
-    try {
-      if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('/sw.js').catch(() => {});
-    } catch (e) { /* desteklenmiyor */ }
-    this._sbYuk = import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return M; });
-    this._sbYuk.catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
-    // Kayıtlı oturum anahtarı varsa sunucuda doğrulanır ve giriş ekranı hiç
-    // gösterilmeden doğrudan içeri girilir — "Beni hatırla" işaretli her
-    // girişte token zaten yazılıyor (bkz. supabase-baglanti.js giris()),
-    // eksik olan yalnızca açılışta bunu kullanmaktı.
-    (async () => {
-      try {
-        const M = await this._sbYuk;
-        if (M) await this.anahtarlaGir(M);
-      } catch (e) { /* token geçersiz ya da bağlantı yok — giriş ekranı gösterilir */ }
-      this.setState({ oturumKontrol: false });
-    })();
-    this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
-    window.addEventListener('resize', this._rs);
-    // Telefon katmanları: üst çubuğun alt kenarı ve alt menünün yüksekliği CSS
-    // değişkenine yazılır; açılan paneller bu değerlere yaslanır, üst üste binmez.
-    this._olcKat = () => {
-      const r = document.documentElement;
-      const b = document.getElementById('tel-bas');
-      const n = document.getElementById('tel-nav');
-      // Eleman yoksa varsayılan (58/60) korunur — 0 yazmak panelleri çakıştırır
-      if (b) { const bv = Math.round(b.getBoundingClientRect().bottom); if (bv > 0 && this._katB !== bv) { this._katB = bv; r.style.setProperty('--tel-bas', bv + 'px'); } }
-      if (n) { const nv = Math.round(n.getBoundingClientRect().height); if (nv > 0 && this._katN !== nv) { this._katN = nv; r.style.setProperty('--tel-nav', nv + 'px'); } }
-    };
-    this._olcKat();
-    requestAnimationFrame(this._olcKat);
-    this._katSaat = setInterval(this._olcKat, 1500);
-    window.addEventListener('resize', this._olcKat);
-    window.addEventListener('orientationchange', this._olcKat);
-    // Bağlantı gelince çevrimdışı kuyruk kendiliğinden boşalır; dakikada bir de denenir
-    // Bağlantı kendiliğinden izlenir: kopunca "çevrimdışı"na geçer, gelince bekleyen
-    // her şey (tesis, not, arıza, ambar, modül, fotoğraf) sırayla gönderilir. Üst
-    // şeritten elle çevrimdışına alınmışsa kendiliğinden çıkılmaz.
-    if (typeof navigator !== 'undefined' && navigator.onLine === false) this.setState({ offline: true });
-    this._agGitti = () => {
-      if (this.state.offline) return;
-      this.setState({ offline: true });
-      this.duyur('İnternet kesildi — çalışmaya devam edin, kayıtlar telefonda saklanıyor.', 5000, 'bilgi');
-    };
-    this._agGeldi = () => {
-      if (this._elleCevrimdisi) return;
-      if (this.state.offline) { this.setState({ offline: false }); this.duyur('İnternet geldi — bekleyen kayıtlar gönderiliyor.', 4500, 'iyi'); }
-      setTimeout(() => this.senkron(true), 1500);
-    };
-    window.addEventListener('online', this._agGeldi);
-    window.addEventListener('offline', this._agGitti);
-    this._gorunur = () => { if (!document.hidden) this.senkron(true); };
-    document.addEventListener('visibilitychange', this._gorunur);
-    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); }, 60000);
-    // Ses kilidi: tarayıcı sesi ilk dokunuşa kadar kapalı tutar; her dokunuşta ses bağlamı uyandırılır
-    this._sesAc = () => {
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return;
-        this._ac = this._ac || new AC();
-        const k = () => { if (this._ac.state === 'running' && !this.state.sesAcik) this.setState({ sesAcik: true }); };
-        if (this._ac.state === 'suspended') this._ac.resume().then(k).catch(() => {}); else k();
-      } catch (e) { /* ses yok */ }
-    };
-    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, this._sesAc, { passive: true }));
-    this._uyariTekrar = setInterval(() => { if (this.state.basvuruUyari) this.uyariSesi(); }, 6000);
-    this._basvuruSaat = setInterval(() => { if (this.state.session && !document.hidden) this.basvuruYenile(); }, 30000);
-    // Tarayıcı bildirimi izni, ilk dokunuşta bir kez istenir (izin yalnız kullanıcı hareketiyle sorulabilir)
-    this._izinIste = () => { try { if (typeof Notification !== 'undefined' && Notification.permission === 'default' && this.state.session) Notification.requestPermission(); } catch (e) { /* desteklenmiyor */ } document.removeEventListener('pointerdown', this._izinIste); };
-    document.addEventListener('pointerdown', this._izinIste);
-    setTimeout(() => this.aracBelgeUyari(), 9000);
-    // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
-    // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
-    // veriYenile ekranı altından değiştirmesin diye o an atlanır.
-    this._veriSaat = setInterval(() => {
-      if (this.state.session && !this.state.scenario) this.veriYenile(true);
-      if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
-    }, 30000);
-    // Esc: açık form ve panelleri kapatır
-    this._esc = e => {
-      if (e.key !== 'Escape') return;
-      if (this.state.hatTam) return this.setState({ hatTam: false });
-      if (this.state.alanForm) return this.setState({ alanForm: null });
-      if (this.state.card) return this.setState({ card: null });
-      if (this.state.userForm) return this.setState({ userForm: null });
-      if (this.state.panel && this.state.panel !== 'yok') this.setState({ panel: 'yok', faultForm: null });
-    };
-    window.addEventListener('keydown', this._esc);
-    try {
-      const raw = localStorage.getItem(SES_KEY);
-      if (raw) {
-        const sv = JSON.parse(raw);
-        if (sv && sv.user) this.setState({ loginUser: sv.user, loginPw: sv.pw || '', remember: true });
-      }
-    } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
-    import('./koyler.js').then(k => { this._yer = k.YERLESIM; this.forceUpdate(); }).catch(() => {});
-    Promise.all([import('./kirsehir-data.js'), import('./envanter.js')]).then(([m, env]) => {
-      const { assets, faults } = env.buildAssets(m);
-      // Cihazda bekleyen (sunucuya yazılmamış) kayıtlar listenin başına döner
-      const yerel = this.yerelTesisOku();
-      const kod = new Set(assets.map(x => String(x.code || '').toUpperCase()));
-      const bekleyen = yerel.filter(x => !kod.has(String(x.code || '').toUpperCase()));
-      // Çevrimdışı açılışta cihazdaki son sunucu kopyası zaten yüklendi: örnek veriyle ezilmez
-      this.setState(this._anlikUygulandi
-        ? { data: m, center: { lat: 39.16, lon: 34.12 } }
-        : { data: m, assets: [...bekleyen, ...assets], faults, center: { lat: 39.16, lon: 34.12 } },
-        () => { this.fotoNiyetGeriYukle(); this.kodDenetle(); this.ekKoyYenile(); });
-    });
-    this._msg = e => {
-      const d = e.data || {};
-      if (d.ks === 'ready') this.pushMap();
-      if (d.ks === 'hatKatman') {
-        try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
-        this.setState({ hatKatman: !!d.on });
-      }
-      if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
-      // Haritadaki arıza noktasına dokunuldu: arıza açılır
-      if (d.ks === 'arizaAc') {
-        const f = (this.state.faults || []).find(x => x.id === d.id);
-        if (f) this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } });
-        return;
-      }
-      if (d.ks === 'konum') { this.setState({ benimKonum: { lat: d.lat, lon: d.lon, t: Date.now() } }); this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
-      if (d.ks === 'konumYok') {
-        this.say(d.kod === 1
-          ? 'Konum izni verilmemiş. Tarayıcı ayarlarından bu siteye konum iznini açın; sonra GİT düğmesine yeniden basın.'
-          : 'Konum alınamadı — açık alana çıkıp yeniden deneyin. Harita şimdilik Kırşehir merkezine getirildi.', true);
-        setTimeout(() => this.setState({ toast: null }), 8000);
-        return;
-      }
-      if (d.ks === 'coord') {
-        // Sihirbaz "haritadan seç" bekliyorsa çift tıklanan nokta yeni tesisin konumu olur
-        const z = this.state.naSz;
-        if (z && z.haritada && this.state.newAsset) {
-          this.setState(st => ({
-            newAsset: { ...st.newAsset, lat: d.lat, lon: d.lon, coordAcc: null, district: this.enYakinIlce(d.lat, d.lon) || st.newAsset.district },
-            naSz: { ...st.naSz, haritada: false, onay: false, yol: 'harita' }
-          }));
-          this.toMap({ ks: 'go', lat: d.lat, lon: d.lon, label: 'Yeni tesis konumu · haritadan seçildi' });
-          return;
-        }
-        this.setState({ picked: { lat: d.lat, lon: d.lon } }); return;
-      }
-      if (d.ks === 'picked') {
-        this.vSave(d.name, d.lat, d.lon, true);
-        const p = this.state.pick;
-        this.setState({ pick: null, vFix: null });
-        this.flyTo(d.lat, d.lon, 15);
-        this.toMap({ ks: 'go', lat: d.lat, lon: d.lon, label: `${d.name}${p && p.district ? ' · ' + p.district : ''}` });
-        this.say(`${d.name} köyünün konumu kaydedildi (${d.lat.toFixed(5)}, ${d.lon.toFixed(5)}). Bu köy bundan sonra internetsiz de bulunur.`, true);
-        setTimeout(() => this.setState({ toast: null }), 6000);
-        return;
-      }
-      if (d.ks === 'select') {
-        this.setState({ selected: d.id, detailTab: 'bilgi', panel: 'detay' });
-        const a = this.state.assets.find(x => x.id === d.id);
-        if (a && a.dbId) this.fotoYenile(a.dbId);
-      }
-      if (d.ks === 'hatHazir') { this.hatGonder(); return; }
-      // Profil sayfası açıldı — mevcut tesisleri gönder ki haritada görünsün
-      if (d.ks === 'profilHazir') { this.profilTesis(); return; }
-      if (d.ks === 'profilAktar') { this.profilAktar(d); return; }
-      if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) {
-        const id = d.id || this.state.selected;
-        if (id) this.hatKaydet(id, d.hatlar);
-        return;
-      }
-      if (d.ks === 'base') this.setState({ mapBase: d.base });
-      if (d.ks === 'route') {
-        this.setState({ route: d });
-        this.say(`${d.code} · ${d.km} km · ${d.min} dk${d.approx ? ' (kuş uçuşu tahmin)' : ' karayolu'}`);
-      }
-    };
-    addEventListener('message', this._msg);
+    this.baslatDurum();
+    this.baslatBaglanti();
+    this.baslatKatmanOlcu();
+    this.baslatAg();
+    this.baslatBasvuruUyari();
+    this.baslatPeriyodik();
+    this.baslatEsc();
+    this.baslatOturumKaydi();
+    this.baslatVeri();
+    this.baslatMesajlar();
   }
   componentDidUpdate(prevProps, prev) {
     // Telefon kabuğu yeni geldiyse katman ölçüsünü beklemeden tazele
@@ -9938,7 +9751,211 @@ class Component extends DCLogic {
     try { document.documentElement.classList.toggle('ks-yardim', ac); } catch (e) { /* belge yok */ }
     this.setState({ yardim: ac });
   }
+  prefOku(u) {
+    try {
+      const p = JSON.parse(localStorage.getItem('ks-pref-' + u.user) || '{}');
+      const out = {};
+      if (p.mapBase) out.mapBase = p.mapBase;
+      const cihazTema = (() => { try { return localStorage.getItem('ks-tema'); } catch (e) { return null; } })();
+      out.theme = (cihazTema === 'dark' || cihazTema === 'light') ? cihazTema
+        : (p.theme === 'dark' ? 'dark' : 'light');
+      try { localStorage.setItem('ks-tema', out.theme); } catch (e) { /* depolama kapalı */ }
+      if (typeof p.navMode === 'boolean') out.navMode = p.navMode;
+      // Süzgeç olduğu gibi geri gelir — hepsi kapalı bırakıldıysa kapalı açılır
+      if (p.filter && typeof p.filter === 'object') {
+        out.filter = {
+          kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
+          ag: p.filter.ag !== false, ges: p.filter.ges !== false,
+          pasif: p.filter.pasif !== false,
+          // ISU katmanları: eski kayıtta yoksa "Tümü" ile birlikte açık gelir
+          kaynak: 'kaynak' in p.filter ? p.filter.kaynak !== false : true,
+          memba: 'memba' in p.filter ? p.filter.memba !== false : true
+        };
+      }
+      if (typeof p.hatKatman === 'boolean') out.hatKatman = p.hatKatman;
+      if (p.bildirimKanal) out.bildirimKanal = p.bildirimKanal;
+      if (p.bildirimEsik) out.bildirimEsik = p.bildirimEsik;
+      if (p.convSys || p.convZone) out.conv = { ...this.state.conv, sys: p.convSys || this.state.conv.sys, zone: p.convZone || this.state.conv.zone };
+      // Her giriş Envanter > Harita ekranında başlar: bırakılan sayfa geri
+      // getirilmez, yoksa kullanıcı Ayarlar'da kaldıysa orada açılıyordu.
+      if (p.envQ) out.envQ = p.envQ;
+      if (p.envTur) out.envTur = p.envTur;
+      if (p.envIlce) out.envIlce = p.envIlce;
+      if (p.envAktiflik) out.envAktiflik = p.envAktiflik;
+      if (p.envDurum) out.envDurum = p.envDurum;
+      if (p.deviceMode) out.deviceMode = p.deviceMode;
+      if (p.detailTab) out.detailTab = p.detailTab;
+      return out;
+    } catch (e) { return {}; }
+  }
+  // geri yüklenen tercihleri haritaya da uygula
+  prefUygula() {
+    const s = this.state;
+    this.toMap({ ks: 'setBase', base: s.mapBase });
+    this.toMap({ ks: 'navMode', on: s.navMode });
+    this.pushMap();
+  }
+  // Tema seçimi hem kullanıcı tercihine hem cihaza yazılır; oturum
+  // kapanınca da, tercih dosyası okunamasa da seçim korunur.
+  temaSec(t) {
+    try { localStorage.setItem('ks-tema', t); } catch (e) { /* depolama kapalı */ }
+    this.setState({ theme: t }, () => this.pushMap());
+  }
+  prefYaz() {
+    const s = this.state;
+    if (!s.session) return;
+    try {
+      const f = {
+        kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
+        ag: s.filter.ag !== false, ges: s.filter.ges !== false,
+        pasif: s.filter.pasif !== false,
+        kaynak: s.filter.kaynak !== false, memba: s.filter.memba !== false
+      };
+      localStorage.setItem('ks-pref-' + s.session.user, JSON.stringify({
+        mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f,
+        hatKatman: s.hatKatman,
+        bildirimKanal: s.bildirimKanal, bildirimEsik: s.bildirimEsik,
+        convSys: s.conv.sys, convZone: s.conv.zone, tab: s.tab, detailTab: s.detailTab,
+        ayarBolum: s.ayarBolum, deviceMode: s.deviceMode,
+        envQ: s.envQ, envTur: s.envTur, envIlce: s.envIlce,
+        envAktiflik: s.envAktiflik, envDurum: s.envDurum
+      }));
+    } catch (e) { /* depolama kapalı */ }
+  }
   tl(n) { return (Math.round(n) || 0).toLocaleString('tr-TR') + ' ₺'; }
+  async fetchJson(url, opts, ms) {
+    const ac = new AbortController();
+    const to = setTimeout(() => ac.abort(), ms || 7000);
+    try {
+      const r = await fetch(url, { ...(opts || {}), signal: ac.signal });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return await r.json();
+    } finally { clearTimeout(to); }
+  }
+  distKm(a) {
+    const R = 6371, t = Math.PI / 180;
+    const dLat = (a.lat - STD_LOC.lat) * t, dLon = (a.lon - STD_LOC.lon) * t;
+    const x = Math.sin(dLat / 2) ** 2 + Math.cos(STD_LOC.lat * t) * Math.cos(a.lat * t) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(x));
+  }
+  // Medya kaynağı şablon deliğiyle verilemez: tarayıcı hole çözülmeden
+  // literal metni indirmeye çalışır. Bu yüzden eleman burada kuruluyor.
+  imgEl(url, alt) {
+    return React.createElement('img', {
+      src: url, alt: alt || '', loading: 'lazy',
+      style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+    });
+  }
+  // Fotoğrafı cihaza indir: telefonda galeriye, bilgisayarda İndirilenler'e
+  async medyaIndir(url, ad) {
+    try {
+      const c = await fetch(url, { mode: 'cors' });
+      if (!c.ok) throw new Error('yok');
+      const blob = await c.blob();
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = u; a.download = ad;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(u), 4000);
+      this.say(`${ad} cihaza indirildi.`);
+    } catch (e) {
+      // Bazı tarayıcılar indirmeyi engeller; dosyayı yeni sekmede açıp
+      // kullanıcının kendi kaydetmesine bırakıyoruz
+      window.open(url, '_blank', 'noopener');
+      this.say('Fotoğraf yeni sekmede açıldı — üzerine basılı tutup “Görseli kaydet” ile cihazınıza alabilirsiniz.', true);
+      setTimeout(() => this.setState({ toast: null }), 8000);
+    }
+  }
+  audioEl(url, yuksek) {
+    return React.createElement('audio', {
+      src: url, controls: true, preload: 'metadata',
+      style: { width: '100%', height: yuksek ? 40 : 34, display: 'block' }
+    });
+  }
+  mesafeM(a, b) {
+    return Math.hypot((a.lon - b.lon) * Math.cos(a.lat * Math.PI / 180) * 111320, (a.lat - b.lat) * 110540);
+  }
+  // Kısa bildirim. Ayrı bir kutu yok — hepsi aynı sağ üst kartta çıkar.
+  say(text, keep) {
+    this.duyur(text, keep ? 9000 : 3800, 'bilgi');
+  }
+  // Göz yormayan bildirim: ekranın üstünde çıkar, süresi dolunca kendiliğinden kalkar
+  duyur(text, ms, tur, git) {
+    clearTimeout(this._d);
+    // Başarı/bilgi bildirimlerinde yalnız ilk cümle (uzun açıklamalar "?" ile
+    // yardım açıkken görünür); hata ve uyarılar tam kalır
+    if (!this.state.yardim && (!tur || tur === 'iyi' || tur === 'bilgi')) {
+      const s = String(text || ''), i = s.search(/[.!?…]\s/);
+      if (i >= 12) text = s.slice(0, i + 1);
+    }
+    this.setState({ duyuru: { text, tur: tur || 'bilgi', git: typeof git === 'function' ? git : null } });
+    this._d = setTimeout(() => this.setState({ duyuru: null }), ms || 5000);
+  }
+  dosyaIndir(ad, icerik, tur) {
+    const blob = new Blob([icerik], { type: tur });
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = u; a.download = ad;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+  }
+  // Lucide çizgi ikonları
+  ikon(ad, boyut) {
+    const P = {
+      gps: ['M12 2v3', 'M12 19v3', 'M2 12h3', 'M19 12h3', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
+      pin: ['M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0', 'M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4'],
+      gunes: ['M12 2v2', 'M12 20v2', 'm4.93 4.93 1.41 1.41', 'm17.66 17.66 1.41 1.41', 'M2 12h2', 'M20 12h2', 'm6.34 17.66-1.41 1.41', 'm19.07 4.93-1.41 1.41', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
+      ay: ['M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9'],
+      indir: ['M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4', 'M7 10l5 5 5-5', 'M12 15V3'],
+      cop: ['M3 6h18', 'M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2', 'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6', 'M10 11v6', 'M14 11v6'],
+      sol: ['m15 18-6-6 6-6'],
+      sag: ['m9 18 6-6-6-6'],
+      kapat: ['M18 6 6 18', 'm6 6 12 12'],
+      uyari: ['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3', 'M12 9v4', 'M12 17h.01'],
+      buyut: ['M15 3h6v6', 'M9 21H3v-6', 'M21 3l-7 7', 'M3 21l7-7'],
+      kalem: ['M12 20h9', 'M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z'],
+      donustur: ['M8 3 4 7l4 4', 'M4 7h16', 'm16 21 4-4-4-4', 'M20 17H4'],
+      yenile: ['M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8', 'M21 3v5h-5', 'M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16', 'M8 16H3v5'],
+      cikis: ['M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4', 'm16 17 5-5-5-5', 'M21 12H9'],
+      ariza: ['M7 18v-6a5 5 0 0 1 10 0v6', 'M5 21a1 1 0 0 0 1-1v-1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a1 1 0 0 0 1 1', 'M12 2v1', 'M2 12h1', 'M21 12h1', 'M5.6 4.6 6.3 5.3', 'M18.4 4.6l-.7.7'],
+      kamera: ['M4 8h3l2-3h6l2 3h3v11H4z', 'M12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7'],
+      // Sol menü sayfaları
+      isler:['M13 2 4 14h6l-1 8 9-12h-6z'],
+      kaynaklar: ['M3 7l9-4 9 4-9 4-9-4z', 'M3 7v10l9 4 9-4V7', 'M12 11v10'],
+      envanter: ['M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z', 'M12 6.6a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8'],
+      kesit: ['M3 17l5-6 4 3 4-7 5 6', 'M3 21h18'],
+      ozet: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'],
+      ayarlar: ['M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6', 'M12 2v3', 'M12 19v3', 'M4.2 4.2l2.1 2.1', 'M17.7 17.7l2.1 2.1', 'M2 12h3', 'M19 12h3', 'M4.2 19.8l2.1-2.1', 'M17.7 6.3l2.1-2.1']
+    };
+    const b = boyut || 16;
+    return React.createElement('svg', {
+      width: b, height: b, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+      strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+      style: { display: 'block', flex: 'none' }, 'aria-hidden': true
+    }, (P[ad] || []).map((p, i) => React.createElement('path', { key: i, d: p })));
+  }
+  th() {
+    const dark = this.state.theme === 'dark';
+    return dark ? {
+      bg: '#121214', surf: '#1c1c1e', surf2: '#2a2a2d', fg: '#f5f5f7',
+      mut: 'rgba(235,235,245,.62)', rule: 'rgba(255,255,255,.13)',
+      acc: '#0a84ff', sel: '#2c2c2e', pend: '#3a2a10',
+      ph1: '#2c2c2e', ph2: '#3a3a3c', mapSat: '.5', mapBri: '.6', themeMark: '☾', dark: true
+    } : {
+      bg: 'var(--color-bg)', surf: '#ffffff', surf2: 'var(--color-neutral-200)', fg: 'var(--color-text)',
+      mut: 'var(--color-neutral-600)', rule: 'var(--color-divider)',
+      acc: 'var(--color-accent)', sel: 'var(--color-accent-100)', pend: 'var(--color-bekle-100)',
+      ph1: '#e4e4e9', ph2: '#d5d5da', mapSat: '.78', mapBri: '1', themeMark: '☀', dark: false
+    };
+  }
+
+  proj(lat, lon) {
+    const z = this.state.zoom, c = this.state.center || { lat: 39.16, lon: 34.12 };
+    const k = Math.pow(1.7, z - 11);
+    return { x: 50 + ((lon - c.lon) / ((BBOX.e - BBOX.w) / k)) * 100, y: 50 - ((lat - c.lat) / ((BBOX.n - BBOX.s) / k)) * 100 };
+  }
   // ISO zamanı programın kullandığı gg.aa.yyyy ss:dd biçimine çevirir
   damgaCevir(iso) {
     const d = new Date(iso);
@@ -10033,209 +10050,49 @@ class Component extends DCLogic {
         + 'cihazın saatini elle de düzeltmeniz iyi olur.', 9000, 'kotu');
     }
   }
-  async fetchJson(url, opts, ms) {
-    const ac = new AbortController();
-    const to = setTimeout(() => ac.abort(), ms || 7000);
+  baslatDurum() {
+    let dm = 'auto';
+    try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
+    this.setState({ deviceMode: dm, device: dm === 'auto' ? this.olcCihaz() : dm, users: this.usersOku() });
     try {
-      const r = await fetch(url, { ...(opts || {}), signal: ac.signal });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return await r.json();
-    } finally { clearTimeout(to); }
-  }
-  distKm(a) {
-    const R = 6371, t = Math.PI / 180;
-    const dLat = (a.lat - STD_LOC.lat) * t, dLon = (a.lon - STD_LOC.lon) * t;
-    const x = Math.sin(dLat / 2) ** 2 + Math.cos(STD_LOC.lat * t) * Math.cos(a.lat * t) * Math.sin(dLon / 2) ** 2;
-    return 2 * R * Math.asin(Math.sqrt(x));
-  }
-  // Medya kaynağı şablon deliğiyle verilemez: tarayıcı hole çözülmeden
-  // literal metni indirmeye çalışır. Bu yüzden eleman burada kuruluyor.
-  imgEl(url, alt) {
-    return React.createElement('img', {
-      src: url, alt: alt || '', loading: 'lazy',
-      style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
-    });
-  }
-  // Fotoğrafı cihaza indir: telefonda galeriye, bilgisayarda İndirilenler'e
-  async medyaIndir(url, ad) {
-    try {
-      const c = await fetch(url, { mode: 'cors' });
-      if (!c.ok) throw new Error('yok');
-      const blob = await c.blob();
-      const u = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = u; a.download = ad;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(u), 4000);
-      this.say(`${ad} cihaza indirildi.`);
-    } catch (e) {
-      // Bazı tarayıcılar indirmeyi engeller; dosyayı yeni sekmede açıp
-      // kullanıcının kendi kaydetmesine bırakıyoruz
-      window.open(url, '_blank', 'noopener');
-      this.say('Fotoğraf yeni sekmede açıldı — üzerine basılı tutup “Görseli kaydet” ile cihazınıza alabilirsiniz.', true);
-      setTimeout(() => this.setState({ toast: null }), 8000);
-    }
-  }
-  audioEl(url, yuksek) {
-    return React.createElement('audio', {
-      src: url, controls: true, preload: 'metadata',
-      style: { width: '100%', height: yuksek ? 40 : 34, display: 'block' }
-    });
-  }
-  mesafeM(a, b) {
-    return Math.hypot((a.lon - b.lon) * Math.cos(a.lat * Math.PI / 180) * 111320, (a.lat - b.lat) * 110540);
-  }
-  prefOku(u) {
-    try {
-      const p = JSON.parse(localStorage.getItem('ks-pref-' + u.user) || '{}');
-      const out = {};
-      if (p.mapBase) out.mapBase = p.mapBase;
-      const cihazTema = (() => { try { return localStorage.getItem('ks-tema'); } catch (e) { return null; } })();
-      out.theme = (cihazTema === 'dark' || cihazTema === 'light') ? cihazTema
-        : (p.theme === 'dark' ? 'dark' : 'light');
-      try { localStorage.setItem('ks-tema', out.theme); } catch (e) { /* depolama kapalı */ }
-      if (typeof p.navMode === 'boolean') out.navMode = p.navMode;
-      // Süzgeç olduğu gibi geri gelir — hepsi kapalı bırakıldıysa kapalı açılır
-      if (p.filter && typeof p.filter === 'object') {
-        out.filter = {
-          kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
-          ag: p.filter.ag !== false, ges: p.filter.ges !== false,
-          pasif: p.filter.pasif !== false,
-          // ISU katmanları: eski kayıtta yoksa "Tümü" ile birlikte açık gelir
-          kaynak: 'kaynak' in p.filter ? p.filter.kaynak !== false : true,
-          memba: 'memba' in p.filter ? p.filter.memba !== false : true
-        };
-      }
-      if (typeof p.hatKatman === 'boolean') out.hatKatman = p.hatKatman;
-      if (p.bildirimKanal) out.bildirimKanal = p.bildirimKanal;
-      if (p.bildirimEsik) out.bildirimEsik = p.bildirimEsik;
-      if (p.convSys || p.convZone) out.conv = { ...this.state.conv, sys: p.convSys || this.state.conv.sys, zone: p.convZone || this.state.conv.zone };
-      // Her giriş Envanter > Harita ekranında başlar: bırakılan sayfa geri
-      // getirilmez, yoksa kullanıcı Ayarlar'da kaldıysa orada açılıyordu.
-      if (p.envQ) out.envQ = p.envQ;
-      if (p.envTur) out.envTur = p.envTur;
-      if (p.envIlce) out.envIlce = p.envIlce;
-      if (p.envAktiflik) out.envAktiflik = p.envAktiflik;
-      if (p.envDurum) out.envDurum = p.envDurum;
-      if (p.deviceMode) out.deviceMode = p.deviceMode;
-      if (p.detailTab) out.detailTab = p.detailTab;
-      return out;
-    } catch (e) { return {}; }
-  }
-  // geri yüklenen tercihleri haritaya da uygula
-  prefUygula() {
-    const s = this.state;
-    this.toMap({ ks: 'setBase', base: s.mapBase });
-    this.toMap({ ks: 'navMode', on: s.navMode });
-    this.pushMap();
-  }
-  // Tema seçimi hem kullanıcı tercihine hem cihaza yazılır; oturum
-  // kapanınca da, tercih dosyası okunamasa da seçim korunur.
-  temaSec(t) {
-    try { localStorage.setItem('ks-tema', t); } catch (e) { /* depolama kapalı */ }
-    this.setState({ theme: t }, () => this.pushMap());
-  }
-  prefYaz() {
-    const s = this.state;
-    if (!s.session) return;
-    try {
-      const f = {
-        kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
-        ag: s.filter.ag !== false, ges: s.filter.ges !== false,
-        pasif: s.filter.pasif !== false,
-        kaynak: s.filter.kaynak !== false, memba: s.filter.memba !== false
-      };
-      localStorage.setItem('ks-pref-' + s.session.user, JSON.stringify({
-        mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f,
-        hatKatman: s.hatKatman,
-        bildirimKanal: s.bildirimKanal, bildirimEsik: s.bildirimEsik,
-        convSys: s.conv.sys, convZone: s.conv.zone, tab: s.tab, detailTab: s.detailTab,
-        ayarBolum: s.ayarBolum, deviceMode: s.deviceMode,
-        envQ: s.envQ, envTur: s.envTur, envIlce: s.envIlce,
-        envAktiflik: s.envAktiflik, envDurum: s.envDurum
-      }));
+      const yv = JSON.parse(localStorage.getItem('ks-yerlesim-veri') || 'null');
+      if (yv && typeof yv === 'object') this.setState({ yerlesimVeri: yv });
+      const ht = JSON.parse(localStorage.getItem('ks-hatlar') || 'null');
+      if (ht && typeof ht === 'object') this.setState({ hatlar: ht }, () => setTimeout(() => this.hatlariYolla(), 900));
+      const ek = JSON.parse(localStorage.getItem('ks-ek-koyler') || 'null');
+      if (ek && typeof ek === 'object') this.setState({ ekKoyler: ek });
     } catch (e) { /* depolama kapalı */ }
   }
-  // Kısa bildirim. Ayrı bir kutu yok — hepsi aynı sağ üst kartta çıkar.
-  say(text, keep) {
-    this.duyur(text, keep ? 9000 : 3800, 'bilgi');
-  }
-  // Göz yormayan bildirim: ekranın üstünde çıkar, süresi dolunca kendiliğinden kalkar
-  duyur(text, ms, tur, git) {
-    clearTimeout(this._d);
-    // Başarı/bilgi bildirimlerinde yalnız ilk cümle (uzun açıklamalar "?" ile
-    // yardım açıkken görünür); hata ve uyarılar tam kalır
-    if (!this.state.yardim && (!tur || tur === 'iyi' || tur === 'bilgi')) {
-      const s = String(text || ''), i = s.search(/[.!?…]\s/);
-      if (i >= 12) text = s.slice(0, i + 1);
-    }
-    this.setState({ duyuru: { text, tur: tur || 'bilgi', git: typeof git === 'function' ? git : null } });
-    this._d = setTimeout(() => this.setState({ duyuru: null }), ms || 5000);
-  }
-  dosyaIndir(ad, icerik, tur) {
-    const blob = new Blob([icerik], { type: tur });
-    const u = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = u; a.download = ad;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(u), 4000);
-  }
-  // Lucide çizgi ikonları
-  ikon(ad, boyut) {
-    const P = {
-      gps: ['M12 2v3', 'M12 19v3', 'M2 12h3', 'M19 12h3', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
-      pin: ['M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0', 'M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4'],
-      gunes: ['M12 2v2', 'M12 20v2', 'm4.93 4.93 1.41 1.41', 'm17.66 17.66 1.41 1.41', 'M2 12h2', 'M20 12h2', 'm6.34 17.66-1.41 1.41', 'm19.07 4.93-1.41 1.41', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
-      ay: ['M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9'],
-      indir: ['M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4', 'M7 10l5 5 5-5', 'M12 15V3'],
-      cop: ['M3 6h18', 'M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2', 'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6', 'M10 11v6', 'M14 11v6'],
-      sol: ['m15 18-6-6 6-6'],
-      sag: ['m9 18 6-6-6-6'],
-      kapat: ['M18 6 6 18', 'm6 6 12 12'],
-      uyari: ['m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3', 'M12 9v4', 'M12 17h.01'],
-      buyut: ['M15 3h6v6', 'M9 21H3v-6', 'M21 3l-7 7', 'M3 21l7-7'],
-      kalem: ['M12 20h9', 'M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z'],
-      donustur: ['M8 3 4 7l4 4', 'M4 7h16', 'm16 21 4-4-4-4', 'M20 17H4'],
-      yenile: ['M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8', 'M21 3v5h-5', 'M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16', 'M8 16H3v5'],
-      cikis: ['M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4', 'm16 17 5-5-5-5', 'M21 12H9'],
-      ariza: ['M7 18v-6a5 5 0 0 1 10 0v6', 'M5 21a1 1 0 0 0 1-1v-1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1a1 1 0 0 0 1 1', 'M12 2v1', 'M2 12h1', 'M21 12h1', 'M5.6 4.6 6.3 5.3', 'M18.4 4.6l-.7.7'],
-      kamera: ['M4 8h3l2-3h6l2 3h3v11H4z', 'M12 9.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7'],
-      // Sol menü sayfaları
-      isler:['M13 2 4 14h6l-1 8 9-12h-6z'],
-      kaynaklar: ['M3 7l9-4 9 4-9 4-9-4z', 'M3 7v10l9 4 9-4V7', 'M12 11v10'],
-      envanter: ['M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z', 'M12 6.6a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8'],
-      kesit: ['M3 17l5-6 4 3 4-7 5 6', 'M3 21h18'],
-      ozet: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'],
-      ayarlar: ['M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6', 'M12 2v3', 'M12 19v3', 'M4.2 4.2l2.1 2.1', 'M17.7 17.7l2.1 2.1', 'M2 12h3', 'M19 12h3', 'M4.2 19.8l2.1-2.1', 'M17.7 6.3l2.1-2.1']
+  baslatKatmanOlcu() {
+    this._rs = () => { if (this.state.deviceMode === 'auto') this.cihazUygula('auto'); };
+    window.addEventListener('resize', this._rs);
+    // Telefon katmanları: üst çubuğun alt kenarı ve alt menünün yüksekliği CSS
+    // değişkenine yazılır; açılan paneller bu değerlere yaslanır, üst üste binmez.
+    this._olcKat = () => {
+      const r = document.documentElement;
+      const b = document.getElementById('tel-bas');
+      const n = document.getElementById('tel-nav');
+      // Eleman yoksa varsayılan (58/60) korunur — 0 yazmak panelleri çakıştırır
+      if (b) { const bv = Math.round(b.getBoundingClientRect().bottom); if (bv > 0 && this._katB !== bv) { this._katB = bv; r.style.setProperty('--tel-bas', bv + 'px'); } }
+      if (n) { const nv = Math.round(n.getBoundingClientRect().height); if (nv > 0 && this._katN !== nv) { this._katN = nv; r.style.setProperty('--tel-nav', nv + 'px'); } }
     };
-    const b = boyut || 16;
-    return React.createElement('svg', {
-      width: b, height: b, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
-      strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
-      style: { display: 'block', flex: 'none' }, 'aria-hidden': true
-    }, (P[ad] || []).map((p, i) => React.createElement('path', { key: i, d: p })));
+    this._olcKat();
+    requestAnimationFrame(this._olcKat);
+    this._katSaat = setInterval(this._olcKat, 1500);
+    window.addEventListener('resize', this._olcKat);
+    window.addEventListener('orientationchange', this._olcKat);
   }
-  th() {
-    const dark = this.state.theme === 'dark';
-    return dark ? {
-      bg: '#121214', surf: '#1c1c1e', surf2: '#2a2a2d', fg: '#f5f5f7',
-      mut: 'rgba(235,235,245,.62)', rule: 'rgba(255,255,255,.13)',
-      acc: '#0a84ff', sel: '#2c2c2e', pend: '#3a2a10',
-      ph1: '#2c2c2e', ph2: '#3a3a3c', mapSat: '.5', mapBri: '.6', themeMark: '☾', dark: true
-    } : {
-      bg: 'var(--color-bg)', surf: '#ffffff', surf2: 'var(--color-neutral-200)', fg: 'var(--color-text)',
-      mut: 'var(--color-neutral-600)', rule: 'var(--color-divider)',
-      acc: 'var(--color-accent)', sel: 'var(--color-accent-100)', pend: 'var(--color-bekle-100)',
-      ph1: '#e4e4e9', ph2: '#d5d5da', mapSat: '.78', mapBri: '1', themeMark: '☀', dark: false
+  baslatEsc() {
+    // Esc: açık form ve panelleri kapatır
+    this._esc = e => {
+      if (e.key !== 'Escape') return;
+      if (this.state.hatTam) return this.setState({ hatTam: false });
+      if (this.state.alanForm) return this.setState({ alanForm: null });
+      if (this.state.card) return this.setState({ card: null });
+      if (this.state.userForm) return this.setState({ userForm: null });
+      if (this.state.panel && this.state.panel !== 'yok') this.setState({ panel: 'yok', faultForm: null });
     };
-  }
-
-  proj(lat, lon) {
-    const z = this.state.zoom, c = this.state.center || { lat: 39.16, lon: 34.12 };
-    const k = Math.pow(1.7, z - 11);
-    return { x: 50 + ((lon - c.lon) / ((BBOX.e - BBOX.w) / k)) * 100, y: 50 - ((lat - c.lat) / ((BBOX.n - BBOX.s) / k)) * 100 };
+    window.addEventListener('keydown', this._esc);
   }
   // Dosyadan içe aktarma — 2026.10.01'e kadar bu fonksiyon dosyayı hiç okumuyor,
   // her seferinde aynı 12 uydurma satırı ilçe merkezlerinin yanına koyuyordu.
@@ -10442,6 +10299,45 @@ class Component extends DCLogic {
     gunSayi = Math.max(7, gunSayi);
     return { toplam, ort: toplam / gunSayi, seri };
   }
+  // Stoğu azaltan hareketten sonra kritik eşiğin altındaki kalemler için
+  // uyarı verir (madde 19). ambarObj işlemin uygulandığı güncel veri —
+  // this.state.ambar setState sonrası hemen güncel olmayabileceği için
+  // çağıran yer elindeki güncel nesneyi (yerelVeri ya da sunucu yanıtı) verir.
+  ambarKritikMesaj(islemler, ambarObj) {
+    const dusuren = ['zimmet', 'sarf', 'hurda'];
+    const dus = [...new Set((islemler || []).filter(i => dusuren.includes(i.tur)).map(i => i.malzeme))];
+    if (!dus.length || !ambarObj) return;
+    const kritikler = [];
+    // (Önceden burada ekran koduna ait SAHA_EKIP kullanılıyordu; metotta
+    // tanımsız olduğu için uyarı hiç çıkmıyor, işlem sonu hata veriyordu.)
+    for (const ad of dus) {
+      const kalem = this.katalogBul(ad);
+      if (!kalem) continue;
+      const toplam = this.ambarToplam(ad, ambarObj);
+      const zim = this.ambarZimmetToplam(ad, ambarObj);
+      const esik = Number(kalem.esik) || KRITIK_ESIK[kalem.birim] || 2;
+      if (toplam + zim > 0 && toplam <= esik) kritikler.push(ad + ' ' + toplam + ' ' + kalem.birim);
+    }
+    if (kritikler.length) {
+      // Satın alma uyarısı: kritik kalem sipariş listesine kendiliğinden eklenir
+      const liste = [...(this.state.siparis || [])];
+      const eklenen = [];
+      for (const ad of dus) {
+        const kalem = this.katalogBul(ad);
+        if (!kalem || liste.some(x => x.malzeme === ad)) continue;
+        const toplam = this.ambarToplam(ad, ambarObj);
+        const esik = Number(kalem.esik) || KRITIK_ESIK[kalem.birim] || 2;
+        if (!(toplam <= esik && toplam + this.ambarZimmetToplam(ad, ambarObj) > 0)) continue;
+        liste.push({ id: 's' + Date.now() + Math.random().toString(36).slice(2, 5), malzeme: ad, adet: this.siparisOneri(ad),
+          birim: kalem.birim, ekleyen: 'Otomatik (kritik stok)', damga: this.damga(), otomatik: true });
+        eklenen.push(ad);
+      }
+      if (eklenen.length) this.siparisYaz(liste);
+      setTimeout(() => this.duyur('Kritik stok seviyesi: ' + kritikler.join(', ')
+        + (eklenen.length ? '. Satın alma için sipariş listesine eklendi.' : '. Ambara giriş girilmesi gerekiyor.'), 9000, 'kotu',
+        () => this.setState({ tab: 'ambar' })), 600);
+    }
+  }
   // Malzeme kataloğu: yeni kalem ya da düzenleme
   malzemeKaydet(f) {
     if (!f) return;
@@ -10560,45 +10456,6 @@ class Component extends DCLogic {
       if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t).then(bitti, () => this.duyur('Kopyalanamadı — tarayıcı izin vermedi.', 5000, 'kotu'));
     } catch (e) { /* aşağıda bildirilir */ }
     this.duyur('Kopyalanamadı — tarayıcı izin vermedi.', 5000, 'kotu');
-  }
-  // Stoğu azaltan hareketten sonra kritik eşiğin altındaki kalemler için
-  // uyarı verir (madde 19). ambarObj işlemin uygulandığı güncel veri —
-  // this.state.ambar setState sonrası hemen güncel olmayabileceği için
-  // çağıran yer elindeki güncel nesneyi (yerelVeri ya da sunucu yanıtı) verir.
-  ambarKritikMesaj(islemler, ambarObj) {
-    const dusuren = ['zimmet', 'sarf', 'hurda'];
-    const dus = [...new Set((islemler || []).filter(i => dusuren.includes(i.tur)).map(i => i.malzeme))];
-    if (!dus.length || !ambarObj) return;
-    const kritikler = [];
-    // (Önceden burada ekran koduna ait SAHA_EKIP kullanılıyordu; metotta
-    // tanımsız olduğu için uyarı hiç çıkmıyor, işlem sonu hata veriyordu.)
-    for (const ad of dus) {
-      const kalem = this.katalogBul(ad);
-      if (!kalem) continue;
-      const toplam = this.ambarToplam(ad, ambarObj);
-      const zim = this.ambarZimmetToplam(ad, ambarObj);
-      const esik = Number(kalem.esik) || KRITIK_ESIK[kalem.birim] || 2;
-      if (toplam + zim > 0 && toplam <= esik) kritikler.push(ad + ' ' + toplam + ' ' + kalem.birim);
-    }
-    if (kritikler.length) {
-      // Satın alma uyarısı: kritik kalem sipariş listesine kendiliğinden eklenir
-      const liste = [...(this.state.siparis || [])];
-      const eklenen = [];
-      for (const ad of dus) {
-        const kalem = this.katalogBul(ad);
-        if (!kalem || liste.some(x => x.malzeme === ad)) continue;
-        const toplam = this.ambarToplam(ad, ambarObj);
-        const esik = Number(kalem.esik) || KRITIK_ESIK[kalem.birim] || 2;
-        if (!(toplam <= esik && toplam + this.ambarZimmetToplam(ad, ambarObj) > 0)) continue;
-        liste.push({ id: 's' + Date.now() + Math.random().toString(36).slice(2, 5), malzeme: ad, adet: this.siparisOneri(ad),
-          birim: kalem.birim, ekleyen: 'Otomatik (kritik stok)', damga: this.damga(), otomatik: true });
-        eklenen.push(ad);
-      }
-      if (eklenen.length) this.siparisYaz(liste);
-      setTimeout(() => this.duyur('Kritik stok seviyesi: ' + kritikler.join(', ')
-        + (eklenen.length ? '. Satın alma için sipariş listesine eklendi.' : '. Ambara giriş girilmesi gerekiyor.'), 9000, 'kotu',
-        () => this.setState({ tab: 'ambar' })), 600);
-    }
   }
   // Tek hareket: giriş, çıkış, zimmet, iade, sarf. Eksi mevcuda düşürmez.
   ambarHareket(g) {
@@ -11196,6 +11053,123 @@ class Component extends DCLogic {
       kayitliSesler: sn.ok ? { ...st.kayitliSesler, ['a' + arizaDbId]: sn.data } : st.kayitliSesler
     }));
   }
+  // Saha fotoğrafı: öncesi/sonrası. Arıza sunucudaysa hemen yüklenir, değilse
+  // kayıt yazılınca (arizaGonder) yüklenmek üzere bekler.
+  sahaFoto(f, asama) {
+    if (!f) return;
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment'; inp.style.display = 'none';
+    inp.onchange = () => {
+      const list = [...(inp.files || [])];
+      inp.remove();
+      if (!list.length) return;
+      const ek = list.map(file => ({ file, url: URL.createObjectURL(file), kb: Math.round(file.size / 1024), asama }));
+      const sf = { ...(this.state.sahaFoto || {}) };
+      const k = sf[f.id] || { once: 0, sonra: 0 };
+      sf[f.id] = { ...k, [asama]: k[asama] + ek.length };
+      this.setState({ sahaFoto: sf });
+      const a = (this.state.assets || []).find(x => x.id === f.assetId);
+      const beklet = async (liste) => {
+        // Önce telefonun deposuna (sayfa kapansa da kalır); depolama kapalıysa bellekte tutulur
+        const kalici = await this.medyaBirak('ariza', f.id, a ? a.code : f.no, { photos: liste });
+        if (!kalici) {
+          this._arizaMedya = this._arizaMedya || {};
+          const md = this._arizaMedya[f.id] || { photos: [], sesler: [] };
+          md.photos = [...md.photos, ...liste];
+          this._arizaMedya[f.id] = md;
+          this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? { ...x, sync: 'pending' } : x) }));
+        }
+        this.duyur(`${ASAMA_AD[asama]} fotoğrafı telefonda — internet gelince yüklenecek.`, 5000);
+      };
+      if (f.dbId && !this.state.offline && this._sb) {
+        this.arizaFotoGonder(ek, a ? a.dbId : null, a ? a.code : f.no, f.dbId).then(n => {
+          if (n === ek.length) return this.duyur(`${ASAMA_AD[asama]} fotoğrafı ${f.no} kaydına yüklendi.`, 5000, 'iyi');
+          beklet(ek.filter(p => !p.yuklendi));
+        });
+      } else {
+        beklet(ek);
+      }
+    };
+    document.body.appendChild(inp);
+    inp.click();
+  }
+  // Çevrimdışı çekilen fotoğraf ve sesler IndexedDB'de durur; sayfa kapansa da
+  // kaybolmaz, internet gelince ve kayıt sunucuya yazılınca kendiliğinden yüklenir.
+  // Depolama kapalıysa false döner (çağıran bellekteki eski yola düşer).
+  async medyaBirak(hedef, ref, kod, ek) {
+    const d = await this._depoYuk;
+    if (!d) return false;
+    let tamam = true;
+    for (const p of (ek.photos || [])) {
+      if (!p.file) continue;
+      const id = await d.medyaEkle({ hedef, ref, kod, tur: 'foto', blob: p.file, ad: p.file.name || '', asama: p.asama || 'once', kb: p.kb || 0 });
+      if (id == null || id === true) tamam = false; else p.idbId = id;
+    }
+    for (const sn of (ek.sesler || [])) {
+      if (!sn.blob) continue;
+      const id = await d.medyaEkle({ hedef, ref, kod, tur: 'ses', blob: sn.blob, sure: sn.sure || '0:00', asama: sn.asama || 'once' });
+      if (id == null || id === true) tamam = false; else sn.idbId = id;
+    }
+    this.bekleyenEkYenile();
+    return tamam;
+  }
+  // Tek arızanın cihazda bekleyen dosyalarını yükler (arıza sunucuya yazılmışsa)
+  async medyaGonder(ref) {
+    const d = await this._depoYuk, M = this._sb;
+    if (!d || !M || !M.tokenOku() || this.state.offline) return 0;
+    const f = (this.state.faults || []).find(x => x.id === ref);
+    if (!f || !f.dbId) return 0;
+    const a = f.assetId ? (this.state.assets || []).find(x => x.id === f.assetId) : null;
+    const tesisDbId = a ? a.dbId : null, kod = a ? a.code : f.no;
+    this._medyaUcta = this._medyaUcta || new Set();
+    const liste = (await d.medyaListe()).filter(x => x.hedef === 'ariza' && x.ref === ref && !this._medyaUcta.has(x.id));
+    let foto = 0, ses = 0;
+    for (const m of liste) {
+      this._medyaUcta.add(m.id);
+      try {
+        let r;
+        if (m.tur === 'foto') r = await M.fotoYukle(m.blob, tesisDbId, kod, 'Arıza kaydı · ' + (ASAMA_AD[m.asama] || ASAMA_AD.once), f.dbId);
+        else {
+          const sec = String(m.sure || '0:00').split(':').reduce((tt, v) => tt * 60 + (+v || 0), 0);
+          r = await M.sesYukle(m.blob, tesisDbId, kod, sec, 'Arıza sesli notu · ' + (ASAMA_AD[m.asama] || ASAMA_AD.once), f.dbId);
+        }
+        if (r && r.ok) { await d.medyaSil(m.id); m.tur === 'foto' ? foto++ : ses++; }
+        else if (r && r.cevrimdisi) break;
+      } catch (e) { break; } finally { this._medyaUcta.delete(m.id); }
+    }
+    this.bekleyenEkYenile();
+    if (foto || ses) {
+      this.arizaFotoYenile(f.dbId);
+      this.duyur((foto ? foto + ' fotoğraf' : '') + (foto && ses ? ' ve ' : '') + (ses ? ses + ' sesli not' : '') + ' ' + f.no + ' kaydına yüklendi.', 5000, 'iyi');
+    }
+    return foto + ses;
+  }
+  // Bağlantı gelince: bekleyen bütün arıza ve tesis dosyaları
+  async medyaKuyrukGonder() {
+    const d = await this._depoYuk, M = this._sb;
+    if (!d || !M || !M.tokenOku() || this.state.offline) return;
+    const liste = await d.medyaListe();
+    if (!liste.length) { this.bekleyenEkYenile(); return; }
+    for (const ref of [...new Set(liste.filter(x => x.hedef === 'ariza').map(x => x.ref))]) await this.medyaGonder(ref);
+    // tesis fotoğrafları: kayıt kodundan sunucudaki tesis bulunur
+    const tes = liste.filter(x => x.hedef === 'tesis');
+    const kodlar = [...new Set(tes.map(x => x.kod))];
+    this._medyaUcta = this._medyaUcta || new Set();
+    for (const kod of kodlar) {
+      const a = (this.state.assets || []).find(x => x.dbId != null && String(x.code).toUpperCase() === String(kod).toUpperCase());
+      if (!a) continue;
+      let n = 0;
+      for (const m of tes.filter(x => x.kod === kod && !this._medyaUcta.has(x.id))) {
+        this._medyaUcta.add(m.id);
+        try {
+          const r = await M.fotoYukle(m.blob, a.dbId, a.code);
+          if (r && r.ok) { await d.medyaSil(m.id); n++; } else if (r && r.cevrimdisi) break;
+        } catch (e) { break; } finally { this._medyaUcta.delete(m.id); }
+      }
+      if (n) { this.fotoYenile(a.dbId); this.duyur(n + ' fotoğraf ' + a.code + ' kaydına yüklendi.', 5000, 'iyi'); }
+    }
+    this.bekleyenEkYenile();
+  }
   // Arıza kaydını sunucuya yazar. 2026.10.01'e kadar arızalar hiç sunucuya
   // gitmiyordu (arizaKaydet tanımlıydı ama çağrılmıyordu): kayıt yalnız
   // ekranda duruyor, ilk veri yenilemesinde sunucudaki boş listeyle
@@ -11309,6 +11283,13 @@ class Component extends DCLogic {
       for (const id of bekleyen) { if (await this.arizaGonder(id)) n++; }
     } finally { this._arizaGonderiyor = false; }
     return n;
+  }
+  // Gönderilmemiş arızalar cihazda saklanır: sayfa kapanıp açılsa da kaybolmaz.
+  // (Seçilen fotoğraf dosyaları saklanamaz — tarayıcı izin vermez.)
+  arizaBekleyenYaz() {
+    const b = (this.state.faults || []).filter(f => f.sync === 'pending' || f.ekBekleyen)
+      .map(f => ({ ...f, photos: (f.photos || []).filter(p => !p.file), sesler: [] }));
+    try { localStorage.setItem('ks-ariza-bekleyen', JSON.stringify(b)); } catch (e) { /* depolama kapalı */ }
   }
   // Telefon saha akışı: işin durumunu değiştirir (sahaya vardım / kapat).
   // Arıza formunu açmadan aynı kuyruktan sunucuya gider.
@@ -11428,130 +11409,6 @@ class Component extends DCLogic {
     const t = a ? this.yakinKoy(a) : null;
     if (t) return { ad: t.ad, ilce, kaynak: 'tesis-yakın' };
     return { ad: '', ilce, kaynak: '' };
-  }
-  // Saha fotoğrafı: öncesi/sonrası. Arıza sunucudaysa hemen yüklenir, değilse
-  // kayıt yazılınca (arizaGonder) yüklenmek üzere bekler.
-  sahaFoto(f, asama) {
-    if (!f) return;
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment'; inp.style.display = 'none';
-    inp.onchange = () => {
-      const list = [...(inp.files || [])];
-      inp.remove();
-      if (!list.length) return;
-      const ek = list.map(file => ({ file, url: URL.createObjectURL(file), kb: Math.round(file.size / 1024), asama }));
-      const sf = { ...(this.state.sahaFoto || {}) };
-      const k = sf[f.id] || { once: 0, sonra: 0 };
-      sf[f.id] = { ...k, [asama]: k[asama] + ek.length };
-      this.setState({ sahaFoto: sf });
-      const a = (this.state.assets || []).find(x => x.id === f.assetId);
-      const beklet = async (liste) => {
-        // Önce telefonun deposuna (sayfa kapansa da kalır); depolama kapalıysa bellekte tutulur
-        const kalici = await this.medyaBirak('ariza', f.id, a ? a.code : f.no, { photos: liste });
-        if (!kalici) {
-          this._arizaMedya = this._arizaMedya || {};
-          const md = this._arizaMedya[f.id] || { photos: [], sesler: [] };
-          md.photos = [...md.photos, ...liste];
-          this._arizaMedya[f.id] = md;
-          this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? { ...x, sync: 'pending' } : x) }));
-        }
-        this.duyur(`${ASAMA_AD[asama]} fotoğrafı telefonda — internet gelince yüklenecek.`, 5000);
-      };
-      if (f.dbId && !this.state.offline && this._sb) {
-        this.arizaFotoGonder(ek, a ? a.dbId : null, a ? a.code : f.no, f.dbId).then(n => {
-          if (n === ek.length) return this.duyur(`${ASAMA_AD[asama]} fotoğrafı ${f.no} kaydına yüklendi.`, 5000, 'iyi');
-          beklet(ek.filter(p => !p.yuklendi));
-        });
-      } else {
-        beklet(ek);
-      }
-    };
-    document.body.appendChild(inp);
-    inp.click();
-  }
-  // Çevrimdışı çekilen fotoğraf ve sesler IndexedDB'de durur; sayfa kapansa da
-  // kaybolmaz, internet gelince ve kayıt sunucuya yazılınca kendiliğinden yüklenir.
-  // Depolama kapalıysa false döner (çağıran bellekteki eski yola düşer).
-  async medyaBirak(hedef, ref, kod, ek) {
-    const d = await this._depoYuk;
-    if (!d) return false;
-    let tamam = true;
-    for (const p of (ek.photos || [])) {
-      if (!p.file) continue;
-      const id = await d.medyaEkle({ hedef, ref, kod, tur: 'foto', blob: p.file, ad: p.file.name || '', asama: p.asama || 'once', kb: p.kb || 0 });
-      if (id == null || id === true) tamam = false; else p.idbId = id;
-    }
-    for (const sn of (ek.sesler || [])) {
-      if (!sn.blob) continue;
-      const id = await d.medyaEkle({ hedef, ref, kod, tur: 'ses', blob: sn.blob, sure: sn.sure || '0:00', asama: sn.asama || 'once' });
-      if (id == null || id === true) tamam = false; else sn.idbId = id;
-    }
-    this.bekleyenEkYenile();
-    return tamam;
-  }
-  // Tek arızanın cihazda bekleyen dosyalarını yükler (arıza sunucuya yazılmışsa)
-  async medyaGonder(ref) {
-    const d = await this._depoYuk, M = this._sb;
-    if (!d || !M || !M.tokenOku() || this.state.offline) return 0;
-    const f = (this.state.faults || []).find(x => x.id === ref);
-    if (!f || !f.dbId) return 0;
-    const a = f.assetId ? (this.state.assets || []).find(x => x.id === f.assetId) : null;
-    const tesisDbId = a ? a.dbId : null, kod = a ? a.code : f.no;
-    this._medyaUcta = this._medyaUcta || new Set();
-    const liste = (await d.medyaListe()).filter(x => x.hedef === 'ariza' && x.ref === ref && !this._medyaUcta.has(x.id));
-    let foto = 0, ses = 0;
-    for (const m of liste) {
-      this._medyaUcta.add(m.id);
-      try {
-        let r;
-        if (m.tur === 'foto') r = await M.fotoYukle(m.blob, tesisDbId, kod, 'Arıza kaydı · ' + (ASAMA_AD[m.asama] || ASAMA_AD.once), f.dbId);
-        else {
-          const sec = String(m.sure || '0:00').split(':').reduce((tt, v) => tt * 60 + (+v || 0), 0);
-          r = await M.sesYukle(m.blob, tesisDbId, kod, sec, 'Arıza sesli notu · ' + (ASAMA_AD[m.asama] || ASAMA_AD.once), f.dbId);
-        }
-        if (r && r.ok) { await d.medyaSil(m.id); m.tur === 'foto' ? foto++ : ses++; }
-        else if (r && r.cevrimdisi) break;
-      } catch (e) { break; } finally { this._medyaUcta.delete(m.id); }
-    }
-    this.bekleyenEkYenile();
-    if (foto || ses) {
-      this.arizaFotoYenile(f.dbId);
-      this.duyur((foto ? foto + ' fotoğraf' : '') + (foto && ses ? ' ve ' : '') + (ses ? ses + ' sesli not' : '') + ' ' + f.no + ' kaydına yüklendi.', 5000, 'iyi');
-    }
-    return foto + ses;
-  }
-  // Bağlantı gelince: bekleyen bütün arıza ve tesis dosyaları
-  async medyaKuyrukGonder() {
-    const d = await this._depoYuk, M = this._sb;
-    if (!d || !M || !M.tokenOku() || this.state.offline) return;
-    const liste = await d.medyaListe();
-    if (!liste.length) { this.bekleyenEkYenile(); return; }
-    for (const ref of [...new Set(liste.filter(x => x.hedef === 'ariza').map(x => x.ref))]) await this.medyaGonder(ref);
-    // tesis fotoğrafları: kayıt kodundan sunucudaki tesis bulunur
-    const tes = liste.filter(x => x.hedef === 'tesis');
-    const kodlar = [...new Set(tes.map(x => x.kod))];
-    this._medyaUcta = this._medyaUcta || new Set();
-    for (const kod of kodlar) {
-      const a = (this.state.assets || []).find(x => x.dbId != null && String(x.code).toUpperCase() === String(kod).toUpperCase());
-      if (!a) continue;
-      let n = 0;
-      for (const m of tes.filter(x => x.kod === kod && !this._medyaUcta.has(x.id))) {
-        this._medyaUcta.add(m.id);
-        try {
-          const r = await M.fotoYukle(m.blob, a.dbId, a.code);
-          if (r && r.ok) { await d.medyaSil(m.id); n++; } else if (r && r.cevrimdisi) break;
-        } catch (e) { break; } finally { this._medyaUcta.delete(m.id); }
-      }
-      if (n) { this.fotoYenile(a.dbId); this.duyur(n + ' fotoğraf ' + a.code + ' kaydına yüklendi.', 5000, 'iyi'); }
-    }
-    this.bekleyenEkYenile();
-  }
-  // Gönderilmemiş arızalar cihazda saklanır: sayfa kapanıp açılsa da kaybolmaz.
-  // (Seçilen fotoğraf dosyaları saklanamaz — tarayıcı izin vermez.)
-  arizaBekleyenYaz() {
-    const b = (this.state.faults || []).filter(f => f.sync === 'pending' || f.ekBekleyen)
-      .map(f => ({ ...f, photos: (f.photos || []).filter(p => !p.file), sesler: [] }));
-    try { localStorage.setItem('ks-ariza-bekleyen', JSON.stringify(b)); } catch (e) { /* depolama kapalı */ }
   }
   bakimPeriyot(t) { return t === 'kuyu' ? 6 : 12; }
   bakimDurum(a) {
@@ -11693,6 +11550,24 @@ class Component extends DCLogic {
     if (!r.ok) return this.duyur(r.err || 'Engellenemedi.', 6000, 'kotu');
     this.denetimYaz('talep', 'Web başvurusu engellendi', b.takip, '');
     this.basvuruYenile();
+  }
+  baslatBasvuruUyari() {
+    // Ses kilidi: tarayıcı sesi ilk dokunuşa kadar kapalı tutar; her dokunuşta ses bağlamı uyandırılır
+    this._sesAc = () => {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        this._ac = this._ac || new AC();
+        const k = () => { if (this._ac.state === 'running' && !this.state.sesAcik) this.setState({ sesAcik: true }); };
+        if (this._ac.state === 'suspended') this._ac.resume().then(k).catch(() => {}); else k();
+      } catch (e) { /* ses yok */ }
+    };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, this._sesAc, { passive: true }));
+    this._uyariTekrar = setInterval(() => { if (this.state.basvuruUyari) this.uyariSesi(); }, 6000);
+    this._basvuruSaat = setInterval(() => { if (this.state.session && !document.hidden) this.basvuruYenile(); }, 30000);
+    // Tarayıcı bildirimi izni, ilk dokunuşta bir kez istenir (izin yalnız kullanıcı hareketiyle sorulabilir)
+    this._izinIste = () => { try { if (typeof Notification !== 'undefined' && Notification.permission === 'default' && this.state.session) Notification.requestPermission(); } catch (e) { /* desteklenmiyor */ } document.removeEventListener('pointerdown', this._izinIste); };
+    document.addEventListener('pointerdown', this._izinIste);
   }
   smsAyarYaz(yama) {
     const y = { ...(this.state.smsAyar || {}), ...yama };
@@ -12279,6 +12154,69 @@ class Component extends DCLogic {
       ? ' pasife alındı — envanterde ve raporlarda pasif sayılır, haritada soluk çıkar. Kayıt ve geçmişi silinmez.'
       : ' yeniden aktif — hizmette sayılır.'), 6000, 'iyi');
   }
+  // kaydın bütün alanlarında ara; bulunan alanın adını döndürür
+  alanAra(a, qn) {
+    const ADLAR = {
+      pompaMarka: 'Pompa markası', pompaModel: 'Pompa modeli', motorSeri: 'Motor seri no',
+      kalkis: 'Kalkış tipi', kolon: 'Kolon borusu', pano: 'Pano tipi', trafoTipi: 'Trafo tipi',
+      malzeme: 'Malzeme', kuyuLog: 'Kuyu logu', filtre: 'Filtre aralıkları', cakil: 'Çakıl zarfı',
+      suAnaliz: 'Su analizi', sondajFirma: 'Sondaj firması', ruhsat: 'DSİ ruhsat',
+      klorCihaz: 'Klorlama cihazı', seviyeSensor: 'Seviye sensörü', kapak: 'Kapak durumu',
+      yedekPompa: 'Yedek pompa', inverter: 'İnvertör', baglanti: 'Bağlantı', rf: 'RF haberleşme',
+      kot: 'Kuyu başı kotu', terfiCap: 'Terfi hattı çapı', sigorta: 'Sigorta', brans: 'Branşman'
+    };
+    for (const k in ADLAR) {
+      const v = a.d && a.d[k];
+      if (v && norm(String(v)).includes(qn)) return `${ADLAR[k]}: ${v}`;
+    }
+    const f = this.state.faults.find(x => x.assetId === a.id && (norm(x.type).includes(qn) || norm(x.no).includes(qn)));
+    if (f) return `Arıza: ${f.no} · ${f.type}`;
+    const n = this.state.notes[a.id];
+    if (n && norm(n).includes(qn)) return 'Notta geçiyor';
+    return null;
+  }
+  missingOf(a) {
+    const req = a.type === 'kuyu'
+      ? [['ruhsat', 'DSİ ruhsat'], ['sondajFirma', 'Sondaj firması'], ['kot', 'Kuyu başı kotu'],
+         ['kuyuLog', 'Kuyu logu'], ['filtre', 'Filtre aralıkları'], ['suAnaliz', 'Su analizi'],
+         ['pompaMarka', 'Pompa markası'], ['motorSeri', 'Motor seri no'], ['akim', 'Ölçülen akım']]
+      : a.type === 'depo'
+        ? [['klorCihaz', 'Klorlama cihazı'], ['seviyeSensor', 'Seviye sensörü'], ['terfiUzunluk', 'Terfi hattı'],
+           ['abone', 'Abone sayısı'], ['temizlik', 'Son temizlik'], ['kapak', 'Kapak / güvenlik']]
+        : [];
+    const base = [];
+    if (!a.village) base.push('Köy / yerleşim');
+    if (!a.year) base.push('Yapım yılı');
+    return base.concat(req.filter(([k]) => !a.d[k]).map(([, l]) => l));
+  }
+  // Yalnız gerçekten girilmiş denemeler. 2026.10.01'e kadar statik/dinamik/debi
+  // dolu her kuyuya hiç yapılmamış iki deneme ("Sondaj deneme ekibi" ve
+  // 05.06.2026 "Kontrol denemesi", türetilmiş değerlerle) uyduruluyordu.
+  testsFor(a) {
+    if (a.type !== 'kuyu') return [];
+    const added = this.state.tests[a.id] || [];
+    const ts = d => { const p = String(d || '').split('.'); return p.length === 3 ? +p[2] * 10000 + +p[1] * 100 + +p[0] : 0; };
+    return [...added].sort((x, y) => ts(y.date) - ts(x.date));
+  }
+  // Masaüstü yeni tesis sihirbazı (3 adım: tür ve yer → konum → bilgi ve foto)
+  naAc() {
+    const m = this.state.data;
+    this._naTemizle();
+    this.setState({
+      scenario: null,
+      newAsset: { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '', note: '', lat: null, lon: null, photos: 0, fotoUrl: [] },
+      naSz: { adim: 1, yol: 'gps', onay: false }
+    });
+  }
+  naKapat() {
+    this._naTemizle();
+    this.setState({ naSz: null, newAsset: null });
+  }
+  _naTemizle() {
+    (this._naUrls || []).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { /* zaten bırakıldı */ } });
+    this._naUrls = [];
+    this._naFiles = [];
+  }
   // Kod şeması: KS-<TÜR>-0001. Her tür kendi içinde sayılır ve daima
   // kullanılmayan EN KÜÇÜK sıra verilir; şemaya uymayan eski kodlar sayıyı şişirmez.
   // Şemaya uymayan kodları (tür başına 1..N aralığının dışındaki numaralar,
@@ -12392,69 +12330,6 @@ class Component extends DCLogic {
     const liste = (ekListe || []).concat(this.state.assets || []);
     return 'KS-' + TYPES[type].pre + '-' + String(this.kodSira(type, liste)).padStart(4, '0');
   }
-  // kaydın bütün alanlarında ara; bulunan alanın adını döndürür
-  alanAra(a, qn) {
-    const ADLAR = {
-      pompaMarka: 'Pompa markası', pompaModel: 'Pompa modeli', motorSeri: 'Motor seri no',
-      kalkis: 'Kalkış tipi', kolon: 'Kolon borusu', pano: 'Pano tipi', trafoTipi: 'Trafo tipi',
-      malzeme: 'Malzeme', kuyuLog: 'Kuyu logu', filtre: 'Filtre aralıkları', cakil: 'Çakıl zarfı',
-      suAnaliz: 'Su analizi', sondajFirma: 'Sondaj firması', ruhsat: 'DSİ ruhsat',
-      klorCihaz: 'Klorlama cihazı', seviyeSensor: 'Seviye sensörü', kapak: 'Kapak durumu',
-      yedekPompa: 'Yedek pompa', inverter: 'İnvertör', baglanti: 'Bağlantı', rf: 'RF haberleşme',
-      kot: 'Kuyu başı kotu', terfiCap: 'Terfi hattı çapı', sigorta: 'Sigorta', brans: 'Branşman'
-    };
-    for (const k in ADLAR) {
-      const v = a.d && a.d[k];
-      if (v && norm(String(v)).includes(qn)) return `${ADLAR[k]}: ${v}`;
-    }
-    const f = this.state.faults.find(x => x.assetId === a.id && (norm(x.type).includes(qn) || norm(x.no).includes(qn)));
-    if (f) return `Arıza: ${f.no} · ${f.type}`;
-    const n = this.state.notes[a.id];
-    if (n && norm(n).includes(qn)) return 'Notta geçiyor';
-    return null;
-  }
-  missingOf(a) {
-    const req = a.type === 'kuyu'
-      ? [['ruhsat', 'DSİ ruhsat'], ['sondajFirma', 'Sondaj firması'], ['kot', 'Kuyu başı kotu'],
-         ['kuyuLog', 'Kuyu logu'], ['filtre', 'Filtre aralıkları'], ['suAnaliz', 'Su analizi'],
-         ['pompaMarka', 'Pompa markası'], ['motorSeri', 'Motor seri no'], ['akim', 'Ölçülen akım']]
-      : a.type === 'depo'
-        ? [['klorCihaz', 'Klorlama cihazı'], ['seviyeSensor', 'Seviye sensörü'], ['terfiUzunluk', 'Terfi hattı'],
-           ['abone', 'Abone sayısı'], ['temizlik', 'Son temizlik'], ['kapak', 'Kapak / güvenlik']]
-        : [];
-    const base = [];
-    if (!a.village) base.push('Köy / yerleşim');
-    if (!a.year) base.push('Yapım yılı');
-    return base.concat(req.filter(([k]) => !a.d[k]).map(([, l]) => l));
-  }
-  // Yalnız gerçekten girilmiş denemeler. 2026.10.01'e kadar statik/dinamik/debi
-  // dolu her kuyuya hiç yapılmamış iki deneme ("Sondaj deneme ekibi" ve
-  // 05.06.2026 "Kontrol denemesi", türetilmiş değerlerle) uyduruluyordu.
-  testsFor(a) {
-    if (a.type !== 'kuyu') return [];
-    const added = this.state.tests[a.id] || [];
-    const ts = d => { const p = String(d || '').split('.'); return p.length === 3 ? +p[2] * 10000 + +p[1] * 100 + +p[0] : 0; };
-    return [...added].sort((x, y) => ts(y.date) - ts(x.date));
-  }
-  // Masaüstü yeni tesis sihirbazı (3 adım: tür ve yer → konum → bilgi ve foto)
-  naAc() {
-    const m = this.state.data;
-    this._naTemizle();
-    this.setState({
-      scenario: null,
-      newAsset: { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '', note: '', lat: null, lon: null, photos: 0, fotoUrl: [] },
-      naSz: { adim: 1, yol: 'gps', onay: false }
-    });
-  }
-  naKapat() {
-    this._naTemizle();
-    this.setState({ naSz: null, newAsset: null });
-  }
-  _naTemizle() {
-    (this._naUrls || []).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { /* zaten bırakıldı */ } });
-    this._naUrls = [];
-    this._naFiles = [];
-  }
   // ── fotoğraf: dosya seçici gizli bir input; kamera ve galeri aynı düğmeden
   fotoSec(kamera) {
     const sel = this.state.assets.find(a => a.id === this.state.selected);
@@ -12560,6 +12435,21 @@ class Component extends DCLogic {
     this.duyur(a.code + ' yeniden açıldı. Telefon, kamera açıkken programı bellekten attığı için çekilen kare programa ulaşmadı — “Galeriden seç” ile telefonun galerisinden ekleyin.', 14000);
   }
   cm = z => Number(z) * 3;
+  baslatVeri() {
+    import('./koyler.js').then(k => { this._yer = k.YERLESIM; this.forceUpdate(); }).catch(() => {});
+    Promise.all([import('./kirsehir-data.js'), import('./envanter.js')]).then(([m, env]) => {
+      const { assets, faults } = env.buildAssets(m);
+      // Cihazda bekleyen (sunucuya yazılmamış) kayıtlar listenin başına döner
+      const yerel = this.yerelTesisOku();
+      const kod = new Set(assets.map(x => String(x.code || '').toUpperCase()));
+      const bekleyen = yerel.filter(x => !kod.has(String(x.code || '').toUpperCase()));
+      // Çevrimdışı açılışta cihazdaki son sunucu kopyası zaten yüklendi: örnek veriyle ezilmez
+      this.setState(this._anlikUygulandi
+        ? { data: m, center: { lat: 39.16, lon: 34.12 } }
+        : { data: m, assets: [...bekleyen, ...assets], faults, center: { lat: 39.16, lon: 34.12 } },
+        () => { this.fotoNiyetGeriYukle(); this.kodDenetle(); this.ekKoyYenile(); });
+    });
+  }
   // periyodik bakım: kuyu 6 ay, depo 12 ay, elektrik tesisi 12 ay
   // Modül anahtarı kurum ayarıdır: sunucuya yazılır, bütün cihazlarda aynı
   // olur (önceden yalnız cihazda duruyordu — bilgisayarda açılan modül
@@ -12964,27 +12854,6 @@ class Component extends DCLogic {
       if (e.not !== not || e.medya !== medya) this.setState({ bekleyenEk: { not, medya } });
     });
   }
-  notKuyrukOku() {
-    try { const v = JSON.parse(localStorage.getItem('ks-not-kuyruk') || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
-  }
-  notKuyrukYaz(l) {
-    try { localStorage.setItem('ks-not-kuyruk', JSON.stringify(l)); } catch (e) { /* depolama kapalı */ }
-    this.bekleyenEkYenile();
-  }
-  async notKuyrukGonder() {
-    const M = this._sb;
-    const l = this.notKuyrukOku();
-    if (!l.length || !M) return;
-    const kalan = []; let n = 0;
-    for (let i = 0; i < l.length; i++) {
-      let r;
-      try { r = await M.notEkle(l[i].dbId, l[i].metin); } catch (e) { r = { ok: false, cevrimdisi: true }; }
-      if (r && r.ok) n++;
-      else if (r && r.cevrimdisi) { kalan.push(...l.slice(i)); break; }
-    }
-    this.notKuyrukYaz(kalan);
-    if (n) this.veriYenile(true);
-  }
   // Bağlantı koptuğu için gönderilemeyen tesis değişikliği: "bekliyor" işaretlenir
   tesisBekle(id) {
     this.setState(st => ({ assets: (st.assets || []).map(x => x.id === id ? { ...x, sync: 'pending' } : x) }));
@@ -13069,9 +12938,181 @@ class Component extends DCLogic {
         : `${assets.length} tesis · ${faults.length} arıza yüklendi.`, 4000);
     }
   }
+  notKuyrukOku() {
+    try { const v = JSON.parse(localStorage.getItem('ks-not-kuyruk') || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+  }
+  notKuyrukYaz(l) {
+    try { localStorage.setItem('ks-not-kuyruk', JSON.stringify(l)); } catch (e) { /* depolama kapalı */ }
+    this.bekleyenEkYenile();
+  }
+  async notKuyrukGonder() {
+    const M = this._sb;
+    const l = this.notKuyrukOku();
+    if (!l.length || !M) return;
+    const kalan = []; let n = 0;
+    for (let i = 0; i < l.length; i++) {
+      let r;
+      try { r = await M.notEkle(l[i].dbId, l[i].metin); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+      if (r && r.ok) n++;
+      else if (r && r.cevrimdisi) { kalan.push(...l.slice(i)); break; }
+    }
+    this.notKuyrukYaz(kalan);
+    if (n) this.veriYenile(true);
+  }
+  baslatBaglanti() {
+    // Son bilinen saat farkı: çevrimdışı açılışta da doğru damga üretilsin
+    this._saatFarki = (() => {
+      const v = parseInt(localStorage.getItem('ks-saat-farki') || '0', 10);
+      return isNaN(v) ? 0 : v;
+    })();
+    // Cihaz deposu (IndexedDB) ve çevrimdışı çalışma için servis çalışanı
+    this._depoYuk = import('./cihaz-depo.js').then(d => {
+      this._depo = d; d.kaliciIste(); this.bekleyenEkYenile(); return d;
+    }).catch(() => null);
+    // Sunucudan son alınan veride gönderilmemiş tesis değişikliği varsa veriYenile onu ezmesin
+    this._anlikYuk = this._depoYuk.then(d => d ? d.anlikOku('anlik') : null).then(an => {
+      this._anlikBekleyen = an && an.v ? (an.v.assets || []).filter(a => a && a.dbId != null && a.sync === 'pending') : [];
+    }).catch(() => { this._anlikBekleyen = []; });
+    try {
+      if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('/sw.js').catch(() => {});
+    } catch (e) { /* desteklenmiyor */ }
+    this._sbYuk = import('./supabase-baglanti.js').then(M => { this._sb = M; this.setState({ sbHazir: true }); return M; });
+    this._sbYuk.catch(() => { /* bağlantı dosyası yüklenemedi — program cihazdaki kopyayla çalışır */ });
+    // Kayıtlı oturum anahtarı varsa sunucuda doğrulanır ve giriş ekranı hiç
+    // gösterilmeden doğrudan içeri girilir — "Beni hatırla" işaretli her
+    // girişte token zaten yazılıyor (bkz. supabase-baglanti.js giris()),
+    // eksik olan yalnızca açılışta bunu kullanmaktı.
+    (async () => {
+      try {
+        const M = await this._sbYuk;
+        if (M) await this.anahtarlaGir(M);
+      } catch (e) { /* token geçersiz ya da bağlantı yok — giriş ekranı gösterilir */ }
+      this.setState({ oturumKontrol: false });
+    })();
+  }
+  baslatAg() {
+    // Bağlantı gelince çevrimdışı kuyruk kendiliğinden boşalır; dakikada bir de denenir
+    // Bağlantı kendiliğinden izlenir: kopunca "çevrimdışı"na geçer, gelince bekleyen
+    // her şey (tesis, not, arıza, ambar, modül, fotoğraf) sırayla gönderilir. Üst
+    // şeritten elle çevrimdışına alınmışsa kendiliğinden çıkılmaz.
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) this.setState({ offline: true });
+    this._agGitti = () => {
+      if (this.state.offline) return;
+      this.setState({ offline: true });
+      this.duyur('İnternet kesildi — çalışmaya devam edin, kayıtlar telefonda saklanıyor.', 5000, 'bilgi');
+    };
+    this._agGeldi = () => {
+      if (this._elleCevrimdisi) return;
+      if (this.state.offline) { this.setState({ offline: false }); this.duyur('İnternet geldi — bekleyen kayıtlar gönderiliyor.', 4500, 'iyi'); }
+      setTimeout(() => this.senkron(true), 1500);
+    };
+    window.addEventListener('online', this._agGeldi);
+    window.addEventListener('offline', this._agGitti);
+    this._gorunur = () => { if (!document.hidden) this.senkron(true); };
+    document.addEventListener('visibilitychange', this._gorunur);
+    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); }, 60000);
+  }
+  baslatPeriyodik() {
+    setTimeout(() => this.aracBelgeUyari(), 9000);
+    // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
+    // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
+    // veriYenile ekranı altından değiştirmesin diye o an atlanır.
+    this._veriSaat = setInterval(() => {
+      if (this.state.session && !this.state.scenario) this.veriYenile(true);
+      if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
+    }, 30000);
+  }
   mapWin() {
     const f = document.querySelector('iframe[title^="Kırşehir haritası"]');
     return f && f.contentWindow;
+  }
+  pushMap() {
+    try { localStorage.setItem('ks-suzgec', JSON.stringify(this.state.filter)); } catch (e) { /* depolama kapalı */ }
+    const pw = this.profilWin();
+    if (pw) { try {
+      pw.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
+      pw.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
+      pw.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
+    } catch (e) { /* çerçeve yok */ } }
+    const w = this.mapWin(); if (!w) return;
+    w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
+    w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
+    w.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
+    w.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
+    w.postMessage({ ks: 'navMode', on: this.state.navMode }, '*');
+    setTimeout(() => this.hatlariYolla(), 60);
+    // harita çerçevesi yenilenirse kendi listesine döner — kayıtları geri yolla
+    if (this.state.sunucu && this.state.assets.length) {
+      w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
+    }
+  }
+  // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
+  toMap(msg) {
+    const w = this.mapWin(); if (w) w.postMessage(msg, '*');
+    if (['assets', 'hatlar', 'hatKatman', 'filter', 'setBase', 'theme'].includes(msg && msg.ks)) {
+      const p = this.profilWin(); if (p) { try { p.postMessage(msg, '*'); } catch (e) { /* çerçeve yok */ } }
+    }
+  }
+
+  // Köy adı girilmemiş tesis için koordinata en yakın köy (4 km içinde).
+  // Kuyuların çoğunda köy alanı boş: kod tek başına hangi tesis olduğunu
+  // söylemiyordu. Yalnız gösterimde kullanılır, kayda yazılmaz; raporlar
+  // yer() ile girilmiş köye göre gruplamaya devam eder.
+  yakinKoy(a) {
+    if (!a || !isFinite(a.lat) || !isFinite(a.lon) || !this._yer) return null;
+    const anahtar = a.lat.toFixed(5) + ',' + a.lon.toFixed(5);
+    this._yakinKoyOb = this._yakinKoyOb || {};
+    if (anahtar in this._yakinKoyOb) return this._yakinKoyOb[anahtar];
+    let en = null, ed = Infinity;
+    for (const r of this._yer) {
+      if (r[3] !== 'YKOY' && r[3] !== 'BCK') continue;
+      const d = this.mesafeM({ lat: r[1], lon: r[2] }, a);
+      if (d < ed) { ed = d; en = r; }
+    }
+    // Bucak merkezleri listede "Akçakent_Mrkbucak" gibi yazılı
+    const ad = en ? String(en[0]).replace(/_?Mrk ?(bucak|köy)$/i, ' merkez').replace(/_/g, ' ').trim() : '';
+    return (this._yakinKoyOb[anahtar] = en && ed < 4000 ? { ad, m: ed } : null);
+  }
+  // Ekranda gösterilecek yer: girilmiş köy, yoksa "≈ en yakın köy", yoksa ilçe
+  yerGoster(a) {
+    if (!a) return '';
+    if (a.village) return a.village + ' · ' + a.district;
+    const k = this.yakinKoy(a);
+    return k ? '≈ ' + k.ad + ' · ' + a.district : a.district + ' (köy girilmedi)';
+  }
+  // Koordinata en yakın kayıtlı tesisin ilçesi; kayıt yoksa ilçe merkezi
+  enYakinIlce(lat, lon) {
+    let best = '', bd = Infinity;
+    (this.state.assets || []).forEach(a => {
+      if (!a || a.lat == null || !a.district) return;
+      const d = this.mesafeM(a, { lat, lon });
+      if (d < bd) { bd = d; best = a.district; }
+    });
+    if (best && bd < 15000) return best;
+    const m = this.state.data;
+    (m && m.DISTRICTS || []).forEach(d => {
+      const dd = this.mesafeM(d, { lat, lon });
+      if (dd < bd) { bd = dd; best = d.name; }
+    });
+    return best;
+  }
+  yolTarifiVer(a) {
+    if (!a) return false;
+    if (!this.state.navMode) {
+      this.duyur('Yol tarifi modu kapalı — Ayarlar > Harita ve görünüm bölümünden açtığınızda güzergâh çizilir.', 7000);
+      return false;
+    }
+    this.toMap({ ks: 'routeTo', id: a.id, code: a.code, village: a.village, lat: a.lat, lon: a.lon });
+    // telefonda kayıt sayfası haritanın üstünde duruyor; güzergâh görünsün diye kapatılır
+    this.setState({ tab: 'harita', panel: this.state.device === 'phone' ? 'yok' : this.state.panel });
+    return true;
+  }
+  flyTo(lat, lon, zoom) {
+    clearTimeout(this._f);
+    this.setState({ center: { lat, lon }, zoom: zoom || 13, fly: { lat, lon }, tab: 'harita' });
+    const w = this.mapWin();
+    if (w) w.postMessage({ ks: 'fly', lat, lon, zoom: zoom || 13 }, '*');
+    this._f = setTimeout(() => this.setState({ fly: null }), 2200);
   }
   hatWin() {
     const f = document.querySelector('iframe[title^="Hat güzergâhları"]');
@@ -13265,93 +13306,73 @@ class Component extends DCLogic {
       w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
     } catch (e) { /* çerçeve hazır değil */ }
   }
-  pushMap() {
-    try { localStorage.setItem('ks-suzgec', JSON.stringify(this.state.filter)); } catch (e) { /* depolama kapalı */ }
-    const pw = this.profilWin();
-    if (pw) { try {
-      pw.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
-      pw.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
-      pw.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
-    } catch (e) { /* çerçeve yok */ } }
-    const w = this.mapWin(); if (!w) return;
-    w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
-    w.postMessage({ ks: 'theme', dark: this.state.theme === 'dark' }, '*');
-    w.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
-    w.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
-    w.postMessage({ ks: 'navMode', on: this.state.navMode }, '*');
-    setTimeout(() => this.hatlariYolla(), 60);
-    // harita çerçevesi yenilenirse kendi listesine döner — kayıtları geri yolla
-    if (this.state.sunucu && this.state.assets.length) {
-      w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
-    }
-  }
-  // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
-  toMap(msg) {
-    const w = this.mapWin(); if (w) w.postMessage(msg, '*');
-    if (['assets', 'hatlar', 'hatKatman', 'filter', 'setBase', 'theme'].includes(msg && msg.ks)) {
-      const p = this.profilWin(); if (p) { try { p.postMessage(msg, '*'); } catch (e) { /* çerçeve yok */ } }
-    }
-  }
-
-  // Köy adı girilmemiş tesis için koordinata en yakın köy (4 km içinde).
-  // Kuyuların çoğunda köy alanı boş: kod tek başına hangi tesis olduğunu
-  // söylemiyordu. Yalnız gösterimde kullanılır, kayda yazılmaz; raporlar
-  // yer() ile girilmiş köye göre gruplamaya devam eder.
-  yakinKoy(a) {
-    if (!a || !isFinite(a.lat) || !isFinite(a.lon) || !this._yer) return null;
-    const anahtar = a.lat.toFixed(5) + ',' + a.lon.toFixed(5);
-    this._yakinKoyOb = this._yakinKoyOb || {};
-    if (anahtar in this._yakinKoyOb) return this._yakinKoyOb[anahtar];
-    let en = null, ed = Infinity;
-    for (const r of this._yer) {
-      if (r[3] !== 'YKOY' && r[3] !== 'BCK') continue;
-      const d = this.mesafeM({ lat: r[1], lon: r[2] }, a);
-      if (d < ed) { ed = d; en = r; }
-    }
-    // Bucak merkezleri listede "Akçakent_Mrkbucak" gibi yazılı
-    const ad = en ? String(en[0]).replace(/_?Mrk ?(bucak|köy)$/i, ' merkez').replace(/_/g, ' ').trim() : '';
-    return (this._yakinKoyOb[anahtar] = en && ed < 4000 ? { ad, m: ed } : null);
-  }
-  // Ekranda gösterilecek yer: girilmiş köy, yoksa "≈ en yakın köy", yoksa ilçe
-  yerGoster(a) {
-    if (!a) return '';
-    if (a.village) return a.village + ' · ' + a.district;
-    const k = this.yakinKoy(a);
-    return k ? '≈ ' + k.ad + ' · ' + a.district : a.district + ' (köy girilmedi)';
-  }
-  // Koordinata en yakın kayıtlı tesisin ilçesi; kayıt yoksa ilçe merkezi
-  enYakinIlce(lat, lon) {
-    let best = '', bd = Infinity;
-    (this.state.assets || []).forEach(a => {
-      if (!a || a.lat == null || !a.district) return;
-      const d = this.mesafeM(a, { lat, lon });
-      if (d < bd) { bd = d; best = a.district; }
-    });
-    if (best && bd < 15000) return best;
-    const m = this.state.data;
-    (m && m.DISTRICTS || []).forEach(d => {
-      const dd = this.mesafeM(d, { lat, lon });
-      if (dd < bd) { bd = dd; best = d.name; }
-    });
-    return best;
-  }
-  yolTarifiVer(a) {
-    if (!a) return false;
-    if (!this.state.navMode) {
-      this.duyur('Yol tarifi modu kapalı — Ayarlar > Harita ve görünüm bölümünden açtığınızda güzergâh çizilir.', 7000);
-      return false;
-    }
-    this.toMap({ ks: 'routeTo', id: a.id, code: a.code, village: a.village, lat: a.lat, lon: a.lon });
-    // telefonda kayıt sayfası haritanın üstünde duruyor; güzergâh görünsün diye kapatılır
-    this.setState({ tab: 'harita', panel: this.state.device === 'phone' ? 'yok' : this.state.panel });
-    return true;
-  }
-  flyTo(lat, lon, zoom) {
-    clearTimeout(this._f);
-    this.setState({ center: { lat, lon }, zoom: zoom || 13, fly: { lat, lon }, tab: 'harita' });
-    const w = this.mapWin();
-    if (w) w.postMessage({ ks: 'fly', lat, lon, zoom: zoom || 13 }, '*');
-    this._f = setTimeout(() => this.setState({ fly: null }), 2200);
+  baslatMesajlar() {
+    this._msg = e => {
+      const d = e.data || {};
+      if (d.ks === 'ready') this.pushMap();
+      if (d.ks === 'hatKatman') {
+        try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
+        this.setState({ hatKatman: !!d.on });
+      }
+      if (d.ks === 'coordMode') { this.setState({ picked: null }); return; }
+      // Haritadaki arıza noktasına dokunuldu: arıza açılır
+      if (d.ks === 'arizaAc') {
+        const f = (this.state.faults || []).find(x => x.id === d.id);
+        if (f) this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } });
+        return;
+      }
+      if (d.ks === 'konum') { this.setState({ benimKonum: { lat: d.lat, lon: d.lon, t: Date.now() } }); this.say(`Konumunuz alındı — ${d.lat.toFixed(5)}, ${d.lon.toFixed(5)} · cihaz GPS ±${d.acc} m.`); return; }
+      if (d.ks === 'konumYok') {
+        this.say(d.kod === 1
+          ? 'Konum izni verilmemiş. Tarayıcı ayarlarından bu siteye konum iznini açın; sonra GİT düğmesine yeniden basın.'
+          : 'Konum alınamadı — açık alana çıkıp yeniden deneyin. Harita şimdilik Kırşehir merkezine getirildi.', true);
+        setTimeout(() => this.setState({ toast: null }), 8000);
+        return;
+      }
+      if (d.ks === 'coord') {
+        // Sihirbaz "haritadan seç" bekliyorsa çift tıklanan nokta yeni tesisin konumu olur
+        const z = this.state.naSz;
+        if (z && z.haritada && this.state.newAsset) {
+          this.setState(st => ({
+            newAsset: { ...st.newAsset, lat: d.lat, lon: d.lon, coordAcc: null, district: this.enYakinIlce(d.lat, d.lon) || st.newAsset.district },
+            naSz: { ...st.naSz, haritada: false, onay: false, yol: 'harita' }
+          }));
+          this.toMap({ ks: 'go', lat: d.lat, lon: d.lon, label: 'Yeni tesis konumu · haritadan seçildi' });
+          return;
+        }
+        this.setState({ picked: { lat: d.lat, lon: d.lon } }); return;
+      }
+      if (d.ks === 'picked') {
+        this.vSave(d.name, d.lat, d.lon, true);
+        const p = this.state.pick;
+        this.setState({ pick: null, vFix: null });
+        this.flyTo(d.lat, d.lon, 15);
+        this.toMap({ ks: 'go', lat: d.lat, lon: d.lon, label: `${d.name}${p && p.district ? ' · ' + p.district : ''}` });
+        this.say(`${d.name} köyünün konumu kaydedildi (${d.lat.toFixed(5)}, ${d.lon.toFixed(5)}). Bu köy bundan sonra internetsiz de bulunur.`, true);
+        setTimeout(() => this.setState({ toast: null }), 6000);
+        return;
+      }
+      if (d.ks === 'select') {
+        this.setState({ selected: d.id, detailTab: 'bilgi', panel: 'detay' });
+        const a = this.state.assets.find(x => x.id === d.id);
+        if (a && a.dbId) this.fotoYenile(a.dbId);
+      }
+      if (d.ks === 'hatHazir') { this.hatGonder(); return; }
+      // Profil sayfası açıldı — mevcut tesisleri gönder ki haritada görünsün
+      if (d.ks === 'profilHazir') { this.profilTesis(); return; }
+      if (d.ks === 'profilAktar') { this.profilAktar(d); return; }
+      if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) {
+        const id = d.id || this.state.selected;
+        if (id) this.hatKaydet(id, d.hatlar);
+        return;
+      }
+      if (d.ks === 'base') this.setState({ mapBase: d.base });
+      if (d.ks === 'route') {
+        this.setState({ route: d });
+        this.say(`${d.code} · ${d.km} km · ${d.min} dk${d.approx ? ' (kuş uçuşu tahmin)' : ' karayolu'}`);
+      }
+    };
+    addEventListener('message', this._msg);
   }
   // İş emri: "İş emri" düğmesi artık gerçek, numaralı bir kayıt açıyor
   // (madde 3-5/9/12-14, 2026.09.30 — daha önce yalnızca bir toast gösteriyordu).
@@ -13538,87 +13559,6 @@ class Component extends DCLogic {
     if (!quiet) this.say('Bu cihazda kayıtlı giriş silindi — programı bir daha açtığınızda kullanıcı adı ve şifre istenir.');
     return true;
   }
-  // ── kullanıcı listesi bu cihazda saklanır; Supabase bağlanınca kullanicilar tablosuna gider
-  // Sayfa yetkileri kullanıcı adına göre ayrı anahtarda durur: sunucu listesi yenilenince silinmesin
-  yetkiTablo() {
-    if (this._yetki) return this._yetki;
-    try {
-      const v = JSON.parse(localStorage.getItem('ks-sayfa-yetki') || 'null');
-      this._yetki = v && typeof v === 'object' ? v : {};
-    } catch (e) { this._yetki = {}; }
-    return this._yetki;
-  }
-  userSuret(u) {
-    const y = this.yetkiTablo()[u.user];
-    const ist = this.istisnaTablo()[u.user];
-    return { ...u, sayfalar: y || u.sayfalar || null, istisna: ist || u.istisna || null, roleLabel: ROLE_LABEL[u.role] || u.role,
-      desc: (ROLE_ORDER.find(r => r[0] === u.role) || [])[2], aktif: u.aktif !== false };
-  }
-  // Sayfa yetkisi kullanıcı kaydında durur: yok = menüde çıkmaz, gor = açar ama kaydedemez, tam = serbest
-  sayfaYetkiYaz(uid, sid, v) {
-    const hedef = this.state.users.find(x => x.id === uid);
-    const yeniYetki = { ...((hedef && hedef.sayfalar) || {}), [sid]: v };
-    const tablo = { ...this.yetkiTablo() };
-    if (hedef) tablo[hedef.user] = yeniYetki;
-    this._yetki = tablo;
-    try { localStorage.setItem('ks-sayfa-yetki', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
-    const list = this.state.users.map(u => u.id === uid ? { ...u, sayfalar: yeniYetki } : u);
-    this.usersKaydet(list);
-    const u = list.find(x => x.id === uid);
-    const me = this.state.session;
-    if (me && me.id === uid) this.setState({ session: { ...me, sayfalar: u.sayfalar } });
-    const ad = SUZGEC_ESKI_AD[sid] || (SAYFALAR.find(x => x[0] === sid) || [, sid])[1];
-    const ne = v === 'yok' ? 'menüsünden kaldırıldı' : (v === 'gor' ? 'yalnızca görüntüleme oldu' : 'tam yetkili oldu');
-    const sunucuya = this.yetkiGonder(u, yeniYetki, (u && u.istisna) || {});
-    this.duyur(`${u ? u.name : ''} · ${ad} sayfası ${ne}.`
-      + (sunucuya ? ' Yetki sunucuya yazıldı — bütün cihazlarda geçerli.' : ' Yetki bu cihazda saklanır.'), 5000, 'iyi');
-  }
-  // Rol paketi varsayılan; kişi kaydındaki istisna yalnızca farkı taşır
-  yetkiVar(u, k) {
-    if (!u) return false;
-    const rolVar = (CAN[k] || []).includes(u.role);
-    if (ISTISNA_DISI.includes(k) || u.role === 'yonetici') return rolVar;
-    const ist = (u.istisna || {})[k];
-    return ist === undefined || ist === null ? rolVar : !!ist;
-  }
-  istisnaYaz(uid, k, deger) {
-    if (ISTISNA_DISI.includes(k)) return;
-    const hedef = this.state.users.find(x => x.id === uid);
-    if (!hedef) return;
-    if (hedef.role === 'yonetici') {
-      return this.duyur('Yönetici rolünün yetkileri kısıtlanamaz — sistem yönetimsiz kalmasın diye bu rol istisna kabul etmiyor.', 6000, 'kotu');
-    }
-    const rolVar = (CAN[k] || []).includes(hedef.role);
-    const ist = { ...(hedef.istisna || {}) };
-    if (deger === rolVar) delete ist[k]; else ist[k] = deger;
-    const tablo = { ...this.istisnaTablo() };
-    tablo[hedef.user] = ist;
-    this._istisna = tablo;
-    try { localStorage.setItem('ks-yetki-istisna', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
-    const list = this.state.users.map(u => u.id === uid ? { ...u, istisna: ist } : u);
-    this.usersKaydet(list);
-    const me = this.state.session;
-    if (me && me.id === uid) this.setState({ session: { ...me, istisna: ist } });
-    const ad = (PERMS.find(p => p[0] === k) || [, k])[1];
-    this.yetkiGonder(hedef, hedef.sayfalar || {}, ist);
-    this.duyur(hedef.name + ' · ' + ad + ' → ' + (deger ? 'verildi' : 'kaldırıldı')
-      + (deger === rolVar ? ' (rol paketiyle aynı, istisna silindi)' : ' (rolden farklı, istisna olarak işlendi)'), 6000, 'iyi');
-  }
-  istisnaTablo() {
-    if (this._istisna) return this._istisna;
-    try {
-      const v = JSON.parse(localStorage.getItem('ks-yetki-istisna') || 'null');
-      this._istisna = v && typeof v === 'object' ? v : {};
-    } catch (e) { this._istisna = {}; }
-    return this._istisna;
-  }
-  usersOku() {
-    try {
-      const list = JSON.parse(localStorage.getItem('ks-users') || 'null');
-      if (Array.isArray(list) && list.length) return list.map(u => this.userSuret(u));
-    } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
-    return [];
-  }
   // ── veritabanı bağlantısı
   async anahtarlaGir(M) {
     if (!M.tokenOku()) return;
@@ -13709,21 +13649,6 @@ class Component extends DCLogic {
     }
     return false;
   }
-  // Yazma yetkisi: kural sunucuda; buradaki denetim yalnızca ekranı doğru göstermek için
-  yazabilir(a) {
-    const me = this.state.session;
-    if (!me) return false;
-    if (!this.state.sunucu) return true;
-    if (me.role === 'yonetici' || me.role === 'mudur') return true;
-    if (!me.bolge) return true;
-    if (!a) return true;
-    return (a.district || '').toLowerCase() === me.bolge.toLowerCase();
-  }
-  kilitUyar(a) {
-    const me = this.state.session;
-    this.say(`${a.code} ${a.district} ilçesinde. Sizin sorumluluk bölgeniz ${me && me.bolge ? me.bolge : '—'} — kaydı görebilirsiniz ama değiştiremezsiniz. Değişiklik için ilçe sorumlusuna veya müdüre başvurun.`, true);
-    setTimeout(() => this.setState({ toast: null }), 8000);
-  }
   async usersYenile() {
     const M = this._sb;
     if (!M) return;
@@ -13731,41 +13656,6 @@ class Component extends DCLogic {
     if (!r.ok || !Array.isArray(r.data)) return;
     this.usersKaydet(r.data.map(M.suret));
     this.yetkiYenile();
-  }
-  // Sayfa yetkileri ve yetki istisnaları kullanıcı kaydıyla birlikte sunucuda
-  // durur: bir cihazda verilen yetki bütün cihazlarda geçerli
-  async yetkiYenile() {
-    const M = this._sb;
-    if (!M || !M.yetkiListesi || !M.tokenOku()) return;
-    let r;
-    try { r = await M.yetkiListesi(); } catch (e) { return; }
-    if (!r.ok || !Array.isArray(r.data)) return;
-    const y = {}, ist = {};
-    for (const k of r.data) {
-      const sy = k.sayfa_yetki, yi = k.yetki_istisna;
-      if (sy && typeof sy === 'object' && Object.keys(sy).length) y[k.kullanici_ad] = sy;
-      if (yi && typeof yi === 'object' && Object.keys(yi).length) ist[k.kullanici_ad] = yi;
-    }
-    this._yetki = y; this._istisna = ist;
-    try {
-      localStorage.setItem('ks-sayfa-yetki', JSON.stringify(y));
-      localStorage.setItem('ks-yetki-istisna', JSON.stringify(ist));
-    } catch (e) { /* depolama kapalı */ }
-    const list = (this.state.users || []).map(u => this.userSuret(u));
-    this.setState({ users: list });
-    const me = this.state.session;
-    if (!me) return;
-    const g = list.find(x => x.user === me.user);
-    if (g) this.setState({ session: { ...me, sayfalar: g.sayfalar, istisna: g.istisna } });
-  }
-  // Yetki değişikliğini sunucuya yazar (yalnızca yönetici yazabilir)
-  yetkiGonder(u, sayfalar, istisna) {
-    const M = this._sb;
-    if (!u || !u.dbId || !M || !M.yetkiKaydet || !M.tokenOku() || this.state.offline) return false;
-    M.yetkiKaydet(u.dbId, sayfalar || {}, istisna || {}).then(r => {
-      if (!r.ok && !r.cevrimdisi) this.duyur('Yetki sunucuya yazılamadı: ' + r.err, 8000, 'kotu');
-    });
-    return true;
   }
   // Yönetici işlemleri internet ister: çevrimdışı eklenen hesap eşitlenirken çakışır
   async yonetIsle(isim, fn) {
@@ -13861,6 +13751,146 @@ class Component extends DCLogic {
     this.girisKaydet(u.user, pw);
     this._prefYuklendi = true;
     this.setState({ session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
+  }
+  // ── kullanıcı listesi bu cihazda saklanır; Supabase bağlanınca kullanicilar tablosuna gider
+  // Sayfa yetkileri kullanıcı adına göre ayrı anahtarda durur: sunucu listesi yenilenince silinmesin
+  yetkiTablo() {
+    if (this._yetki) return this._yetki;
+    try {
+      const v = JSON.parse(localStorage.getItem('ks-sayfa-yetki') || 'null');
+      this._yetki = v && typeof v === 'object' ? v : {};
+    } catch (e) { this._yetki = {}; }
+    return this._yetki;
+  }
+  userSuret(u) {
+    const y = this.yetkiTablo()[u.user];
+    const ist = this.istisnaTablo()[u.user];
+    return { ...u, sayfalar: y || u.sayfalar || null, istisna: ist || u.istisna || null, roleLabel: ROLE_LABEL[u.role] || u.role,
+      desc: (ROLE_ORDER.find(r => r[0] === u.role) || [])[2], aktif: u.aktif !== false };
+  }
+  // Sayfa yetkisi kullanıcı kaydında durur: yok = menüde çıkmaz, gor = açar ama kaydedemez, tam = serbest
+  sayfaYetkiYaz(uid, sid, v) {
+    const hedef = this.state.users.find(x => x.id === uid);
+    const yeniYetki = { ...((hedef && hedef.sayfalar) || {}), [sid]: v };
+    const tablo = { ...this.yetkiTablo() };
+    if (hedef) tablo[hedef.user] = yeniYetki;
+    this._yetki = tablo;
+    try { localStorage.setItem('ks-sayfa-yetki', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
+    const list = this.state.users.map(u => u.id === uid ? { ...u, sayfalar: yeniYetki } : u);
+    this.usersKaydet(list);
+    const u = list.find(x => x.id === uid);
+    const me = this.state.session;
+    if (me && me.id === uid) this.setState({ session: { ...me, sayfalar: u.sayfalar } });
+    const ad = SUZGEC_ESKI_AD[sid] || (SAYFALAR.find(x => x[0] === sid) || [, sid])[1];
+    const ne = v === 'yok' ? 'menüsünden kaldırıldı' : (v === 'gor' ? 'yalnızca görüntüleme oldu' : 'tam yetkili oldu');
+    const sunucuya = this.yetkiGonder(u, yeniYetki, (u && u.istisna) || {});
+    this.duyur(`${u ? u.name : ''} · ${ad} sayfası ${ne}.`
+      + (sunucuya ? ' Yetki sunucuya yazıldı — bütün cihazlarda geçerli.' : ' Yetki bu cihazda saklanır.'), 5000, 'iyi');
+  }
+  // Rol paketi varsayılan; kişi kaydındaki istisna yalnızca farkı taşır
+  yetkiVar(u, k) {
+    if (!u) return false;
+    const rolVar = (CAN[k] || []).includes(u.role);
+    if (ISTISNA_DISI.includes(k) || u.role === 'yonetici') return rolVar;
+    const ist = (u.istisna || {})[k];
+    return ist === undefined || ist === null ? rolVar : !!ist;
+  }
+  istisnaYaz(uid, k, deger) {
+    if (ISTISNA_DISI.includes(k)) return;
+    const hedef = this.state.users.find(x => x.id === uid);
+    if (!hedef) return;
+    if (hedef.role === 'yonetici') {
+      return this.duyur('Yönetici rolünün yetkileri kısıtlanamaz — sistem yönetimsiz kalmasın diye bu rol istisna kabul etmiyor.', 6000, 'kotu');
+    }
+    const rolVar = (CAN[k] || []).includes(hedef.role);
+    const ist = { ...(hedef.istisna || {}) };
+    if (deger === rolVar) delete ist[k]; else ist[k] = deger;
+    const tablo = { ...this.istisnaTablo() };
+    tablo[hedef.user] = ist;
+    this._istisna = tablo;
+    try { localStorage.setItem('ks-yetki-istisna', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
+    const list = this.state.users.map(u => u.id === uid ? { ...u, istisna: ist } : u);
+    this.usersKaydet(list);
+    const me = this.state.session;
+    if (me && me.id === uid) this.setState({ session: { ...me, istisna: ist } });
+    const ad = (PERMS.find(p => p[0] === k) || [, k])[1];
+    this.yetkiGonder(hedef, hedef.sayfalar || {}, ist);
+    this.duyur(hedef.name + ' · ' + ad + ' → ' + (deger ? 'verildi' : 'kaldırıldı')
+      + (deger === rolVar ? ' (rol paketiyle aynı, istisna silindi)' : ' (rolden farklı, istisna olarak işlendi)'), 6000, 'iyi');
+  }
+  istisnaTablo() {
+    if (this._istisna) return this._istisna;
+    try {
+      const v = JSON.parse(localStorage.getItem('ks-yetki-istisna') || 'null');
+      this._istisna = v && typeof v === 'object' ? v : {};
+    } catch (e) { this._istisna = {}; }
+    return this._istisna;
+  }
+  usersOku() {
+    try {
+      const list = JSON.parse(localStorage.getItem('ks-users') || 'null');
+      if (Array.isArray(list) && list.length) return list.map(u => this.userSuret(u));
+    } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
+    return [];
+  }
+  // Yazma yetkisi: kural sunucuda; buradaki denetim yalnızca ekranı doğru göstermek için
+  yazabilir(a) {
+    const me = this.state.session;
+    if (!me) return false;
+    if (!this.state.sunucu) return true;
+    if (me.role === 'yonetici' || me.role === 'mudur') return true;
+    if (!me.bolge) return true;
+    if (!a) return true;
+    return (a.district || '').toLowerCase() === me.bolge.toLowerCase();
+  }
+  kilitUyar(a) {
+    const me = this.state.session;
+    this.say(`${a.code} ${a.district} ilçesinde. Sizin sorumluluk bölgeniz ${me && me.bolge ? me.bolge : '—'} — kaydı görebilirsiniz ama değiştiremezsiniz. Değişiklik için ilçe sorumlusuna veya müdüre başvurun.`, true);
+    setTimeout(() => this.setState({ toast: null }), 8000);
+  }
+  // Sayfa yetkileri ve yetki istisnaları kullanıcı kaydıyla birlikte sunucuda
+  // durur: bir cihazda verilen yetki bütün cihazlarda geçerli
+  async yetkiYenile() {
+    const M = this._sb;
+    if (!M || !M.yetkiListesi || !M.tokenOku()) return;
+    let r;
+    try { r = await M.yetkiListesi(); } catch (e) { return; }
+    if (!r.ok || !Array.isArray(r.data)) return;
+    const y = {}, ist = {};
+    for (const k of r.data) {
+      const sy = k.sayfa_yetki, yi = k.yetki_istisna;
+      if (sy && typeof sy === 'object' && Object.keys(sy).length) y[k.kullanici_ad] = sy;
+      if (yi && typeof yi === 'object' && Object.keys(yi).length) ist[k.kullanici_ad] = yi;
+    }
+    this._yetki = y; this._istisna = ist;
+    try {
+      localStorage.setItem('ks-sayfa-yetki', JSON.stringify(y));
+      localStorage.setItem('ks-yetki-istisna', JSON.stringify(ist));
+    } catch (e) { /* depolama kapalı */ }
+    const list = (this.state.users || []).map(u => this.userSuret(u));
+    this.setState({ users: list });
+    const me = this.state.session;
+    if (!me) return;
+    const g = list.find(x => x.user === me.user);
+    if (g) this.setState({ session: { ...me, sayfalar: g.sayfalar, istisna: g.istisna } });
+  }
+  // Yetki değişikliğini sunucuya yazar (yalnızca yönetici yazabilir)
+  yetkiGonder(u, sayfalar, istisna) {
+    const M = this._sb;
+    if (!u || !u.dbId || !M || !M.yetkiKaydet || !M.tokenOku() || this.state.offline) return false;
+    M.yetkiKaydet(u.dbId, sayfalar || {}, istisna || {}).then(r => {
+      if (!r.ok && !r.cevrimdisi) this.duyur('Yetki sunucuya yazılamadı: ' + r.err, 8000, 'kotu');
+    });
+    return true;
+  }
+  baslatOturumKaydi() {
+    try {
+      const raw = localStorage.getItem(SES_KEY);
+      if (raw) {
+        const sv = JSON.parse(raw);
+        if (sv && sv.user) this.setState({ loginUser: sv.user, loginPw: sv.pw || '', remember: true });
+      }
+    } catch (e) { /* depolama kapalı veya bozuk kayıt */ }
   }
   csvKac(v) {
     const x = String(v === undefined || v === null ? '' : v).replace(/"/g, '""');

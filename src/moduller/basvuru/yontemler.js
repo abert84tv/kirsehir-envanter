@@ -122,3 +122,4 @@
     this.denetimYaz('talep', 'Web başvurusu engellendi', b.takip, '');
     this.basvuruYenile();
   }
+//@dahil moduller/basvuru/yontemler/baslat.js

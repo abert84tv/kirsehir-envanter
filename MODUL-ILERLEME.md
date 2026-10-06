@@ -18,20 +18,17 @@ mantık (yöntemler), görünüm modeli. `node build.js` bunları birleştirip *
 
 ## Durum
 - [x] **Faz 0** — tek parça → `src/` (74 parça, 21 modül klasörü), `build.js`, duman-testi entegrasyonu, Vercel `buildCommand`. (2026-10-07)
-- [ ] **Faz 1** — kalan büyük parçaları ince böl (aşağıdaki liste)
+- [x] **Faz 1** — kabuk 233 satır; render hazırlığı/görünüm/yöntemler alt konulara bölündü; `componentDidMount` 10 `baslat*` yöntemine ayrıldı (2026-10-07)
 - [ ] **Faz 2** — SQL dosyaları ve `supabase-baglanti.js` sarmalayıcılarını modüllere taşı
 - [ ] **Faz 3** — modül bildirimi (`modul.json`: ad, bağımlılık, açıklama) + duman-testinde modül başına kontrol
 - [ ] **Faz 4** — `node yeni-modul.js <ad>` iskelet üretici + `src/README.md` "özellik ekle / çıkar" kılavuzu
 - [ ] **Faz 5** — DURUM.md / README güncellemesi, son tam doğrulama, kullanıcıya rapor
 
 ## SIRADAKİ ADIM
-**Faz 1 (devam):** tamamlananlar — (a) `kabuk.html` 233 satıra indi (yan menü, üst çubuk, katmanlar, giriş ekranları, telefon sheet/ortak katmanlar modüllere çıkarıldı);
-(b) `render-hazirlik.js` 9 konu parçasına bölündü (`moduller/*/hazirlik-*.js`, SIRA önemli: dosyadaki dahil sırası korunmalı);
-(c) `gorunum.js` dosyaları özellik başına `gorunum/<ad>.js` parçalarına bölündü.
-**Kalan:** (d) `yontemler.js` dosyalarını alt konuya göre böl (ariza: foto-medya / sla / esitleme / saha; cekirdek: yasam-dongusu / tema-tercih / zaman / yardimcilar;
-esitleme: modul-esitleme / senkron / not-kuyruk; yerlesim: koy-ek / csv; ambar: stok / siparis / hareket) — yöntem sırası önemsizdir ama `componentWillUnmount` iki tanımlıdır (sonraki geçerli; ikisini de aynı dosyada, sırayı koruyarak tut);
-(e) `componentDidMount` (199 satır) içindeki modül-özel başlatmaları ilgili modülün `...Baslat()` yöntemine taşı (davranış aynı kalmalı: çağrı sırasını koru);
-(f) Faz 1'i işaretle ve Faz 2'ye geç.
+**Faz 2:** (a) `build.js`'e ikinci hedef ekle: `src/baglanti/kabuk.js` → `supabase-baglanti.js` (ES modül; `export` işlevleri modül başına parça: telemetri, basvuru, entegrasyon, ariza, is-emri, ambar... — sıra/`import`'lar korunsun, çıktı bayt bayt aynı olsun);
+(b) `SQL-*.sql` dosyalarını `src/moduller/<ad>/sql/` altına `git mv` ile taşı, kökte `SQL-INDEKS.md` (hangi dosya hangi modül, hangi sırayla uygulandı) yaz, KURULUM.md/OKU.md/README.md içindeki yolları güncelle;
+(c) `supabase-islev-*.ts` edge function kaynaklarını `src/moduller/<ad>/islev/` altına taşı (telegram→basvuru, talep-siniflandir→talep, mesaj-gonder→bildirim); `duman-testi.js` ve dokümanlardaki yolları güncelle;
+(d) Faz 2'yi işaretle, Faz 3'e geç.
 
 ## Notlar
 - Dahil işaretleri: `<!--@dahil yol-->` (HTML), `//@dahil yol` (JS), `/*@dahil yol*/` (CSS); yol `src/`'ye göre.

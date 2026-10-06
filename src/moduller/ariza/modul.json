@@ -1,0 +1,15 @@
+{
+  "ad": "ariza",
+  "aciklama": "Arıza kaydı ve formu, saha akışı (Sahadayım/İşi tamamla), SLA/bekleme/ana arıza, arıza fotoğraf ve sesli not.",
+  "modulAnahtari": "ariza",
+  "sayfalar": [
+    "ariza",
+    "gunluk"
+  ],
+  "bagimli": [
+    "harita",
+    "is-emri",
+    "ambar"
+  ],
+  "not": "Hedef süre, kanıt zorunluluğu ve merkez onayı da bu modülün anahtarlarıdır (sure, kanit, onay)."
+}

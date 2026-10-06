@@ -1,0 +1,10 @@
+{
+  "ad": "yerlesim",
+  "aciklama": "Köy ve yerleşim verisi, elle eklenen köyler, CSV içe aktarma, köy konumu düzeltme.",
+  "sayfalar": [
+    "yerlesim"
+  ],
+  "bagimli": [
+    "harita"
+  ]
+}

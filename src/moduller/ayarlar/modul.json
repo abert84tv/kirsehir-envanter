@@ -1,0 +1,11 @@
+{
+  "ad": "ayarlar",
+  "aciklama": "Ayarlar sayfası kabuğu: görünüm, veri, modül açma/kapama listesi.",
+  "sayfalar": [
+    "ayarKap"
+  ],
+  "bagimli": [
+    "oturum",
+    "esitleme"
+  ]
+}

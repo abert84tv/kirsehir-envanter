@@ -1,0 +1,10 @@
+{
+  "ad": "is-emri",
+  "aciklama": "İş emri: açma, ekip/araç atama, kapatma, ek ekip ve alt işler.",
+  "modulAnahtari": "ariza",
+  "bagimli": [
+    "ariza",
+    "talep"
+  ],
+  "not": "Arıza modülü kapalıyken iş emri anlamsızdır."
+}

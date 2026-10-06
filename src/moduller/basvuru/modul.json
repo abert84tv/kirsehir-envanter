@@ -1,0 +1,8 @@
+{
+  "ad": "basvuru",
+  "aciklama": "Web formu ve Telegram başvuruları, yeni başvuru alarmı (ses/şerit/bildirim).",
+  "bagimli": [
+    "talep"
+  ],
+  "not": "Telegram uyarı/durum tetikleyicileri veritabanında (sql/)."
+}

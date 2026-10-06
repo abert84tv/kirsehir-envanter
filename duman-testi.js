@@ -32,6 +32,47 @@ try {
   basarisiz('index.html güncel değil — "node build.js" çalıştırın. ' + String((e.stderr || e.stdout || e.message)).trim().split(/\r?\n/)[0]);
 }
 
+// 0b) src/ yapısı: her modülün modul.json'u var, bağımlılıklar gerçek, yetim dosya yok
+console.log('0b) src/ modül yapısı');
+(function srcYapisi() {
+  const SRC = path.join(ROOT, 'src');
+  const MOD = path.join(SRC, 'moduller');
+  if (!fs.existsSync(MOD)) return basarisiz('src/moduller yok');
+  const klasorler = fs.readdirSync(MOD).filter(a => fs.statSync(path.join(MOD, a)).isDirectory());
+  let sorun = 0;
+  for (const m of klasorler) {
+    const mj = path.join(MOD, m, 'modul.json');
+    if (!fs.existsSync(mj)) { basarisiz(`src/moduller/${m}/modul.json yok`); sorun++; continue; }
+    let j;
+    try { j = JSON.parse(fs.readFileSync(mj, 'utf8')); } catch (e) { basarisiz(`${m}/modul.json geçerli JSON değil: ${e.message}`); sorun++; continue; }
+    if (j.ad !== m) { basarisiz(`${m}/modul.json: "ad" klasör adıyla aynı olmalı`); sorun++; }
+    if (!j.aciklama) { basarisiz(`${m}/modul.json: "aciklama" boş`); sorun++; }
+    for (const b of (j.bagimli || [])) if (!klasorler.includes(b)) { basarisiz(`${m}/modul.json: bağımlı modül yok: ${b}`); sorun++; }
+  }
+  // dahil edilen dosyalar
+  const ISARET = /^(?:<!--@dahil (.+?)-->|\/\/@dahil (.+?)|\/\*@dahil (.+?)\*\/)$/;
+  const goruldu = new Set();
+  const tara = yol => {
+    if (goruldu.has(yol)) return;
+    goruldu.add(yol);
+    const tam = path.join(SRC, yol);
+    if (!fs.existsSync(tam)) return;
+    for (const satir of fs.readFileSync(tam, 'utf8').replace(/\r\n/g, '\n').split('\n')) {
+      const x = satir.match(ISARET);
+      if (x) tara((x[1] || x[2] || x[3]).trim());
+    }
+  };
+  tara('kabuk.html'); tara('baglanti/kabuk.js');
+  const hepsi = [];
+  (function yuru(d) {
+    for (const a of fs.readdirSync(d)) { const p = path.join(d, a); if (fs.statSync(p).isDirectory()) yuru(p); else hepsi.push(path.relative(SRC, p).split(path.sep).join('/')); }
+  })(SRC);
+  const serbest = /(^|\/)(modul\.json|README\.md)$|\/sql\/|\/islev\//;
+  const yetim = hepsi.filter(f => !goruldu.has(f) && !serbest.test(f));
+  for (const y of yetim) { basarisiz('yetim dosya (hiçbir yerden dahil edilmiyor): src/' + y); sorun++; }
+  if (!sorun) basari(`${klasorler.length} modül, ${hepsi.length} dosya — modul.json tamam, yetim yok`);
+})();
+
 // 1) HTML dosyalarındaki gömülü <script> bloklarının sözdizimi
 console.log('1) Gömülü <script> sözdizimi');
 const htmlDosyalari = ['index.html', 'harita.html', 'profil.html', 'hat.html'];

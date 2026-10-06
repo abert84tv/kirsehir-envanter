@@ -1,0 +1,11 @@
+{
+  "ad": "esitleme",
+  "aciklama": "Çevrimdışı çalışma: sunucuya senkron, modül verisi kuyruğu, not kuyruğu, ağ izleme, kuyruk sayfası.",
+  "sayfalar": [
+    "kuyruk"
+  ],
+  "bagimli": [
+    "oturum"
+  ],
+  "not": "Her modülün sunucuya yazması buradan geçer."
+}

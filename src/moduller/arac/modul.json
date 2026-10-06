@@ -1,0 +1,11 @@
+{
+  "ad": "arac",
+  "aciklama": "Araç ve ekipman defteri, görev/konum, belge uyarıları.",
+  "modulAnahtari": "arac",
+  "sayfalar": [
+    "arac"
+  ],
+  "bagimli": [
+    "denetim"
+  ]
+}

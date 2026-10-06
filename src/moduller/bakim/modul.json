@@ -1,0 +1,11 @@
+{
+  "ad": "bakim",
+  "aciklama": "Periyodik bakım takvimi ve bakım kaydı.",
+  "modulAnahtari": "bakim",
+  "sayfalar": [
+    "bakim"
+  ],
+  "bagimli": [
+    "envanter"
+  ]
+}

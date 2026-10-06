@@ -1,0 +1,13 @@
+{
+  "ad": "envanter",
+  "aciklama": "Tesis (kuyu/depo/AG/GES) listesi, kartı, yeni kayıt sihirbazı, fotoğraf, test/deneme, saha notu, kod onarımı.",
+  "sayfalar": [
+    "envanter",
+    "islem"
+  ],
+  "bagimli": [
+    "bakim",
+    "yerlesim",
+    "harita"
+  ]
+}

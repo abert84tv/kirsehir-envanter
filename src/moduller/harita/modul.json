@@ -1,0 +1,11 @@
+{
+  "ad": "harita",
+  "aciklama": "Envanter haritası, hat kesiti köprüsü, hat güzergâhları, koordinat dönüşümü, harita mesajlaşması (iframe).",
+  "sayfalar": [
+    "profil"
+  ],
+  "bagimli": [
+    "yerlesim",
+    "envanter"
+  ]
+}

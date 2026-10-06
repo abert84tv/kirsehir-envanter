@@ -1,0 +1,11 @@
+{
+  "ad": "ekip",
+  "aciklama": "Ekipler, personel havuzu, nöbet takvimi, ekip/araç panosu.",
+  "sayfalar": [
+    "ekipPano"
+  ],
+  "bagimli": [
+    "denetim",
+    "ariza"
+  ]
+}

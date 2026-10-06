@@ -1,0 +1,8 @@
+{
+  "ad": "telemetri",
+  "aciklama": "Telemetri cihazları, ölçümler, alarmlar ve eşik kuralları.",
+  "sayfalar": [
+    "telemetri"
+  ],
+  "not": "Bağımsız; yalnız çekirdek ve denetim."
+}

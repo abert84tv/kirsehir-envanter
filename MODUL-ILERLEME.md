@@ -20,18 +20,20 @@ mantık (yöntemler), görünüm modeli. `node build.js` bunları birleştirip *
 - [x] **Faz 0** — tek parça → `src/` (74 parça, 21 modül klasörü), `build.js`, duman-testi entegrasyonu, Vercel `buildCommand`. (2026-10-07)
 - [x] **Faz 1** — kabuk 233 satır; render hazırlığı/görünüm/yöntemler alt konulara bölündü; `componentDidMount` 10 `baslat*` yöntemine ayrıldı (2026-10-07)
 - [x] **Faz 2** — `supabase-baglanti.js` src/baglanti/ + modül parçalarından derleniyor; SQL `src/moduller/<m>/sql/`, edge function `islev/` altında; `SQL-INDEKS.md` (2026-10-07)
-- [ ] **Faz 3** — modül bildirimi (`modul.json`: ad, bağımlılık, açıklama) + duman-testinde modül başına kontrol
-- [ ] **Faz 4** — `node yeni-modul.js <ad>` iskelet üretici + `src/README.md` "özellik ekle / çıkar" kılavuzu
+- [x] **Faz 3** — her modülde `modul.json`; `modul-bilgi.js` (tablo/bağımlılık); duman-testi: modul.json + yetim dosya denetimi (2026-10-07)
+- [x] **Faz 4** — `yeni-modul.js` (ekle/`--kaldir`, kullanılıyorsa reddeder) + `src/README.md` kılavuzu; ekle→kaldır döngüsü index.html'i bayt bayt aynı bıraktığı doğrulandı (2026-10-07)
 - [ ] **Faz 5** — DURUM.md / README güncellemesi, son tam doğrulama, kullanıcıya rapor
 
 ## SIRADAKİ ADIM
-**Faz 3:** her modül klasörüne `modul.json` yaz (ad, açıklama, sahip olduğu sekme/panel anahtarları, bağımlı olduğu modüller, `kapatilabilir` + `s.modul.<anahtar>` anahtarı varsa onu);
-`duman-testi.js`'e kontrol ekle: (1) her `src/moduller/*` klasöründe `modul.json` var ve geçerli JSON; (2) `modul.json`'daki bağımlılıklar gerçek klasör; (3) `src/` altındaki hiçbir dosya "yetim" değil — her dosya `kabuk.html`/`baglanti/kabuk.js`'den
-(dolaylı) dahil edilmiş ya da `sql/`/`islev/`/`modul.json`/README; (4) dahil işaretleri dosya sonunda boş satır bırakmıyor.
-Sonra Faz 4 (`yeni-modul.js` iskelet üretici + `src/README.md` kılavuzu), Faz 5 (son doğrulama + rapor + zamanlanmış görevi kapat).
+**Faz 5 (son):** (1) Tarayıcıda uçtan uca tarama: localhost:5176 — masaüstü (geniş) ve telefon (resize_window mobile) düzeninde bütün sekmeleri sırayla aç (`logic.setState({tab})`), `renderVals()` hatasız, konsolda hata yok; yöntem/anahtar karşılaştırması (index.html'in src/'den önceki sürümüyle: `git show 55a060d:index.html`);
+(2) canlı (kirsehir-envanter.vercel.app) = yerel `index.html` bayt eşitliği ve Vercel "success";
+(3) `DURUM.md` ve kök `README.md`'ye "kod yapısı" bölümü (`src/README.md`'ye yönlendir; yeni sürüm artırma yolu: `src/sabitler/11-genel.js` SURUM + `sw.js` SURUM, sonra `node build.js`);
+(4) hafızadaki `modular-yapi-gorevi.md` durumunu "tamamlandı" yap; kullanıcıya özet rapor yaz;
+(5) zamanlanmış görevi kapat: `update_scheduled_task` taskId `kirsehir-modul-donusumu-devam`, enabled=false.
 
 ## Notlar
 - Dahil işaretleri: `<!--@dahil yol-->` (HTML), `//@dahil yol` (JS), `/*@dahil yol*/` (CSS); yol `src/`'ye göre.
 - Yöntem ve görünüm özelliklerinin **sırası** önemsizdir (anahtar tekrarı yok). `componentWillUnmount` iki kez tanımlı: sonraki geçerli (orijinalden miras, korunuyor).
 - Görünüm özellikleri dosya sonunda virgülle bitmelidir (derleme sırası değişebilir).
-- Orijinal tek parça dosya git geçmişinde: commit `55a060d..` öncesi `index.html`.
+- Orijinal tek parça `index.html`: commit `e1d861a` (Faz 0'dan hemen önce, 2026-10-07) ve öncesi.
+- Sürüm artırma (DURUM/yayın): `src/sabitler/11-genel.js` içindeki SURUM + `sw.js` SURUM → `node build.js`.

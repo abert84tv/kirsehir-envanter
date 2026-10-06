@@ -1,0 +1,12 @@
+{
+  "ad": "talep",
+  "aciklama": "Dış talep (telefon, dilekçe...), muhtar defteri, yapay zekâ sınıflandırma, arızaya çevirme.",
+  "modulAnahtari": "talep",
+  "sayfalar": [
+    "talep"
+  ],
+  "bagimli": [
+    "basvuru",
+    "is-emri"
+  ]
+}

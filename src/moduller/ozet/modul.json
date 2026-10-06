@@ -1,0 +1,13 @@
+{
+  "ad": "ozet",
+  "aciklama": "Özet sayfası, operasyon panosu (Genel bakış), rapor, PDF ve Excel çıktısı, günlük iş listesi.",
+  "sayfalar": [
+    "isPano",
+    "ozet"
+  ],
+  "bagimli": [
+    "envanter",
+    "ariza",
+    "harita"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "ad": "ambar",
+  "aciklama": "Ambar ve zimmet, malzeme kataloğu, sipariş listesi, stok hareketi, arızadan stok düşümü.",
+  "modulAnahtari": "ambar",
+  "sayfalar": [
+    "ambar"
+  ],
+  "bagimli": [
+    "ariza"
+  ]
+}

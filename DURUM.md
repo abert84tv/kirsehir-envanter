@@ -1974,3 +1974,7 @@ Sürüm 2026.10.05-114.
 - Envanter haritası: sabit üçlü geçiş (Harita | Liste | Hat kesiti) + açılır "Süzgeç" bloğu (varsayılan kapalı).
 - Envanter listesi ve Arıza listesi: süzgeç ve sıralama açılır-kapanır tek satırda; satırda yalnız bekleyen kayıt etiketi görünür.
 - Servis çalışanı sayfaları her seferinde sunucuyla doğrular (eski kopyada kalma riski azaldı).
+
+## 2026.10.06-133 — Koyu tema sadeleşti, telefonda Liste kalktı
+- Koyu tema zemini saf siyahtan (#000) yumuşak koyu griye (#121214) alındı; arama kutuları/şeritler artık siyah delik gibi durmuyor. Harita denetimleri (yakınlaştırma, künye, açılır pencere) koyu temada koyu. Arıza düğmesi beyaz/siyah yerine kart rengi.
+- Telefonda Envanter > Liste görünümü geçiş çubuğundan kaldırıldı (üstteki arama kutusu aynı işi görüyor); masaüstünde duruyor.

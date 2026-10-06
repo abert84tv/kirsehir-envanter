@@ -4589,7 +4589,7 @@ Hareket gir
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.fg }};border-radius:10px;border:1px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button>
+<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button>
 <button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:60px;height:60px;background:var(--color-accent);border-radius:10px;border:1px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.gpsBuyuk }}</button>
 </div>
 </div>
@@ -9200,7 +9200,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-132';
+const SURUM = '2026.10.06-133';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -14568,7 +14568,7 @@ class Component extends DCLogic {
   th() {
     const dark = this.state.theme === 'dark';
     return dark ? {
-      bg: '#000000', surf: '#1c1c1e', surf2: '#2c2c2e', fg: '#f5f5f7',
+      bg: '#121214', surf: '#1c1c1e', surf2: '#2a2a2d', fg: '#f5f5f7',
       mut: 'rgba(235,235,245,.62)', rule: 'rgba(255,255,255,.13)',
       acc: '#0a84ff', sel: '#2c2c2e', pend: '#3a2a10',
       ph1: '#2c2c2e', ph2: '#3a3a3c', mapSat: '.5', mapBri: '.6', themeMark: '☾', dark: true
@@ -18156,7 +18156,9 @@ class Component extends DCLogic {
         // 2026.09.30). Yetki hâlâ SUZGEC_TANIM'dan okunuyor, dokunulmadı —
         // yalnızca burada, GÖRÜNEN hap listesi Ayarlar'da tek girdiye
         // süzülüyor; tek gerçek erişim yolu artık sayfa içindeki liste.
-        const gorunenSuz = g.id === 'ayarlar' ? g.suz.filter(z => z.hedef === 'ayarlar') : g.suz;
+        let gorunenSuz = g.id === 'ayarlar' ? g.suz.filter(z => z.hedef === 'ayarlar') : g.suz;
+        // Telefonda Liste görünümü kaldırıldı: kayıt bulmak için üstteki arama kutusu (köy, kod, koordinat) yeter.
+        if (s.device === 'phone' && g.id === 'envanter' && tabId !== 'envanter') gorunenSuz = gorunenSuz.filter(z => z.hedef !== 'envanter');
         if (gorunenSuz.length < 2) return { acik: false, telAcik: false, baslik: '', alt: '', suzgecler: [] };
         const z0 = g.suz.find(z => z.hedef === tabId);
         return {

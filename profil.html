@@ -139,6 +139,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     #side{flex:0 0 auto;max-height:36%;border-left:none;border-top:2px solid var(--color-text)}
     #sideTog{display:flex;flex:none;justify-content:center;min-height:34px;border-radius:0;border:none;border-top:1px solid var(--color-divider);background:var(--color-bg);font-size:11.5px}
     body.sideGizli #side{display:none}
+    body.baGizli #bar{display:none}
     #bar{gap:6px;padding:6px 8px}
     #bar .ttl,#bar .hint{display:none}
     #ara{flex:1 1 100%;max-width:none}
@@ -449,11 +450,13 @@ function olcumYaz(nokta) {
   const yaz = (id, v) => { el(id).textContent = v; };
   if (noktalar.length < 2) {
     ['mDist', 'mKot', 'mMin', 'mMax', 'mUp', 'mDown', 'mEgim', 'mKus'].forEach(i => yaz(i, '—'));
+    if (typeof sideEtiket === 'function') sideEtiket();
     return;
   }
   let toplam = 0;
   for (let i = 1; i < noktalar.length; i++) toplam += mesafe(noktalar[i - 1], noktalar[i]);
   yaz('mDist', km(toplam));
+  if (typeof sideEtiket === 'function') sideEtiket();
   yaz('mKus', km(mesafe(noktalar[0], noktalar[noktalar.length - 1])));
   const h = (nokta || []).filter(p => p.h != null).map(p => p.h);
   if (h.length < 2) { ['mKot', 'mMin', 'mMax', 'mUp', 'mDown', 'mEgim'].forEach(i => yaz(i, '—')); return; }
@@ -551,11 +554,23 @@ function buyukAyar(on) {
   el('buyut').classList.toggle('on', on);
   requestAnimationFrame(() => { cizProfil(); if (!on) map.invalidateSize(); });
 }
+// Telefonda harita ekranı büyük başlar: araç şeridi ve ölçüm paneli kapalı, ihtiyaç olunca açılır
+const dar = () => window.matchMedia('(max-width:760px)').matches;
+function sideEtiket() {
+  const g = document.body.classList.contains('sideGizli');
+  const d = el('mDist').textContent;
+  el('sideTog').textContent = (g ? '▴ Ölçüm ve profil' : '▾ Ölçüm ve profili gizle') + (g && noktalar.length ? ' · ' + (d && d !== '—' ? d + ' · ' : '') + noktalar.length + ' nokta' : '');
+}
 el('sideTog').onclick = () => {
-  const g = document.body.classList.toggle('sideGizli');
-  el('sideTog').textContent = g ? '▴ Ölçüm ve profili göster' : '▾ Ölçüm ve profili gizle';
+  document.body.classList.toggle('sideGizli');
+  sideEtiket();
   setTimeout(() => map.invalidateSize(), 60);
 };
+if (dar()) { document.body.classList.add('sideGizli', 'baGizli'); sideEtiket(); }
+window.addEventListener('message', ev => {
+  const d = ev.data;
+  if (d && d.ks === 'arac') { document.body.classList.toggle('baGizli', !d.acik && dar()); setTimeout(() => map.invalidateSize(), 60); }
+});
 el('buyut').onclick = () => buyukAyar(!document.body.classList.contains('buyuk'));
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && document.body.classList.contains('buyuk')) buyukAyar(false);

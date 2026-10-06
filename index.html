@@ -76,6 +76,7 @@ html.ks-koyu #tel-bas,html.ks-koyu #tel-nav{background-color:rgba(28,28,30,.94)!
 button{transition:background-color .14s,border-color .14s,transform .12s}
 input:focus,select:focus,textarea:focus{outline:none!important;border-color:var(--color-accent)!important;box-shadow:0 0 0 3px rgba(0,113,227,.22)!important}
 .table tbody tr{transition:background-color .12s}
+html.ks-tam #tel-bas,html.ks-tam #tel-nav{display:none!important}
 @page{size:A4;margin:12mm}
 @media print{
  body{background:#fff}
@@ -4577,6 +4578,7 @@ Hareket gir
 <button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
 </sc-for>
 </div>
+<button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
 <button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Süzgeç <span style="font-size:10px">{{ telSuz.ok }}</span></button>
 </div>
 <sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
@@ -4690,12 +4692,22 @@ Hareket gir
 <!-- profil: mesafe ve yol profili -->
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
-<div style="flex:none;padding:6px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div class="ks-bilgi" style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ profil.note }}</div>
-<div style="display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto">
-<button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
-<button onClick="{{ profil.arizali }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ profil.arizaLabel }}</button>
+<div style="flex:none;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:8px;padding:7px 10px">
+<div style="flex:1;min-width:0;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="3">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
+</sc-for>
 </div>
+<button onClick="{{ telSuz.aracTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.aracKenar }};background:{{ telSuz.aracZemin }};color:{{ telSuz.aracYazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Araçlar <span style="font-size:10px">{{ telSuz.aracOk }}</span></button>
+<button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
+</div>
+<sc-if value="{{ telSuz.aracAcik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;gap:8px;padding:0 10px 9px;overflow-x:auto">
+<button onClick="{{ profil.secilen }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:40px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Seçili kaydı nokta yap</button>
+<button onClick="{{ profil.arizali }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:40px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ profil.arizaLabel }}</button>
+</div>
+</sc-if>
 </div>
 <iframe src="profil.html" title="Mesafe ve yol profili (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 </div>
@@ -9200,7 +9212,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-134';
+const SURUM = '2026.10.06-135';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9348,7 +9360,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
+    telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -9747,6 +9759,8 @@ class Component extends DCLogic {
     if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (s.ayarBolum === 'entegrasyon' && s.tab === 'ayarlar') this.entegrasyonYenile(); }
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
+    // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir
+    if (s.telTam && s.tab !== 'harita' && s.tab !== 'profil') { try { document.documentElement.classList.remove('ks-tam'); } catch (e) { /* belge yok */ } this.setState({ telTam: false }); }
     if (this._telTab !== s.tab) { this._telTab = s.tab; if (s.tab === 'telemetri') this.telemetriYenile(true); }
     // Sunucudan alınan son veri cihaza da yazılır: internetsiz açılışta oradan gelir
     if (s.session && s.sunucu && s.sonEsitleme
@@ -9993,6 +10007,7 @@ class Component extends DCLogic {
       for (const id in tablo) for (const x of (tablo[id] || [])) if (x && (x.noktalar || []).length) hatlar.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '' });
       w.postMessage({ ks: 'profil', assets: this.profilAssets(), hatlar }, '*');
       w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
+      w.postMessage({ ks: 'arac', acik: !!this.state.telAracAcik }, '*');
       w.postMessage({ ks: 'filter', filter: this.state.filter }, '*');
       w.postMessage({ ks: 'setBase', base: this.state.mapBase }, '*');
       w.postMessage({ ks: 'hatKatman', on: this.state.hatKatman !== false }, '*');
@@ -16043,6 +16058,11 @@ class Component extends DCLogic {
           listeTog: () => this.setState({ telListeSuzAcik: !this.state.telListeSuzAcik }),
           listeKenar: lAcik ? 'var(--color-accent)' : ui.rule,
           listeEtiket: envKontrol.suzuluyor ? 'süzülüyor' : '',
+          aracAcik: !!s.telAracAcik, aracOk: s.telAracAcik ? '▴' : '▾',
+          aracKenar: s.telAracAcik ? 'var(--color-accent)' : ui.rule, aracZemin: s.telAracAcik ? 'var(--color-accent)' : 'transparent', aracYazi: s.telAracAcik ? '#fff' : ui.fg,
+          aracTog: () => { const v = !this.state.telAracAcik; this.setState({ telAracAcik: v }); const w = this.profilWin(); if (w) try { w.postMessage({ ks: 'arac', acik: v }, '*'); } catch (e) { /* çerçeve yok */ } },
+          tamIk: s.telTam ? '⤡' : '⤢',
+          tamTog: () => { const v = !this.state.telTam; this.setState({ telTam: v }); try { document.documentElement.classList.toggle('ks-tam', v); } catch (e) { /* belge yok */ } setTimeout(() => { const w = this.mapWin(); const p = this.profilWin(); try { w && w.dispatchEvent(new Event('resize')); p && p.dispatchEvent(new Event('resize')); } catch (e) { /* çerçeve yok */ } }, 120); },
           arzAcik: !!s.telArzSuzAcik, arzOk: s.telArzSuzAcik ? '▴' : '▾',
           arzTog: () => this.setState({ telArzSuzAcik: !this.state.telArzSuzAcik }),
           arzKenar: s.telArzSuzAcik ? 'var(--color-accent)' : ui.rule,
@@ -18163,7 +18183,7 @@ class Component extends DCLogic {
         return {
           acik: true,
           // Telefonda harita açıkken başlık gizlenir; ekran haritaya kalır
-          telAcik: !(s.device === 'phone' && tabId === 'harita'),
+          telAcik: !(s.device === 'phone' && (tabId === 'harita' || tabId === 'profil')),
           baslik: g.ad, alt: ALT[(z0 || {}).id] || '',
           suzgecler: gorunenSuz.map(z => {
             const n = suzgecSayi[z.hedef] || 0;

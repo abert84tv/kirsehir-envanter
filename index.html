@@ -9280,7 +9280,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-141';
+const SURUM = '2026.10.06-142';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11702,6 +11702,16 @@ class Component extends DCLogic {
     }));
     setTimeout(() => this.arizaKuyrukGonder(), 0);
   }
+  // Talepten açılan arıza çözülünce talep de "Çözüldü" olur; başvurana (Telegram/web) durum kendiliğinden gider
+  talepArizaKapandi(f) {
+    if (!f || !f.no) return;
+    const liste = [...(this.state.talepler || [])];
+    const i = liste.findIndex(x => x.arizaNo === f.no && !['cozuldu', 'red'].includes(x.durum));
+    if (i < 0) return;
+    liste[i] = { ...liste[i], durum: 'cozuldu', sonuc: liste[i].sonuc || 'Arıza giderildi.', guncelleme: this.damga() };
+    this.talepYaz(liste, f.no + ' çözüldü — ' + (liste[i].no || 'bağlı talep') + ' de çözüldü olarak işaretlendi.');
+    setTimeout(() => this.basvuruEsitle(), 800);
+  }
   async isEmriKapatVer(baglIsEmri, f, sessiz) {
     const M = this._sb;
     if (!M || !M.tokenOku() || !baglIsEmri) return false;
@@ -13108,6 +13118,7 @@ class Component extends DCLogic {
     })();
     // Çevrimdışıyken çözülen arızanın bağlı iş emri şimdi kapanır
     if (yeni.status === 'cozuldu') {
+      this.talepArizaKapandi(yeni);
       const ie = this.isEmriBul(dbId);
       if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, yeni), 500);
     }

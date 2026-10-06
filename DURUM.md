@@ -2014,3 +2014,7 @@ Sürüm 2026.10.05-114.
 ## 2026.10.06-141 — Başvuru alarmı: yüksek ses, tıklanana kadar
 - Alarm sesi yeniden yazıldı: kare+testere dalgalı ~2 sn siren, tam ses seviyesi (tepe ≈ %95, bozulmadan). Ses artık görsel uyarıdan önce başlatılır; ses bağlamı uykudaysa uyanır uyanmaz çalar (3-4 sn gecikme buradandı).
 - Operatör "Gelen'i aç" ya da ✕'e basana kadar: kırmızı şerit yanıp söner, ses 6 sn'de bir tekrar eder, sekme başlığı "🔔 YENİ BAŞVURU!" yanıp söner, tarayıcı bildirimi (requireInteraction) kapanmaz.
+
+## 2026.10.06-142 — Başvuru durum takibi
+- Telegram'dan başvuran vatandaşa durum değişince bot kendiliğinden yazar (İnceleniyor / Ekip görevlendirildi / Çözüldü / Karşılanamıyor + not). /durum KOD ile de sorulabilir. Spam'e atılan başvuruya mesaj gitmez.
+- Talepten açılan arıza çözülünce bağlı talep de kendiliğinden "Çözüldü" olur (sonuç boşsa "Arıza giderildi."); böylece zincir sonuna kadar vatandaşa yansır.

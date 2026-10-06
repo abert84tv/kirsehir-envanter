@@ -81,6 +81,16 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .ks-pin.a{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-pin.bag{border:2px solid #15803d;box-shadow:0 0 0 3px rgba(21,128,61,.28)}
   #pts .bg{flex:none;font:600 10.5px/1 var(--font-body);color:#15803d;background:rgba(21,128,61,.12);border-radius:8px;padding:3px 6px}
+  #sonUz{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:8px;
+    max-width:calc(100% - 24px);padding:7px 8px 7px 12px;border-radius:14px;background:var(--color-bg,#fff);border:1px solid var(--color-divider);
+    box-shadow:0 4px 16px rgba(0,0,0,.18);font:600 12.5px/1 var(--font-body);color:var(--color-text);white-space:nowrap}
+  #sonUz.show{display:flex}
+  #sonUz input{all:unset;box-sizing:border-box;width:70px;height:38px;padding:0 8px;border-radius:10px;border:1px solid var(--color-divider);
+    text-align:right;font:700 15px/38px var(--font-body);color:var(--color-text);background:var(--color-bg,#fff)}
+  #sonUz button{all:unset;cursor:pointer;box-sizing:border-box;height:38px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13px/38px var(--font-body)}
+  #sonUz .u{color:var(--color-neutral-600);font-weight:500}
+  .ks-canli-et{background:var(--color-accent);border:none;color:#fff;font:700 13px/1 var(--font-body);padding:5px 9px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .ks-canli-et:before{display:none}
   .ks-seg{background:var(--color-text);border:1px solid var(--color-divider);border-radius:9px;color:#fff;padding:1px 5px;
     font:600 11px/1.3 var(--font-body);letter-spacing:-.01em}
   .ks-seg:before{display:none}
@@ -194,6 +204,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   <div id="body">
     <div id="mapKap">
       <div id="map"></div>
+      <div id="sonUz"><span class="u">Son nokta, öncekine</span><input id="sonUzM" type="number" inputmode="decimal" min="1" step="1"><span class="u">m</span><button id="sonUzGo" type="button">Ayarla</button></div>
       <div class="panel" id="tools">
         <button id="menu"><span class="bars"><i></i><i></i><i></i></span><span id="menu-lbl">Harita menüsü</span></button>
         <div class="body">
@@ -291,12 +302,43 @@ function mesafe(a, b) {
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
 }
+function hedefNokta(a, b, m) {
+  // a noktasından b yönünde tam m metre ilerideki nokta (büyük daire)
+  const R = 6371008.8, f1 = rad(a[0]), l1 = rad(a[1]);
+  const y = Math.sin(rad(b[1] - a[1])) * Math.cos(rad(b[0]));
+  const x = Math.cos(f1) * Math.sin(rad(b[0])) - Math.sin(f1) * Math.cos(rad(b[0])) * Math.cos(rad(b[1] - a[1]));
+  const t = (x === 0 && y === 0) ? Math.PI / 2 : Math.atan2(y, x), d = m / R;
+  const f2 = Math.asin(Math.sin(f1) * Math.cos(d) + Math.cos(f1) * Math.sin(d) * Math.cos(t));
+  const l2 = l1 + Math.atan2(Math.sin(t) * Math.sin(d) * Math.cos(f1), Math.cos(d) - Math.sin(f1) * Math.sin(f2));
+  return [f2 * 180 / Math.PI, l2 * 180 / Math.PI];
+}
 const km = m => m >= 1000 ? (m / 1000).toFixed(m < 10000 ? 2 : 1) + ' km' : Math.round(m) + ' m';
 const mtr = v => (v > 0 ? '+' : '') + Math.round(v) + ' m';
 
 function pinIkon(i, son, bagli) {
   return L.divIcon({ className: '', iconSize: [24, 24], iconAnchor: [12, 12],
     html: '<div class="ks-pin' + (son ? ' a' : '') + (bagli ? ' bag' : '') + '">' + i + '</div>' });
+}
+const canliEt = L.tooltip({ permanent: true, direction: 'top', offset: [0, -14], className: 'ks-canli-et' });
+function canliSurukle(i, ll) {
+  const g = [ll.lat, ll.lng];
+  const onceki = i > 0 ? noktalar[i - 1] : null;
+  const gecici = noktalar.map((q, j) => j === i ? g : q);
+  if (hat) hat.setLatLngs(gecici);
+  [i, i + 1].forEach(j => {
+    if (j < 1 || j >= gecici.length || !segEt[j - 1]) return;
+    segEt[j - 1].setLatLng([(gecici[j - 1][0] + gecici[j][0]) / 2, (gecici[j - 1][1] + gecici[j][1]) / 2])
+      .setContent(km(mesafe(gecici[j - 1], gecici[j])));
+  });
+  let toplam = 0;
+  for (let j = 1; j < gecici.length; j++) toplam += mesafe(gecici[j - 1], gecici[j]);
+  if (onceki) {
+    const d = mesafe(onceki, g);
+    canliEt.setLatLng(ll).setContent('↔ ' + km(d)); if (!canliEt._map) canliEt.addTo(map);
+    uyar((i + 1) + '. nokta, ' + i + '. noktaya ' + km(d) + ' uzakta · toplam ' + km(toplam));
+    if (i === noktalar.length - 1) el('sonUzM').value = Math.round(d);
+  } else uyar('Toplam ' + km(toplam));
+  el('mDist').textContent = km(toplam);
 }
 function ciz() {
   if (typeof aktTazele === 'function') aktTazele();
@@ -305,7 +347,9 @@ function ciz() {
   if (hat) { map.removeLayer(hat); hat = null; }
   noktalar.forEach((p, i) => {
     const mk = L.marker(p, { icon: pinIkon(i + 1, i === noktalar.length - 1, !!p.bag), draggable: true });
-    mk.on('dragend', e => { const ll = e.target.getLatLng(); noktalar[i] = [ll.lat, ll.lng]; ciz(); profilAl(); });
+    // Sürüklerken: çizgi, parça etiketleri ve "önceki noktaya uzaklık" anlık güncellenir
+    mk.on('drag', e => canliSurukle(i, e.target.getLatLng()));
+    mk.on('dragend', e => { const ll = e.target.getLatLng(); noktalar[i] = [ll.lat, ll.lng]; canliEt.remove(); ciz(); profilAl(); });
     mk.addTo(map); pinler.push(mk);
   });
   if (noktalar.length > 1) {
@@ -319,10 +363,28 @@ function ciz() {
     }
   }
   listele();
+  sonUzGuncelle();
   el('geri').disabled = !noktalar.length;
   el('temiz').disabled = !noktalar.length;
   el('yenile').disabled = noktalar.length < 2;
 }
+function sonUzGuncelle() {
+  const k = el('sonUz'), n = noktalar.length;
+  k.classList.toggle('show', n >= 2);
+  if (n >= 2 && document.activeElement !== el('sonUzM')) el('sonUzM').value = Math.round(mesafe(noktalar[n - 2], noktalar[n - 1]));
+}
+function sonUzUygula() {
+  const n = noktalar.length, m = parseFloat(String(el('sonUzM').value).replace(',', '.'));
+  if (n < 2 || !isFinite(m) || m <= 0) return uyar('Geçerli bir uzaklık (metre) yazın.');
+  const yeni = hedefNokta(noktalar[n - 2], noktalar[n - 1], m);
+  noktalar[n - 1] = yeni;           // yeni konum: tesise bağı kalkar, yön korunur
+  ciz(); profilAl();
+  if (!map.getBounds().contains(yeni)) map.panTo(yeni);
+  uyar(n + '. nokta, ' + (n - 1) + '. noktaya tam ' + km(m) + ' uzaklığa alındı.');
+  setTimeout(() => uyar(''), 3500);
+}
+el('sonUzGo').onclick = sonUzUygula;
+el('sonUzM').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); sonUzUygula(); } };
 function listele() {
   const k = el('pts');
   if (!noktalar.length) {

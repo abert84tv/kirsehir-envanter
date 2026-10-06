@@ -42,8 +42,8 @@ Deno.serve(async (req) => {
   let g: Record<string, any>;
   try { g = await req.json(); } catch { return yanit({ ok: false }, 400); }
 
-  // Programdan çağrı: webhook kurulumu (yalnız yönetici)
-  if (g.islem === 'kur') {
+  // Programdan çağrı: webhook kurulumu / kaldırma (yalnız yönetici)
+  if (g.islem === 'kur' || g.islem === 'kaldir') {
     if (!bot) return yanit({ ok: false, err: 'Önce bot anahtarını kaydedin.' });
     const o = await fetch(url + '/rest/v1/rpc/oturum_ac', {
       method: 'POST', headers: { apikey: anon, Authorization: 'Bearer ' + anon, 'Content-Type': 'application/json' },
@@ -52,6 +52,10 @@ Deno.serve(async (req) => {
     const oj = o.ok ? await o.json() : null;
     const k = Array.isArray(oj) ? oj[0] : oj;
     if (!k || String(k.rol) !== 'yonetici') return yanit({ ok: false, err: 'Yalnız yönetici bağlayabilir.' }, 403);
+    if (g.islem === 'kaldir') {
+      const kd = await (await tg('deleteWebhook', { drop_pending_updates: true })).json();
+      return yanit({ ok: !!kd.ok, err: kd.ok ? '' : (kd.description || 'Webhook kaldırılamadı.') });
+    }
     const me = await (await tg('getMe', {})).json();
     if (!me.ok) return yanit({ ok: false, err: 'Telegram anahtarı geçersiz.' });
     const wh = await (await tg('setWebhook', {

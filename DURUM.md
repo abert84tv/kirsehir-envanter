@@ -1992,3 +1992,13 @@ Sürüm 2026.10.05-114.
 - "Seçili kaydı nokta yap" ve "Açık arızalı kaydı nokta yap" düğmeleri ve işlevleri programdan kaldırıldı (masaüstü + telefon).
 - "Nokta ekle" açıkken bir kuyu/depo işaretine dokunulursa nokta tam o tesisin konumuna oturur ve kayda bağlanır (haritada yeşil halkalı numara, listede "KOD · başlangıç/bitiş" etiketi). "Nokta ekle" kapalıyken işaretlere dokunmak nokta eklemez.
 - Aktarırken "Bağlanacak kayıt" ilk/son uçtaki kayıttan gelir; hat türü uçlara göre önerilir (kuyu → Terfi, kuyu+depo → İsale, depo → Şebeke, AG/GES → Enerji), elle değiştirilebilir. Hat açıklaması "KOD → KOD · km" olarak yazılır. Hiç bağ yoksa ana programda seçili kayda eklenir.
+
+## 2026.10.06-138 — İş emri kapanıyor, kuyruk açıklandı, hat ucu metreyle, Özet düzeni
+- İş emri kapatılamıyordu: sunucudaki kapatma işlevi tesis geçmişine yazarken kullanıcı kimliği türü uyuşmadığı için hata veriyordu ve program hatayı göstermiyordu. SQL düzeltildi (SQL-is-emri-kapat-duzelt.sql), mühendis de kapatabilir. Program artık hatayı gösterir; çözülmüş arızanın açık kalan iş emrini kendiliğinden kapatır; İş emirleri panelinde elle "İş emrini kapat" düğmesi var.
+- Arıza kartında malzeme listesi açılır liste oldu (telefon + masaüstü); ararken kendiliğinden açılır, seçince kapanır.
+- Bekleyen/kuyruk: üst çubuktaki rozet yalnız bağlantı durumunu söyler ("Canlı"); turuncu "Bekleyen N" düğmesi gitmemiş kayıtları sayar. Kuyruk sayfası her bekleyen kaydı ve neden beklediğini listeler; "Şimdi gönder" tesis, arıza, ambar, modül, not ve fotoğrafları dener.
+- Hedef süre (SLA) kapalıyken arıza kartındaki SLA alanları ve Özet'teki SLA / hedef süre göstergeleri de gizlenir (Ayarlar > Modüller > Hedef süre).
+- "Planlı" süzgeci "Periyodik bakım" oldu (tesisin son bakım tarihine göre hesaplanır).
+- Hat kesiti: nokta sürüklenirken önceki noktaya uzaklık canlı görünür; altta "Son nokta, öncekine [100] m Ayarla" ile son nokta tam metreye alınır.
+- Özet: kart düzeni, yuvarlak ve vurgu renkli çubuklar, okunur bölüm başlıkları.
+- Telegram: "Anahtarı sil" bot bağlantısını da keser (edge function telegram-basvuru v2); kart açıklamasına adımlar eklendi.

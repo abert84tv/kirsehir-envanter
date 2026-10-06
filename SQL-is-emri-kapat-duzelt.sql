@@ -1,0 +1,3 @@
+-- İş emri kapatma hatası: gecmis.kim uuid, kullanıcı kimliği bigint → kapanış sunucuda hata veriyordu.
+-- Düzeltme: kim boş bırakılır (ad kim_ad'a yazılır); mühendis de kapatabilir (açma/atama yetkisiyle aynı).
+-- Uygulandı: 2026-10-06 (migration is_emri_kapat_duzelt)

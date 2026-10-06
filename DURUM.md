@@ -2022,3 +2022,6 @@ Sürüm 2026.10.05-114.
 ## 2026.10.06-143 — Masaüstünde Sahadayım / İşi tamamla, "Tümü" ISU'yu kapsıyor
 - Arıza kartında (masaüstü + telefon ayrıntılı form) "İş akışı"nın üstüne Sahadayım ve İşi tamamla düğmeleri eklendi (telefonun sade ekranıyla aynı mantık). Sahadayım işi "Sahada" yapar; İşi tamamla durumu Çözüldü yapıp kaydeder (kanıt fotoğrafı zorunluysa eksikse uyarır, malzeme zimmetten düşme sorusu çıkar; merkez onayı açıksa "Kontrolde" olur). Masaüstünde Sahadayım konum almaz (bilgisayarın konumu arızanın yeri değildir).
 - Harita ve Hat kesiti "Tümü" süzgeci artık ISU Kaynak ve ISU Memba noktalarını da açar/kapar; varsayılan açık. Kullanıcı bazlı kayıtlı süzgeç ISU alanlarını da saklar.
+
+## 2026.10.06-144 — Masaüstü sağ panelde üstte sabit çıkış
+- Tesis kartı (kuyu/depo/AG/GES), arıza formu ve koordinat dönüşümü panellerinde sağ üstte sabit ✕ düğmesi: panel aşağı kaydırılsa da görünür, ilgili paneli kapatır. Alttaki "Kapat" düğmeleri yerinde. Arıza panelinde üstte çıkış yoktu; eklendi.

@@ -1,6 +1,6 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.06-131';
+const SURUM = 'ks-2026.10.06-132';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo-2';
 const KARO_LIMIT = 900;
@@ -39,7 +39,7 @@ self.addEventListener('activate', e => {
 function zamanAsimli(istek, ms) {
   return new Promise((res, rej) => {
     const t = setTimeout(() => rej(new Error('zaman aşımı')), ms);
-    fetch(istek).then(r => { clearTimeout(t); res(r); }, e => { clearTimeout(t); rej(e); });
+    fetch(istek, { cache: 'no-cache' }).then(r => { clearTimeout(t); res(r); }, e => { clearTimeout(t); rej(e); });
   });
 }
 

@@ -4570,15 +4570,22 @@ Hareket gir
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
-<div class="scroll" style="position:relative;flex:none;z-index:6;display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;padding:9px 12px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
-<div style="position:sticky;left:-12px;z-index:3;flex:none;display:flex;align-items:center;gap:6px;background:{{ ui.surf }};padding:0 8px 0 12px;margin:0 -2px 0 -12px;box-shadow:8px 0 8px -6px rgba(0,0,0,.12)">
-<sc-for list="{{ telGecis.liste }}" as="tg" hint-placeholder-count="2">
-<button onClick="{{ tg.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ ui.bg }};color:{{ ui.fg }};border:1px solid {{ ui.rule }}">{{ tg.label }}</button>
+<div style="position:relative;flex:none;z-index:6;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:8px;padding:7px 10px">
+<div style="flex:1;min-width:0;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="3">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
 </sc-for>
 </div>
+<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Süzgeç <span style="font-size:10px">{{ telSuz.ok }}</span></button>
+</div>
+<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;text-align:center;padding:12px 15px;border-radius:20px;font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.telBg }};color:{{ f.telFg }};border:1px solid {{ ui.rule }}">{{ f.label }}</button>
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
 </sc-for>
+</div>
+</sc-if>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
@@ -4591,6 +4598,9 @@ Hareket gir
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <input value="{{ envKontrol.q }}" onChange="{{ envKontrol.onQ }}" placeholder="Envanterde ara — kod, köy, ilçe, alan" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:12px 11px;min-height:46px"></input>
+<button onClick="{{ telSuz.listeTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid {{ telSuz.listeKenar }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)"><span>Süzgeç ve sıralama</span><span style="color:{{ ui.mut }};font-size:11px">{{ telSuz.listeEtiket }} {{ telSuz.listeOk }}</span></button>
+<sc-if value="{{ telSuz.listeAcik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:8px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <select value="{{ envKontrol.turVal }}" onChange="{{ envKontrol.onTur }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ envKontrol.turler }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
 <select value="{{ envKontrol.ilceVal }}" onChange="{{ envKontrol.onIlceF }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ envKontrol.ilceler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
@@ -4601,6 +4611,8 @@ Hareket gir
 <button onClick="{{ envKontrol.yonTik }}" title="Sıra yönünü çevir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center">{{ envKontrol.yon }}</button>
 </div>
 </div>
+</div>
+</sc-if>
 <div style="display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ envKontrol.sayi }}</span>
 <sc-if value="{{ envKontrol.suzuluyor }}" hint-placeholder-val="{{ false }}">
@@ -4620,7 +4632,7 @@ Hareket gir
 </span>
 <span style="flex:none;display:flex;flex-direction:column;gap:4px;align-items:flex-end">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.aBg }};color:{{ a.aFg }};border-radius:10px;border:1px solid {{ a.aBorder }}">{{ a.aLabel }}</span>
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.sBg }};color:{{ a.sFg }};border-radius:10px;border:1px solid {{ a.sBorder }}">{{ a.sLabel }}</span>
+<sc-if value="{{ a.sVar }}" hint-placeholder-val="{{ false }}"><span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.sBg }};color:{{ a.sFg }};border-radius:10px;border:1px solid {{ a.sBorder }}">{{ a.sLabel }}</span></sc-if>
 </span>
 </button>
 </sc-for>
@@ -4635,6 +4647,9 @@ Hareket gir
 </div>
 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <input value="{{ arzKontrol.q }}" onChange="{{ arzKontrol.onQ }}" placeholder="Arızada ara — no, kayıt, tür, ekip" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:12px 11px;min-height:46px"></input>
+<button onClick="{{ telSuz.arzTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid {{ telSuz.arzKenar }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)"><span>Süzgeç ve sıralama</span><span style="color:{{ ui.mut }};font-size:11px">{{ telSuz.arzEtiket }} {{ telSuz.arzOk }}</span></button>
+<sc-if value="{{ telSuz.arzAcik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-direction:column;gap:8px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
 <select value="{{ arzKontrol.oncelikVal }}" onChange="{{ arzKontrol.onOncelik }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ arzKontrol.oncelikler }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
 <select value="{{ arzKontrol.durumVal }}" onChange="{{ arzKontrol.onDurum }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:11px 8px;min-height:44px;cursor:pointer"><sc-for list="{{ arzKontrol.durumlar }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select>
@@ -4644,6 +4659,8 @@ Hareket gir
 <button onClick="{{ arzKontrol.yonTik }}" title="Sıra yönünü çevir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px;min-height:36px;flex:1 0 auto;white-space:nowrap;justify-content:center;display:flex;align-items:center">{{ arzKontrol.yon }}</button>
 </div>
 </div>
+</div>
+</sc-if>
 <div style="display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ arzKontrol.sayi }}</span>
 <sc-if value="{{ arzKontrol.suzuluyor }}" hint-placeholder-val="{{ false }}">
@@ -9183,7 +9200,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-131';
+const SURUM = '2026.10.06-132';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9331,7 +9348,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    telMenuAcik: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
+    telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -16016,6 +16033,22 @@ class Component extends DCLogic {
       yardimZemin: s.yardim ? 'var(--color-accent)' : 'transparent',
       yardimYazi: s.yardim ? '#fff' : ui.fg,
       toggleYardim: () => this.yardimDegistir(),
+      telSuz: (() => {
+        const acik = !!s.telSuzAcik, lAcik = !!s.telListeSuzAcik;
+        return {
+          acik, ok: acik ? '▴' : '▾',
+          tog: () => this.setState({ telSuzAcik: !this.state.telSuzAcik }),
+          kenar: acik ? 'var(--color-accent)' : ui.rule, zemin: acik ? 'var(--color-accent)' : 'transparent', yazi: acik ? '#fff' : ui.fg,
+          listeAcik: lAcik, listeOk: lAcik ? '▴' : '▾',
+          listeTog: () => this.setState({ telListeSuzAcik: !this.state.telListeSuzAcik }),
+          listeKenar: lAcik ? 'var(--color-accent)' : ui.rule,
+          listeEtiket: envKontrol.suzuluyor ? 'süzülüyor' : '',
+          arzAcik: !!s.telArzSuzAcik, arzOk: s.telArzSuzAcik ? '▴' : '▾',
+          arzTog: () => this.setState({ telArzSuzAcik: !this.state.telArzSuzAcik }),
+          arzKenar: s.telArzSuzAcik ? 'var(--color-accent)' : ui.rule,
+          arzEtiket: (typeof arzKontrol !== 'undefined' && arzKontrol.suzuluyor) ? 'süzülüyor' : ''
+        };
+      })(),
       telMenu: {
         acik: !!s.telMenuAcik, kenar: s.telMenuAcik ? 'var(--color-accent)' : ui.rule,
         zemin: s.telMenuAcik ? 'var(--color-accent)' : 'transparent', yazi: s.telMenuAcik ? '#fff' : ui.fg,
@@ -18283,7 +18316,7 @@ class Component extends DCLogic {
           fill: pend ? 'var(--color-accent)' : 'transparent',
           stroke: pend ? 'var(--color-accent)' : ui.rule,
           ink: pend ? '#fff' : ui.fg,
-          sLabel: pend ? 'Bekliyor' : 'Eşitlendi',
+          sLabel: pend ? 'Bekliyor' : 'Eşitlendi', sVar: !!pend,
           sBg: pend ? ui.pend : 'transparent',
           sFg: pend ? (dark ? 'var(--color-accent-400)' : 'var(--color-accent-700)') : ui.mut,
           sBorder: pend ? 'var(--color-accent)' : ui.rule,

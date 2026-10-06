@@ -1969,3 +1969,8 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.06-131 — Telefonda harita ekranından Hat kesitine geçiş
 - Envanter haritasında "Liste" ve "Hat kesiti" geçiş düğmeleri süzgeç şeridine sabitlendi (şerit kaysa da görünür kalır).
+
+## 2026.10.06-132 — Telefonda sadeleştirme
+- Envanter haritası: sabit üçlü geçiş (Harita | Liste | Hat kesiti) + açılır "Süzgeç" bloğu (varsayılan kapalı).
+- Envanter listesi ve Arıza listesi: süzgeç ve sıralama açılır-kapanır tek satırda; satırda yalnız bekleyen kayıt etiketi görünür.
+- Servis çalışanı sayfaları her seferinde sunucuyla doğrular (eski kopyada kalma riski azaldı).

@@ -4418,6 +4418,19 @@ Hareket gir
 <sc-if value="{{ faultForm.isExisting }}" hint-placeholder-val="{{ false }}">
 <div style="border-top:1px solid {{ ui.rule }};padding-top:13px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-bottom:8px">İş akışı</div>
+<sc-if value="{{ faultForm.hizli.var }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-if value="{{ faultForm.hizli.vardimVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ faultForm.hizli.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 150px;height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/46px var(--font-body);text-align:center">Sahadayım</button>
+</sc-if>
+<sc-if value="{{ faultForm.hizli.tamamlaVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.hizli.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 150px;height:46px;border-radius:12px;background:#34c759;color:#fff;font:700 14px/46px var(--font-body);text-align:center">İşi tamamla</button>
+</sc-if>
+</div>
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.hizli.not }}</span>
+</div>
+</sc-if>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{ faultForm.workflow }}" as="w" hint-placeholder-count="4">
 <button onClick="{{ w.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;opacity:{{ w.op }};padding:9px 12px;border-radius:10px;border:1px solid {{ w.border }};background:{{ w.bg }};color:{{ w.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">{{ w.label }}</button>
@@ -8240,10 +8253,25 @@ Hareket gir
 </div>
 
 <sc-if value="{{ faultForm.isExisting }}" hint-placeholder-val="{{ false }}">
-<div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-wrap:wrap;gap:8px">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:12px;display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ faultForm.hizli.var }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-if value="{{ faultForm.hizli.vardimVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ faultForm.hizli.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 150px;height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/46px var(--font-body);text-align:center">Sahadayım</button>
+</sc-if>
+<sc-if value="{{ faultForm.hizli.tamamlaVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.hizli.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 150px;height:46px;border-radius:12px;background:#34c759;color:#fff;font:700 14px/46px var(--font-body);text-align:center">İşi tamamla</button>
+</sc-if>
+</div>
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.hizli.not }}</span>
+</div>
+</sc-if>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{ faultForm.workflow }}" as="w" hint-placeholder-count="4">
 <button onClick="{{ w.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;opacity:{{ w.op }};padding:10px 12px;border-radius:10px;border:1px solid {{ w.border }};background:{{ w.bg }};color:{{ w.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">{{ w.label }}</button>
 </sc-for>
+</div>
 <sc-if value="{{ faultForm.yenidenAc.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px 13px;display:flex;flex-direction:column;gap:10px">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Kapanmış kayıt</span>
@@ -9280,7 +9308,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-142';
+const SURUM = '2026.10.06-143';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9373,12 +9401,15 @@ class Component extends DCLogic {
     panel: 'yok', faultForm: null, queue: [], toast: null, hatTam: false,
     hatKatman: (() => { try { return localStorage.getItem('ks-hat-katman') !== '0'; } catch (e) { return true; } })(),
     filter: (() => {
-      // kaynak/memba: ISU'dan gelen referans katmanları, varsayılan kapalı —
+      // kaynak/memba: ISU'dan gelen referans katmanları — "Tümü" bunları da kapsar (2026.10.06);
       // depo süzgeci ise ISU depo referans noktalarını da kapsar (bkz. harita.html)
-      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: false, memba: false };
+      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: true, memba: true };
       try {
         const p = JSON.parse(localStorage.getItem('ks-suzgec') || 'null');
-        if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;
+        // Eski kayıtta ISU kapalı saklıydı: bir kez açılır (sonra kullanıcının seçimi korunur)
+        const goc = localStorage.getItem('ks-suzgec-isu') === '1';
+        if (p && typeof p === 'object') for (const k in v) if (k in p && (goc || (k !== 'kaynak' && k !== 'memba'))) v[k] = p[k] !== false;
+        localStorage.setItem('ks-suzgec-isu', '1');
       } catch (e) { /* depolama kapalı */ }
       return v;
     })(),
@@ -13174,7 +13205,8 @@ class Component extends DCLogic {
     }
     this.setState(st => ({ faults: (st.faults || []).map(x => x.id === f.id ? g : x), sahaKapanis: null }));
     // Sahaya varınca arıza noktası kendiliğinden alınır (izin yoksa uyarır)
-    if (yeni === 'sahada' && !f.nokta) setTimeout(() => this.arizaNoktaAl(g, true), 300);
+    // (yalnız telefonda: masaüstü bilgisayarın konumu arızanın yeri değildir)
+    if (yeni === 'sahada' && !f.nokta && this.state.device === 'phone') setTimeout(() => this.arizaNoktaAl(g, true), 300);
     const a = (this.state.assets || []).find(x => x.id === f.assetId);
     this.denetimYaz('ariza', 'Saha: ' + (STATUS_LABEL[yeni] || yeni), (f.no || '') + ' · ' + (f.type || '')
       + ((g.malzeme || []).length && kapanis ? ' · ' + g.malzeme.map(m => m.ad + ' × ' + m.adet).join(', ') : ''), a ? a.code : '');
@@ -14306,7 +14338,10 @@ class Component extends DCLogic {
         out.filter = {
           kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
           ag: p.filter.ag !== false, ges: p.filter.ges !== false,
-          pasif: p.filter.pasif !== false
+          pasif: p.filter.pasif !== false,
+          // ISU katmanları: eski kayıtta yoksa "Tümü" ile birlikte açık gelir
+          kaynak: 'kaynak' in p.filter ? p.filter.kaynak !== false : true,
+          memba: 'memba' in p.filter ? p.filter.memba !== false : true
         };
       }
       if (typeof p.hatKatman === 'boolean') out.hatKatman = p.hatKatman;
@@ -14345,7 +14380,8 @@ class Component extends DCLogic {
       const f = {
         kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
         ag: s.filter.ag !== false, ges: s.filter.ges !== false,
-        pasif: s.filter.pasif !== false
+        pasif: s.filter.pasif !== false,
+        kaynak: s.filter.kaynak !== false, memba: s.filter.memba !== false
       };
       localStorage.setItem('ks-pref-' + s.session.user, JSON.stringify({
         mapBase: s.mapBase, theme: s.theme, navMode: s.navMode, filter: f,
@@ -18524,7 +18560,7 @@ class Component extends DCLogic {
 
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
       filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
-        const turler = ['kuyu', 'depo', 'ag', 'ges'];
+        const turler = ['kuyu', 'depo', 'ag', 'ges', 'kaynak', 'memba'];
         const on = id === 'all' ? turler.every(t => s.filter[t])
           : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];
         return {
@@ -18537,7 +18573,7 @@ class Component extends DCLogic {
           telBg: ui.surf,
           telFg: on ? ui.acc : ui.mut,
           toggle: () => id === 'all'
-            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on } }, () => this.pushMap())
+            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
             : id === 'pasif'
               ? this.setState({ filter: { ...s.filter, pasif: s.filter.pasif === false } }, () => this.pushMap())
               : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
@@ -18550,7 +18586,7 @@ class Component extends DCLogic {
         line2: 'OpenStreetMap' },
       map: {
         filtreBos: !['kuyu', 'depo', 'ag', 'ges'].some(k => s.filter[k]),
-        hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true } }, () => this.pushMap()),
+        hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, kaynak: true, memba: true } }, () => this.pushMap()),
         display: tabId === 'harita' ? 'flex' : 'none', arizaBtn: canCreateFault ? 'flex' : 'none' },
       zoomIn: () => this.setState({ zoom: Math.min(15.5, s.zoom + 1) }),
       zoomOut: () => this.setState({ zoom: Math.max(9, s.zoom - 1) }),
@@ -18968,6 +19004,27 @@ class Component extends DCLogic {
           fg: ff && ff.priority === p ? (p === 'Acil' ? '#fff' : ui.acc) : ui.mut,
           pick: () => this.setState({ faultForm: { ...this.state.faultForm, priority: p } })
         })),
+        // Hızlı iş akışı (masaüstü + telefon ayrıntılı form): Sahadayım → İşi tamamla
+        hizli: (() => {
+          if (!ff || !ff.id) return { var: false };
+          const kapali = KAPALI_DURUM.includes(ff.status);
+          const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
+          const vardimVar = !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi;
+          const tamamlaVar = !kapali && ff.status === 'sahada' && kendiIsi;
+          const hedef = onayOn && !canAssign ? 'kontrol' : 'cozuldu';
+          return {
+            var: vardimVar || tamamlaVar, vardimVar, tamamlaVar,
+            not: vardimVar ? 'Sahadayım: ekip yerine vardı, iş “Sahada” olur ve başlama zamanı kaydolur.'
+              : 'İşi tamamla: aşağıdaki fotoğraf, malzeme ve süre ile ' + (hedef === 'kontrol' ? 'işi merkez onayına gönderir.' : 'kaydı kapatır; kanıt fotoğrafı zorunluysa eksikse uyarır.'),
+            vardim: () => {
+              const f0 = (this.state.faults || []).find(x => x.id === ff.id) || ff;
+              this.sahaDurum({ ...f0, note: this.state.faultForm.note ?? f0.note }, 'sahada');
+              this.setState({ faultForm: { ...this.state.faultForm, status: 'sahada' } });
+              this.duyur((ff.no || 'İş') + ' sahada olarak işaretlendi. İş bitince “İşi tamamla”ya basın.', 5000, 'iyi');
+            },
+            tamamla: () => this.setState({ faultForm: { ...this.state.faultForm, status: hedef } }, () => this.renderVals().saveFault())
+          };
+        })(),
         workflow: wfSteps.map(([id, label]) => {
           // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
           // saha ekibi işi Kontrolde durumuna bırakır.

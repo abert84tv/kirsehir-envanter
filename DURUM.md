@@ -2018,3 +2018,7 @@ Sürüm 2026.10.05-114.
 ## 2026.10.06-142 — Başvuru durum takibi
 - Telegram'dan başvuran vatandaşa durum değişince bot kendiliğinden yazar (İnceleniyor / Ekip görevlendirildi / Çözüldü / Karşılanamıyor + not). /durum KOD ile de sorulabilir. Spam'e atılan başvuruya mesaj gitmez.
 - Talepten açılan arıza çözülünce bağlı talep de kendiliğinden "Çözüldü" olur (sonuç boşsa "Arıza giderildi."); böylece zincir sonuna kadar vatandaşa yansır.
+
+## 2026.10.06-143 — Masaüstünde Sahadayım / İşi tamamla, "Tümü" ISU'yu kapsıyor
+- Arıza kartında (masaüstü + telefon ayrıntılı form) "İş akışı"nın üstüne Sahadayım ve İşi tamamla düğmeleri eklendi (telefonun sade ekranıyla aynı mantık). Sahadayım işi "Sahada" yapar; İşi tamamla durumu Çözüldü yapıp kaydeder (kanıt fotoğrafı zorunluysa eksikse uyarır, malzeme zimmetten düşme sorusu çıkar; merkez onayı açıksa "Kontrolde" olur). Masaüstünde Sahadayım konum almaz (bilgisayarın konumu arızanın yeri değildir).
+- Harita ve Hat kesiti "Tümü" süzgeci artık ISU Kaynak ve ISU Memba noktalarını da açar/kapar; varsayılan açık. Kullanıcı bazlı kayıtlı süzgeç ISU alanlarını da saklar.

@@ -67,11 +67,21 @@ console.log('0b) src/ modül yapısı');
   (function yuru(d) {
     for (const a of fs.readdirSync(d)) { const p = path.join(d, a); if (fs.statSync(p).isDirectory()) yuru(p); else hepsi.push(path.relative(SRC, p).split(path.sep).join('/')); }
   })(SRC);
-  const serbest = /(^|\/)(modul\.json|README\.md)$|\/sql\/|\/islev\//;
+  const serbest = /(^|\/)(modul\.json|README\.md|esdeger-bilinen\.json)$|\/sql\/|\/islev\//;
   const yetim = hepsi.filter(f => !goruldu.has(f) && !serbest.test(f));
   for (const y of yetim) { basarisiz('yetim dosya (hiçbir yerden dahil edilmiyor): src/' + y); sorun++; }
   if (!sorun) basari(`${klasorler.length} modül, ${hepsi.length} dosya — modul.json tamam, yetim yok`);
 })();
+
+// 0c) masaüstü ↔ telefon eşdeğerlik: bir özellik yalnız bir tarafa eklenmiş mi?
+console.log('0c) masaüstü/telefon eşdeğerlik (esdeger-kontrol.js)');
+try {
+  const cikti = execFileSync(process.execPath, [path.join(ROOT, 'esdeger-kontrol.js')], { stdio: 'pipe' }).toString().trim();
+  basari(cikti.split(/\r?\n/).join(' · '));
+} catch (e) {
+  basarisiz('yeni masaüstü/telefon farkı:');
+  console.log(String(e.stderr || e.stdout || e.message).trim().split(/\r?\n/).map(s => '      ' + s).join('\n'));
+}
 
 // 1) HTML dosyalarındaki gömülü <script> bloklarının sözdizimi
 console.log('1) Gömülü <script> sözdizimi');

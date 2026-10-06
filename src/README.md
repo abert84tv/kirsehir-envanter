@@ -50,3 +50,11 @@ Değiştir → `node build.js` → `node duman-testi.js` → tarayıcıda dene �
 - Canlı veritabanını değiştiren SQL: önce modülün `sql/` klasörüne yazılır, sonra uygulanır, `SQL-INDEKS.md` güncellenir.
 
 İlerleme kaydı: `../MODUL-ILERLEME.md`.
+
+## Masaüstü ↔ telefon eşdeğerlik kontrolü
+Şablonlar iki ayrı parça olduğu için bir düğme/giriş yalnız bir tarafa eklenip ötekine unutulabilir. `node esdeger-kontrol.js` (duman-testi de çalıştırır)
+her iki tarafın eylem bağlarını (`onClick="{{ ... }}"` vb.) karşılaştırır; **yeni** bir tek taraflı bağ görürse hata verir.
+- Düzeltme: aynı özelliği öteki tarafa ekleyin (aynı bağı kullanmak yeterli).
+- Bilerek farklıysa: `node esdeger-kontrol.js --yaz` ve `src/esdeger-bilinen.json`'daki satırın **nedenini** yazın.
+- `--tum`: bütün farklar modüle göre · `--adaylar`: "EKSİK ADAYI" olarak işaretli, henüz karara bağlanmamış farklar (şu an 10: ör. telefonda işçilik girişi, Özet ilçe/zaman süzgeci).
+Telefonda sade saha ekranı gibi bilinçli tasarım farkları listede "tasarım:" nedeniyle durur.

@@ -14,7 +14,7 @@ Vercel 1-2 dakikada yayınlar, sonra adreste **Ctrl+Shift+R**.
 
 ## ÖNEMLİ — önce SQL
 
-`SQL-cop-kutusu.sql` dosyasını **Supabase > SQL Editor**'de bir kez
+`src/moduller/denetim/sql/SQL-cop-kutusu.sql` dosyasını **Supabase > SQL Editor**'de bir kez
 çalıştırın (içeriğini kopyala-yapıştır → Run). Bu dosya depoya
 yüklenmez, yalnızca Supabase'de çalıştırılır.
 

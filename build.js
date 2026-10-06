@@ -18,7 +18,6 @@ const path = require('path');
 
 const KOK = __dirname;
 const SRC = path.join(KOK, 'src');
-const CIKTI = path.join(KOK, 'index.html');
 const ISARET = /^(?:<!--@dahil (.+?)-->|\/\/@dahil (.+?)|\/\*@dahil (.+?)\*\/)$/;
 
 const oku = p => fs.readFileSync(p, 'utf8').replace(/\r\n/g, '\n');
@@ -35,23 +34,27 @@ function genislet(metin, kaynak, yigin) {
   }).join('\n');
 }
 
-function uret() {
-  return genislet(oku(path.join(SRC, 'kabuk.html')), 'kabuk.html', []);
+// Hedefler: [kaynak (src/'ye göre), çıktı (kökte)]
+const HEDEFLER = [
+  ['kabuk.html', 'index.html'],
+  ['baglanti/kabuk.js', 'supabase-baglanti.js'],
+];
+function uret(kaynak) {
+  return genislet(oku(path.join(SRC, kaynak)), kaynak, []);
 }
 
 const kontrol = process.argv.includes('--kontrol');
-let cikti;
-try { cikti = uret(); } catch (e) { console.error('Derleme hatası: ' + e.message); process.exit(2); }
-
-if (kontrol) {
-  const mevcut = fs.existsSync(CIKTI) ? oku(CIKTI) : '';
-  if (mevcut !== cikti) {
-    console.error('index.html güncel değil — "node build.js" çalıştırın (src/ içinde değişiklik var ama index.html yeniden üretilmemiş).');
-    process.exit(1);
-  }
-  console.log('index.html güncel (' + cikti.split('\n').length + ' satır).');
-} else {
-  const mevcut = fs.existsSync(CIKTI) ? oku(CIKTI) : null;
-  if (mevcut === cikti) console.log('index.html zaten güncel (' + cikti.split('\n').length + ' satır).');
-  else { fs.writeFileSync(CIKTI, cikti); console.log('index.html üretildi (' + cikti.split('\n').length + ' satır).'); }
+let hata = 0;
+for (const [kaynak, cikti] of HEDEFLER) {
+  const hedef = path.join(KOK, cikti);
+  let metin;
+  try { metin = uret(kaynak); } catch (e) { console.error('Derleme hatası: ' + e.message); process.exit(2); }
+  const mevcut = fs.existsSync(hedef) ? oku(hedef) : null;
+  const satir = metin.split(/\n/).length;
+  if (kontrol) {
+    if (mevcut !== metin) { console.error(cikti + ' güncel değil — "node build.js" çalıştırın (src/ içinde değişiklik var ama ' + cikti + ' yeniden üretilmemiş).'); hata = 1; }
+    else console.log(cikti + ' güncel (' + satir + ' satır).');
+  } else if (mevcut === metin) console.log(cikti + ' zaten güncel (' + satir + ' satır).');
+  else { fs.writeFileSync(hedef, metin); console.log(cikti + ' üretildi (' + satir + ' satır).'); }
 }
+process.exit(hata);

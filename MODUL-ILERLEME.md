@@ -19,16 +19,16 @@ mantık (yöntemler), görünüm modeli. `node build.js` bunları birleştirip *
 ## Durum
 - [x] **Faz 0** — tek parça → `src/` (74 parça, 21 modül klasörü), `build.js`, duman-testi entegrasyonu, Vercel `buildCommand`. (2026-10-07)
 - [x] **Faz 1** — kabuk 233 satır; render hazırlığı/görünüm/yöntemler alt konulara bölündü; `componentDidMount` 10 `baslat*` yöntemine ayrıldı (2026-10-07)
-- [ ] **Faz 2** — SQL dosyaları ve `supabase-baglanti.js` sarmalayıcılarını modüllere taşı
+- [x] **Faz 2** — `supabase-baglanti.js` src/baglanti/ + modül parçalarından derleniyor; SQL `src/moduller/<m>/sql/`, edge function `islev/` altında; `SQL-INDEKS.md` (2026-10-07)
 - [ ] **Faz 3** — modül bildirimi (`modul.json`: ad, bağımlılık, açıklama) + duman-testinde modül başına kontrol
 - [ ] **Faz 4** — `node yeni-modul.js <ad>` iskelet üretici + `src/README.md` "özellik ekle / çıkar" kılavuzu
 - [ ] **Faz 5** — DURUM.md / README güncellemesi, son tam doğrulama, kullanıcıya rapor
 
 ## SIRADAKİ ADIM
-**Faz 2:** (a) `build.js`'e ikinci hedef ekle: `src/baglanti/kabuk.js` → `supabase-baglanti.js` (ES modül; `export` işlevleri modül başına parça: telemetri, basvuru, entegrasyon, ariza, is-emri, ambar... — sıra/`import`'lar korunsun, çıktı bayt bayt aynı olsun);
-(b) `SQL-*.sql` dosyalarını `src/moduller/<ad>/sql/` altına `git mv` ile taşı, kökte `SQL-INDEKS.md` (hangi dosya hangi modül, hangi sırayla uygulandı) yaz, KURULUM.md/OKU.md/README.md içindeki yolları güncelle;
-(c) `supabase-islev-*.ts` edge function kaynaklarını `src/moduller/<ad>/islev/` altına taşı (telegram→basvuru, talep-siniflandir→talep, mesaj-gonder→bildirim); `duman-testi.js` ve dokümanlardaki yolları güncelle;
-(d) Faz 2'yi işaretle, Faz 3'e geç.
+**Faz 3:** her modül klasörüne `modul.json` yaz (ad, açıklama, sahip olduğu sekme/panel anahtarları, bağımlı olduğu modüller, `kapatilabilir` + `s.modul.<anahtar>` anahtarı varsa onu);
+`duman-testi.js`'e kontrol ekle: (1) her `src/moduller/*` klasöründe `modul.json` var ve geçerli JSON; (2) `modul.json`'daki bağımlılıklar gerçek klasör; (3) `src/` altındaki hiçbir dosya "yetim" değil — her dosya `kabuk.html`/`baglanti/kabuk.js`'den
+(dolaylı) dahil edilmiş ya da `sql/`/`islev/`/`modul.json`/README; (4) dahil işaretleri dosya sonunda boş satır bırakmıyor.
+Sonra Faz 4 (`yeni-modul.js` iskelet üretici + `src/README.md` kılavuzu), Faz 5 (son doğrulama + rapor + zamanlanmış görevi kapat).
 
 ## Notlar
 - Dahil işaretleri: `<!--@dahil yol-->` (HTML), `//@dahil yol` (JS), `/*@dahil yol*/` (CSS); yol `src/`'ye göre.

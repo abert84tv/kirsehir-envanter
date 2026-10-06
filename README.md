@@ -99,15 +99,15 @@ piksel yazılmamalı, bu değişkenler kullanılmalı.
 
 Supabase SQL düzenleyicisinde bir kez, bu sırayla:
 
-1. `SQL-yeni-moduller.sql`
-2. `SQL-cop-kutusu.sql`
-3. `SQL-moduller-sunucu.sql`
-4. `SQL-veri-butunlugu.sql`
-5. `SQL-ambar-hurda.sql` — ambar hareketine "hurda" türü ekler (2026.09.15)
-6. `SQL-is-emirleri.sql` — İş Emri tablosu + RPC seti (2026.09.30)
-7. `SQL-kanit-saklama.sql` — arıza kanıtı 2 yıl / envanter fotoğrafı ömür
+1. `src/moduller/cekirdek/sql/SQL-yeni-moduller.sql`
+2. `src/moduller/denetim/sql/SQL-cop-kutusu.sql`
+3. `src/moduller/esitleme/sql/SQL-moduller-sunucu.sql`
+4. `src/moduller/esitleme/sql/SQL-veri-butunlugu.sql`
+5. `src/moduller/ambar/sql/SQL-ambar-hurda.sql` — ambar hareketine "hurda" türü ekler (2026.09.15)
+6. `src/moduller/is-emri/sql/SQL-is-emirleri.sql` — İş Emri tablosu + RPC seti (2026.09.30)
+7. `src/moduller/ariza/sql/SQL-kanit-saklama.sql` — arıza kanıtı 2 yıl / envanter fotoğrafı ömür
    boyu saklama politikası, KVKK (2026.09.30)
-8. `SQL-ambar-koy-raporu.sql` — ambar hareketine tesis referansı ekler,
+8. `src/moduller/ambar/sql/SQL-ambar-koy-raporu.sql` — ambar hareketine tesis referansı ekler,
    köy/ilçe bazlı malzeme raporu için (2026.09.30)
 
 Daha önce çalıştırılanlar tekrar edilmez; hepsi `create or replace` ile

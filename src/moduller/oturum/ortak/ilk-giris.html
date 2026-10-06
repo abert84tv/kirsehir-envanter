@@ -1,0 +1,30 @@
+<!-- ══════════════ İLK GİRİŞ — ŞİFRE BELİRLEME ══════════════ -->
+<sc-if value="{{ pwChange.on }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100dvh;box-sizing:border-box;padding:24px;display:flex;align-items:center;justify-content:center">
+<div style="width:452px;max-width:100%;border-radius:18px;border:1px solid var(--color-divider);background:var(--color-surface);box-shadow:var(--shadow-md);overflow:hidden">
+<div style="padding:26px 24px 22px">
+<div style="width:26px;height:26px;background:var(--color-accent);margin-bottom:18px"></div>
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:9px">İlk giriş</div>
+<h1 style="font:600 23px/1.1 var(--font-heading);letter-spacing:-.022em;letter-spacing:-.01em;margin:0 0 6px">Kendi şifrenizi belirleyin</h1>
+<p style="font:400 12.5px/1.5 var(--font-body);color:var(--color-neutral-700);margin:0 0 20px">Hesabınız yönetici tarafından açıldı ve size geçici bir şifre verildi. Devam etmek için kendi şifrenizi yazın — bundan sonra bununla girersiniz.</p>
+<div style="display:flex;flex-direction:column;gap:13px;border-top:1px solid var(--color-divider);padding-top:18px">
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-neutral-600)">Yeni şifre</span>
+<input value="{{ pwChange.yeni }}" onChange="{{ pwChange.onYeni }}" onKeyDown="{{ pwChange.onKey }}" type="password" autocomplete="new-password" placeholder="••••" style="all:unset;border-radius:10px;border:1px solid var(--color-text);padding:13px 12px;font:600 15px/1 ui-monospace,Menlo,monospace;letter-spacing:-.01em;color:var(--color-text);background:#fff">
+</label>
+<label style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-neutral-600)">Yeni şifre — tekrar</span>
+<input value="{{ pwChange.tekrar }}" onChange="{{ pwChange.onTekrar }}" onKeyDown="{{ pwChange.onKey }}" type="password" autocomplete="new-password" placeholder="••••" style="all:unset;border-radius:10px;border:1px solid var(--color-text);padding:13px 12px;font:600 15px/1 ui-monospace,Menlo,monospace;letter-spacing:-.01em;color:var(--color-text);background:#fff">
+</label>
+<sc-if value="{{ pwChange.hasErr }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid var(--color-uyari-200);background:var(--color-uyari-100);color:var(--color-uyari-700);padding:10px 12px;font:600 12.5px/1.35 var(--font-body)">{{ pwChange.err }}</div>
+</sc-if>
+</div>
+</div>
+<div style="border-top:1px solid var(--color-text);background:var(--color-neutral-200);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px">
+<button onClick="{{ pwChange.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-neutral-700);border-bottom:1px solid var(--color-neutral-600);padding-bottom:2px">Giriş ekranına dön</button>
+<button onClick="{{ pwChange.kaydet }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 14px/1 var(--font-body);padding:15px 22px;justify-content:center;flex:none">Şifreyi kaydet</button>
+</div>
+</div>
+</div>
+</sc-if>

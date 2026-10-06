@@ -1,0 +1,56 @@
+<!-- phone sheets -->
+<sc-if value="{{ sheet.open }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePanel }}" style="position:absolute;inset:0;background:rgba(20,19,18,.55);z-index:14"></div>
+<div class="scroll" style="position:absolute;left:0;right:0;bottom:var(--tel-nav);top:var(--tel-bas);background:{{ ui.bg }};border-top:1px solid var(--color-accent);z-index:15;overflow:auto">
+
+<!--@dahil moduller/envanter/telefon/panel-isDetail.html-->
+
+<!--@dahil moduller/ariza/telefon/panel-isFault.html-->
+
+<!--@dahil moduller/harita/telefon/panel-isConv.html-->
+
+</div>
+</sc-if>
+
+
+<sc-if value="{{ menuSayfa.acik }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="position:absolute;left:0;right:0;top:var(--tel-bas);bottom:var(--tel-nav);z-index:60;overflow:auto;background:{{ ui.bg }};display:flex;flex-direction:column">
+<div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<span style="font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">Bütün ekranlar</span>
+<button onClick="{{ menuSayfa.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">Kapat</button>
+</div>
+<sc-for list="{{ menuSayfa.gruplar }}" as="g" hint-placeholder-count="4">
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch">
+<div style="padding:18px 16px 7px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="margin:0 12px;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">
+<sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:12px;min-height:52px;padding:0 15px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1;font:500 16px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ n.fgList }}">{{ n.label }}</span>
+<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+<span style="min-width:22px;padding:3px 8px;border-radius:11px;background:var(--color-uyari);color:#fff;font:600 12px/1.4 var(--font-body);text-align:center">{{ n.badgeN }}</span>
+</sc-if>
+<span style="flex:none;color:{{ ui.mut }};font:400 17px/1 var(--font-body);opacity:.5">›</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<div id="tel-nav" style="flex:none;display:flex;border-top:1px solid {{ ui.rule }};background:{{ ui.surf }};position:relative;z-index:61">
+<sc-for list="{{ navPhone }}" as="n" hint-placeholder-count="5">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;padding:9px 2px calc(9px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:5px;position:relative">
+<span style="width:7px;height:7px;border-radius:50%;background:{{ n.dot }}"></span>
+<span style="max-width:100%;font:600 12px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ n.fgPlain }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
+<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+<span style="position:absolute;top:4px;right:calc(50% - 26px);min-width:18px;height:18px;border-radius:9px;background:var(--color-uyari);color:#fff;font:600 11px/18px var(--font-body);text-align:center;padding:0 5px">{{ n.badgeN }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+
+</div>
+</sc-if>
+
+</div>

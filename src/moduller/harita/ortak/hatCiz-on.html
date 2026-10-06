@@ -1,0 +1,11 @@
+<sc-if value="{{ hatCiz.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:97;background:{{ ui.bg }};display:flex;flex-direction:column">
+<div style="flex:none;display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};flex:none">Hat çizimi</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};flex:none">{{ hatCiz.kod }}</span>
+<span style="flex:1;min-width:0;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ hatCiz.bilgi }}</span>
+<button onClick="{{ hatCiz.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 14px;min-height:44px;display:flex;align-items:center" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Bitir ve kapat</button>
+</div>
+<iframe src="hat.html" title="Hat güzergâhları" style="flex:1;width:100%;min-height:0;border:none;display:block;background:{{ ui.bg }}"></iframe>
+</div>
+</sc-if>

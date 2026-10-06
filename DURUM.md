@@ -2031,3 +2031,4 @@ Sürüm 2026.10.05-114.
 
 ## Modüler yapı — Faz 0 (2026-10-07)
 - `index.html` artık `src/` klasöründen `node build.js` ile üretiliyor (20 bin satırlık tek parça → 21 modül klasörü + sabitler + stil + kabuk). Vercel yayında `buildCommand: node build.js` çalıştırır. Çıktı eskisiyle satır satır aynı (yalnız yöntem/özellik sırası modüle göre gruplandı). `duman-testi.js` index.html'in güncel olduğunu da denetler. Ayrıntı ve sıradaki adımlar: `MODUL-ILERLEME.md`, `src/README.md`.
+- Faz 1 (kısmi, 2026-10-07): kabuk 1218 → 233 satır; render hazırlığı ve görünüm modelleri konu/özellik başına dosyalara bölündü (çıktı index.html bayt bayt aynı).

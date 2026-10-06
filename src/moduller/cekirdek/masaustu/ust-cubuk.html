@@ -1,0 +1,79 @@
+<!-- main -->
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
+<div style="flex:1 1 140px;min-width:110px;display:flex;flex-direction:column;gap:3px">
+<span style="font:700 17px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.baslik }}</span>
+<span class="ks-bilgi" style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.alt }}</span>
+</div>
+<sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
+<span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
+</sc-if>
+<sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;background:var(--color-uyari);color:#fff;font:600 12px/34px var(--font-body);letter-spacing:-.01em" style-hover="opacity:.88">{{ kuyrukG.label }}</button>
+</sc-if>
+<button onClick="{{ toggleNet }}" title="{{ net.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:8px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ net.yazi }};background:{{ net.zemin }}"><span class="ks-canli {{ net.nokta }}"></span>{{ net.badge }}</button>
+<button onClick="{{ esitle.tik }}" title="{{ esitle.note }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ ikonlar.yenile }}<span class="ks-ust-etiket">{{ esitle.label }}</span></button>
+<button onClick="{{ openConv }}" title="Koordinat dönüşümü panelini aç / kapat" aria-label="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:34px;padding:0 12px;border-radius:10px;border:1px solid {{ convBtn.border }};background:{{ convBtn.bg }};color:{{ convBtn.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;white-space:nowrap">↔<span class="ks-ust-etiket">Koordinat</span></button>
+<button onClick="{{ toggleYardim }}" title="Açıklamaları göster / gizle" aria-label="Yardım" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ yardimKenar }};background:{{ yardimZemin }};color:{{ yardimYazi }};display:flex;align-items:center;justify-content:center;font:700 15px/1 var(--font-heading)">?</button>
+<button onClick="{{ toggleTheme }}" title="Açık / koyu tema" aria-label="Tema" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center">{{ ikonlar.tema }}</button>
+<button onClick="{{ logout }}" title="Çıkış" aria-label="Çıkış" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+<sc-if value="{{ naAcVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ naAc }}" title="Yeni tesis kaydı aç" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/34px var(--font-body);letter-spacing:-.01em" style-hover="background:var(--color-accent-600)">+<span class="ks-ust-etiket"> Yeni tesis</span></button>
+</sc-if>
+</div>
+
+<sc-if value="{{ naSz.haritada }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="position:absolute;left:50%;top:70px;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 16px;border-radius:12px;background:rgba(29,29,31,.94);color:#fff;box-shadow:0 12px 30px rgba(0,0,0,.25);font:600 13px/1.3 var(--font-body)">
+<span class="ks-canli"></span>
+<span>Yeni tesis: haritada tesisin yerine çift tıklayın</span>
+<button onClick="{{ naSz.haritaVazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.14);font:600 12px/1 var(--font-body)">Forma dön</button>
+</div>
+</sc-if>
+
+<!--@dahil moduller/envanter/masaustu/naSz-acik.html-->
+
+<sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
+<div class="scroll ks-gir" style="position:absolute;top:100px;left:12px;width:480px;max-width:calc(100% - 40px);z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 34px rgba(0,0,0,.16);max-height:320px;overflow:auto;padding:4px">
+<sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
+<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:9px 12px;border-radius:9px" style-hover="background:{{ ui.surf2 }}">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};width:78px;flex:none">{{ s.kind }}</span>
+<span style="font:600 13.5px/1 var(--font-body)">{{ s.name }}</span>
+<span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ s.meta }}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ saltOkur }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;padding:9px 20px;border-bottom:1px solid var(--color-uyari-200);background:var(--color-uyari-100);font:600 12px/1.45 var(--font-body);color:var(--color-uyari-800)">{{ saltOkurNot }}</div>
+</sc-if>
+
+<!-- Sayfa süzgeç çubuğu — başlık artık üst çubukta; burada yalnız süzgeçler -->
+<sc-if value="{{ sayfaBar.acik }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;align-items:center;gap:16px;padding:8px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="flex:none;display:flex;width:fit-content;gap:2px;padding:2px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:32px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13.5px/1 var(--font-body);letter-spacing:-.012em">
+<span>{{ z.label }}</span>
+<sc-if value="{{ z.nVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 11px/1 var(--font-body);opacity:.75">{{ z.n }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
+<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+</sc-for>
+<span style="flex:1 1 auto;min-width:0;margin-left:auto;padding-left:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}" title="{{ counts.line1 }} · nokta bırakmak için haritaya çift tıklayın">{{ counts.kisa }} · çift tıkla nokta bırak</span>
+</div>
+<iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
+<div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
+<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border-radius:10px;border:1px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.ariza }}</button>
+<button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:var(--color-accent);border-radius:10px;border:1px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">{{ ikonlar.gpsBuyuk }}</button>
+</div>
+</div>

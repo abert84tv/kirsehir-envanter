@@ -25,10 +25,13 @@ mantık (yöntemler), görünüm modeli. `node build.js` bunları birleştirip *
 - [ ] **Faz 5** — DURUM.md / README güncellemesi, son tam doğrulama, kullanıcıya rapor
 
 ## SIRADAKİ ADIM
-**Faz 1 başlıyor.** Sıra: (a) `src/kabuk.html`'de kalan şablon gövdeleri (yan menü, başlık, ortak katmanlar) → `moduller/cekirdek/`;
-(b) `moduller/cekirdek/render-hazirlik.js` (~520 satır yerel değişken) — modül konusuna göre parçalara ayır;
-(c) büyük `gorunum.js` dosyalarını (`ariza` faultForm ~560 satır, `ambar` ambarEkran ~350, `envanter`, `ozet`) özellik başına dosyaya böl;
-(d) `componentDidMount` (199 satır) ve `veriYenile` içindeki modül-özel kısımları modüllerin kendi "başlat" yöntemine taşı.
+**Faz 1 (devam):** tamamlananlar — (a) `kabuk.html` 233 satıra indi (yan menü, üst çubuk, katmanlar, giriş ekranları, telefon sheet/ortak katmanlar modüllere çıkarıldı);
+(b) `render-hazirlik.js` 9 konu parçasına bölündü (`moduller/*/hazirlik-*.js`, SIRA önemli: dosyadaki dahil sırası korunmalı);
+(c) `gorunum.js` dosyaları özellik başına `gorunum/<ad>.js` parçalarına bölündü.
+**Kalan:** (d) `yontemler.js` dosyalarını alt konuya göre böl (ariza: foto-medya / sla / esitleme / saha; cekirdek: yasam-dongusu / tema-tercih / zaman / yardimcilar;
+esitleme: modul-esitleme / senkron / not-kuyruk; yerlesim: koy-ek / csv; ambar: stok / siparis / hareket) — yöntem sırası önemsizdir ama `componentWillUnmount` iki tanımlıdır (sonraki geçerli; ikisini de aynı dosyada, sırayı koruyarak tut);
+(e) `componentDidMount` (199 satır) içindeki modül-özel başlatmaları ilgili modülün `...Baslat()` yöntemine taşı (davranış aynı kalmalı: çağrı sırasını koru);
+(f) Faz 1'i işaretle ve Faz 2'ye geç.
 
 ## Notlar
 - Dahil işaretleri: `<!--@dahil yol-->` (HTML), `//@dahil yol` (JS), `/*@dahil yol*/` (CSS); yol `src/`'ye göre.

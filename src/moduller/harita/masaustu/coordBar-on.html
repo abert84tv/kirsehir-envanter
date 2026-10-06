@@ -1,0 +1,26 @@
+<sc-if value="{{ coordBar.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:72;background:{{ ui.fg }};color:{{ ui.bg }};padding:13px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+<span style="font:600 12px/1.3 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);flex:none">Seçilen nokta</span>
+<sc-if value="{{ coordBar.wgs }}" hint-placeholder-val="{{ true }}">
+<span style="display:flex;flex-direction:column;gap:2px">
+<span style="font:400 10px/1 var(--font-body);letter-spacing:-.01em;opacity:.6">WGS84</span>
+<span style="font:600 13.5px/1 ui-monospace,Menlo,monospace">{{ coordBar.wgs }}</span>
+</span>
+<span style="display:flex;flex-direction:column;gap:2px">
+<span style="font:400 10px/1 var(--font-body);letter-spacing:-.01em;opacity:.6">Google DMS</span>
+<span style="font:600 13.5px/1 ui-monospace,Menlo,monospace">{{ coordBar.dms }}</span>
+</span>
+<span style="display:flex;flex-direction:column;gap:2px">
+<span style="font:400 10px/1 var(--font-body);letter-spacing:-.01em;opacity:.6">ITRF96-3°</span>
+<span style="font:600 13.5px/1 ui-monospace,Menlo,monospace">{{ coordBar.itrf }}</span>
+</span>
+<span style="flex:1"></span>
+<button onClick="{{ coordBar.kopyala }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:11px 12px">Kopyala</button>
+<button onClick="{{ coordBar.donustur }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:11px 12px">Dönüştürücüye at</button>
+<sc-if value="{{ coordBar.canCreate }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ coordBar.yeniTesis }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:11px 12px">Buraya tesis kur</button>
+</sc-if>
+<button onClick="{{ coordBar.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }};font:600 13px/1 var(--font-body);padding:11px 13px">✕</button>
+</sc-if>
+</div>
+</sc-if>

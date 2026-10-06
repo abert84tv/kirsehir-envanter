@@ -1,0 +1,1 @@
+      isEmriListeAc: () => this.setState({ isEmriPanel: { durumF: '' } }),

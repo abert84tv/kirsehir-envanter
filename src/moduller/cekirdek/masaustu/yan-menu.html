@@ -1,0 +1,41 @@
+<!-- sidebar — marka, arama, gruplu menü, oturum -->
+<div style="width:64px;flex:none;position:relative;z-index:60">
+<div class="ks-rail" style="position:absolute;left:0;top:0;bottom:0;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;min-height:0;background:{{ ui.surf }}">
+<div style="flex:none;display:flex;align-items:center;gap:11px;padding:16px 20px 12px">
+<span style="width:24px;height:24px;border-radius:7px;background:var(--color-accent);flex:none;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"></path></svg></span>
+<span class="ks-et" style="font:700 14.5px/1 var(--font-heading);letter-spacing:-.015em;color:{{ ui.fg }}">Kırşehir Envanter</span>
+</div>
+<div style="flex:none;margin:0 12px 6px;display:flex;align-items:center;gap:8px;border-radius:9px;border:1px solid {{ ui.rule }};padding:8px 12px;background:{{ ui.bg }}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ ui.mut }}" stroke-width="2" stroke-linecap="round" style="flex:none"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input class="ks-et" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" title="Köy, kayıt kodu, 39.1462 34.1583 veya 572799,55 4331744,74" aria-label="Ara" style="all:unset;flex:1;min-width:0;font:400 13px/1 var(--font-body);color:{{ ui.fg }}">
+<sc-if value="{{ seeking.on }}" hint-placeholder-val="{{ false }}">
+<span style="flex:none;font:600 10.5px/1 var(--font-body);color:var(--color-accent)">…</span>
+</sc-if>
+</div>
+<div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:4px 12px 8px;gap:2px">
+<sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:6px">
+<div class="ks-et" style="padding:6px 12px 4px;font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
+<button onClick="{{ n.go }}" title="{{ n.label }}" aria-label="{{ n.label }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;background:{{ n.pill }};color:{{ n.fg }}" style-hover="background:{{ n.hover }}">
+<span style="flex:none;width:18px;height:18px;display:flex;align-items:center;justify-content:center">{{ n.ikon }}</span>
+<span class="ks-et" style="flex:1;min-width:0;font:{{ n.agirlik }} 13.5px/1.25 var(--font-body);letter-spacing:-.012em;text-overflow:ellipsis">{{ n.label }}</span>
+<sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+<span class="ks-et ks-nabiz" style="flex:none;min-width:20px;padding:1px 7px;border-radius:9px;background:{{ n.badgeBg }};color:{{ n.badgeFg }};font:700 11px/1.5 var(--font-body);text-align:center">{{ n.badgeN }}</span>
+<span class="ks-nokta-r" style="position:absolute;top:7px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--color-uyari);box-shadow:0 0 0 2px {{ ui.surf }}"></span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div title="{{ sessionCard.name }} · {{ sessionCard.role }}" style="flex:none;padding:12px 17px;border-top:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
+<span style="flex:none;width:30px;height:30px;border-radius:50%;background:{{ ui.fg }};color:{{ ui.bg }};font:700 11px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ sessionCard.bas }}</span>
+<div class="ks-et" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<div style="font:600 13px/1.25 var(--font-heading);color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.name }}</div>
+<div style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sessionCard.role }}</div>
+</div>
+<button class="ks-et" onClick="{{ logout }}" title="Çıkış" aria-label="Çıkış" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:30px;height:30px;border-radius:8px;color:{{ ui.mut }};display:flex;align-items:center;justify-content:center" style-hover="background:{{ ui.surf2 }};color:var(--color-uyari)">{{ ikonlar.cikisBuyuk }}</button>
+</div>
+</div>
+</div>

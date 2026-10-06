@@ -1,0 +1,19 @@
+<sc-if value="{{ buyut.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:90;background:rgba(18,17,16,.94);display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.22);color:#fff">
+<span style="font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent)">{{ buyut.sayac }}</span>
+<span style="flex:1;min-width:0;font:400 12.5px/1.3 var(--font-body);color:rgba(255,255,255,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ buyut.meta }}</span>
+<button onClick="{{ buyut.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.indir }}</button>
+<button onClick="{{ buyut.kapat }}" title="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.kapatBuyuk }}</button>
+</div>
+<div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px">
+<sc-if value="{{ buyut.coklu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ buyut.onceki }}" title="Önceki fotoğraf" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:52px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.sol }}</button>
+</sc-if>
+<div style="flex:1;min-width:0;height:100%;display:flex;align-items:center;justify-content:center">{{ buyut.img }}</div>
+<sc-if value="{{ buyut.coklu }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ buyut.sonraki }}" title="Sonraki fotoğraf" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:52px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.35);color:#fff" style-hover="background:var(--color-accent);border-color:var(--color-accent)">{{ ikonlar.sag }}</button>
+</sc-if>
+</div>
+</div>
+</sc-if>

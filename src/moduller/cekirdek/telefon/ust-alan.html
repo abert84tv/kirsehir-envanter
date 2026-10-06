@@ -1,0 +1,84 @@
+<!-- ══════════════ TELEFON ══════════════ -->
+<sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+<div style="width:100%;height:100dvh;position:relative;overflow:hidden;background:{{ ui.bg }};color:{{ ui.fg }};display:flex;flex-direction:column">
+<sc-if value="{{ saltOkur }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;padding:8px 14px;border-bottom:1px solid var(--color-uyari-200);background:var(--color-uyari-100);font:600 12px/1.45 var(--font-body);color:var(--color-uyari-800)">{{ saltOkurNot }}</div>
+</sc-if>
+
+<div id="tel-bas" style="position:relative;z-index:62;flex:none;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="display:flex;align-items:center;gap:9px;padding:9px 12px">
+<div style="flex:1;min-height:42px;display:flex;align-items:center;gap:8px;border-radius:11px;border:1px solid {{ ui.rule }};padding:0 12px;background:{{ ui.bg }}">
+<span style="width:11px;height:11px;border-radius:10px;border:1px solid {{ ui.mut }};border-radius:50%;flex:none"></span>
+<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 14px/1 var(--font-body);color:{{ ui.fg }}">
+</div>
+<button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);display:flex;align-items:center;justify-content:center">{{ ikonlar.donustur }}</button>
+<sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;min-width:46px;padding:0 10px;border-radius:11px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 13.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
+</sc-if>
+<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-width:46px;height:42px;padding:0 10px;border-radius:11px;border:1px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:600 12px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap">{{ net.short }}</button>
+<button onClick="{{ telMenu.ac }}" aria-label="Menü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid {{ telMenu.kenar }};background:{{ telMenu.zemin }};color:{{ telMenu.yazi }};display:flex;align-items:center;justify-content:center;font:700 20px/1 var(--font-body)">⋮</button>
+</div>
+<sc-if value="{{ telMenu.acik }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ telMenu.kapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:300"></div>
+<div class="ks-gir" style="position:absolute;right:10px;top:62px;z-index:301;min-width:230px;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};box-shadow:0 18px 44px rgba(0,0,0,.28);padding:6px;display:flex;flex-direction:column">
+<sc-for list="{{ telMenu.ogeler }}" as="o" hint-placeholder-count="5">
+<button onClick="{{ o.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;border-radius:11px;font:600 14.5px/1 var(--font-body);color:{{ o.renk }}"><span style="width:22px;text-align:center;font-size:17px">{{ o.ikon }}</span>{{ o.ad }}</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="position:absolute;left:8px;right:8px;top:100%;margin-top:4px;z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 30px rgba(0,0,0,.2);max-height:280px;overflow:auto;padding:4px">
+<sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
+<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;width:100%;padding:10px 12px;border-radius:9px;text-align:left">
+<span style="font:600 14px/1.15 var(--font-body)">{{ s.name }}</span>
+<span style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }}">{{ s.kind }} · {{ s.meta }}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--color-uyari);color:#fff;padding:7px 14px;font:600 12px/1.3 var(--font-body);letter-spacing:-.01em">Çevrimdışı — kayıtlar cihazda</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ sayfaBar.telAcik }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;flex-direction:column;gap:7px;padding:9px 14px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<span style="font:600 20px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:3px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="4">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 8px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);letter-spacing:-.012em;text-align:center">
+<span>{{ z.label }}</span>
+<sc-if value="{{ z.nVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 11px/1 var(--font-body);opacity:.75">{{ z.n }}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
+<div style="position:relative;flex:none;z-index:6;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:center;gap:8px;padding:7px 10px">
+<div style="flex:1;min-width:0;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border-radius:11px;background:{{ ui.surf2 }}">
+<sc-for list="{{ sayfaBar.suzgecler }}" as="z" hint-placeholder-count="3">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
+</sc-for>
+</div>
+<button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
+<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Süzgeç <span style="font-size:10px">{{ telSuz.ok }}</span></button>
+</div>
+<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
+<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
+<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
+<div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button>
+<button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:60px;height:60px;background:var(--color-accent);border-radius:10px;border:1px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.gpsBuyuk }}</button>
+</div>
+</div>

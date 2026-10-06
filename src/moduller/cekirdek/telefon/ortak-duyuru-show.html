@@ -1,0 +1,15 @@
+<sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:calc(var(--tel-bas) + 8px) 10px 0;pointer-events:none">
+<div onClick="{{ duyuru.git }}" style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
+<span style="flex:none;width:34px;height:34px;border-radius:10px;background:{{ duyuru.simgeBg }};color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.uyari }}</span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="flex:1;min-width:0;font:600 12.5px/1.2 var(--font-body);color:{{ duyuru.fg }}">{{ duyuru.baslik }}</span>
+<span style="flex:none;font:500 12px/1.2 var(--font-body);color:{{ duyuru.zamanFg }}">{{ duyuru.zaman }}</span>
+</div>
+<span style="font:400 13px/1.45 var(--font-body);color:{{ duyuru.fg }};text-wrap:pretty">{{ duyuru.text }}</span>
+</div>
+<button onClick="{{ duyuru.kapat }}" aria-label="Kapat" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:{{ duyuru.fg }}">{{ ikonlar.kapat }}</button>
+</div>
+</div>
+</sc-if>

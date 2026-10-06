@@ -1,0 +1,62 @@
+<sc-if value="{{ alanDuzenle.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:96;background:rgba(32,30,29,.7);display:flex;justify-content:center;align-items:stretch;padding:0">
+<div style="width:100%;max-width:720px;display:flex;flex-direction:column;background:{{ ui.bg }};color:{{ ui.fg }};border-left:1px solid {{ ui.rule }};border-right:1px solid {{ ui.rule }}">
+<div style="flex:none;display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--color-accent);color:#fff">
+<div style="flex:1;min-width:0">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;opacity:.85;margin-bottom:6px">{{ alanDuzenle.baslik }}</div>
+<div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">{{ alanDuzenle.kod }}</div>
+</div>
+<button onClick="{{ alanDuzenle.iptal }}" aria-label="Kapat" title="Kapat — Esc" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid rgba(255,255,255,.55);color:#fff">{{ ikonlar.kapat }}</button>
+</div>
+<div style="flex:none;padding:11px 16px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ alanDuzenle.not }}</div>
+<div class="scroll" style="flex:1;min-height:0;overflow:auto">
+<div style="border-bottom:1px solid {{ ui.rule }}">
+<div style="padding:11px 16px;background:{{ ui.surf2 }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Yerleşim</div>
+<div style="display:flex;flex-direction:column;gap:6px;padding:11px 16px;border-bottom:1px solid {{ ui.rule }}">
+<span style="font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ alanDuzenle.ilce }}" onChange="{{ alanDuzenle.onIlce }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer;min-height:48px">
+<sc-for list="{{ alanDuzenle.ilceler }}" as="i" hint-placeholder-count="7">
+<option value="{{ i.n }}">{{ i.n }}</option>
+</sc-for>
+</select>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;padding:11px 16px;border-bottom:1px solid {{ ui.rule }}">
+<span style="font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy / yerleşim</span>
+<select value="{{ alanDuzenle.koy }}" onChange="{{ alanDuzenle.onKoy }}" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};cursor:pointer;min-height:48px">
+<option value="">— seçilmedi</option>
+<sc-for list="{{ alanDuzenle.koyler }}" as="k" hint-placeholder-count="10">
+<option value="{{ k.n }}">{{ k.n }}</option>
+</sc-for>
+</select>
+</div>
+</div>
+<sc-for list="{{ alanDuzenle.gruplar }}" as="g" hint-placeholder-count="3">
+<div style="border-bottom:1px solid {{ ui.rule }}">
+<div style="padding:11px 16px;background:{{ ui.surf2 }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ g.baslik }}</div>
+<sc-for list="{{ g.alanlar }}" as="f" hint-placeholder-count="6">
+<div style="display:flex;flex-direction:column;gap:6px;padding:11px 16px;border-bottom:1px solid {{ ui.rule }}">
+<div style="display:flex;align-items:baseline;gap:8px">
+<span style="flex:1;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ f.label }}</span>
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ f.unit }}</span>
+</div>
+<sc-if value="{{ f.metinMi }}" hint-placeholder-val="{{ true }}">
+<input value="{{ f.val }}" onChange="{{ f.onChange }}" inputmode="{{ f.mod }}" placeholder="— eksik" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};padding:13px;font:600 14px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.surf }};min-height:48px" style-focus="border-color:var(--color-accent)">
+</sc-if>
+<sc-if value="{{ f.evetMi }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ f.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:13px 6px;background:{{ f.acBg }};color:{{ f.acFg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }};min-height:48px">Var</button>
+<button onClick="{{ f.kapa }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:13px 6px;background:{{ f.kapaBg }};color:{{ f.kapaFg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;min-height:48px">Yok</button>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="flex:none;display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--color-accent);background:{{ ui.surf }}">
+<button onClick="{{ alanDuzenle.kaydet }}" class="btn btn-primary" style="flex:1;justify-content:center;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:16px 14px;min-height:52px">Kaydet</button>
+<button onClick="{{ alanDuzenle.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 18px;min-height:52px">Vazgeç</button>
+</div>
+</div>
+</div>
+</sc-if>

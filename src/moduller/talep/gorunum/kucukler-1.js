@@ -1,0 +1,1 @@
+      muhtarListeAc: () => this.setState({ muhtarPanel: { q: '' } }),

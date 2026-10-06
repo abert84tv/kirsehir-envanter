@@ -1,0 +1,7 @@
+<sc-if value="{{ vFixBar.on }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:70;background:{{ ui.fg }};color:{{ ui.bg }};padding:12px 20px;display:flex;align-items:center;gap:14px">
+<span style="flex:1;font:600 13px/1.35 var(--font-body)">{{ vFixBar.text }}</span>
+<button onClick="{{ vFixBar.fix }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 13px">Yanlış — doğru yeri işaretle</button>
+<button onClick="{{ vFixBar.ok }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 13px">Doğru</button>
+</div>
+</sc-if>

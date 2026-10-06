@@ -1,0 +1,69 @@
+<sc-if value="{{ card.on }}" hint-placeholder-val="{{ false }}">
+<div id="tesis-karti-perde" style="position:fixed;inset:0;z-index:95;background:rgba(32,30,29,.72);overflow:auto;display:flex;flex-direction:column">
+<div id="tesis-karti-arac" style="display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid #201e1d;background:#f3f2f2;position:sticky;top:0">
+<button onClick="{{ card.yazdir }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:0 16px;min-height:46px;justify-content:center">Yazdır</button>
+<button onClick="{{ card.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;border-radius:10px;border:1px solid #201e1d;color:#201e1d;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:0 14px;min-height:46px">Kapat</button>
+<span style="flex:1"></span>
+<span style="font:400 11.5px/1.2 var(--font-body);color:#6b6664;align-self:center;text-align:right">A4 · sahaya<br>götürmek için</span>
+</div>
+<div class="scroll" style="flex:1;min-height:0;overflow:auto;background:#fff">
+<div id="tesis-karti" style="width:794px;padding:30px 34px;color:#201e1d">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid #201e1d;padding-bottom:14px">
+<div>
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:7px">Kırşehir · Tesis kartı</div>
+<div style="font:600 32px/1 var(--font-heading);letter-spacing:-.022em">{{ card.code }}</div>
+<div style="font:400 14px/1.4 var(--font-body);color:#4a4644;margin-top:7px">{{ card.kind }} · {{ card.place }}</div>
+</div>
+<div style="text-align:right;font:400 12.5px/1.7 var(--font-body);color:#4a4644">
+<div>Barkod {{ card.barkod }}</div>
+<div>Yapım {{ card.yil }}</div>
+<div>{{ card.koord }}</div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;column-gap:30px;margin-top:6px">
+<sc-for list="{{ card.rows }}" as="r" hint-placeholder-count="16">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #d6d3d1;break-inside:avoid">
+<span style="font:400 12px/1.3 var(--font-body);color:#6b6664;max-width:52%">{{ r.label }}</span>
+<span style="font:600 12.5px/1.3 var(--font-body);text-align:right">{{ r.value }}</span>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ card.chart.show }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:20px;border-radius:10px;border:1px solid #201e1d;padding:13px 15px;break-inside:avoid">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:#ec3013;margin-bottom:9px">Deneme ölçümleri — yıllara göre</div>
+<svg viewBox="0 0 600 150" style="width:100%;height:auto;display:block">
+<line x1="26" y1="128" x2="574" y2="128" stroke="#d6d3d1" stroke-width="2"></line>
+<sc-for list="{{ card.chart.bars }}" as="b" hint-placeholder-count="2">
+<rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" fill="#201e1d"></rect>
+</sc-for>
+<polyline points="{{ card.chart.poly }}" fill="none" stroke="#ec3013" stroke-width="3"></polyline>
+<sc-for list="{{ card.chart.bars }}" as="b" hint-placeholder-count="2">
+<circle cx="{{ b.ox }}" cy="{{ b.oy }}" r="4" fill="#ec3013"></circle>
+</sc-for>
+<sc-for list="{{ card.chart.bars }}" as="b" hint-placeholder-count="2">
+<text x="{{ b.lx }}" y="{{ b.ly }}" text-anchor="middle" fill="#6b6664" style="font:600 12.5px var(--font-body)">{{ b.label }}</text>
+</sc-for>
+<sc-for list="{{ card.chart.bars }}" as="b" hint-placeholder-count="2">
+<text x="{{ b.lx }}" y="{{ b.vy }}" text-anchor="middle" fill="#201e1d" style="font:600 12.5px var(--font-body)">{{ b.val }}</text>
+</sc-for>
+</svg>
+<div style="display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;font:400 11.5px/1.4 var(--font-body);color:#6b6664">
+<span>{{ card.chart.maxLabel }}</span>
+<span>{{ card.chart.minLabel }}</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ card.hasNot }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:20px;border-radius:10px;border:1px solid #201e1d;padding:13px 15px">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-accent);margin-bottom:7px">Saha notu</div>
+<div style="font:400 12.5px/1.6 var(--font-body);white-space:pre-wrap">{{ card.notu }}</div>
+</div>
+</sc-if>
+<div style="margin-top:22px;border-top:1px solid #201e1d;padding-top:12px;display:flex;justify-content:space-between;gap:16px">
+<span style="font:400 11.5px/1.4 var(--font-body);color:#6b6664">Çıktı tarihi {{ card.tarih }} · doldurulmamış alanlar bu karta yazılmadı</span>
+<span style="font:400 11.5px/1.4 var(--font-body);color:#6b6664">Ölçüm / kontrol imzası</span>
+</div>
+</div>
+</div>
+</div>
+</sc-if>

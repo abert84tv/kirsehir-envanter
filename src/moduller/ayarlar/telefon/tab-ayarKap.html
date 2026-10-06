@@ -1,0 +1,107 @@
+<sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0">
+<sc-if value="{{ ayar.listeAcik }}" hint-placeholder-val="{{ true }}">
+<div style="padding:0 0 28px">
+<sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
+<div style="padding:20px 16px 7px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="margin:0 12px;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">
+<sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:12px;min-height:62px;padding:11px 15px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;text-align:left">
+<span style="font:500 16px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ r.alt }}</span>
+</span>
+<span style="flex:none;color:{{ ui.mut }};font:400 18px/1 var(--font-body);opacity:.5">›</span>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ ayar.detay }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};position:sticky;top:0;z-index:3">
+<button onClick="{{ ayar.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:4px;padding:8px 10px 8px 6px;border-radius:9px;color:{{ ui.acc }};font:500 15px/1 var(--font-body);letter-spacing:-.015em"><span style="font-size:20px;line-height:1">‹</span> Ayarlar</button>
+<span style="flex:1;min-width:0;font:600 16px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ayar.bolumAd }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:9px">Diğer ekranlar</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ otherScreens }}" as="n" hint-placeholder-count="2">
+<button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">{{ n.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<!--@dahil moduller/ayarlar/telefon/ayar-veri.html-->
+
+<sc-if value="{{ ayar.koyeslestir }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Kayıtlara köy adı ata</div>
+<div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ vFill.note }}</div>
+<button onClick="{{ vFill.run }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px">{{ vFill.label }}</button>
+</div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Yeni tesis kur</div>
+<div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">Kayıtta olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açın. Sahadaysanız daha kısa yol: haritada boş noktaya dokunun, çıkan şeritten “Buraya tesis kur”.</div>
+<button onClick="{{ yeniTesisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px;min-height:50px">Yeni tesis kaydı aç</button>
+</div>
+<div style="padding:13px 14px">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Elle işaretlenen köy konumları</div>
+<div style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ vSaved }}</div>
+<button onClick="{{ vClear }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:14px;min-height:50px">İşaretlenmiş konumları temizle</button>
+</div>
+</sc-if>
+
+<!--@dahil moduller/bildirim/telefon/ayar-bildirim.html-->
+<!--@dahil moduller/ayarlar/telefon/ayar-gorunum.html-->
+<!--@dahil moduller/oturum/telefon/ayar-yetki.html-->
+<sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Ayarlar hatırlanıyor</div>
+<div class="ks-bilgi" style="font:400 12px/1.55 var(--font-body);color:{{ ui.mut }};margin-bottom:11px">{{ prefNote }}</div>
+<button onClick="{{ prefReset }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:14px;min-height:50px">Varsayılana döndür</button>
+</div>
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Oturum ve cihaz</div>
+<div style="font:600 14.5px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ sessionCard.name }}</div>
+<div style="font:600 12.5px/1.4 var(--font-body);color:{{ ui.fg }}">{{ sessionCard.role }}</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ sessionCard.dev }}</div>
+<div style="font:400 12.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ sessionCard.crew }}</div>
+<div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }};margin:8px 0 11px">{{ forgetNote }}</div>
+<button onClick="{{ logout }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px">{{ ikonlar.cikisBuyuk }} Çıkış yap</button>
+<sc-if value="{{ hasSavedLogin }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ forgetLogin }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 15px;width:100%;text-align:center">Kayıtlı girişi sil</button>
+</sc-if>
+</div>
+</sc-if>
+<!--@dahil moduller/entegrasyon/telefon/ayar-entegrasyon.html-->
+<sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
+<div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
+<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Modüller</div>
+<div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ moduller.not }}</div>
+<sc-for list="{{ moduller.list }}" as="m" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:9px;padding:13px 0;border-top:1px solid {{ ui.rule }};margin-top:12px">
+<span style="font:600 14px/1.2 var(--font-heading);color:{{ ui.fg }}">{{ m.ad }}</span>
+<span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.sayi }}</span>
+<span class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ m.aciklama }}</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<button onClick="{{ m.ac.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;background:{{ m.ac.bg }};color:{{ m.ac.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;border-right:1px solid {{ ui.rule }}">Açık</button>
+<button onClick="{{ m.kapa.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;background:{{ m.kapa.bg }};color:{{ m.kapa.fg }};font:600 12px/1 var(--font-body);letter-spacing:-.01em">Kapalı</button>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<!--@dahil moduller/denetim/telefon/ayar-kvkk.html-->
+
+<!--@dahil moduller/denetim/telefon/ayar-denetim.html-->
+
+<!--@dahil moduller/ekip/telefon/ayar-ekip.html-->
+
+<!--@dahil moduller/denetim/telefon/ayar-cop.html-->
+<!--@dahil moduller/oturum/telefon/ayar-yetki-2.html-->
+</div>
+</sc-if>

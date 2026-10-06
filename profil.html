@@ -79,6 +79,8 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .ks-pin{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;
     border:1px solid var(--color-divider);border-radius:9px;background:#fff;color:var(--color-text);font:600 12.5px/1 var(--font-body)}
   .ks-pin.a{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+  .ks-pin.bag{border:2px solid #15803d;box-shadow:0 0 0 3px rgba(21,128,61,.28)}
+  #pts .bg{flex:none;font:600 10.5px/1 var(--font-body);color:#15803d;background:rgba(21,128,61,.12);border-radius:8px;padding:3px 6px}
   .ks-seg{background:var(--color-text);border:1px solid var(--color-divider);border-radius:9px;color:#fff;padding:1px 5px;
     font:600 11px/1.3 var(--font-body);letter-spacing:-.01em}
   .ks-seg:before{display:none}
@@ -256,7 +258,9 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
             <div>
               <b>Güzergâhı hat olarak kaydet</b>
               <span id="hatNot">Çizdiğiniz güzergâh, kaydın hattı olarak ana haritada görünür.</span>
+              <select id="aktHedef" title="Hat hangi kayda bağlansın"></select>
               <select id="aktHatTur">
+                <option value="terfi">Terfi hattı</option>
                 <option value="isale">İsale hattı</option>
                 <option value="sebeke">Şebeke hattı</option>
                 <option value="enerji">Enerji hattı</option>
@@ -290,9 +294,9 @@ function mesafe(a, b) {
 const km = m => m >= 1000 ? (m / 1000).toFixed(m < 10000 ? 2 : 1) + ' km' : Math.round(m) + ' m';
 const mtr = v => (v > 0 ? '+' : '') + Math.round(v) + ' m';
 
-function pinIkon(i, son) {
+function pinIkon(i, son, bagli) {
   return L.divIcon({ className: '', iconSize: [24, 24], iconAnchor: [12, 12],
-    html: '<div class="ks-pin' + (son ? ' a' : '') + '">' + i + '</div>' });
+    html: '<div class="ks-pin' + (son ? ' a' : '') + (bagli ? ' bag' : '') + '">' + i + '</div>' });
 }
 function ciz() {
   if (typeof aktTazele === 'function') aktTazele();
@@ -300,7 +304,7 @@ function ciz() {
   segEt.forEach(t => map.removeLayer(t)); segEt = [];
   if (hat) { map.removeLayer(hat); hat = null; }
   noktalar.forEach((p, i) => {
-    const mk = L.marker(p, { icon: pinIkon(i + 1, i === noktalar.length - 1), draggable: true });
+    const mk = L.marker(p, { icon: pinIkon(i + 1, i === noktalar.length - 1, !!p.bag), draggable: true });
     mk.on('dragend', e => { const ll = e.target.getLatLng(); noktalar[i] = [ll.lat, ll.lng]; ciz(); profilAl(); });
     mk.addTo(map); pinler.push(mk);
   });
@@ -331,6 +335,7 @@ function listele() {
     const rk = ornek.length ? ornekRakim(i) : null;
     r.innerHTML = '<span class="n">' + (i + 1) + '</span>'
       + '<span class="c">' + p[0].toFixed(5) + ' , ' + p[1].toFixed(5) + '</span>'
+      + (p.bag ? '<span class="bg">' + p.bag.kod + (i === 0 ? ' · başlangıç' : i === noktalar.length - 1 ? ' · bitiş' : '') + '</span>' : '')
       + '<span class="e">' + (rk != null ? Math.round(rk) + ' m' : '—') + '</span>';
     const x = document.createElement('button'); x.className = 'x'; x.textContent = 'SİL';
     x.onclick = () => { noktalar.splice(i, 1); ciz(); profilAl(); };
@@ -611,7 +616,11 @@ ciz();
    Burada yalnız tıklama davranışı farklı: işarete dokununca güzergâha nokta eklenir. */
 const TES_AD = { kuyu: 'Su kuyusu', depo: 'Su deposu', ag: 'AG şebeke / pano', ges: 'Güneş enerji santrali', kaynak: 'ISU kaynak noktası', memba: 'ISU memba noktası' };
 function tesisEkle(t) {
-  noktalar.push([t.lat, t.lon]);
+  if (!ekleModu) return;
+  // Kayıt işaretine dokunulunca nokta tam tesis konumuna oturur ve o kayda BAĞLANIR (ilk/son uç = hattın bağlandığı kayıt)
+  const pt = [t.lat, t.lon];
+  if (t.id) pt.bag = { id: t.id, kod: t.code, type: t.type };
+  noktalar.push(pt);
   ciz(); profilAl();
   uyar(t.code + ' güzergâha eklendi (' + noktalar.length + '. nokta) · ' + (TES_AD[t.type] || '')
     + '. Yanlışsa “Son noktayı sil” ile geri alın.');
@@ -621,7 +630,7 @@ let K = null; const bekleyen = [];
 const Kcalis = fn => { if (K) fn(K); else bekleyen.push(fn); };
 import('./harita-katman.js').then(m => {
   K = m.katmanKur(map, {
-    tikla(g) { tesisEkle(g.kind === 'a' ? { code: g.a.code, type: g.a.type, lat: g.lat, lon: g.lon } : { code: g.isu.ad.replace(' (referans)', ''), type: g.tur, lat: g.lat, lon: g.lon }); },
+    tikla(g) { tesisEkle(g.kind === 'a' ? { id: g.a.id, code: g.a.code, type: g.a.type, lat: g.lat, lon: g.lon } : { code: g.isu.ad.replace(' (referans)', ''), type: g.tur, lat: g.lat, lon: g.lon }); },
     arizaAc() { /* arıza kaydı ana programda açılır */ }
   });
   window.ksHarita = { map, durum: () => K.durum(), filtre: f => K.setFilter(f) };
@@ -658,6 +667,7 @@ parent.postMessage({ ks: 'profilHazir' }, '*');
   const ciftle = (b, on) => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); };
   cK.onclick = () => { kayitOn = !kayitOn; ciftle(cK, kayitOn); };
   cH.onclick = () => { hatOn = !hatOn; ciftle(cH, hatOn); };
+  sT.onchange = () => { window.__turElle = true; };
   ciftle(cK, kayitOn); ciftle(cH, hatOn);
 
   // nokta listesi ve görünürlük her çizimde tazelenir
@@ -676,8 +686,24 @@ parent.postMessage({ ks: 'profilHazir' }, '*');
     });
     sN.value = secili && +secili < noktalar.length ? secili : '0';
     el('hatNot').textContent = noktalar.length > 1
-      ? noktalar.length + ' noktalı güzergâh, kaydın hattı olarak ana haritada görünür.'
+      ? noktalar.length + ' noktalı güzergâh. İlk ya da son noktayı bir kuyu/depo işaretine dokunarak koyarsanız hat o kayda bağlanır.'
       : 'Hat için en az iki nokta gerekir — şu an bir nokta var.';
+    // Bağlanacak kayıt: çizimde ilk/son uç olarak seçilen tesisler (başlangıç öncelikli)
+    const sH = el('aktHedef'), once = sH.value;
+    const ilk = noktalar[0] && noktalar[0].bag, son = noktalar.length > 1 && noktalar[noktalar.length - 1].bag;
+    sH.innerHTML = '';
+    const ekle = (v, ad) => { const o = document.createElement('option'); o.value = v; o.textContent = ad; sH.appendChild(o); };
+    if (ilk) ekle(ilk.id, 'Bağlanacak kayıt: ' + ilk.kod + ' (başlangıç)');
+    if (son && (!ilk || son.id !== ilk.id)) ekle(son.id, 'Bağlanacak kayıt: ' + son.kod + ' (bitiş)');
+    if (!ilk && !son) ekle('', 'Bağlanacak kayıt: ana programda seçili olan');
+    if (once && [...sH.options].some(o => o.value === once)) sH.value = once;
+    // Hat türü uçlara göre önerilir (elle değiştirilmediyse): kuyu→depo isale, depodan şebekeye, enerji kaydı → enerji
+    if (!window.__turElle) {
+      const tu = [ilk, son].filter(Boolean).map(b => b.type);
+      sT.value = tu.some(x => x === 'ag' || x === 'ges') ? 'enerji'
+        : (tu.includes('kuyu') && tu.includes('depo')) ? 'isale'
+        : tu.includes('kuyu') ? 'terfi' : tu.includes('depo') ? 'sebeke' : sT.value;
+    }
   };
 
   el('aktGo').onclick = () => {
@@ -688,7 +714,12 @@ parent.postMessage({ ks: 'profilHazir' }, '*');
     parent.postMessage({
       ks: 'profilAktar',
       nokta: kayitOn ? { lat: +noktalar[i][0].toFixed(6), lon: +noktalar[i][1].toFixed(6), sira: i + 1 } : null,
-      hat: hatOn ? { tur: sT.value, noktalar: noktalar.map(p => [+p[0].toFixed(6), +p[1].toFixed(6)]) } : null,
+      hat: hatOn ? {
+        tur: sT.value, noktalar: noktalar.map(p => [+p[0].toFixed(6), +p[1].toFixed(6)]),
+        hedefId: el('aktHedef').value || '',
+        bag: { ilk: noktalar[0] && noktalar[0].bag ? { id: noktalar[0].bag.id, kod: noktalar[0].bag.kod } : null,
+               son: noktalar.length > 1 && noktalar[noktalar.length - 1].bag ? { id: noktalar[noktalar.length - 1].bag.id, kod: noktalar[noktalar.length - 1].bag.kod } : null }
+      } : null,
       km: el('mDist').textContent
     }, '*');
     uyar('Ana programa gönderildi — İşlem sekmesinde açılıyor.');

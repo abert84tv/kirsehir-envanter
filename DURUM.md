@@ -1987,3 +1987,8 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.06-136 — Hat kesitinde süzgeç
 - Hat kesiti ekranında da Envanter haritasındaki süzgeç (Tümü, Kuyu, Depo, AG, GES, Pasifler, ISU Kaynak, ISU Memba) var (masaüstünde şerit, telefonda "Süzgeç" düğmesi); seçimler iki haritaya birlikte uygulanır.
+
+## 2026.10.06-137 — Hat kesiti: gereksiz düğmeler kalktı, hat uçları kayda bağlanıyor
+- "Seçili kaydı nokta yap" ve "Açık arızalı kaydı nokta yap" düğmeleri ve işlevleri programdan kaldırıldı (masaüstü + telefon).
+- "Nokta ekle" açıkken bir kuyu/depo işaretine dokunulursa nokta tam o tesisin konumuna oturur ve kayda bağlanır (haritada yeşil halkalı numara, listede "KOD · başlangıç/bitiş" etiketi). "Nokta ekle" kapalıyken işaretlere dokunmak nokta eklemez.
+- Aktarırken "Bağlanacak kayıt" ilk/son uçtaki kayıttan gelir; hat türü uçlara göre önerilir (kuyu → Terfi, kuyu+depo → İsale, depo → Şebeke, AG/GES → Enerji), elle değiştirilebilir. Hat açıklaması "KOD → KOD · km" olarak yazılır. Hiç bağ yoksa ana programda seçili kayda eklenir.

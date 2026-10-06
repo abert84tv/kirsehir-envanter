@@ -9227,7 +9227,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-138';
+const SURUM = '2026.10.06-139';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9652,6 +9652,10 @@ class Component extends DCLogic {
     this._gorunur = () => { if (!document.hidden) this.senkron(true); };
     document.addEventListener('visibilitychange', this._gorunur);
     this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); }, 60000);
+    this._basvuruSaat = setInterval(() => { if (this.state.session && !document.hidden) this.basvuruYenile(); }, 30000);
+    // Tarayıcı bildirimi izni, ilk dokunuşta bir kez istenir (izin yalnız kullanıcı hareketiyle sorulabilir)
+    this._izinIste = () => { try { if (typeof Notification !== 'undefined' && Notification.permission === 'default' && this.state.session) Notification.requestPermission(); } catch (e) { /* desteklenmiyor */ } document.removeEventListener('pointerdown', this._izinIste); };
+    document.addEventListener('pointerdown', this._izinIste);
     setTimeout(() => this.aracBelgeUyari(), 9000);
     // Başka kullanıcının yaptığı değişiklik (silme dahil) bu cihazda otomatik
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
@@ -9825,7 +9829,7 @@ class Component extends DCLogic {
     if (this._agGeldi) window.removeEventListener('online', this._agGeldi);
     if (this._agGitti) window.removeEventListener('offline', this._agGitti);
     if (this._gorunur) document.removeEventListener('visibilitychange', this._gorunur);
-    clearInterval(this._kuyrukSaat);
+    clearInterval(this._kuyrukSaat); clearInterval(this._basvuruSaat);
     clearInterval(this._veriSaat);
     clearTimeout(this._t); clearTimeout(this._f); clearTimeout(this._d);
   }
@@ -13595,6 +13599,51 @@ class Component extends DCLogic {
       aciklama: x.aciklama, lat: x.lat, lon: x.lon, durum: x.durum, sonuc: x.sonuc || '', talepNo: x.talep_no || '', zaman: x.olusma
     }));
     this.setState({ basvurular: liste }, () => this.basvuruEsitle());
+    this.basvuruUyar(liste);
+  }
+  // Yeni web/Telegram başvurusu: kırmızı kart + ses + (izin varsa) tarayıcı bildirimi + sekme başlığı.
+  // Her başvuru bir cihazda bir kez duyurulur; ilk açılışta yalnız son 2 saatlikler.
+  basvuruUyar(liste) {
+    let gor; try { gor = JSON.parse(localStorage.getItem('ks-basvuru-gorulen') || 'null'); } catch (e) { gor = null; }
+    const ilk = !Array.isArray(gor); gor = Array.isArray(gor) ? gor : [];
+    const yeniler = liste.filter(b => b.durum === 'yeni');
+    const duyurulacak = yeniler.filter(b => !gor.includes(b.id) && !(ilk && Date.now() - Date.parse(b.zaman) > 2 * 3600 * 1000));
+    try { localStorage.setItem('ks-basvuru-gorulen', JSON.stringify([...new Set([...gor, ...yeniler.map(b => b.id)])].slice(-300))); } catch (e) { /* depolama kapalı */ }
+    const me = this.state.session;
+    if (!me || me.role === 'izleyici' || !duyurulacak.length) return;
+    const b = duyurulacak[0], fazla = duyurulacak.length - 1;
+    const metin = (b.konu || 'Yeni başvuru') + ' · ' + b.koy + (b.ilce ? ' (' + b.ilce + ')' : '') + (fazla ? ' — ve ' + fazla + ' başvuru daha' : '');
+    this.duyur('Yeni başvuru geldi: ' + metin, 20000, 'ariza', () => this.setState({ tab: 'talep' }));
+    this.uyariSesi();
+    try {
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        const n = new Notification('Yeni başvuru — Kırşehir Envanter', { body: metin, tag: 'ks-basvuru', renotify: true });
+        n.onclick = () => { try { window.focus(); } catch (e) { /* odak yok */ } this.setState({ tab: 'talep' }); n.close(); };
+      }
+    } catch (e) { /* bildirim desteklenmiyor */ }
+    // Sekme başlığı, kullanıcı geri dönene kadar yanıp söner
+    if (typeof document !== 'undefined' && document.hidden) {
+      const ad = document.title || 'Kırşehir Envanter'; let a = false;
+      clearInterval(this._baslikSaat);
+      this._baslikSaat = setInterval(() => { a = !a; document.title = a ? '(' + duyurulacak.length + ') Yeni başvuru!' : ad; if (!document.hidden) { clearInterval(this._baslikSaat); document.title = ad; } }, 1000);
+    }
+  }
+  // Kısa iki tonlu uyarı sesi (dosya gerekmez)
+  uyariSesi() {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      this._ac = this._ac || new AC();
+      const c = this._ac; if (c.state === 'suspended') c.resume();
+      [[880, 0], [1175, .22], [880, .5], [1175, .72]].forEach(([f, t]) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(c.destination);
+        const b = c.currentTime + t;
+        g.gain.setValueAtTime(0, b); g.gain.linearRampToValueAtTime(.35, b + .02); g.gain.linearRampToValueAtTime(0, b + .2);
+        o.start(b); o.stop(b + .22);
+      });
+    } catch (e) { /* ses çalınamadı (tarayıcı izni) */ }
+    try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) { /* titreşim yok */ }
   }
   // Talebin durumu değişince başvurunun takip sayfası da güncellenir
   async basvuruEsitle() {
@@ -15216,7 +15265,7 @@ class Component extends DCLogic {
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn };
-    const suzgecSayi = { ariza: acikAriza, talep: acikTalep };
+    const suzgecSayi = { ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
       const zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);

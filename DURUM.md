@@ -2002,3 +2002,6 @@ Sürüm 2026.10.05-114.
 - Hat kesiti: nokta sürüklenirken önceki noktaya uzaklık canlı görünür; altta "Son nokta, öncekine [100] m Ayarla" ile son nokta tam metreye alınır.
 - Özet: kart düzeni, yuvarlak ve vurgu renkli çubuklar, okunur bölüm başlıkları.
 - Telegram: "Anahtarı sil" bot bağlantısını da keser (edge function telegram-basvuru v2); kart açıklamasına adımlar eklendi.
+
+## 2026.10.06-139 — Yeni başvuru uyarısı
+- Web / Telegram başvurusu gelince: kırmızı kart (dokununca Gelen'e gider), iki tonlu ses, telefonda titreşim, izin verilmişse tarayıcı bildirimi, sekme arkadayken başlıkta yanıp sönen "(N) Yeni başvuru!". Başvurular 30 sn'de bir yoklanır; her başvuru bir cihazda bir kez duyurulur. İşler menüsündeki sayı yeni başvuruları da içerir. Tarayıcı bildirim izni ilk dokunuşta bir kez istenir.

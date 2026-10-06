@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
   try { g = await req.json(); } catch { return yanit({ ok: false }, 400); }
 
   // Programdan çağrı: webhook kurulumu / kaldırma (yalnız yönetici)
-  if (g.islem === 'kur' || g.islem === 'kaldir') {
+  if (g.islem === 'kur' || g.islem === 'kaldir' || g.islem === 'kod') {
     if (!bot) return yanit({ ok: false, err: 'Önce bot anahtarını kaydedin.' });
     const o = await fetch(url + '/rest/v1/rpc/oturum_ac', {
       method: 'POST', headers: { apikey: anon, Authorization: 'Bearer ' + anon, 'Content-Type': 'application/json' },
@@ -52,6 +52,8 @@ Deno.serve(async (req) => {
     const oj = o.ok ? await o.json() : null;
     const k = Array.isArray(oj) ? oj[0] : oj;
     if (!k || String(k.rol) !== 'yonetici') return yanit({ ok: false, err: 'Yalnız yönetici bağlayabilir.' }, 403);
+    const uyariKod = (await sha(bot + ':yonetici')).slice(0, 8).toUpperCase();
+    if (g.islem === 'kod') return yanit({ ok: true, kod: uyariKod });
     if (g.islem === 'kaldir') {
       const kd = await (await tg('deleteWebhook', { drop_pending_updates: true })).json();
       return yanit({ ok: !!kd.ok, err: kd.ok ? '' : (kd.description || 'Webhook kaldırılamadı.') });
@@ -61,7 +63,7 @@ Deno.serve(async (req) => {
     const wh = await (await tg('setWebhook', {
       url: url + '/functions/v1/telegram-basvuru', secret_token: await sha(bot), allowed_updates: ['message']
     })).json();
-    return yanit({ ok: !!wh.ok, kullanici: me.result && me.result.username, err: wh.ok ? '' : (wh.description || 'Webhook kurulamadı.') });
+    return yanit({ ok: !!wh.ok, kod: uyariKod, kullanici: me.result && me.result.username, err: wh.ok ? '' : (wh.description || 'Webhook kurulamadı.') });
   }
 
   // Telegram webhook
@@ -83,6 +85,27 @@ Deno.serve(async (req) => {
   }
   const metin = String(m.text || '').trim().slice(0, 1500);
   if (!metin) return yanit({ ok: true });
+  // Yönetici uyarısı: /yonetici KOD → bu sohbete her yeni başvuruda Telegram mesajı gider; /yonetici CIK → kaydı siler
+  if (metin.startsWith('/yonetici')) {
+    const girilen = (metin.split(/\s+/)[1] || '').toUpperCase();
+    const dogru = (await sha(bot + ':yonetici')).slice(0, 8).toUpperCase();
+    const lr = await rest('entegrasyon?ad=eq.telegram_uyari_sohbet&select=deger');
+    const lj = lr.ok ? await lr.json() : [];
+    let liste: string[] = lj[0] && lj[0].deger ? String(lj[0].deger).split(',').filter(Boolean) : [];
+    if (girilen === 'CIK') {
+      liste = liste.filter(x => x !== sohbet);
+      if (liste.length) await rest('entegrasyon?on_conflict=ad', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify({ ad: 'telegram_uyari_sohbet', deger: liste.join(',') }) });
+      else await rest('entegrasyon?ad=eq.telegram_uyari_sohbet', { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+      await cevap('Bu sohbet yönetici uyarılarından çıkarıldı.');
+    } else if (girilen !== dogru) {
+      await cevap('Kod hatalı. Kodu programda Ayarlar > Entegrasyon > Telegram kartında görürsünüz.');
+    } else {
+      if (!liste.includes(sohbet)) liste.push(sohbet);
+      await rest('entegrasyon?on_conflict=ad', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify({ ad: 'telegram_uyari_sohbet', deger: liste.join(',') }) });
+      await cevap('✅ Bu sohbet yönetici uyarısı olarak kaydedildi. Yeni başvuru gelince buraya mesaj düşecek (sesli bildirim).\nÇıkmak için: /yonetici CIK');
+    }
+    return yanit({ ok: true });
+  }
   if (metin.startsWith('/start') || metin.startsWith('/yardim')) {
     await cevap('Kırşehir İl Özel İdaresi su ve kanal arıza bildirimi.\n\nSorunu yazın (köy adı ve ne olduğu), isterseniz konumunuzu da paylaşın. Size bir takip kodu vereceğim.\nDurum için: /durum BSV-XXXXXX' + KVKK);
     return yanit({ ok: true });

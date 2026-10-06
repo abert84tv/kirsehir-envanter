@@ -2005,3 +2005,8 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.06-139 — Yeni başvuru uyarısı
 - Web / Telegram başvurusu gelince: kırmızı kart (dokununca Gelen'e gider), iki tonlu ses, telefonda titreşim, izin verilmişse tarayıcı bildirimi, sekme arkadayken başlıkta yanıp sönen "(N) Yeni başvuru!". Başvurular 30 sn'de bir yoklanır; her başvuru bir cihazda bir kez duyurulur. İşler menüsündeki sayı yeni başvuruları da içerir. Tarayıcı bildirim izni ilk dokunuşta bir kez istenir.
+
+## 2026.10.06-140 — Başvuru uyarısı en üste alındı
+- Yeni başvuruda ekranın en üstünde kırmızı şerit çıkar; kullanıcı "Gelen'i aç" ya da ✕ diyene kadar kalır, ses 20 sn'de bir tekrarlanır. Ses kilidi her dokunuşta açılır.
+- Ayarlar > Entegrasyon > "Yeni başvuru uyarısı" kartı: ses / tarayıcı bildirimi / Telegram durumunu gösterir; "Sesi ve uyarıyı dene", "Bildirim izni iste", "Telegram kodunu göster".
+- Uygulama kapalıyken de uyarı: bota "/yonetici KOD" yazan sohbete her yeni başvuruda (web formu ya da Telegram) bot mesaj atar → telefonda bildirim sesi. "/yonetici CIK" ile çıkılır. Sunucu: pg_net + vatandas_basvuru tetikleyicisi, edge function telegram-basvuru v3.

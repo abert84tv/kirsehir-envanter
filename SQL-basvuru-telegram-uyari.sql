@@ -1,0 +1,5 @@
+-- Yeni başvuru (web formu ya da Telegram) gelince, bota "/yonetici KOD" ile kayıt olmuş
+-- sohbetlere Telegram mesajı gider: uygulama kapalıyken de telefonda bildirim sesi çıkar.
+-- Uygulandı: 2026-10-06 (migration basvuru_telegram_uyari). Kod: Ayarlar > Entegrasyon > "Telegram kodunu göster".
+-- Ayrıntı: pg_net eklentisi, entegrasyon.ad'a 'telegram_uyari_sohbet', vatandas_basvuru üzerinde
+-- AFTER INSERT tetikleyicisi (basvuru_telegram_uyar) — hata olursa kayıt asla engellenmez.

@@ -2779,6 +2779,24 @@ Hareket gir
 <sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
 <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;max-width:760px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<sc-if value="{{ entegrasyon.uyari.var }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;background:{{ ui.surf }};border:2px solid var(--color-accent);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yeni başvuru uyarısı</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.sesRenk }}">{{ entegrasyon.uyari.ses }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.bildirimRenk }}">{{ entegrasyon.uyari.bildirim }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.telegramRenk }}">{{ entegrasyon.uyari.telegram }}</span>
+<sc-if value="{{ entegrasyon.uyari.kodVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:600 13px/1.5 ui-monospace,Menlo,monospace;word-break:break-word">{{ entegrasyon.uyari.kod }}</div>
+</sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ entegrasyon.uyari.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Sesi ve uyarıyı dene</button>
+<button onClick="{{ entegrasyon.uyari.izinIste }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Bildirim izni iste</button>
+<sc-if value="{{ entegrasyon.uyari.telVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ entegrasyon.uyari.kodGetir }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Telegram kodunu göster</button>
+</sc-if>
+</div>
+</div>
+</sc-if>
 <sc-for list="{{ entegrasyon.kartlar }}" as="k" hint-placeholder-count="3">
 <div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
 <span style="font:700 15px/1.2 var(--font-heading)">{{ k.baslik }}</span>
@@ -3715,6 +3733,14 @@ Hareket gir
 </div>
 </sc-if>
 
+<sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+<span style="flex:none;font:700 24px/1">🔔</span>
+<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span></button>
+<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
+<button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
+</div>
+</sc-if>
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;top:0;right:0;z-index:80;display:flex;justify-content:flex-end;padding:56px 18px 0;pointer-events:none;max-width:100%">
 <div onClick="{{ duyuru.git }}" style="pointer-events:auto;width:372px;max-width:calc(100vw - 36px);display:flex;align-items:flex-start;gap:12px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:18px;padding:13px 14px;box-shadow:0 16px 40px rgba(0,0,0,.20),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
@@ -6812,6 +6838,24 @@ Hareket gir
 <sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
 <div style="padding:13px 14px;display:flex;flex-direction:column;gap:14px;max-width:760px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Entegrasyon</div>
+<sc-if value="{{ entegrasyon.uyari.var }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;background:{{ ui.surf }};border:2px solid var(--color-accent);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yeni başvuru uyarısı</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.sesRenk }}">{{ entegrasyon.uyari.ses }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.bildirimRenk }}">{{ entegrasyon.uyari.bildirim }}</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ entegrasyon.uyari.telegramRenk }}">{{ entegrasyon.uyari.telegram }}</span>
+<sc-if value="{{ entegrasyon.uyari.kodVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;background:{{ ui.bg }};border:1px solid {{ ui.rule }};padding:10px 12px;font:600 13px/1.5 ui-monospace,Menlo,monospace;word-break:break-word">{{ entegrasyon.uyari.kod }}</div>
+</sc-if>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ entegrasyon.uyari.dene }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 14px/44px var(--font-body)">Sesi ve uyarıyı dene</button>
+<button onClick="{{ entegrasyon.uyari.izinIste }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Bildirim izni iste</button>
+<sc-if value="{{ entegrasyon.uyari.telVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ entegrasyon.uyari.kodGetir }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:44px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13.5px/42px var(--font-body)">Telegram kodunu göster</button>
+</sc-if>
+</div>
+</div>
+</sc-if>
 <sc-for list="{{ entegrasyon.kartlar }}" as="k" hint-placeholder-count="3">
 <div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
 <span style="font:700 15px/1.2 var(--font-heading)">{{ k.baslik }}</span>
@@ -8347,6 +8391,14 @@ Hareket gir
 
 <!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:12px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+<span style="flex:none;font:700 24px/1">🔔</span>
+<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span></button>
+<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
+<button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
+</div>
+</sc-if>
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:calc(var(--tel-bas) + 8px) 10px 0;pointer-events:none">
 <div onClick="{{ duyuru.git }}" style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
@@ -9227,7 +9279,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.06-139';
+const SURUM = '2026.10.06-140';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9375,7 +9427,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
+    basvuruUyari: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -9652,6 +9704,18 @@ class Component extends DCLogic {
     this._gorunur = () => { if (!document.hidden) this.senkron(true); };
     document.addEventListener('visibilitychange', this._gorunur);
     this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); }, 60000);
+    // Ses kilidi: tarayıcı sesi ilk dokunuşa kadar kapalı tutar; her dokunuşta ses bağlamı uyandırılır
+    this._sesAc = () => {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        this._ac = this._ac || new AC();
+        const k = () => { if (this._ac.state === 'running' && !this.state.sesAcik) this.setState({ sesAcik: true }); };
+        if (this._ac.state === 'suspended') this._ac.resume().then(k).catch(() => {}); else k();
+      } catch (e) { /* ses yok */ }
+    };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, this._sesAc, { passive: true }));
+    this._uyariTekrar = setInterval(() => { if (this.state.basvuruUyari) this.uyariSesi(); }, 20000);
     this._basvuruSaat = setInterval(() => { if (this.state.session && !document.hidden) this.basvuruYenile(); }, 30000);
     // Tarayıcı bildirimi izni, ilk dokunuşta bir kez istenir (izin yalnız kullanıcı hareketiyle sorulabilir)
     this._izinIste = () => { try { if (typeof Notification !== 'undefined' && Notification.permission === 'default' && this.state.session) Notification.requestPermission(); } catch (e) { /* desteklenmiyor */ } document.removeEventListener('pointerdown', this._izinIste); };
@@ -9829,7 +9893,8 @@ class Component extends DCLogic {
     if (this._agGeldi) window.removeEventListener('online', this._agGeldi);
     if (this._agGitti) window.removeEventListener('offline', this._agGitti);
     if (this._gorunur) document.removeEventListener('visibilitychange', this._gorunur);
-    clearInterval(this._kuyrukSaat); clearInterval(this._basvuruSaat);
+    clearInterval(this._kuyrukSaat); clearInterval(this._basvuruSaat); clearInterval(this._uyariTekrar);
+    ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.removeEventListener(ev, this._sesAc));
     clearInterval(this._veriSaat);
     clearTimeout(this._t); clearTimeout(this._f); clearTimeout(this._d);
   }
@@ -13599,6 +13664,7 @@ class Component extends DCLogic {
       aciklama: x.aciklama, lat: x.lat, lon: x.lon, durum: x.durum, sonuc: x.sonuc || '', talepNo: x.talep_no || '', zaman: x.olusma
     }));
     this.setState({ basvurular: liste }, () => this.basvuruEsitle());
+    if (this.state.basvuruUyari && !liste.some(b => b.durum === 'yeni')) this.setState({ basvuruUyari: null });
     this.basvuruUyar(liste);
   }
   // Yeni web/Telegram başvurusu: kırmızı kart + ses + (izin varsa) tarayıcı bildirimi + sekme başlığı.
@@ -13613,7 +13679,8 @@ class Component extends DCLogic {
     if (!me || me.role === 'izleyici' || !duyurulacak.length) return;
     const b = duyurulacak[0], fazla = duyurulacak.length - 1;
     const metin = (b.konu || 'Yeni başvuru') + ' · ' + b.koy + (b.ilce ? ' (' + b.ilce + ')' : '') + (fazla ? ' — ve ' + fazla + ' başvuru daha' : '');
-    this.duyur('Yeni başvuru geldi: ' + metin, 20000, 'ariza', () => this.setState({ tab: 'talep' }));
+    // Her şeyin üstünde duran kalıcı şerit: kullanıcı açana ya da susturana kadar kalır, ses 20 sn'de bir tekrarlanır
+    this.setState(st => ({ basvuruUyari: { n: (st.basvuruUyari ? st.basvuruUyari.n : 0) + duyurulacak.length, metin } }));
     this.uyariSesi();
     try {
       if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
@@ -13635,6 +13702,7 @@ class Component extends DCLogic {
       if (!AC) return;
       this._ac = this._ac || new AC();
       const c = this._ac; if (c.state === 'suspended') c.resume();
+      if (c.state === 'closed') return;
       [[880, 0], [1175, .22], [880, .5], [1175, .72]].forEach(([f, t]) => {
         const o = c.createOscillator(), g = c.createGain();
         o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(c.destination);
@@ -15901,6 +15969,14 @@ class Component extends DCLogic {
         ariza: this.ikon('ariza', 20), arizaBuyuk: this.ikon('ariza', 24),
         donustur: this.ikon('donustur', 18)
       },
+      basvuruBanner: (() => {
+        const u = s.basvuruUyari;
+        return {
+          show: !!u && !!s.session, baslik: u ? (u.n > 1 ? u.n + ' yeni başvuru geldi' : 'Yeni başvuru geldi') : '', metin: u ? u.metin : '',
+          ac: () => { this.setState({ basvuruUyari: null, tab: 'talep' }); },
+          kapat: () => this.setState({ basvuruUyari: null })
+        };
+      })(),
       duyuru: (() => {
         const d = s.duyuru;
         const ariza = !!d && d.tur === 'ariza';
@@ -17786,7 +17862,7 @@ class Component extends DCLogic {
       // (masaüstü ve telefon şablonu ayrı, veri ortak)
       entegrasyon: (() => {
         const E = s.entegrasyon || {};
-        if (!(tabId === 'ayarlar' && ayarBolumu(s.ayarBolum) === 'entegrasyon')) return { kartlar: [], yazar: false, yaziYok: false };
+        if (!(tabId === 'ayarlar' && ayarBolumu(s.ayarBolum) === 'entegrasyon')) return { kartlar: [], yazar: false, yaziYok: false, uyari: { var: false } };
         const yonetici = !!(me && me.role === 'yonetici');
         const goster = !!(me && ['yonetici', 'mudur'].includes(me.role));
         const KARTLAR = [
@@ -17794,7 +17870,41 @@ class Component extends DCLogic {
           ['anthropic_api_anahtari', 'Yapay zekâ — Anthropic Claude (ücretli API)', 'Varsa Gemini yerine bu kullanılır. Anahtar console.anthropic.com adresinden alınır; kullandıkça ücretlenir. İptal için “Anahtarı sil”.', 'sk-ant-…', 'Dene'],
           ['telegram_bot_anahtari', 'Telegram botu (ücretsiz)', 'Vatandaş Telegram’dan yazınca bildirim başvuru olur ve takip kodu alır. 1) Telegram’da @BotFather’a /newbot yazın, adı verin. 2) Verdiği anahtarı aşağıya yapıştırıp “Anahtarı kaydet”. 3) “Botu bağla”. İptal için “Anahtarı sil” yeter — bot da kesilir.', '123456:ABC…', 'Botu bağla']
         ];
+        const izin = typeof Notification === 'undefined' ? 'yok' : Notification.permission;
+        const sohbetVar = (E.liste || []).some(x => x.ad === 'telegram_uyari_sohbet');
+        const botVar = (E.liste || []).some(x => x.ad === 'telegram_bot_anahtari');
         return {
+          uyari: {
+            var: goster,
+            ses: s.sesAcik ? 'Ses: hazır ✔' : 'Ses: kilitli — sayfaya bir kez dokunun, sonra “Sesi dene”ye basın',
+            sesRenk: s.sesAcik ? '#1b9a4a' : '#d97706',
+            bildirim: izin === 'granted' ? 'Tarayıcı bildirimi: açık ✔' : (izin === 'denied' ? 'Tarayıcı bildirimi: engellenmiş — adres çubuğundaki kilit simgesinden izin verin' : (izin === 'yok' ? 'Tarayıcı bildirimi: bu cihaz desteklemiyor' : 'Tarayıcı bildirimi: izin verilmedi')),
+            bildirimRenk: izin === 'granted' ? '#1b9a4a' : '#d97706',
+            telegram: !botVar ? 'Telegram uyarısı: önce botu bağlayın'
+              : (sohbetVar ? 'Telegram uyarısı: kayıtlı sohbet var ✔ (uygulama kapalıyken de telefona mesaj düşer)'
+                : 'Telegram uyarısı: kayıtlı sohbet yok — uygulama kapalıyken uyarı için aşağıdaki kodla kaydolun'),
+            telegramRenk: sohbetVar ? '#1b9a4a' : '#d97706',
+            kod: E.uyariKod ? 'Telegram’da kendi botunuza şunu yazın:  /yonetici ' + E.uyariKod + '   (çıkmak için: /yonetici CIK)' : '',
+            kodVar: !!E.uyariKod,
+            telVar: botVar && yonetici,
+            dene: () => {
+              this._sesAc && this._sesAc(); this.uyariSesi();
+              this.setState({ basvuruUyari: { n: 1, metin: 'Deneme · Köy (İlçe) — bu bir denemedir' } });
+              if (izin === 'granted') { try { new Notification('Deneme — Kırşehir Envanter', { body: 'Bildirim çalışıyor.' }); } catch (e) { /* bildirim yok */ } }
+            },
+            izinIste: () => {
+              if (typeof Notification === 'undefined') return this.duyur('Bu cihaz tarayıcı bildirimi desteklemiyor.', 5000, 'kotu');
+              Notification.requestPermission().then(p => {
+                this.setState({ uyariTik: Date.now() });
+                if (p === 'granted') { try { new Notification('Bildirim açıldı', { body: 'Yeni başvuru gelince böyle görünür.' }); } catch (e) { /* bildirim yok */ } }
+                else this.duyur('İzin verilmedi — tarayıcının site ayarlarından bildirime izin verin.', 7000, 'kotu');
+              });
+            },
+            kodGetir: async () => {
+              const r = await this._sb.telegramKod();
+              if (r && r.ok) this.entegrasyonGuncelle({ uyariKod: r.kod }); else this.duyur((r && r.err) || 'Kod alınamadı.', 6000, 'kotu');
+            }
+          },
           yazar: yonetici && !s.offline, yaziYok: !yonetici,
           kartlar: KARTLAR.map(([ad, baslik, aciklama, ipucu, deneAd]) => {
             const x = (E.liste || []).find(i => i.ad === ad);

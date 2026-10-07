@@ -1,7 +1,7 @@
       // is-panosu modülü — "İş panosu": başvuru, talep ve arızalar tek ekranda Yeni / Atandı / Sahada / Bitti sütunlarında.
       // Her kutucuk bir iş; solundaki renkli çubuk ve nokta önceliği, altındaki tek büyük düğme bir sonraki adımı gösterir.
       isPanosuEkran: (() => {
-        if (tabId !== 'isPanosu') return { acik: false, kolonlar: [], ozet: [], telSec: [], telKartlar: [], telBos: '', telRenk: '', yeniTalep: () => {} };
+        if (tabId !== 'isPanosu') return { acik: false, kolonlar: [], panoGorunumu: true, gorunumSec: [], tablo: { acik: false, basliklar: [], satirlar: [], durumSecenek: [], ekipSecenek: [], atamaSecenek: [] }, ozet: [], telSec: [], telKartlar: [], telBos: '', telRenk: '', yeniTalep: () => {} };
         const simdi = Date.now();
         const yasMetin = ms => {
           if (!ms) return '';
@@ -83,7 +83,9 @@
             dugme, dugmeRenk, git, ikinci: '', ikinciGit: () => {},
             ac: () => this.panoAc(f),
             ekipSec: kolon === 'yeni' && secilenEkip === f.id, ekipSecenek: kolon === 'yeni' && secilenEkip === f.id ? ekipSecenek(f) : [],
-            surukle: kolon !== 'bitti' && yazabilir ? { tur: 'ariza', id: f.id } : null
+            surukle: kolon !== 'bitti' && yazabilir ? { tur: 'ariza', id: f.id } : null,
+            ekipDegisir: kolon !== 'bitti' && can('assign'), ekipDeger: ekipVar ? f.crew : '',
+            ekipDegis: e => { const v = e.target.value; if (v && v !== (ekipVar ? f.crew : '')) this.panoEkipAta(f, v); }
           });
         }
 
@@ -100,6 +102,8 @@
             dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: k.git,
             ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: k.ac,
             ekipSec: !!k.ekipSec, ekipSecenek: k.ekipSecenek || [],
+            ekipDegisir: !!k.ekipDegisir, ekipDeger: k.ekipDeger || '', ekipDegis: k.ekipDegis || (() => {}),
+            kolonAd: KOLON_AD[k.kolon], kolonRenk: (KOLON.find(x => x[0] === k.kolon) || [])[2], onc2: ONC[k.onc] ?? 9, ms2: k.ms || 0, kimAd: k.kimBos ? '' : k.kim,
             suruklenir: surukle ? 'true' : 'false', imlec: surukle ? 'grab' : 'default',
             surukleBasla: e => { if (!surukle) return; this._panoSurukle = surukle; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', surukle.id); } catch (x) { /* eski tarayıcı */ } },
             surukleBitti: () => { this._panoSurukle = null; if (this.state.panoHedef) this.setState({ panoHedef: null }); }
@@ -124,8 +128,37 @@
         const geciken = kartlar.filter(k => k.uyariKirmizi).length;
         const secKol = KOLON.some(k => k[0] === s.panoKolon) ? s.panoKolon : 'yeni';
         const secK = kolonlar.find(k => k.id === secKol);
+        // ── Tablo görünümü (Excel benzeri): aynı kartlar satır olur; başlığa basınca sıralanır, üstten süzülür
+        const gor = s.panoGorunum === 'tablo' ? 'tablo' : 'pano';
+        const sira = s.panoSira || { k: 'onc', dir: 1 };
+        const sz = s.panoSuz || {};
+        const ara = String(sz.q || '').toLocaleLowerCase('tr');
+        const tumSatir = kartlar.map(k => ({ ...tamam(k), kolon: k.kolon, kimAd: k.kimBos ? '' : k.kim, ms2: k.ms || 0, onc2: ONC[k.onc] ?? 9, durumMetin: KOLON_AD[k.kolon] }));
+        let satirlar = tumSatir.filter(r => (!sz.durum || r.kolon === sz.durum)
+          && (!sz.ekip || (sz.ekip === '__yok' ? !r.kimAd : r.kimAd === sz.ekip))
+          && (!ara || [r.baslik, r.tur, r.yer, r.kim, r.durumMetin, r.aciklama].join(' ').toLocaleLowerCase('tr').includes(ara)));
+        const anahtar = { onc: r => r.onc2, no: r => r.tur, baslik: r => r.baslik, yer: r => r.yer, kim: r => r.kim, durum: r => KOLON.findIndex(x => x[0] === r.kolon), sure: r => -r.ms2 };
+        const kf = anahtar[sira.k] || anahtar.onc;
+        satirlar = satirlar.sort((a, b) => { const x = kf(a), y = kf(b); const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'tr'); return (c || (b.ms2 - a.ms2)) * sira.dir; });
+        const BASLIK = [['onc', '●'], ['no', 'No'], ['baslik', 'Ne'], ['yer', 'Nerede'], ['kim', 'Kimde'], ['durum', 'Durum'], ['sure', 'Süre']];
+        const ekipAdlari = CREWS.filter(c => c !== ATANMADI);
+        const tablo = {
+          acik: gor === 'tablo', sayi: satirlar.length + ' / ' + tumSatir.length + ' iş',
+          basliklar: BASLIK.map(([k, ad]) => ({ ad: ad + (sira.k === k ? (sira.dir > 0 ? ' ↑' : ' ↓') : ''), tik: () => this.setState({ panoSira: { k, dir: sira.k === k ? -sira.dir : 1 } }) })),
+          satirlar: satirlar.map(r => ({ ...r, kimDegisir: r.ekipDegisir })),
+          ara: sz.q || '', onAra: e => this.setState({ panoSuz: { ...sz, q: e.target.value } }),
+          durum: sz.durum || '', onDurum: e => this.setState({ panoSuz: { ...sz, durum: e.target.value } }),
+          durumSecenek: [{ v: '', ad: 'Her durum' }, ...KOLON.map(k => ({ v: k[0], ad: k[1] }))],
+          ekip: sz.ekip || '', onEkip: e => this.setState({ panoSuz: { ...sz, ekip: e.target.value } }),
+          ekipSecenek: [{ v: '', ad: 'Her ekip' }, { v: '__yok', ad: 'Ekip atanmamış' }, ...ekipAdlari.map(c => ({ v: c, ad: c }))],
+          atamaSecenek: [{ v: '', ad: 'Ekip seç…' }, ...ekipAdlari.map(c => ({ v: c, ad: c }))],
+          temizleVar: !!(sz.q || sz.durum || sz.ekip), temizle: () => this.setState({ panoSuz: {} })
+        };
         return {
-          acik: true, kolonlar,
+          acik: true, kolonlar, tablo, panoGorunumu: gor === 'pano',
+          gorunumSec: [['pano', 'Pano'], ['tablo', 'Tablo']].map(([k, ad]) => ({
+            ad, ...seg(gor === k, () => { try { localStorage.setItem('ks-pano-gorunum', k); } catch (e) { /* depolama kapalı */ } this.setState({ panoGorunum: k }); })
+          })),
           ozet: [
             { n: kartlar.filter(k => k.kolon === 'yeni').length, ad: 'bekleyen', renk: '#5e5ce6' },
             { n: acil, ad: 'acil', renk: 'var(--color-uyari)', alarm: acil > 0 },

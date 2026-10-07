@@ -2050,3 +2050,6 @@ Sürüm 2026.10.05-114.
 ## 2026.10.07-147 — İş panosu (yeni, deneme)
 - İşler > **İş panosu** (ilk süzgeç): gelen Telegram/web başvuruları, talepler ve arızalar tek ekranda **Yeni → Atandı → Sahada → Bitti** sütunlarında renkli kutucuklar. Kutucuk: öncelik rengi (acil: nabız atan nokta), arıza türü, yer, kimde (ekip), kaç saat önce, uyarı ("uzun süredir bekliyor"), tek büyük düğme (Arızaya çevir / Ekip ata / Sahada / İşi bitir). Masaüstünde kutular sütunlar arasında sürüklenebilir (Atandı'ya bırakılınca ekip sorulur, Sahada'ya bırakılınca "sahada" olur, Bitti'ye bırakılınca kapanış formu açılır). Telefonda 4 renkli sayaç düğmesi + seçili sütunun listesi (yöneticinin sahada izlemesi için). Eski ekranlar (Genel bakış, Gelen, Açık...) yerinde duruyor.
 - Yeni modül: `src/moduller/is-panosu/` (yeni-modul.js ile kuruldu); mevcut akışları çağırır, yeni iş kuralı yok.
+
+## 2026.10.07-148 — İş panosu: Tablo görünümü
+- İş panosunun üstünde **Pano | Tablo** düğmesi (seçim cihazda hatırlanır). Tablo (masaüstü): Excel benzeri satırlar; başlığa tıklayınca sıralama (öncelik, no, ne, nerede, kimde, durum, süre), üstte arama kutusu + durum ve ekip süzgeci, satırdaki ekip kutusundan doğrudan ekip atama/değiştirme, satır sonunda tek düğme. Telefon aynı kart listesini kullanır. İki görünümün hangisinin işe yaradığı deneyerek belirlenecek.

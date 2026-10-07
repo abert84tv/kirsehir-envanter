@@ -78,7 +78,7 @@
     this.smsKuyrukYaz(kuyruk);
     this.denetimYaz('bildirim', 'Mesaj kuyruğa alındı', kanal + ' · ' + r.hata, kapsam);
     this.duyur(kapsam + ' bildirimi gönderilemedi: ' + r.hata + ' Mesaj kuyrukta bekliyor.', 8000, 'kotu',
-      () => this.setState({ tab: 'ayarlar', ayarBolum: 'veri' }));
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'bildirim' }));
   }
   async smsKuyrukGonder() {
     const kuyruk = [...(this.state.smsKuyruk || [])];

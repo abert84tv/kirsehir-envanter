@@ -5,7 +5,9 @@
       // (masaüstü ve telefon şablonu ayrı, veri ortak)
       entegrasyon: (() => {
         const E = s.entegrasyon || {};
-        if (!(tabId === 'ayarlar' && ayarBolumu(s.ayarBolum) === 'entegrasyon')) return { kartlar: [], yazar: false, yaziYok: false, uyari: { var: false } };
+        const bolum = ayarAcik(s);
+        const BOLUM_KART = { uyari: ['telegram_bot_anahtari'], yapayzeka: ['gemini_api_anahtari', 'anthropic_api_anahtari'], konum: ['konum_yazma_anahtari', 'arvento_kullanici', 'arvento_sifre'] };
+        if (!(tabId === 'ayarlar' && BOLUM_KART[bolum])) return { kartlar: [], yazar: false, yaziYok: false, uyari: { var: false } };
         const yonetici = !!(me && me.role === 'yonetici');
         const goster = !!(me && ['yonetici', 'mudur'].includes(me.role));
         const KARTLAR = [
@@ -21,7 +23,7 @@
         const botVar = (E.liste || []).some(x => x.ad === 'telegram_bot_anahtari');
         return {
           uyari: {
-            var: goster,
+            var: goster && bolum === 'uyari',
             ses: s.sesAcik ? 'Ses: hazır ✔' : 'Ses: kilitli — sayfaya bir kez dokunun, sonra “Sesi dene”ye basın',
             sesRenk: s.sesAcik ? '#1b9a4a' : '#d97706',
             bildirim: izin === 'granted' ? 'Tarayıcı bildirimi: açık ✔' : (izin === 'denied' ? 'Tarayıcı bildirimi: engellenmiş — adres çubuğundaki kilit simgesinden izin verin' : (izin === 'yok' ? 'Tarayıcı bildirimi: bu cihaz desteklemiyor' : 'Tarayıcı bildirimi: izin verilmedi')),
@@ -52,7 +54,7 @@
             }
           },
           yazar: yonetici && !s.offline, yaziYok: !yonetici,
-          kartlar: KARTLAR.map(([ad, baslik, aciklama, ipucu, deneAd]) => {
+          kartlar: KARTLAR.filter(k => BOLUM_KART[bolum].includes(k[0])).map(([ad, baslik, aciklama, ipucu, deneAd]) => {
             const x = (E.liste || []).find(i => i.ad === ad);
             const sonuc = (E.sonuclar || {})[ad] || '';
             return {

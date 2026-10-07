@@ -2065,3 +2065,8 @@ Sürüm 2026.10.05-114.
 - **Arıza** kaydı (masaüstü) ve **yeni telefon talebi** de aynı tek sayfa İş kartında açılır (üstteki + düğmesi dahil). Telefonda arıza düzenleme sade ekranı olarak kalır.
 - Genel bakış göstergeleri **Özet > Operasyon göstergeleri**'ne taşındı; göstergelerdeki kısayollar iş panosunu süzgeçli açar. Pano üstünde **Muhtar defteri** düğmesi.
 - Ölü kod temizliği: arıza listesi hazırlık dosyası ve kullanılmayan ekran verileri kaldırıldı.
+
+## 2026.10.07-151 — Ayarlar sadeleştirildi
+- **Masaüstü:** Ayarlar iki sütunlu — solda bölüm listesi (her zaman görünür), sağda seçili bölüm. Geri-ileri gezinme yok. Telefonda liste → bölüm düzeni aynı kaldı.
+- 14 karışık bölüm yerine 5 başlık altında kısa sayfalar: **Ekip** (Ekipler, Personel) · **Bağlantılar ve uyarılar** (Başvuru uyarısı ve Telegram, Ekip mesajları, Ekip konumu, Yapay zekâ) · **Kullanıcılar ve güvenlik** (Yetkiler, KVKK, Denetim izi) · **Veri** (Sürüm ve senkronizasyon, Köy listesi, Kayıt araçları, Dış veri aktarımı, Çöp kutusu) · **Program** (Harita ve görünüm, Modüller).
+- Eski tek 'Entegrasyon' sayfası üçe bölündü (uyarı+Telegram, yapay zekâ, ekip konumu); 'Ekipler ve personel' ikiye bölündü; ekip konumu paylaşımı Veri'den kendi sayfasına taşındı. Gönderilemeyen mesaj bildirimi artık doğrudan Ekip mesajları sayfasını açar.

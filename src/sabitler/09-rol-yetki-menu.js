@@ -49,26 +49,31 @@ const MENU_SIRA = ['envanter', 'isler', 'kaynaklar', 'ozet', 'ayarlar'];
 // "Saha araçları" grubu bu ayrışmadan doğdu. Üst çubuktaki tekrar eden
 // haplar da kaldırıldı (bkz. sayfaBar) — artık tek erişim yolu bu liste.
 const AYAR_LISTE = [
-  ['Kurum', [
+  ['Ekip', [
+    ['ekip', 'Ekipler', 'Hangi ekipte kim var, hangi araç, vardiya'],
+    ['personel', 'Personel', 'Kişiler, yetkinlik, izin ve nöbet']
+  ]],
+  ['Bağlantılar ve uyarılar', [
+    ['uyari', 'Başvuru uyarısı ve Telegram', 'Yeni başvuruda ses, bildirim ve Telegram botu'],
+    ['bildirim', 'Ekip mesajları', 'Ekibe ve şefe SMS/mesaj gönderimi'],
+    ['konum', 'Ekip konumu', 'Araç takip (Arvento) ve zimmetli cihazlar'],
+    ['yapayzeka', 'Yapay zekâ', 'Gelen talebi önceden sınıflandırma']
+  ]],
+  ['Kullanıcılar ve güvenlik', [
     ['yetki', 'Yetkiler ve kullanıcılar', 'Kim neyi görebilir, kim değiştirebilir'],
-    ['ekip', 'Ekipler ve personel', 'Vardiya, yetkinlik ve ekip listesi'],
-    ['kvkk', 'KVKK ve saklama', 'Kişisel veri saklama süreleri']
+    ['kvkk', 'KVKK ve saklama', 'Kişisel veri saklama süreleri'],
+    ['denetim', 'Denetim izi', 'Kim neyi ne zaman değiştirdi']
   ]],
   ['Veri', [
-    ['veri', 'Senkronizasyon ve sürüm', 'Sunucu bağlantısı, bekleyen kayıtlar, program sürümü'],
-    ['denetim', 'Denetim izi', 'Kim neyi ne zaman değiştirdi'],
-    ['cop', 'Çöp kutusu', 'Silinen kayıtlar 30 gün burada bekler']
-  ]],
-  ['Saha araçları', [
-    ['bildirim', 'Arıza bildirimleri', 'Ekibe ve şefe SMS/mesaj gönderimi'],
-    ['koyeslestir', 'Kayıt araçları', 'Köy adı eşleştirme, yeni tesis kurma'],
+    ['veri', 'Sürüm ve senkronizasyon', 'Sunucu bağlantısı, bekleyen kayıtlar, program sürümü'],
     ['yerlesim', 'Köy ve yerleşim listesi', 'Nüfus, hayvan varlığı, yerleşim adları'],
-    ['aktarim', 'Dış veri aktarımı', 'KML/KMZ, Excel/CSV, Sheets, GPX içe alma']
+    ['koyeslestir', 'Kayıt araçları', 'Köy adı eşleştirme, yeni tesis kurma'],
+    ['aktarim', 'Dış veri aktarımı', 'KML/KMZ, Excel/CSV, Sheets, GPX içe alma'],
+    ['cop', 'Çöp kutusu', 'Silinen kayıtlar 30 gün burada bekler']
   ]],
   ['Program', [
     ['gorunum', 'Harita ve görünüm', 'Zemin, tema, menü yerleşimi'],
-    ['modul', 'Modüller', 'Kullanılmayan bölümleri kapatın'],
-    ['entegrasyon', 'Entegrasyon', 'Yapay zekâ ve dış servis anahtarları']
+    ['modul', 'Modüller', 'Kullanılmayan bölümleri kapatın']
   ]]
 ];
 // Ayrı sekmesi olan bölümler listeden o sekmeye götürür; yetki üçüncü
@@ -80,7 +85,7 @@ const AYAR_TAB_YETKI = { denetim: 'ayarlar', cop: 'ayarlar', yerlesim: 'yerlesim
 // "bildirim" artık kendi gerçek bölümü olduğu için buradan kaldırıldı —
 // eskiden 'veri'ye yönlendiriyordu, şimdi doğrudan kendi bölümüne gider.
 const AYAR_ESKI = {
-  entegrasyon: 'entegrasyon', kurum: 'yetki', program: 'gorunum',
+  entegrasyon: 'uyari', kurum: 'yetki', program: 'gorunum',
   yetki: 'yetki', ekip: 'ekip', kvkk: 'kvkk', veri: 'veri',
   gorunum: 'gorunum', modul: 'modul'
 };
@@ -90,6 +95,9 @@ const ayarBolumu = id => {
   const d = AYAR_ESKI[id] || id;
   return AYAR_BOLUMLER.some(([bid]) => bid === d) ? d : null;
 };
+// Masaüstünde Ayarlar iki sütundur (solda bölüm listesi, sağda içerik): hiçbir bölüm seçili değilse ilki açılır.
+// Telefonda liste tek başına açılır, bölüm seçilince tam ekran olur.
+const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : 'ekip');
 const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'])[1];
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {

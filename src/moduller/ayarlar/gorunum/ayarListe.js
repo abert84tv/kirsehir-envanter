@@ -8,6 +8,10 @@
             && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok'))
           .map(([id, ad, alt]) => ({
             ad,
+            aktif: ayarAcik(s) === id,
+            zemin: ayarAcik(s) === id && tabId === 'ayarlar' ? ui.sel : 'transparent',
+            renk: ayarAcik(s) === id && tabId === 'ayarlar' ? ui.acc : ui.fg,
+            rozet: id === 'cop' && (s.trash.length + (s.cop || []).length) ? String(s.trash.length + (s.cop || []).length) : '',
             alt: id === 'cop' && (s.trash.length + (s.cop || []).length)
               ? (s.trash.length + (s.cop || []).length) + ' kayıt bekliyor'
               : alt,

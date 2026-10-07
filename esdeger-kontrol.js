@@ -104,6 +104,7 @@ const NEDENLER = [
   [/^masaustu:(arzKontrol|envKontrol)\.h\./, 'tasarım: masaüstü tablo başlığından sıralama (telefonda açılır sıralama: onSira/yonTik)'],
   [/^telefon:(arzKontrol|envKontrol)\.(onSira|yonTik|temizle)/, 'tasarım: telefonda açılır sıralama (masaüstünde tablo başlığı)'],
   [/^masaustu:naSz\.|^masaustu:naAc$/, 'tasarım: masaüstü yeni tesis sihirbazı (telefonda İşlem > senaryolar akışı)'],
+  [/^telefon:ayar\.geri$/, 'tasarım: masaüstünde Ayarlar iki sütunlu (solda bölüm listesi), geri düğmesi gerekmez; telefonda liste → bölüm'],
   [/^telefon:(telSuz|telMenu|navPhone|menuSayfa|otherScreens)/, 'tasarım: telefon gezinmesi (alt çubuk, açılır menü, süzgeç/araç şeridi)'],
   [/^masaustu:(toggleTheme|toggleYardim|esitle\.tik|panelKapat|closeDetail)/, 'tasarım: masaüstü üst çubuk/sağ panel düğmeleri (telefonda menü ve tam ekran paneller)'],
   [/^masaustu:faultForm\.onIscilik/, 'EKSİK ADAYI: işçilik girişi telefondaki ayrıntılı arıza formunda yok'],

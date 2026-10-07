@@ -39,7 +39,7 @@
     const s = this.state;
     // Bekleyen arızalar cihazda saklanır (arizaBekleyenYaz)
     if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
-    if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (s.ayarBolum === 'entegrasyon' && s.tab === 'ayarlar') this.entegrasyonYenile(); }
+    if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (['uyari', 'yapayzeka', 'konum'].includes(ayarBolumu(s.ayarBolum)) && s.tab === 'ayarlar') this.entegrasyonYenile(); }
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir

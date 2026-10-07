@@ -1,4 +1,4 @@
-<sc-if value="{{ ayar.ekip }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ ayar.personel }}" hint-placeholder-val="{{ false }}">
 <div>
 
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
@@ -139,6 +139,10 @@
 </sc-for>
 </div>
 
+</div>
+</sc-if>
+<sc-if value="{{ ayar.ekip }}" hint-placeholder-val="{{ false }}">
+<div>
 <div style="padding:16px 20px">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ekipler</div>
 <div style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px;margin-bottom:13px">{{ ekipYonetim.not }}</div>

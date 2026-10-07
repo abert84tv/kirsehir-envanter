@@ -57,6 +57,7 @@
   "masaustu:r.types[].pick": "tasarım: toplu aktarım yalnız bilgisayarda (telefonda Ayarlar'a yönlendirir)",
   "masaustu:toggleTheme": "tasarım: masaüstü üst çubuk/sağ panel düğmeleri (telefonda menü ve tam ekran paneller)",
   "masaustu:toggleYardim": "tasarım: masaüstü üst çubuk/sağ panel düğmeleri (telefonda menü ve tam ekran paneller)",
+  "telefon:ayar.geri": "tasarım: masaüstünde Ayarlar iki sütunlu (solda bölüm listesi), geri düğmesi gerekmez; telefonda liste → bölüm",
   "telefon:envKontrol.onSira": "tasarım: telefonda açılır sıralama (masaüstünde tablo başlığı)",
   "telefon:envKontrol.temizle": "tasarım: telefonda açılır sıralama (masaüstünde tablo başlığı)",
   "telefon:envKontrol.yonTik": "tasarım: telefonda açılır sıralama (masaüstünde tablo başlığı)",

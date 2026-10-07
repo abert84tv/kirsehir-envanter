@@ -112,6 +112,7 @@ const NEDENLER = [
   [/^masaustu:ozet\.(onIlce|onOzel|zamanSec|sekmeSec)/, 'EKSİK ADAYI: Özet ilçe/zaman aralığı süzgeci telefonda yok (telefon yalnız sekme seçer)'],
   [/^masaustu:ekipPano\.(aracDefteri|ekipDuzenle)/, 'EKSİK ADAYI: ekip panosu kısayolları (araç defteri, ekip düzenle) telefonda yok'],
   [/^masaustu:detail\.fotoSekme/, 'EKSİK ADAYI: tesis kartında "Fotoğraf" kısayol düğmesi telefonda yok'],
+  [/isPanosuEkran|^masaustu:k\.kartlar|^telefon:t\.sec/, 'tasarım: İş panosu masaüstünde 4 sütun + sürükle-bırak, telefonda 4 renkli sekmeli tek liste (kartlar ve düğmeler aynı işi yapar, yalnız kapsayıcı farklı)'],
   [/^telefon:telSuz\./, 'tasarım: telefon süzgeç/araç şeridi'],
 ];
 const neden = k => { for (const [re, n] of NEDENLER) if (re.test(k)) return n; return 'başlangıç: incelenmedi (bilerek farklı olabilir; gerçek eksikse öteki tarafa ekleyin ve satırı silin)'; };

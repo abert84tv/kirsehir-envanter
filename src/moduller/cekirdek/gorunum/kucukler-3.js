@@ -26,7 +26,7 @@
         ayarKap: tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop',
         ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim',
         ambar: tabId === 'ambar', arac: tabId === 'arac', talep: tabId === 'talep',
-        isPano: tabId === 'isPano', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
+        isPano: tabId === 'isPano', isPanosu: tabId === 'isPanosu', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
       },
       // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez
       navGruplu: MENU_GRUP.map(([baslik, idler]) => ({

@@ -34,7 +34,7 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const SUZGEC_TANIM = {
   // "Genel bakış" (operasyon panosu) kendi yetki anahtarı yok — arıza
   // yetkisinden miras alır, sekmesi isPano (2026.10).
-  isler: [['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
+  isler: [['kanban', 'İş panosu', 'ariza', 'isPanosu'], ['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Periyodik bakım', 'bakim']],
   // Hat kesiti Envanter'in üçüncü görünümü: aynı harita, aynı katmanlar (2026.10.06)
   envanter: [['harita', 'Harita', 'harita'], ['kesit', 'Hat kesiti', 'profil'], ['liste', 'Liste', 'envanter']],

@@ -57,6 +57,7 @@
     const canAssign = can('assign');
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
+    if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';

@@ -108,6 +108,11 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-canli.ks-kapali::after{border-color:var(--color-uyari)}
 .ks-nabiz{display:inline-block;animation:ksNabiz 2.1s ease-in-out infinite}
 .ks-gir{animation:ksGir .35s ease both}
+.ks-kart{transition:transform .15s ease,box-shadow .2s ease}
+.ks-kart:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.ks-kart[draggable=true]:active{cursor:grabbing;opacity:.7}
+.ks-pdot{position:relative;flex:none;width:11px;height:11px;border-radius:50%;display:inline-block}
+.ks-pdot.acil::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--color-uyari);animation:ksPing 1.4s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.ks-canli::after,.ks-nabiz,.ks-gir{animation:none}}
 @keyframes ksCiz{to{stroke-dashoffset:0}}
 .ks-ciz{stroke-dasharray:1;stroke-dashoffset:1;animation:ksCiz 1.1s ease .1s forwards}
@@ -3452,6 +3457,65 @@ Hareket gir
 <div class="ks-bilgi" style="padding:14px 20px;border-top:1px solid {{ ui.rule }};font:400 12px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">Personel ayrıldığında <strong style="color:{{ ui.fg }}">Dondur</strong> kullanın: giriş kapanır, kişinin attığı bütün kayıtlar ve düzenlemeler adıyla sistemde kalır, aynı kişi işe dönerse <strong style="color:{{ ui.fg }}">Aktif et</strong> ile eski hesabı olduğu gibi açılır — yeni hesap açmak, kullanıcı adını yeniden vermek gerekmez. <strong style="color:{{ ui.fg }}">Sil</strong> yalnızca yanlışlıkla açılmış hesaplar için; geri dönüşü yoktur ve eski kayıtlarda adı “Silinmiş kullanıcı” olarak görünür.</div>
 </sc-if>
 <div style="height:20px"></div>
+</div>
+</sc-if>
+<sc-if value="{{ tab.isPanosu }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<sc-for list="{{ isPanosuEkran.ozet }}" as="o" hint-placeholder-count="4">
+<div style="display:flex;align-items:baseline;gap:6px">
+<sc-if value="{{ o.alarm }}" hint-placeholder-val="{{ false }}"><span class="ks-canli ks-kapali"></span></sc-if>
+<span style="font:700 22px/1 var(--font-heading);color:{{ o.renk }}">{{ o.n }}</span>
+<span style="font:500 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ o.ad }}</span>
+</div>
+</sc-for>
+<span style="flex:1"></span>
+<sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.yeniTalep }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;background:var(--color-accent);color:#fff;font:700 13.5px/44px var(--font-body)">+ Yeni talep (telefon)</button></sc-if>
+</div>
+<div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.yardim }}</div>
+<div style="flex:1;display:grid;grid-template-columns:repeat(4,minmax(200px,1fr));gap:12px;align-items:start;min-height:0">
+<sc-for list="{{ isPanosuEkran.kolonlar }}" as="k" hint-placeholder-count="4">
+<div onDragOver="{{ k.ustunde }}" onDragEnter="{{ k.girdi }}" onDrop="{{ k.birak }}" style="border-radius:16px;border:2px dashed {{ k.kenar }};background:{{ k.zemin }};padding:10px;display:flex;flex-direction:column;gap:10px;min-height:260px;transition:background .15s">
+<div style="display:flex;align-items:center;gap:8px;padding:2px 4px 4px">
+<span style="width:12px;height:12px;border-radius:4px;background:{{ k.renk }}"></span>
+<span style="flex:1;font:700 15px/1 var(--font-heading)">{{ k.ad }}</span>
+<span class="ks-nabiz" style="min-width:26px;text-align:center;font:700 13px/1 var(--font-body);color:#fff;background:{{ k.renk }};padding:5px 8px;border-radius:10px">{{ k.n }}</span>
+</div>
+<sc-for list="{{ k.kartlar }}" as="c" hint-placeholder-count="2">
+<div draggable="{{ c.suruklenir }}" onDragStart="{{ c.surukleBasla }}" onDragEnd="{{ c.surukleBitti }}" class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px;cursor:{{ c.imlec }}">
+<div style="display:flex;align-items:center;gap:9px">
+<span class="{{ c.noktaSinif }}" style="background:{{ c.renk }}"></span>
+<button onClick="{{ c.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;font:700 14.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ c.baslik }}</button>
+</div>
+<div style="display:flex;align-items:center;gap:8px"><span style="flex:1;min-width:0;font:500 12.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ c.yer }}</span><span style="flex:none;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:4px 7px;border-radius:8px;background:{{ ui.surf2 }}">{{ c.tur }}</span></div>
+<sc-if value="{{ c.aciklamaVar }}" hint-placeholder-val="{{ false }}"><div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ c.aciklama }}</div></sc-if>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="font:700 12.5px/1.2 var(--font-body);color:{{ c.kimRenk }}">{{ c.kim }}</span>
+<span style="flex:1"></span>
+<sc-if value="{{ c.kanalVar }}" hint-placeholder-val="{{ false }}"><span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:3px 6px;border-radius:7px;border:1px solid {{ ui.rule }}">{{ c.kanal }}</span></sc-if>
+<span style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ c.sure }}</span>
+</div>
+<sc-if value="{{ c.uyariVar }}" hint-placeholder-val="{{ false }}"><div style="font:700 11.5px/1.2 var(--font-body);color:{{ c.uyariRenk }}">{{ c.uyari }}</div></sc-if>
+<sc-if value="{{ c.ekipSec }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:2px">
+<span style="font:600 11.5px/1 var(--font-body);color:{{ ui.mut }}">Hangi ekip gitsin?</span>
+<sc-for list="{{ c.ekipSecenek }}" as="e" hint-placeholder-count="4">
+<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};display:flex;align-items:center;justify-content:space-between;gap:8px;font:600 13px/1.2 var(--font-body);color:{{ ui.fg }}"><span>{{ e.ad }}</span><span style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ e.say }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ c.dugmeVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px">
+<button onClick="{{ c.git }}" style="all:unset;white-space:nowrap;padding:0 6px;box-sizing:border-box;cursor:pointer;flex:1;min-height:46px;border-radius:11px;background:{{ c.dugmeRenk }};color:#fff;font:700 14px/46px var(--font-body);text-align:center">{{ c.dugme }}</button>
+<sc-if value="{{ c.ikinciVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.ikinciGit }}" style="all:unset;white-space:nowrap;box-sizing:border-box;cursor:pointer;flex:none;min-height:46px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/44px var(--font-body)">{{ c.ikinci }}</button></sc-if>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ k.bosVar }}" hint-placeholder-val="{{ false }}"><div style="padding:22px 8px;text-align:center;font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ k.bos }}</div></sc-if>
+</div>
+</sc-for>
+</div>
 </div>
 </sc-if>
 
@@ -7441,6 +7505,61 @@ Hareket gir
 </sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ tab.isPanosu }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};display:flex;flex-direction:column">
+<div style="position:sticky;top:0;z-index:3;background:{{ ui.bg }};padding:10px 12px 8px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+<sc-for list="{{ isPanosuEkran.telSec }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:58px;border-radius:12px;border:2px solid {{ t.renk }};background:{{ t.bg }};color:{{ t.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px"><span style="font:700 20px/1 var(--font-heading)">{{ t.n }}</span><span style="font:600 11px/1 var(--font-body)">{{ t.ad }}</span></button>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<sc-for list="{{ isPanosuEkran.ozet }}" as="o" hint-placeholder-count="4">
+<div style="display:flex;align-items:baseline;gap:5px">
+<sc-if value="{{ o.alarm }}" hint-placeholder-val="{{ false }}"><span class="ks-canli ks-kapali"></span></sc-if>
+<span style="font:700 16px/1 var(--font-heading);color:{{ o.renk }}">{{ o.n }}</span>
+<span style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ o.ad }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="padding:12px;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ isPanosuEkran.telKartlar }}" as="c" hint-placeholder-count="3">
+<div class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:9px">
+<span class="{{ c.noktaSinif }}" style="background:{{ c.renk }}"></span>
+<button onClick="{{ c.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;font:700 14.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ c.baslik }}</button>
+</div>
+<div style="display:flex;align-items:center;gap:8px"><span style="flex:1;min-width:0;font:500 12.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ c.yer }}</span><span style="flex:none;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:4px 7px;border-radius:8px;background:{{ ui.surf2 }}">{{ c.tur }}</span></div>
+<sc-if value="{{ c.aciklamaVar }}" hint-placeholder-val="{{ false }}"><div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ c.aciklama }}</div></sc-if>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+<span style="font:700 12.5px/1.2 var(--font-body);color:{{ c.kimRenk }}">{{ c.kim }}</span>
+<span style="flex:1"></span>
+<sc-if value="{{ c.kanalVar }}" hint-placeholder-val="{{ false }}"><span style="font:600 10.5px/1 var(--font-body);color:{{ ui.mut }};padding:3px 6px;border-radius:7px;border:1px solid {{ ui.rule }}">{{ c.kanal }}</span></sc-if>
+<span style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ c.sure }}</span>
+</div>
+<sc-if value="{{ c.uyariVar }}" hint-placeholder-val="{{ false }}"><div style="font:700 11.5px/1.2 var(--font-body);color:{{ c.uyariRenk }}">{{ c.uyari }}</div></sc-if>
+<sc-if value="{{ c.ekipSec }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:2px">
+<span style="font:600 11.5px/1 var(--font-body);color:{{ ui.mut }}">Hangi ekip gitsin?</span>
+<sc-for list="{{ c.ekipSecenek }}" as="e" hint-placeholder-count="4">
+<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:48px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};display:flex;align-items:center;justify-content:space-between;gap:8px;font:600 13.5px/1.2 var(--font-body);color:{{ ui.fg }}"><span>{{ e.ad }}</span><span style="font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ e.say }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ c.dugmeVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px">
+<button onClick="{{ c.git }}" style="all:unset;white-space:nowrap;padding:0 6px;box-sizing:border-box;cursor:pointer;flex:1;min-height:50px;border-radius:12px;background:{{ c.dugmeRenk }};color:#fff;font:700 15px/50px var(--font-body);text-align:center">{{ c.dugme }}</button>
+<sc-if value="{{ c.ikinciVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.ikinciGit }}" style="all:unset;white-space:nowrap;box-sizing:border-box;cursor:pointer;flex:none;min-height:50px;padding:0 14px;border-radius:12px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 13px/48px var(--font-body)">{{ c.ikinci }}</button></sc-if>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ isPanosuEkran.telBosVar }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 8px;text-align:center;font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.telBos }}</div></sc-if>
+</div>
+<sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><div style="padding:0 12px 16px"><button onClick="{{ isPanosuEkran.yeniTalep }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:50px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/50px var(--font-body);text-align:center">+ Yeni talep (telefon)</button></div></sc-if>
+</div>
+</sc-if>
 
 <sc-if value="{{ coordBar.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:0;right:0;bottom:calc(var(--tel-nav) + 6px);z-index:20;background:{{ ui.fg }};color:{{ ui.bg }};border-top:3px solid var(--color-accent);padding:12px 14px;display:flex;flex-direction:column;gap:10px">
@@ -9320,7 +9439,7 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const SUZGEC_TANIM = {
   // "Genel bakış" (operasyon panosu) kendi yetki anahtarı yok — arıza
   // yetkisinden miras alır, sekmesi isPano (2026.10).
-  isler: [['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
+  isler: [['kanban', 'İş panosu', 'ariza', 'isPanosu'], ['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
     ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Periyodik bakım', 'bakim']],
   // Hat kesiti Envanter'in üçüncü görünümü: aynı harita, aynı katmanlar (2026.10.06)
   envanter: [['harita', 'Harita', 'harita'], ['kesit', 'Hat kesiti', 'profil'], ['liste', 'Liste', 'envanter']],
@@ -9375,7 +9494,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.07-146';
+const SURUM = '2026.10.07-147';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9526,7 +9645,7 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
-    basvuruUyari: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
+    basvuruUyari: null, panoKolon: 'yeni', panoEkip: null, panoHedef: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -15005,6 +15124,67 @@ class Component extends DCLogic {
     const hayvanli = Object.values(yeni).filter(x => x.buyukbas != null || x.kucukbas != null).length;
     this.duyur(`${dosyaAd ? dosyaAd + ' \u2014 ' : ''}${n} sat\u0131r okundu \u00b7 ${nufuslu} yerle\u015fimde n\u00fcfus, ${hayvanli} yerle\u015fimde hayvan say\u0131s\u0131${atlanan ? ' \u00b7 ' + atlanan + ' sat\u0131r atland\u0131' : ''}.`, 8000, 'iyi');
   }
+  // is-panosu modülü — İş panosu işlemleri. Hepsi var olan akışları çağırır; yeni iş kuralı eklemez.
+  // Başvuruyu tek adımda arıza formuna taşır (önce talep olur, sonra arıza formu açılır)
+  async panoBasvuruArizaya(b) {
+    await this.basvuruAktar(b);
+    const t = (this.state.talepler || []).find(x => x.takip === b.takip);
+    if (t) this.panoTalepArizaya(t);
+  }
+  // Talebi arıza formuna taşır; formu açık bırakır, panodan ayrılmaz
+  panoTalepArizaya(t) {
+    this.talepArizaya(t.id);
+    setTimeout(() => this.setState({ tab: 'isPanosu' }), 0);
+  }
+  // Arızayı ayrıntı formunda (masaüstü sağ panel / telefon sade ekran) açar
+  panoAc(f) {
+    this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } });
+  }
+  // "Sahada": ekip yerine vardı
+  panoSahada(f) {
+    this.sahaDurum({ ...f }, 'sahada');
+    this.duyur((f.no || 'İş') + ' sahada olarak işaretlendi.', 4000, 'iyi');
+  }
+  // Ekip atar; sunucuya bağlıysa iş emri de açılır (arıza formundaki "iş emri oluştur ve ekibe ata" ile aynı iş)
+  async panoEkipAta(f, crew) {
+    this.setState({ panoEkip: null });
+    if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını yönetici, müdür, mühendis ya da şef yapar.', true);
+    const M = this._sb;
+    const ie = f.dbId ? this.isEmriBul(f.dbId) : null;
+    const baglanti = !!(M && M.tokenOku() && this.state.sunucu && !this.state.offline);
+    if (ie && baglanti) await this.isEmriAtaKaydet(ie, { ekip: crew, araclar: (ie.araclar || []).map(x => x.id) });
+    else if (!ie && f.dbId && baglanti) await this.isEmriAcSade(f, { crew });
+    // İş emri akışı atlandıysa (bağlantı yok, hata) ekip yine de arızaya yazılır
+    const g = (this.state.faults || []).find(x => x.id === f.id);
+    if (g && g.crew !== crew) this.arizaEkipYaz(g, crew);
+    this.denetimYaz('ariza', 'Panodan ekip atandı', (f.no || '') + ' · ' + crew, f.no || '');
+  }
+  // Kutuyu bir sütuna bıraktı
+  panoBirak(kolon) {
+    const k = this._panoSurukle;
+    this._panoSurukle = null;
+    this.setState({ panoHedef: null });
+    if (!k || k.tur !== 'ariza') return;
+    const f = (this.state.faults || []).find(x => x.id === k.id);
+    if (!f) return;
+    const ekipVar = !!f.crew && f.crew !== ATANMADI;
+    if (kolon === 'atandi') {
+      if (f.status === 'atandi') return;
+      if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını yönetici, müdür, mühendis ya da şef yapar.', true);
+      if (ekipVar && ['acik', 'yeniden'].includes(f.status)) return this.panoEkipAta(f, f.crew);
+      return this.setState({ panoEkip: f.id, panoKolon: 'yeni' }, () => this.duyur('Önce hangi ekibin gideceğini seçin.', 4500, 'bilgi'));
+    }
+    if (kolon === 'sahada') {
+      if (f.status === 'sahada') return;
+      return this.panoSahada(f);
+    }
+    if (kolon === 'bitti') {
+      this.panoAc(f);
+      return this.duyur('Kapatmak için formda “İşi tamamla”ya basın — kanıt fotoğrafı ve malzeme orada alınır.', 7000, 'bilgi');
+    }
+    this.duyur('İşi geriye almak için arıza formundaki durumu değiştirin.', 5000, 'bilgi');
+  }
+
   renderVals() {
     const s = this.state, ui = this.th(), dark = ui.dark;
     const m = s.data;
@@ -15065,6 +15245,7 @@ class Component extends DCLogic {
     const canAssign = can('assign');
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
+    if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';
@@ -15488,7 +15669,7 @@ class Component extends DCLogic {
     const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
-      gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn };
+      gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };
     const suzgecSayi = { ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
@@ -15767,7 +15948,7 @@ class Component extends DCLogic {
         ayarKap: tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop',
         ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim',
         ambar: tabId === 'ambar', arac: tabId === 'arac', talep: tabId === 'talep',
-        isPano: tabId === 'isPano', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
+        isPano: tabId === 'isPano', isPanosu: tabId === 'isPanosu', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
       },
       // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez
       navGruplu: MENU_GRUP.map(([baslik, idler]) => ({
@@ -20835,6 +21016,157 @@ class Component extends DCLogic {
           }
         };
       })(),
+      // is-panosu modülü — "İş panosu": başvuru, talep ve arızalar tek ekranda Yeni / Atandı / Sahada / Bitti sütunlarında.
+      // Her kutucuk bir iş; solundaki renkli çubuk ve nokta önceliği, altındaki tek büyük düğme bir sonraki adımı gösterir.
+      isPanosuEkran: (() => {
+        if (tabId !== 'isPanosu') return { acik: false, kolonlar: [], ozet: [], telSec: [], telKartlar: [], telBos: '', telRenk: '', yeniTalep: () => {} };
+        const simdi = Date.now();
+        const yasMetin = ms => {
+          if (!ms) return '';
+          const dk = Math.max(0, Math.round((simdi - ms) / 60000));
+          return dk < 2 ? 'şimdi' : dk < 60 ? dk + ' dk önce' : dk < 1440 ? Math.floor(dk / 60) + ' sa önce' : Math.floor(dk / 1440) + ' gün önce';
+        };
+        const ONC = { 'Acil': 0, 'Yüksek': 1, 'Normal': 2, 'Düşük': 3 };
+        const oncRenk = p => p === 'Acil' ? 'var(--color-uyari)' : p === 'Yüksek' ? '#ff9f0a' : p === 'Düşük' ? '#8e8e93' : 'var(--color-accent)';
+        const KOLON = [
+          ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
+          ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
+          ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok'],
+          ['bitti', 'Bitti', '#30d158', 'Son 7 günde kapanan yok']
+        ];
+        const KOLON_AD = Object.fromEntries(KOLON.map(k => [k[0], k[1]]));
+        const SAHA_DURUMLARI = ['sahada', 'bilgi', 'bekleme', 'yonlendirildi', 'kontrol'];
+        const yeniKolonu = st => st === 'acik' || st === 'yeniden';
+        const yazabilir = !!me && me.role !== 'izleyici';
+        const kartlar = [];
+        const secilenEkip = s.panoEkip;
+        const ekipSecenek = f => CREWS.filter(c => c !== ATANMADI).map(c => {
+          const is = s.faults.filter(x => x.crew === c && !KAPALI_DURUM.includes(x.status)).length;
+          return { ad: c, say: is ? is + ' iş' : 'boş', sec: () => this.panoEkipAta(f, c) };
+        });
+
+        // ── başvurular (Telegram / web formu): henüz kimse almadı
+        if (talepOn) for (const b of (s.basvurular || []).filter(x => x.durum === 'yeni')) {
+          const ms = Date.parse(b.zaman) || 0, telg = b.konu === 'Telegram bildirimi';
+          kartlar.push({
+            anahtar: 'b' + b.id, kolon: 'yeni', tur: 'Başvuru', onc: 'Normal', ms,
+            baslik: telg ? (String(b.aciklama || '').slice(0, 70) || 'Telegram mesajı') : (b.konu || 'Başvuru'),
+            yer: (b.koy && b.koy !== 'Belirtilmedi' ? b.koy + (b.ilce ? ' · ' + b.ilce : '') : 'Köy yazılmamış'),
+            kim: 'Bildiren: ' + b.ad, kimBos: false, kanal: telg ? 'Telegram' : 'Web formu',
+            aciklama: telg ? '' : String(b.aciklama || '').slice(0, 110), uyari: '',
+            dugme: yazabilir ? 'Arızaya çevir' : 'Aç', dugmeRenk: '#5e5ce6',
+            git: yazabilir ? () => this.panoBasvuruArizaya(b) : () => this.setState({ tab: 'talep' }),
+            ikinci: can('assign') ? 'Spam' : '', ikinciGit: () => this.basvuruEngelle(b),
+            ac: () => this.setState({ tab: 'talep' }), surukle: null
+          });
+        }
+        // ── talepler: alındı ama henüz arızaya çevrilmedi
+        if (talepOn) for (const t of (s.talepler || []).filter(x => !TALEP_KAPALI.includes(x.durum))) {
+          kartlar.push({
+            anahtar: 't' + t.id, kolon: 'yeni', tur: 'Talep', onc: t.oncelik || 'Normal', ms: this.damgaMs(t.acilis),
+            baslik: t.konu, yer: t.koy + (t.ilce ? ' · ' + t.ilce : ''),
+            kim: 'Bildiren: ' + t.ad, kimBos: false, kanal: TALEP_KANAL[t.kanal] || '', aciklama: String(t.aciklama || '').slice(0, 110), uyari: '',
+            dugme: yazabilir ? 'Arızaya çevir' : 'Aç', dugmeRenk: '#5e5ce6',
+            git: yazabilir ? () => this.panoTalepArizaya(t) : () => this.setState({ tab: 'talep' }),
+            ikinci: '', ikinciGit: () => {}, ac: () => this.setState({ tab: 'talep' }), surukle: null
+          });
+        }
+        // ── arızalar
+        if (arizaOn) for (const f of myFaults) {
+          let kolon = null;
+          if (yeniKolonu(f.status)) kolon = 'yeni';
+          else if (f.status === 'atandi') kolon = 'atandi';
+          else if (SAHA_DURUMLARI.includes(f.status)) kolon = 'sahada';
+          else if (f.status === 'cozuldu') {
+            const kms = f.closedIso ? Date.parse(f.closedIso) : this.damgaMs(f.closed);
+            if (kms && simdi - kms < 7 * 86400000) kolon = 'bitti'; else if (!kms) kolon = 'bitti';
+          }
+          if (!kolon) continue;
+          const a = f.assetId ? s.assets.find(x => x.id === f.assetId) : null;
+          const ekipVar = !!f.crew && f.crew !== ATANMADI;
+          const ms = this.damgaMs(f.opened) || (f.openedIso ? Date.parse(f.openedIso) : 0);
+          const sd = sureOn && kolon !== 'bitti' ? this.sureDurum(f) : null;
+          const ge = kolon !== 'bitti' && ((sd && sd.gecikti) || (kolon === 'yeni' && ms && simdi - ms > 12 * 3600000));
+          let dugme = '', dugmeRenk = '', git = () => {};
+          if (kolon === 'yeni') { dugme = can('assign') ? 'Ekip ata' : 'Aç'; dugmeRenk = '#5e5ce6'; git = can('assign') ? () => this.setState({ panoEkip: secilenEkip === f.id ? null : f.id }) : () => this.panoAc(f); }
+          else if (kolon === 'atandi') { dugme = yazabilir ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazabilir ? () => this.panoSahada(f) : () => this.panoAc(f); }
+          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && can('assign') ? 'Onayla ve kapat' : (yazabilir ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
+          const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
+          kartlar.push({
+            anahtar: 'f' + f.id, kolon, tur: f.no, onc: f.priority || 'Normal', ms,
+            baslik: f.type || 'Arıza', yer: (a ? a.code + ' · ' + this.yerGoster(a) : [f.koy, f.ilce || f.district].filter(Boolean).join(' · ')),
+            kim: ekipVar ? f.crew : 'Ekip atanmadı', kimBos: !ekipVar, kanal: '', aciklama: '',
+            uyari: ge ? (sd && sd.gecikti ? sd.etiket : 'Uzun süredir bekliyor') : durumNot,
+            uyariKirmizi: !!ge,
+            dugme, dugmeRenk, git, ikinci: '', ikinciGit: () => {},
+            ac: () => this.panoAc(f),
+            ekipSec: kolon === 'yeni' && secilenEkip === f.id, ekipSecenek: kolon === 'yeni' && secilenEkip === f.id ? ekipSecenek(f) : [],
+            surukle: kolon !== 'bitti' && yazabilir ? { tur: 'ariza', id: f.id } : null
+          });
+        }
+
+        const tamam = k => {
+          const surukle = k.surukle;
+          const renk = oncRenk(k.onc);
+          const ms = k.ms;
+          return {
+            anahtar: k.anahtar, tur: k.tur, baslik: k.baslik, yer: k.yer, kim: k.kim,
+            kimRenk: k.kimBos ? '#d97706' : ui.fg, kanal: k.kanal, kanalVar: !!k.kanal,
+            aciklama: k.aciklama, aciklamaVar: !!k.aciklama,
+            onc: k.onc, renk, noktaSinif: 'ks-pdot' + (k.onc === 'Acil' ? ' acil' : ''),
+            sure: yasMetin(ms), uyari: k.uyari || '', uyariVar: !!k.uyari, uyariRenk: k.uyariKirmizi ? 'var(--color-uyari)' : '#d97706',
+            dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: k.git,
+            ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: k.ac,
+            ekipSec: !!k.ekipSec, ekipSecenek: k.ekipSecenek || [],
+            suruklenir: surukle ? 'true' : 'false', imlec: surukle ? 'grab' : 'default',
+            surukleBasla: e => { if (!surukle) return; this._panoSurukle = surukle; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', surukle.id); } catch (x) { /* eski tarayıcı */ } },
+            surukleBitti: () => { this._panoSurukle = null; if (this.state.panoHedef) this.setState({ panoHedef: null }); }
+          };
+        };
+        const sirala = (a, b) => (ONC[a.onc] ?? 9) - (ONC[b.onc] ?? 9) || (a.ms || 1e15) - (b.ms || 1e15);
+        const kolonlar = KOLON.map(([id, ad, renk, bos]) => {
+          let liste = kartlar.filter(k => k.kolon === id);
+          liste = id === 'bitti' ? liste.sort((a, b) => (b.ms || 0) - (a.ms || 0)).slice(0, 8) : liste.sort(sirala);
+          const hedefte = s.panoHedef === id;
+          return {
+            id, ad, renk, bos, n: kartlar.filter(k => k.kolon === id).length, kartlar: liste.map(tamam), bosVar: !liste.length,
+            gecikme: liste.filter(k => k.uyariKirmizi).length,
+            zemin: hedefte ? (dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.05)') : 'transparent',
+            kenar: hedefte ? renk : ui.rule,
+            ustunde: e => { if (this._panoSurukle) e.preventDefault(); },
+            girdi: () => { if (this._panoSurukle && this.state.panoHedef !== id) this.setState({ panoHedef: id }); },
+            birak: e => { e.preventDefault(); this.panoBirak(id); }
+          };
+        });
+        const acil = kartlar.filter(k => k.kolon !== 'bitti' && k.onc === 'Acil').length;
+        const geciken = kartlar.filter(k => k.uyariKirmizi).length;
+        const secKol = KOLON.some(k => k[0] === s.panoKolon) ? s.panoKolon : 'yeni';
+        const secK = kolonlar.find(k => k.id === secKol);
+        return {
+          acik: true, kolonlar,
+          ozet: [
+            { n: kartlar.filter(k => k.kolon === 'yeni').length, ad: 'bekleyen', renk: '#5e5ce6' },
+            { n: acil, ad: 'acil', renk: 'var(--color-uyari)', alarm: acil > 0 },
+            { n: geciken, ad: 'geciken', renk: '#d97706', alarm: false },
+            { n: kartlar.filter(k => k.kolon === 'bitti').length, ad: 'son 7 gün biten', renk: '#30d158' }
+          ].map(x => ({ ...x, alarm: !!x.alarm && x.n > 0 })),
+          yeniTalepVar: yazabilir && talepOn,
+          yeniTalep: () => this.setState({
+            tab: 'talep', talepForm: {
+              ad: '', tel: '', sifat: 'muhtar', kanal: 'telefon', ilce: (m && m.DISTRICTS[0].name) || '', koy: '',
+              konu: TALEP_KONU[0], oncelik: 'Normal', aciklama: '', durum: 'yeni', sonuc: ''
+            }
+          }),
+          yardim: 'Kutuyu sütunlar arasında sürükleyin ya da altındaki büyük düğmeye basın. Renkli nokta öncelik: kırmızı acil, turuncu yüksek, mavi normal.',
+          telSec: kolonlar.map(k => ({
+            ad: k.ad, n: k.n, renk: k.renk, acik: k.id === secKol,
+            bg: k.id === secKol ? k.renk : 'transparent', fg: k.id === secKol ? '#fff' : ui.fg,
+            sec: () => this.setState({ panoKolon: k.id })
+          })),
+          telKartlar: secK ? secK.kartlar : [], telBos: secK ? secK.bos : '', telBosVar: !!secK && secK.bosVar, telRenk: secK ? secK.renk : ui.mut
+        };
+      })(),
+
     };
   }
 }

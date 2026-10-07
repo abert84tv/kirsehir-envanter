@@ -2046,3 +2046,7 @@ Sürüm 2026.10.05-114.
 - Telefondaki Ekip panosuna **Araç defteri** ve **Ekip ve personel düzenle** kısayolları eklendi.
 - Eşdeğerlik kontrolündeki 10 "eksik adayı"ndan 7'si giderildi, 3'ü bilerek farklı olarak nedenleriyle kayda geçti (Haritada göster, tesis kartı Fotoğraf kısayolu, günlük iş listesi — telefonda eşdeğer akış var).
 - "642 gün gecikti" bakım satırı: şu an hiçbir tesiste bakım tarihi yok (291 tesisin 291'i "kayıt yok") — o satır büyük olasılıkla bir cihazda girilmiş deneme verisiydi, sunucuda yok.
+
+## 2026.10.07-147 — İş panosu (yeni, deneme)
+- İşler > **İş panosu** (ilk süzgeç): gelen Telegram/web başvuruları, talepler ve arızalar tek ekranda **Yeni → Atandı → Sahada → Bitti** sütunlarında renkli kutucuklar. Kutucuk: öncelik rengi (acil: nabız atan nokta), arıza türü, yer, kimde (ekip), kaç saat önce, uyarı ("uzun süredir bekliyor"), tek büyük düğme (Arızaya çevir / Ekip ata / Sahada / İşi bitir). Masaüstünde kutular sütunlar arasında sürüklenebilir (Atandı'ya bırakılınca ekip sorulur, Sahada'ya bırakılınca "sahada" olur, Bitti'ye bırakılınca kapanış formu açılır). Telefonda 4 renkli sayaç düğmesi + seçili sütunun listesi (yöneticinin sahada izlemesi için). Eski ekranlar (Genel bakış, Gelen, Açık...) yerinde duruyor.
+- Yeni modül: `src/moduller/is-panosu/` (yeni-modul.js ile kuruldu); mevcut akışları çağırır, yeni iş kuralı yok.

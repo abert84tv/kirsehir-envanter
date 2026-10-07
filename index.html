@@ -9319,7 +9319,7 @@ const DENETIM_SINIR = 3000;
 const MODUL_AD = {
   ariza: 'Arıza ve iş emri', bakim: 'Periyodik bakım', sure: 'Hedef süre',
   kanit: 'Kanıt zorunluluğu', onay: 'Merkez onayı', ambar: 'Ambar ve zimmet',
-  arac: 'Araç ve ekipman', talep: 'Dış talep'
+  arac: 'Araç ve ekipman', talep: 'Dış talep', telemetri: 'Telemetri'
 };
 // Dış talep: köyden gelen ihbar ve istek. Arıza kaydından ayrıdır —
 // her talep arızaya dönüşmez, ama dönüşenin izi kalır.
@@ -9686,7 +9686,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.07-151';
+const SURUM = '2026.10.07-152';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9797,7 +9797,7 @@ class Component extends DCLogic {
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
     modul: (() => {
-      const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false, ambar: true, arac: true, talep: true };
+      const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false, ambar: true, arac: true, talep: true, telemetri: false };
       try {
         const p = JSON.parse(localStorage.getItem('ks-modul') || localStorage.getItem('ks-moduller') || 'null');
         if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;
@@ -15561,6 +15561,8 @@ class Component extends DCLogic {
     const ambarOn = s.modul.ambar !== false;
     const aracOn = s.modul.arac !== false;
     const talepOn = s.modul.talep !== false;
+    // Telemetri (sensör/PLC) bağlı cihaz olmadan boş bir sayfa: varsayılan kapalı, Ayarlar > Modüller'den açılır
+    const telemetriOn = s.modul.telemetri === true;
     // Ekip listesi artık durumdan gelir (Ayarlar > Ekipler'den düzenlenir)
     const SAHA_EKIP = (s.ekipler || []).map(e => e.ad);
     const CREWS = [ATANMADI, ...SAHA_EKIP];
@@ -15617,6 +15619,7 @@ class Component extends DCLogic {
     if (tabId === 'arac' && !aracOn) tabId = 'harita';
     if (tabId === 'talep' && !talepOn) tabId = 'harita';
     if (tabId === 'yerlesim' && !yerlesimOn) tabId = 'harita';
+    if (tabId === 'telemetri' && !telemetriOn) tabId = 'ekipPano';
     // aktarım ekranı yalnızca bilgisayarda çizilir; telefonda boş gri sayfa çıkıyordu
     if (tabId === 'aktarim' && s.device === 'phone') tabId = 'ayarlar';
     const myFaults = me && me.role === 'personel' ? s.faults.filter(f => f.crew === me.crew) : s.faults;
@@ -15985,7 +15988,7 @@ class Component extends DCLogic {
     const acikAriza = myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length;
     const acikTalep = (s.talepler || []).filter(t => !TALEP_KAPALI.includes(t.durum)).length;
     // Modül anahtarı kapalıysa o süzgeç hiç çıkmaz
-    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn,
+    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn, telemetri: telemetriOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };
@@ -18295,6 +18298,13 @@ class Component extends DCLogic {
             kapa: seg(!aracOn, () => { if (aracOn) this.modulAnahtar('arac', false); }),
             sayi: ((s.arac && s.arac.list) || []).length + ' araç ve ekipman',
             aciklama: 'Araç ve ekipman listesi, kimde olduğu, sayaç okumaları ve görev dökümü. Menüdeki Araç sekmesini kapsar.'
+          },
+          {
+            ad: 'Telemetri',
+            ac: seg(telemetriOn, () => { if (!telemetriOn) this.modulAnahtar('telemetri', true); }),
+            kapa: seg(!telemetriOn, () => { if (telemetriOn) this.modulAnahtar('telemetri', false); }),
+            sayi: 'sensör ve PLC verileri',
+            aciklama: 'Kuyu ve depolara bağlı sensör/PLC cihazlarının verisi, alarmlar ve eşik kuralları. Cihaz bağlamadıysanız kapalı kalsın; açınca Kaynaklar altında Telemetri sayfası görünür.'
           },
           {
             ad: 'Hedef süre',
@@ -20774,15 +20784,13 @@ class Component extends DCLogic {
           tekrarYok: tekrarList.length === 0,
           tekrarNot: 'Aynı tesiste birden çok arıza kaydı olanlar — en çok kayıtlıdan başlar.',
           tekrarBos: 'Aynı tesiste ikinci arıza kaydı yok. Bir tesis burada görünmeye başladıysa aynı parça tekrar arızalanıyor demektir; kalıcı çözüm gerekir.',
+          // 2026.10.07 sadeleştirme: sekiz kutu dörde indi — Kuyu/Depo/Pasif aşağıdaki tür tablosunda,
+          // eşitleme bekleyen kayıt üst çubuktaki göstergede zaten var
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
-            { n: String(s.assets.filter(a => a.type === 'kuyu').length), label: 'Kuyu' },
-            { n: String(s.assets.filter(a => a.type === 'depo').length), label: 'Depo' },
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
-            { n: String(s.assets.filter(a => !aktifMi(a)).length), label: 'Pasif' },
             { n: String(miss.length), label: 'Eksik bilgili' },
-            { n: String(openF.length), label: 'Açık arıza' },
-            { n: String(pendA.length + pendF.length + s.queue.filter(q => q.state === 'pending').length), label: 'Eşitleme bekleyen' }
+            { n: String(openF.length), label: 'Açık arıza' }
           ],
           districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,

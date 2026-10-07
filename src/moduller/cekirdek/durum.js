@@ -43,7 +43,7 @@
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
     modul: (() => {
-      const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false, ambar: true, arac: true, talep: true };
+      const v = { ariza: true, bakim: true, sure: false, kanit: true, onay: false, ambar: true, arac: true, talep: true, telemetri: false };
       try {
         const p = JSON.parse(localStorage.getItem('ks-modul') || localStorage.getItem('ks-moduller') || 'null');
         if (p && typeof p === 'object') for (const k in v) if (k in p) v[k] = p[k] !== false;

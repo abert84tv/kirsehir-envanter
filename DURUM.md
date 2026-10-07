@@ -2070,3 +2070,7 @@ Sürüm 2026.10.05-114.
 - **Masaüstü:** Ayarlar iki sütunlu — solda bölüm listesi (her zaman görünür), sağda seçili bölüm. Geri-ileri gezinme yok. Telefonda liste → bölüm düzeni aynı kaldı.
 - 14 karışık bölüm yerine 5 başlık altında kısa sayfalar: **Ekip** (Ekipler, Personel) · **Bağlantılar ve uyarılar** (Başvuru uyarısı ve Telegram, Ekip mesajları, Ekip konumu, Yapay zekâ) · **Kullanıcılar ve güvenlik** (Yetkiler, KVKK, Denetim izi) · **Veri** (Sürüm ve senkronizasyon, Köy listesi, Kayıt araçları, Dış veri aktarımı, Çöp kutusu) · **Program** (Harita ve görünüm, Modüller).
 - Eski tek 'Entegrasyon' sayfası üçe bölündü (uyarı+Telegram, yapay zekâ, ekip konumu); 'Ekipler ve personel' ikiye bölündü; ekip konumu paylaşımı Veri'den kendi sayfasına taşındı. Gönderilemeyen mesaj bildirimi artık doğrudan Ekip mesajları sayfasını açar.
+
+## 2026.10.07-152 — Özet ve Kaynaklar sadeleşti
+- **Özet:** üstteki 8 sayı kutusu 4'e indi (Kayıt · Aktif · Eksik bilgili · Açık arıza). Kuyu/depo/pasif dağılımı zaten aşağıdaki tür tablosunda; eşitleme bekleyen sayısı üst çubuk göstergesinde.
+- **Telemetri** artık yeni bir modül (Ayarlar > Modüller, varsayılan KAPALI). Bağlı cihaz yokken Kaynaklar'da boş sayfa olarak görünmüyor; cihaz bağlanınca modülden açılır.

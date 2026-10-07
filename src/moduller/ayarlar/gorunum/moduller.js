@@ -42,6 +42,13 @@
             aciklama: 'Araç ve ekipman listesi, kimde olduğu, sayaç okumaları ve görev dökümü. Menüdeki Araç sekmesini kapsar.'
           },
           {
+            ad: 'Telemetri',
+            ac: seg(telemetriOn, () => { if (!telemetriOn) this.modulAnahtar('telemetri', true); }),
+            kapa: seg(!telemetriOn, () => { if (telemetriOn) this.modulAnahtar('telemetri', false); }),
+            sayi: 'sensör ve PLC verileri',
+            aciklama: 'Kuyu ve depolara bağlı sensör/PLC cihazlarının verisi, alarmlar ve eşik kuralları. Cihaz bağlamadıysanız kapalı kalsın; açınca Kaynaklar altında Telemetri sayfası görünür.'
+          },
+          {
             ad: 'Hedef süre',
             ac: seg(modAyar('sure'), () => { if (!modAyar('sure') || !arizaOn) this.modulAnahtar('sure', true); }),
             kapa: seg(!modAyar('sure'), () => { if (modAyar('sure')) this.modulAnahtar('sure', false); }),

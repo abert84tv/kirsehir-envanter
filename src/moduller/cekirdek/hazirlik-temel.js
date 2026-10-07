@@ -10,6 +10,8 @@
     const ambarOn = s.modul.ambar !== false;
     const aracOn = s.modul.arac !== false;
     const talepOn = s.modul.talep !== false;
+    // Telemetri (sensör/PLC) bağlı cihaz olmadan boş bir sayfa: varsayılan kapalı, Ayarlar > Modüller'den açılır
+    const telemetriOn = s.modul.telemetri === true;
     // Ekip listesi artık durumdan gelir (Ayarlar > Ekipler'den düzenlenir)
     const SAHA_EKIP = (s.ekipler || []).map(e => e.ad);
     const CREWS = [ATANMADI, ...SAHA_EKIP];
@@ -66,6 +68,7 @@
     if (tabId === 'arac' && !aracOn) tabId = 'harita';
     if (tabId === 'talep' && !talepOn) tabId = 'harita';
     if (tabId === 'yerlesim' && !yerlesimOn) tabId = 'harita';
+    if (tabId === 'telemetri' && !telemetriOn) tabId = 'ekipPano';
     // aktarım ekranı yalnızca bilgisayarda çizilir; telefonda boş gri sayfa çıkıyordu
     if (tabId === 'aktarim' && s.device === 'phone') tabId = 'ayarlar';
     const myFaults = me && me.role === 'personel' ? s.faults.filter(f => f.crew === me.crew) : s.faults;

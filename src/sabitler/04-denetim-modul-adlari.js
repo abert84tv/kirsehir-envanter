@@ -7,7 +7,7 @@ const DENETIM_SINIR = 3000;
 const MODUL_AD = {
   ariza: 'Arıza ve iş emri', bakim: 'Periyodik bakım', sure: 'Hedef süre',
   kanit: 'Kanıt zorunluluğu', onay: 'Merkez onayı', ambar: 'Ambar ve zimmet',
-  arac: 'Araç ve ekipman', talep: 'Dış talep'
+  arac: 'Araç ve ekipman', talep: 'Dış talep', telemetri: 'Telemetri'
 };
 // Dış talep: köyden gelen ihbar ve istek. Arıza kaydından ayrıdır —
 // her talep arızaya dönüşmez, ama dönüşenin izi kalır.

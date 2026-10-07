@@ -157,15 +157,13 @@
           tekrarYok: tekrarList.length === 0,
           tekrarNot: 'Aynı tesiste birden çok arıza kaydı olanlar — en çok kayıtlıdan başlar.',
           tekrarBos: 'Aynı tesiste ikinci arıza kaydı yok. Bir tesis burada görünmeye başladıysa aynı parça tekrar arızalanıyor demektir; kalıcı çözüm gerekir.',
+          // 2026.10.07 sadeleştirme: sekiz kutu dörde indi — Kuyu/Depo/Pasif aşağıdaki tür tablosunda,
+          // eşitleme bekleyen kayıt üst çubuktaki göstergede zaten var
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
-            { n: String(s.assets.filter(a => a.type === 'kuyu').length), label: 'Kuyu' },
-            { n: String(s.assets.filter(a => a.type === 'depo').length), label: 'Depo' },
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
-            { n: String(s.assets.filter(a => !aktifMi(a)).length), label: 'Pasif' },
             { n: String(miss.length), label: 'Eksik bilgili' },
-            { n: String(openF.length), label: 'Açık arıza' },
-            { n: String(pendA.length + pendF.length + s.queue.filter(q => q.state === 'pending').length), label: 'Eşitleme bekleyen' }
+            { n: String(openF.length), label: 'Açık arıza' }
           ],
           districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,

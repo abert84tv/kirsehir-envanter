@@ -7,7 +7,7 @@
     const acikAriza = myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length;
     const acikTalep = (s.talepler || []).filter(t => !TALEP_KAPALI.includes(t.durum)).length;
     // Modül anahtarı kapalıysa o süzgeç hiç çıkmaz
-    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn,
+    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn, telemetri: telemetriOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };

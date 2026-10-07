@@ -2074,3 +2074,6 @@ Sürüm 2026.10.05-114.
 ## 2026.10.07-152 — Özet ve Kaynaklar sadeleşti
 - **Özet:** üstteki 8 sayı kutusu 4'e indi (Kayıt · Aktif · Eksik bilgili · Açık arıza). Kuyu/depo/pasif dağılımı zaten aşağıdaki tür tablosunda; eşitleme bekleyen sayısı üst çubuk göstergesinde.
 - **Telemetri** artık yeni bir modül (Ayarlar > Modüller, varsayılan KAPALI). Bağlı cihaz yokken Kaynaklar'da boş sayfa olarak görünmüyor; cihaz bağlanınca modülden açılır.
+
+## 2026.10.07-153 — Arıza durum seçici sadeleşti
+- Arıza kartındaki durum seçici 8 adımdan 6'ya indi: Açık · Atandı · Sahada · Beklemede · Çözüldü · İptal (Merkez onayı açıksa Kontrolde de görünür). “Bilgi bekliyor” ve “Başka birime” artık **Beklemede + bekleme nedeni** (dış kurum, malzeme, abone/muhtar…) olarak girilir; neden listesi hedef süre modülü kapalıyken de çıkar. Eski kayıtlar bu iki durumdaysa kendi adımı görünmeye devam eder, veri değişmedi.

@@ -291,7 +291,7 @@
             iptal: !!ek.slaIptal,
             onGun: e => { const v = String(e.target.value || '').trim(); this.arizaEkDegis(ff, { slaGun: v === '' ? null : Math.min(365, Math.max(0, parseInt(v, 10) || 0)) }); },
             onIptal: () => this.arizaEkDegis(ff, { slaIptal: !ek.slaIptal }),
-            bekleme: sureOn && ff.status === 'bekleme', neden: ek.beklemeNeden || '', nedenler: BEKLEME_NEDEN.map(v => ({ v })),
+            bekleme: ff.status === 'bekleme', neden: ek.beklemeNeden || '', nedenler: BEKLEME_NEDEN.map(v => ({ v })),
             onNeden: e => this.arizaEkDegis(ff, { beklemeNeden: e.target.value }),
             beklemeVar: sureOn && bekDk > 0,
             beklemeYazi: 'Toplam bekleme: ' + (bekDk >= 120 ? Math.floor(bekDk / 60) + ' saat' : bekDk + ' dk') + ' — hedef süreden düşülür.',
@@ -335,7 +335,9 @@
             tamamla: () => this.setState({ faultForm: { ...this.state.faultForm, status: hedef } }, () => this.renderVals().saveFault())
           };
         })(),
-        workflow: wfSteps.map(([id, label]) => {
+        // Durum seçici sade: “Bilgi bekliyor” ve “Başka birime” artık “Beklemede” + neden olarak girilir;
+        // eski kayıt bu iki durumdaysa kendi adımı görünmeye devam eder (veri değişmez)
+        workflow: wfSteps.filter(([id]) => !['bilgi', 'yonlendirildi'].includes(id) || (ff && ff.status === id)).map(([id, label]) => {
           // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
           // saha ekibi işi Kontrolde durumuna bırakır.
           const kilit = onayOn && id === 'cozuldu' && !canAssign;

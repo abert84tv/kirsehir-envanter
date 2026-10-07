@@ -49,7 +49,7 @@
     window.addEventListener('offline', this._agGitti);
     this._gorunur = () => { if (!document.hidden) this.senkron(true); };
     document.addEventListener('visibilitychange', this._gorunur);
-    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); }, 60000);
+    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); this.konumGonderTik(); if (['isPanosu', 'isKarti'].includes(this.state.tab)) this.konumYenile(); }, 60000);
   }
   baslatPeriyodik() {
     setTimeout(() => this.aracBelgeUyari(), 9000);

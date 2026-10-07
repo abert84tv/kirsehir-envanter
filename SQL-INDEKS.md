@@ -32,3 +32,5 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 | basvuru | `src/moduller/basvuru/islev/telegram.ts` | `telegram-basvuru` |
 | talep | `src/moduller/talep/islev/talep-siniflandir.ts` | `talep-siniflandir` |
 | bildirim | `src/moduller/bildirim/islev/mesaj-gonder.ts` | `mesaj-gonder` (varsa) |
+
+| konum | `src/moduller/konum/sql/SQL-konum.sql` | ekip konumu: konum_cihaz/konum_son, konum_yaz (Arvento), konum_gonder (zimmetli cihaz) — ayrıntı KONUM-ALTYAPI.md |

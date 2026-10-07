@@ -1,0 +1,47 @@
+<sc-if value="{{ ayar.veri }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ konumEkran.paylasim.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 20px;border-top:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:9px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Ekip konumu — bu cihaz</span>
+<span style="font:600 13px/1.4 var(--font-body);color:{{ konumEkran.paylasim.durumRenk }}">{{ konumEkran.paylasim.durum }}</span>
+<span class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:720px">{{ konumEkran.paylasim.not }}</span>
+<sc-if value="{{ konumEkran.paylasim.sonVar }}" hint-placeholder-val="{{ false }}"><span style="font:500 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ konumEkran.paylasim.son }}</span></sc-if>
+<sc-if value="{{ konumEkran.paylasim.hataVar }}" hint-placeholder-val="{{ false }}"><span style="font:700 12.5px/1.4 var(--font-body);color:var(--color-uyari)">{{ konumEkran.paylasim.hata }}</span></sc-if>
+<button onClick="{{ konumEkran.paylasim.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:46px;padding:0 20px;border-radius:11px;background:var(--color-accent);color:#fff;font:700 14px/46px var(--font-body)">{{ konumEkran.paylasim.etiket }}</button>
+</div>
+</sc-if>
+</sc-if>
+<sc-if value="{{ ayar.entegrasyon }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ konumEkran.cihaz.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 20px 16px;max-width:760px">
+<div style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:14px 16px;display:flex;flex-direction:column;gap:11px">
+<span style="font:700 15px/1.2 var(--font-heading)">Ekip konumu — cihazlar</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Haritada ve ekip seçiminde gösterilen konum, ekibe bağlı cihazların en yenisidir: araç takip sistemi (Arvento) ya da ekibe zimmetli tablet/telefon. Her cihaz bir ekibe bağlanır. Yalnız son konum tutulur.</span>
+<sc-for list="{{ konumEkran.cihaz.liste }}" as="c" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:10px;border:1px solid {{ ui.rule }}">
+<div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 13.5px/1.2 var(--font-body)">{{ c.ad }}</span><span style="font:500 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ c.tur }} · {{ c.kod }}</span></div>
+<span style="font:700 12.5px/1.2 var(--font-body);color:{{ c.ekipRenk }}">{{ c.ekip }}</span>
+<span style="font:600 12px/1.2 var(--font-body);color:{{ c.konumRenk }}">{{ c.konum }}</span>
+<button onClick="{{ c.duzenle }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Düzenle</button>
+<button onClick="{{ c.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 12px;border-radius:9px;border:1px solid #d92d20;color:#d92d20;font:600 12.5px/38px var(--font-body)">Sil</button>
+</div>
+</sc-for>
+<sc-if value="{{ konumEkran.cihaz.bos }}" hint-placeholder-val="{{ false }}"><span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Henüz cihaz eklenmemiş.</span></sc-if>
+<sc-if value="{{ konumEkran.cihaz.form }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:9px;padding:12px;border-radius:10px;background:{{ ui.surf2 }}">
+<span style="font:700 13px/1 var(--font-body)">{{ konumEkran.cihaz.baslik }}</span>
+<input value="{{ konumEkran.cihaz.ad }}" onChange="{{ konumEkran.cihaz.onAd }}" placeholder="Cihaz adı (örn. Ekip 1 aracı)" style="all:unset;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};font:500 14px/44px var(--font-body)">
+<select value="{{ konumEkran.cihaz.tur }}" onChange="{{ konumEkran.cihaz.onTur }}" style="all:unset;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};font:600 14px/44px var(--font-body);cursor:pointer"><sc-for list="{{ konumEkran.cihaz.turler }}" as="t" hint-placeholder-count="2"><option value="{{ t.v }}">{{ t.l }}</option></sc-for></select>
+<select value="{{ konumEkran.cihaz.ekipDeger }}" onChange="{{ konumEkran.cihaz.onEkip }}" style="all:unset;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};font:600 14px/44px var(--font-body);cursor:pointer"><sc-for list="{{ konumEkran.cihaz.ekipler }}" as="e" hint-placeholder-count="4"><option value="{{ e.v }}">{{ e.l }}</option></sc-for></select>
+<sc-if value="{{ konumEkran.cihaz.arventoMu }}" hint-placeholder-val="{{ false }}">
+<input value="{{ konumEkran.cihaz.plaka }}" onChange="{{ konumEkran.cihaz.onPlaka }}" placeholder="Plaka (takip sistemindeki gibi)" style="all:unset;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};font:500 14px/44px var(--font-body)">
+<input value="{{ konumEkran.cihaz.kod }}" onChange="{{ konumEkran.cihaz.onKod }}" placeholder="Takip sistemi cihaz kodu (varsa; plaka yeterliyse boş bırakın)" style="all:unset;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};font:500 14px/44px var(--font-body)">
+</sc-if>
+<div style="display:flex;gap:8px"><button onClick="{{ konumEkran.cihaz.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 22px;border-radius:11px;background:var(--color-accent);color:#fff;font:700 14px/46px var(--font-body)">Kaydet</button><button onClick="{{ konumEkran.cihaz.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 18px;border-radius:11px;border:1px solid {{ ui.rule }};font:600 13.5px/44px var(--font-body)">Vazgeç</button></div>
+</div>
+</sc-if>
+<sc-if value="{{ !konumEkran.cihaz.form }}" hint-placeholder-val="{{ true }}"><button onClick="{{ konumEkran.cihaz.yeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:44px;padding:0 18px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);font:700 13.5px/42px var(--font-body)">+ Cihaz ekle</button></sc-if>
+<span style="font:500 11.5px/1.5 var(--font-body);color:{{ ui.mut }};word-break:break-all">Araç takip verisi bu adrese yazılır (anahtar: yukarıdaki “Konum yazma anahtarı”): {{ konumEkran.cihaz.adres }}</span>
+</div>
+</div>
+</sc-if>
+</sc-if>

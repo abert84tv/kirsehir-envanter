@@ -2053,3 +2053,9 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.07-148 — İş panosu: Tablo görünümü
 - İş panosunun üstünde **Pano | Tablo** düğmesi (seçim cihazda hatırlanır). Tablo (masaüstü): Excel benzeri satırlar; başlığa tıklayınca sıralama (öncelik, no, ne, nerede, kimde, durum, süre), üstte arama kutusu + durum ve ekip süzgeci, satırdaki ekip kutusundan doğrudan ekip atama/değiştirme, satır sonunda tek düğme. Telefon aynı kart listesini kullanır. İki görünümün hangisinin işe yaradığı deneyerek belirlenecek.
+
+## 2026.10.07-149 — İş kartı (tek sayfa), satır tıklaması, ekip konumu altyapısı
+- Panoda/tabloda kutunun ya da satırın **her yerine** basınca iş açılır (düğme ve seçim kutuları kendi işini yapar). Telegram/web başvurusu ve talep artık eski Talep ekranına gitmez: yeni **İş kartı** sayfası açılır.
+- **İş kartı** (masaüstü + telefon, tek sayfa, 6 bölüm): 1 Bildirim (kanal, zaman, kim, telefon, metin, konum) · 2 Ne arızası (sınıf, tür, öncelik; sistem önerisiyle dolu) · 3 Nerede (ilçe, köy, tesis seçimi; mesafeye göre) · 4 Kim gidecek (ekipler: bölge/nöbet/doluluk, üyeler ve durumları, araç, uyarılar, konum ve km) · 5 Ne zaman (hemen / ileri tarih) · 6 Not. Altta tek düğme **Ata** (ekip seçilmediyse "Arıza oluştur"); başvuru için "Spam", talep için "Arıza değil — kapat". Ata, mevcut kaydetme akışını kullanır (iş emri + araç dahil).
+- **Ekip konumu altyapısı** (yeni modül `konum`): konum_cihaz/konum_son tabloları, `konum_yaz` (Arvento ya da onun verisini ileten betik; anahtar korumalı), `konum_gonder` (ekibe zimmetli tablet/telefon; Ayarlar › Veri › "Konumu paylaş"), cihaz yönetimi Ayarlar › Entegrasyon › "Ekip konumu — cihazlar", Arvento kullanıcı/şifre ve yazma anahtarı kartları. Yalnız son konum saklanır. Arvento çekici henüz yok (API/hesap gelince). Ayrıntı: KONUM-ALTYAPI.md.
+- Not: Sunucuda ekip listesi ve araç listesi boş; ekibe üye ve araç girilmedikçe İş kartında "Ekibe personel girilmemiş / Araç bağlı değil" uyarısı çıkar.

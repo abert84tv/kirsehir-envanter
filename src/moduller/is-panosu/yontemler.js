@@ -58,3 +58,4 @@
     }
     this.duyur('İşi geriye almak için arıza formundaki durumu değiştirin.', 5000, 'bilgi');
   }
+//@dahil moduller/is-panosu/yontemler/kart.js

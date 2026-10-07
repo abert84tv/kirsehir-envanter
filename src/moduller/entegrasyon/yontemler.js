@@ -3,6 +3,7 @@
   async entegrasyonYenile() {
     const M = this._sb;
     if (!M || !M.entegrasyonListesi || !M.tokenOku() || this.state.offline) return;
+    this.konumCihazlariYenile();
     const r = await M.entegrasyonListesi();
     this.entegrasyonGuncelle(r.ok
       ? { yuk: true, hata: '', liste: (r.data || []).map(x => ({ ad: x.ad, son4: x.son4, zaman: x.guncelleme, kim: x.guncelleyen })) }
@@ -21,6 +22,9 @@
   async entegrasyonDene(ad) {
     const yaz = m => this.entegrasyonGuncelle({ sonuclar: { ...(this.state.entegrasyon.sonuclar || {}), [ad]: m } });
     yaz('Deneniyor…');
+    if (ad === 'arvento_kullanici' || ad === 'arvento_sifre' || ad === 'konum_yazma_anahtari') {
+      return yaz('Bu anahtar kaydedildi. Araç takip verisi gelmeye başlayınca ekip konumları haritada ve ekip seçiminde görünür; “Ekip konumu — cihazlar” bölümünde her cihazın son konumu yazılır.');
+    }
     if (ad === 'telegram_bot_anahtari') {
       const r = await this._sb.telegramKur();
       return yaz(r && r.ok ? 'Bot bağlandı ✔ — Telegram’da @' + (r.kullanici || 'bot') + ' botuna yazan herkesin mesajı Gelen > Web başvuruları’na düşer.' : 'Bağlanamadı: ' + ((r && r.err) || 'bilinmeyen hata'));

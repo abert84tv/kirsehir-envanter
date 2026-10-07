@@ -27,7 +27,7 @@
 <span class="ks-nabiz" style="min-width:26px;text-align:center;font:700 13px/1 var(--font-body);color:#fff;background:{{ k.renk }};padding:5px 8px;border-radius:10px">{{ k.n }}</span>
 </div>
 <sc-for list="{{ k.kartlar }}" as="c" hint-placeholder-count="2">
-<div draggable="{{ c.suruklenir }}" onDragStart="{{ c.surukleBasla }}" onDragEnd="{{ c.surukleBitti }}" class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px;cursor:{{ c.imlec }}">
+<div draggable="{{ c.suruklenir }}" onDragStart="{{ c.surukleBasla }}" onDragEnd="{{ c.surukleBitti }}" onClick="{{ c.tikla }}" class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px;cursor:{{ c.imlec }}">
 <div style="display:flex;align-items:center;gap:9px">
 <span class="{{ c.noktaSinif }}" style="background:{{ c.renk }}"></span>
 <button onClick="{{ c.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;font:700 14.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ c.baslik }}</button>
@@ -79,7 +79,7 @@
 <span></span>
 </div>
 <sc-for list="{{ isPanosuEkran.tablo.satirlar }}" as="r" hint-placeholder-count="5">
-<div class="ks-gir" style="display:grid;grid-template-columns:24px 118px minmax(130px,1.2fr) minmax(120px,1fr) minmax(170px,1fr) 92px 112px 118px;gap:10px;align-items:center;padding:6px 14px;min-height:54px;border-bottom:1px solid {{ ui.rule }};border-left:5px solid {{ r.renk }}">
+<div onClick="{{ r.tikla }}" class="ks-gir" style="cursor:pointer;display:grid;grid-template-columns:24px 118px minmax(130px,1.2fr) minmax(120px,1fr) minmax(170px,1fr) 92px 112px 118px;gap:10px;align-items:center;padding:6px 14px;min-height:54px;border-bottom:1px solid {{ ui.rule }};border-left:5px solid {{ r.renk }}">
 <span class="{{ r.noktaSinif }}" style="background:{{ r.renk }}"></span>
 <span style="font:600 12px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.mut }}">{{ r.tur }}</span>
 <button onClick="{{ r.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:700 13.5px/1.25 var(--font-body);color:{{ ui.fg }}">{{ r.baslik }}</button>

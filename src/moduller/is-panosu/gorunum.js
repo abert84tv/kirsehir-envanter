@@ -36,10 +36,10 @@
             yer: (b.koy && b.koy !== 'Belirtilmedi' ? b.koy + (b.ilce ? ' · ' + b.ilce : '') : 'Köy yazılmamış'),
             kim: 'Bildiren: ' + b.ad, kimBos: false, kanal: telg ? 'Telegram' : 'Web formu',
             aciklama: telg ? '' : String(b.aciklama || '').slice(0, 110), uyari: '',
-            dugme: yazabilir ? 'Arızaya çevir' : 'Aç', dugmeRenk: '#5e5ce6',
-            git: yazabilir ? () => this.panoBasvuruArizaya(b) : () => this.setState({ tab: 'talep' }),
+            dugme: yazabilir ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
+            git: () => this.isKartiAc('b', b.id),
             ikinci: can('assign') ? 'Spam' : '', ikinciGit: () => this.basvuruEngelle(b),
-            ac: () => this.setState({ tab: 'talep' }), surukle: null
+            ac: () => this.isKartiAc('b', b.id), surukle: null
           });
         }
         // ── talepler: alındı ama henüz arızaya çevrilmedi
@@ -48,9 +48,9 @@
             anahtar: 't' + t.id, kolon: 'yeni', tur: 'Talep', onc: t.oncelik || 'Normal', ms: this.damgaMs(t.acilis),
             baslik: t.konu, yer: t.koy + (t.ilce ? ' · ' + t.ilce : ''),
             kim: 'Bildiren: ' + t.ad, kimBos: false, kanal: TALEP_KANAL[t.kanal] || '', aciklama: String(t.aciklama || '').slice(0, 110), uyari: '',
-            dugme: yazabilir ? 'Arızaya çevir' : 'Aç', dugmeRenk: '#5e5ce6',
-            git: yazabilir ? () => this.panoTalepArizaya(t) : () => this.setState({ tab: 'talep' }),
-            ikinci: '', ikinciGit: () => {}, ac: () => this.setState({ tab: 'talep' }), surukle: null
+            dugme: yazabilir ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
+            git: () => this.isKartiAc('t', t.id),
+            ikinci: '', ikinciGit: () => {}, ac: () => this.isKartiAc('t', t.id), surukle: null
           });
         }
         // ── arızalar
@@ -101,6 +101,8 @@
             sure: yasMetin(ms), uyari: k.uyari || '', uyariVar: !!k.uyari, uyariRenk: k.uyariKirmizi ? 'var(--color-uyari)' : '#d97706',
             dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: k.git,
             ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: k.ac,
+            // kutunun/satırın her yerine basınca kart açılır (düğme, seçim kutusu ve yazı alanları kendi işini yapar)
+            tikla: e => { const h = e && e.target; if (h && h.closest && h.closest('button,select,input,option,textarea,a')) return; k.ac(); },
             ekipSec: !!k.ekipSec, ekipSecenek: k.ekipSecenek || [],
             ekipDegisir: !!k.ekipDegisir, ekipDeger: k.ekipDeger || '', ekipDegis: k.ekipDegis || (() => {}),
             kolonAd: KOLON_AD[k.kolon], kolonRenk: (KOLON.find(x => x[0] === k.kolon) || [])[2], onc2: ONC[k.onc] ?? 9, ms2: k.ms || 0, kimAd: k.kimBos ? '' : k.kim,
@@ -181,3 +183,4 @@
           telKartlar: secK ? secK.kartlar : [], telBos: secK ? secK.bos : '', telBosVar: !!secK && secK.bosVar, telRenk: secK ? secK.renk : ui.mut
         };
       })(),
+//@dahil moduller/is-panosu/gorunum/isKarti.js

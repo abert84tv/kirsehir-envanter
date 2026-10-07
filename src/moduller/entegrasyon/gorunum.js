@@ -11,7 +11,10 @@
         const KARTLAR = [
           ['gemini_api_anahtari', 'Yapay zekâ — Google Gemini (ücretsiz)', 'Gelen talebi önceden sınıflandırır. aistudio.google.com/apikey adresinden Google hesabıyla ücretsiz anahtar alınır (kredi kartı istemez).', 'AIza…', 'Dene'],
           ['anthropic_api_anahtari', 'Yapay zekâ — Anthropic Claude (ücretli API)', 'Varsa Gemini yerine bu kullanılır. Anahtar console.anthropic.com adresinden alınır; kullandıkça ücretlenir. İptal için “Anahtarı sil”.', 'sk-ant-…', 'Dene'],
-          ['telegram_bot_anahtari', 'Telegram botu (ücretsiz)', 'Vatandaş Telegram’dan yazınca bildirim başvuru olur ve takip kodu alır. 1) Telegram’da @BotFather’a /newbot yazın, adı verin. 2) Verdiği anahtarı aşağıya yapıştırıp “Anahtarı kaydet”. 3) “Botu bağla”. İptal için “Anahtarı sil” yeter — bot da kesilir.', '123456:ABC…', 'Botu bağla']
+          ['telegram_bot_anahtari', 'Telegram botu (ücretsiz)', 'Vatandaş Telegram’dan yazınca bildirim başvuru olur ve takip kodu alır. 1) Telegram’da @BotFather’a /newbot yazın, adı verin. 2) Verdiği anahtarı aşağıya yapıştırıp “Anahtarı kaydet”. 3) “Botu bağla”. İptal için “Anahtarı sil” yeter — bot da kesilir.', '123456:ABC…', 'Botu bağla'],
+          ['konum_yazma_anahtari', 'Araç takip — konum yazma anahtarı', 'Araç takip sisteminin (Arvento) konumu programa yazarken kullandığı gizli anahtar. En az 16 karakterlik uzun rastgele bir metin uydurup buraya kaydedin; aynı metni verileri ileten tarafa verin. Yazma adresi aşağıdaki “Ekip konumu — cihazlar” kartında.', 'uzun-rastgele-bir-anahtar', 'Bilgi'],
+          ['arvento_kullanici', 'Araç takip — Arvento kullanıcı adı', 'Programın Arvento’dan konumu kendisi çekebilmesi için (bağlantı hazır olduğunda). Hesap bilgisi Arvento’dan ya da bilgi işlemden alınır; yalnız yönetici girer, tarayıcıya geri gelmez.', 'kullanıcı adı', 'Bilgi'],
+          ['arvento_sifre', 'Araç takip — Arvento şifresi', 'Yukarıdaki kullanıcı adının şifresi. Sunucuda saklanır; istediğiniz zaman silebilirsiniz.', 'şifre', 'Bilgi']
         ];
         const izin = typeof Notification === 'undefined' ? 'yok' : Notification.permission;
         const sohbetVar = (E.liste || []).some(x => x.ad === 'telegram_uyari_sohbet');

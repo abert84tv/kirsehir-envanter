@@ -22,3 +22,4 @@
 //@dahil moduller/ariza/baglanti/ariza-ek.js
 //@dahil moduller/basvuru/baglanti/telegram.js
 //@dahil moduller/is-emri/baglanti/is-emri-ek.js
+//@dahil moduller/konum/baglanti/konum.js

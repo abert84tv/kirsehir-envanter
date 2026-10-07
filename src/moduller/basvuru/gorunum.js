@@ -3,7 +3,7 @@
         return {
           show: !!u && !!s.session, baslik: u ? (u.n > 1 ? u.n + ' yeni başvuru geldi' : 'Yeni başvuru geldi') : '', metin: u ? u.metin : '',
           sesNot: s.sesAcik ? '' : 'Ses kapalı görünüyor — ekrana bir kez dokunun',
-          ac: () => { this.setState({ basvuruUyari: null, tab: 'talep' }); },
+          ac: () => { this.setState({ basvuruUyari: null, tab: 'isPanosu' }); },
           kapat: () => this.setState({ basvuruUyari: null })
         };
       })(),

@@ -20,6 +20,7 @@
         const SAHA_DURUMLARI = ['sahada', 'bilgi', 'bekleme', 'yonlendirildi', 'kontrol'];
         const yeniKolonu = st => st === 'acik' || st === 'yeniden';
         const yazabilir = !!me && me.role !== 'izleyici';
+        const talepGor = talepOn && yetki('talep') !== 'yok';
         const kartlar = [];
         const secilenEkip = s.panoEkip;
         const ekipSecenek = f => CREWS.filter(c => c !== ATANMADI).map(c => {
@@ -28,7 +29,7 @@
         });
 
         // ── başvurular (Telegram / web formu): henüz kimse almadı
-        if (talepOn) for (const b of (s.basvurular || []).filter(x => x.durum === 'yeni')) {
+        if (talepGor) for (const b of (s.basvurular || []).filter(x => x.durum === 'yeni')) {
           const ms = Date.parse(b.zaman) || 0, telg = b.konu === 'Telegram bildirimi';
           kartlar.push({
             anahtar: 'b' + b.id, kolon: 'yeni', tur: 'Başvuru', onc: 'Normal', ms,
@@ -43,7 +44,7 @@
           });
         }
         // ── talepler: alındı ama henüz arızaya çevrilmedi
-        if (talepOn) for (const t of (s.talepler || []).filter(x => !TALEP_KAPALI.includes(x.durum))) {
+        if (talepGor) for (const t of (s.talepler || []).filter(x => !TALEP_KAPALI.includes(x.durum))) {
           kartlar.push({
             anahtar: 't' + t.id, kolon: 'yeni', tur: 'Talep', onc: t.oncelik || 'Normal', ms: this.damgaMs(t.acilis),
             baslik: t.konu, yer: t.koy + (t.ilce ? ' · ' + t.ilce : ''),
@@ -167,13 +168,9 @@
             { n: geciken, ad: 'geciken', renk: '#d97706', alarm: false },
             { n: kartlar.filter(k => k.kolon === 'bitti').length, ad: 'son 7 gün biten', renk: '#30d158' }
           ].map(x => ({ ...x, alarm: !!x.alarm && x.n > 0 })),
-          yeniTalepVar: yazabilir && talepOn,
-          yeniTalep: () => this.setState({
-            tab: 'talep', talepForm: {
-              ad: '', tel: '', sifat: 'muhtar', kanal: 'telefon', ilce: (m && m.DISTRICTS[0].name) || '', koy: '',
-              konu: TALEP_KONU[0], oncelik: 'Normal', aciklama: '', durum: 'yeni', sonuc: ''
-            }
-          }),
+          yeniTalepVar: yazabilir && talepGor,
+          yeniTalep: () => this.isKartiYeni(),
+          muhtarDefteri: () => this.setState({ muhtarPanel: { q: '' } }),
           yardim: 'Kutuyu sütunlar arasında sürükleyin ya da altındaki büyük düğmeye basın. Renkli nokta öncelik: kırmızı acil, turuncu yüksek, mavi normal.',
           telSec: kolonlar.map(k => ({
             ad: k.ad, n: k.n, renk: k.renk, acik: k.id === secKol,

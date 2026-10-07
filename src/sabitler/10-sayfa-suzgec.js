@@ -34,8 +34,9 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 const SUZGEC_TANIM = {
   // "Genel bakış" (operasyon panosu) kendi yetki anahtarı yok — arıza
   // yetkisinden miras alır, sekmesi isPano (2026.10).
-  isler: [['kanban', 'İş panosu', 'ariza', 'isPanosu'], ['pano', 'Genel bakış', 'ariza', 'isPano'], ['gelen', 'Gelen', 'talep'], ['acik', 'Açık', 'ariza'],
-    ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Periyodik bakım', 'bakim']],
+  // 2026.10.07 sadeleştirme: Gelen (talep) ve Açık (arıza listesi) kalktı — iş panosunun Yeni sütunu ve Tablo görünümü yerini aldı;
+  // Genel bakış göstergeleri Özet sayfasına taşındı.
+  isler: [['kanban', 'İş panosu', 'ariza', 'isPanosu'], ['bugun', 'Bana atanan', 'gunluk'], ['planli', 'Periyodik bakım', 'bakim']],
   // Hat kesiti Envanter'in üçüncü görünümü: aynı harita, aynı katmanlar (2026.10.06)
   envanter: [['harita', 'Harita', 'harita'], ['kesit', 'Hat kesiti', 'profil'], ['liste', 'Liste', 'envanter']],
   // "Ekipler" (ekip ve araç panosu) araç yetkisinden miras alır, sekmesi ekipPano
@@ -46,7 +47,7 @@ const SUZGEC_TANIM = {
   // Özet'in altında ikinci bir yoldan erişilebilir olmaları kafa karıştırıyordu
   // ve "Özet" (rapor/gösterge) ile de konu olarak örtüşmüyordu. Yetkileri
   // hâlâ Ayarlar yetkisinden miras alınıyor (üçüncü sütun) — bu hiç değişmedi.
-  ozet: [['ozet', 'Özet', 'ozet']],
+  ozet: [['ozet', 'Özet', 'ozet'], ['operasyon', 'Operasyon göstergeleri', 'ariza', 'isPano']],
   ayarlar: [['ayarlar', 'Ayarlar', 'ayarlar'], ['yerlesim', 'Köy konumları', 'yerlesim'],
     ['aktarim', 'İçe ve dışa aktarım', 'aktarim'],
     ['denetim', 'Denetim izi', 'ayarlar', 'denetim'], ['cop', 'Çöp kutusu', 'ayarlar', 'cop']]

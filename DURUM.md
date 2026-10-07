@@ -2059,3 +2059,9 @@ Sürüm 2026.10.05-114.
 - **İş kartı** (masaüstü + telefon, tek sayfa, 6 bölüm): 1 Bildirim (kanal, zaman, kim, telefon, metin, konum) · 2 Ne arızası (sınıf, tür, öncelik; sistem önerisiyle dolu) · 3 Nerede (ilçe, köy, tesis seçimi; mesafeye göre) · 4 Kim gidecek (ekipler: bölge/nöbet/doluluk, üyeler ve durumları, araç, uyarılar, konum ve km) · 5 Ne zaman (hemen / ileri tarih) · 6 Not. Altta tek düğme **Ata** (ekip seçilmediyse "Arıza oluştur"); başvuru için "Spam", talep için "Arıza değil — kapat". Ata, mevcut kaydetme akışını kullanır (iş emri + araç dahil).
 - **Ekip konumu altyapısı** (yeni modül `konum`): konum_cihaz/konum_son tabloları, `konum_yaz` (Arvento ya da onun verisini ileten betik; anahtar korumalı), `konum_gonder` (ekibe zimmetli tablet/telefon; Ayarlar › Veri › "Konumu paylaş"), cihaz yönetimi Ayarlar › Entegrasyon › "Ekip konumu — cihazlar", Arvento kullanıcı/şifre ve yazma anahtarı kartları. Yalnız son konum saklanır. Arvento çekici henüz yok (API/hesap gelince). Ayrıntı: KONUM-ALTYAPI.md.
 - Not: Sunucuda ekip listesi ve araç listesi boş; ekibe üye ve araç girilmedikçe İş kartında "Ekibe personel girilmemiş / Araç bağlı değil" uyarısı çıkar.
+
+## 2026.10.07-150 — Sadeleştirme: Talep, Gelen, Açık ve Genel bakış kalktı
+- **İşler** menüsü üç görünüme indi: İş panosu · Bana atanan · Periyodik bakım. Eski **Talep/Gelen** ve **Açık (arıza listesi)** ekranları silindi; yerini panonun Yeni sütunu ve Tablo görünümü aldı. Eski bağlantılar ve kayıtlı sekme tercihi iş panosuna düşer.
+- **Arıza** kaydı (masaüstü) ve **yeni telefon talebi** de aynı tek sayfa İş kartında açılır (üstteki + düğmesi dahil). Telefonda arıza düzenleme sade ekranı olarak kalır.
+- Genel bakış göstergeleri **Özet > Operasyon göstergeleri**'ne taşındı; göstergelerdeki kısayollar iş panosunu süzgeçli açar. Pano üstünde **Muhtar defteri** düğmesi.
+- Ölü kod temizliği: arıza listesi hazırlık dosyası ve kullanılmayan ekran verileri kaldırıldı.

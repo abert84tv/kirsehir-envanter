@@ -34,12 +34,12 @@
         ];
         const durumSay = d => acikF.filter(f => d.includes(f.status));
         const ASAMA = [
-          ['talep', 'Talep', '#8e8e93', acikT, () => this.setState({ tab: 'talep' }), talepOn],
-          ['acik', 'Açık arıza', '#5e5ce6', durumSay(['acik', 'yeniden']), () => this.setState({ tab: 'ariza', arzF: { durum: 'acik' } }), arizaOn],
-          ['atandi', 'Atandı', '#0071e3', durumSay(['atandi']), () => this.setState({ tab: 'ariza', arzF: { durum: 'atandi' } }), arizaOn],
-          ['sahada', 'Sahada', '#ff9f0a', durumSay(['sahada']), () => this.setState({ tab: 'ariza', arzF: { durum: 'sahada' } }), arizaOn],
-          ['bekle', 'Beklemede', '#af52de', durumSay(['bilgi', 'bekleme', 'yonlendirildi', 'kontrol']), () => this.setState({ tab: 'ariza', arzF: {} }), arizaOn],
-          ['kapanis', 'Bugün kapandı', '#34c759', kapanan, () => this.setState({ tab: 'ariza', arzF: { durum: 'cozuldu' } }), arizaOn]
+          ['talep', 'Talep', '#8e8e93', acikT, () => this.panoGit({ durum: 'yeni' }), talepOn],
+          ['acik', 'Açık arıza', '#5e5ce6', durumSay(['acik', 'yeniden']), () => this.panoGit({ durum: 'yeni' }), arizaOn],
+          ['atandi', 'Atandı', '#0071e3', durumSay(['atandi']), () => this.panoGit({ durum: 'atandi' }), arizaOn],
+          ['sahada', 'Sahada', '#ff9f0a', durumSay(['sahada']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
+          ['bekle', 'Beklemede', '#af52de', durumSay(['bilgi', 'bekleme', 'yonlendirildi', 'kontrol']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
+          ['kapanis', 'Bugün kapandı', '#34c759', kapanan, () => this.panoGit({ durum: 'bitti' }), arizaOn]
         ].filter(r => r[5]);
         const hedef = Math.max(gelenF.length, 1);
         const asamalar = ASAMA.map(([id, l, c, liste, git], i) => {
@@ -75,7 +75,7 @@
         acikT.forEach(t => { const k = t.ilce || '—'; ilceSay[k] = (ilceSay[k] || 0) + 1; });
         const ilceMax = Math.max(1, ...Object.values(ilceSay));
         const ilceler = Object.entries(ilceSay).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([ad, n]) => ({
-          ad, n, w: (n / ilceMax * 100) + '%', git: () => this.setState({ tab: 'ariza', arzQ: ad === '—' ? '' : ad, arzF: {} })
+          ad, n, w: (n / ilceMax * 100) + '%', git: () => this.panoGit({ q: ad === '—' ? '' : ad })
         }));
         const ekipSay = {};
         acikF.forEach(f => { const k = f.crew && f.crew !== ATANMADI ? f.crew : 'Atanmadı'; ekipSay[k] = (ekipSay[k] || 0) + 1; });

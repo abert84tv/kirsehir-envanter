@@ -1,7 +1,7 @@
   talepYaz(liste, mesaj, git) {
     this.modulYaz('talep', liste.slice(0, 1000));
     this.setState({ talepler: liste, talepForm: null },
-      () => { this.basvuruEsitle(); if (mesaj) this.duyur(mesaj, 6500, 'iyi', git || (() => this.setState({ tab: 'talep' }))); });
+      () => { this.basvuruEsitle(); if (mesaj) this.duyur(mesaj, 6500, 'iyi', git || (() => this.setState({ tab: 'isPanosu' }))); });
   }
   talepNo() {
     const y = new Date().getFullYear();

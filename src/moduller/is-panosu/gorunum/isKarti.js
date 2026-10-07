@@ -1,20 +1,59 @@
       // İş kartı: yeni gelen başvuru/talebi tek sayfada karara bağlar — bildirim, sınıf, yer, kim gidecek, ne zaman, Ata.
       // Eski Talep ekranına gitmeden arıza oluşturur ve ekibe atar.
       isKartiEkran: (() => {
-        const BOS = { acik: false, gruplar: [], turler: [], oncelikler: [], ilceler: [], tesisler: [], ekipler: [], zamanSec: [], gerekce: [] };
+        const BOS = { acik: false, arizaAcik: false, gruplar: [], turler: [], oncelikler: [], ilceler: [], tesisler: [], ekipler: [], zamanSec: [], gerekce: [] };
         const k = s.isKarti;
+        // Var olan arıza: tek sayfa kart (masaüstü). Mantık ve alanlar mevcut arıza formundan (faultForm) gelir, yalnız yerleşim değişti.
+        if (tabId === 'isKarti' && k && k.tur === 'a') {
+          const cik = () => this.setState({ tab: 'isPanosu', isKarti: null, faultForm: null, panel: 'yok' });
+          return {
+            ...BOS, arizaAcik: !!s.faultForm, geri: cik, vazgec: cik,
+            // kaydet: kayıt başarılıysa (form temizlenir) panoya dönülür; doğrulama uyarısı varsa kartta kalınır
+            kaydet: () => {
+              this.renderVals().saveFault();
+              setTimeout(() => { if (!this.state.faultForm) this.setState({ tab: 'isPanosu', isKarti: null, panel: 'yok' }); }, 700);
+            }
+          };
+        }
         if (tabId !== 'isKarti' || !k) return BOS;
-        const kay = k.tur === 'b' ? (s.basvurular || []).find(x => x.id === k.id) : (s.talepler || []).find(x => x.id === k.id);
+        const yeni = k.tur === 'n';
+        const kay = yeni ? { ad: k.ad, tel: k.tel, sifat: k.sifat, kanal: k.kanal, aciklama: k.aciklama, konu: '', ilce: k.ilce, koy: k.koy }
+          : k.tur === 'b' ? (s.basvurular || []).find(x => x.id === k.id) : (s.talepler || []).find(x => x.id === k.id);
         if (!kay) return BOS;
         const yaz = y => this.setState({ isKarti: { ...this.state.isKarti, ...y } });
         const telg = k.tur === 'b' && kay.konu === 'Telegram bildirimi';
         const kanal = k.tur === 'b' ? (telg ? 'Telegram' : 'Web formu') : (TALEP_KANAL[kay.kanal] || '');
-        const zaman = k.tur === 'b' ? this.damgaCevir(kay.zaman) : kay.acilis;
+        const zaman = yeni ? 'şimdi' : k.tur === 'b' ? this.damgaCevir(kay.zaman) : kay.acilis;
         const G = ARIZA_GRUP[k.grup] || ARIZA_GRUP.su;
         const sebeke = !!G.sebeke;
         const ref = this.isKartiNokta(kay);
         const kmYaz = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
         const yasMetin = iso => { const dk = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000)); return dk < 2 ? 'şimdi' : dk < 60 ? dk + ' dk önce' : dk < 1440 ? Math.floor(dk / 60) + ' sa önce' : Math.floor(dk / 1440) + ' gün önce'; };
+
+        // Yeni talep (telefonla gelen): bildiren bilgisi elle girilir; açıklama yazılınca sınıf, tür, öncelik ve köy önerilir
+        const yeniAlanlar = !yeni ? {} : {
+          ad: k.ad || '', onAd: e => yaz({ ad: e.target.value }),
+          telGir: k.tel || '', onTel: e => {
+            const tel = e.target.value; const es = tel.replace(/\D/g, '').length >= 7 ? this.muhtarEslesenKoy(tel) : null;
+            yaz(es ? { tel, ilce: k.ilce || es.ilce || '', koy: k.koy || es.koy || '', sifat: 'muhtar' } : { tel });
+          },
+          sifatlar: Object.entries(TALEP_SIFAT).map(([v, l]) => ({ v, l })), sifatDeger: k.sifat, onSifat: e => yaz({ sifat: e.target.value }),
+          kanallar: Object.entries(TALEP_KANAL).map(([v, l]) => ({ v, l })), kanalDeger: k.kanal, onKanal: e => yaz({ kanal: e.target.value }),
+          aciklamaGir: k.aciklama || '',
+          onAciklama: e => {
+            const metin = e.target.value;
+            const sn = this.talepSiniflandir(metin, { ilce: k.ilce });
+            const g = ARIZA_GRUP[sn.grup] ? sn.grup : k.grup;
+            const y = { aciklama: metin, gerekce: sn.gerekce || [] };
+            if (metin.trim().length >= 8) {
+              Object.assign(y, { grup: g, ariza: ARIZA_GRUP[g].turler.includes(sn.tur) ? sn.tur : ARIZA_GRUP[g].turler[0], oncelik: sn.oncelik || k.oncelik });
+              if (!k.koy && sn.koy) y.koy = sn.koy;
+              if (!k.ilce && sn.ilce) y.ilce = sn.ilce;
+            }
+            yaz(y);
+          },
+          kvkkVar: !!(s.kvkk || {}).onayZorunlu, kvkk: !!k.kvkk, onKvkk: () => yaz({ kvkk: !k.kvkk })
+        };
 
         // tesis seçimi (tesisli gruplarda)
         let tesisler = [];
@@ -81,7 +120,8 @@
         ].filter(Boolean);
         return {
           acik: true, bekle: !!k.bekle,
-          baslik: (k.tur === 'b' ? 'Yeni başvuru' : 'Talep') + ' · ' + kanal + (k.tur === 'b' ? ' · ' + kay.takip : ' · ' + kay.no),
+          baslik: yeni ? 'Yeni talep · ' + kanal : (k.tur === 'b' ? 'Yeni başvuru' : 'Talep') + ' · ' + kanal + (k.tur === 'b' ? ' · ' + kay.takip : ' · ' + kay.no),
+          yeni, ...yeniAlanlar,
           geri: () => this.setState({ tab: 'isPanosu', isKarti: null }),
           // 1. Bildirim
           kanal, zaman, kim: kay.ad, kimVar: !!kay.ad, sifat: (k.tur === 'b' ? (kay.sifat === 'muhtar' ? 'Muhtar' : 'Vatandaş') : (TALEP_SIFAT[kay.sifat] || '')),
@@ -118,7 +158,7 @@
           eksik: eksik.join(' · '), eksikVar: eksik.length > 0,
           ata: () => this.isKartiAta(),
           ataEtiket: k.bekle ? 'Hazırlanıyor…' : (k.ekip ? 'Ata' : 'Arıza oluştur (ekibi sonra ata)'),
-          ikinci: k.tur === 'b' ? 'Spam' : 'Arıza değil — kapat',
-          ikinciGit: () => k.tur === 'b' ? this.basvuruEngelle(kay).then(() => this.setState({ tab: 'isPanosu', isKarti: null })) : this.isKartiKapat(kay)
+          ikinci: yeni ? 'Vazgeç' : k.tur === 'b' ? 'Spam' : 'Arıza değil — kapat',
+          ikinciGit: () => yeni ? this.setState({ tab: 'isPanosu', isKarti: null }) : k.tur === 'b' ? this.basvuruEngelle(kay).then(() => this.setState({ tab: 'isPanosu', isKarti: null })) : this.isKartiKapat(kay)
         };
       })(),

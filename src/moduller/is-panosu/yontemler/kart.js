@@ -18,6 +18,18 @@
       }
     });
   }
+  // Yeni talep (telefonla gelen): bildiren elle girilir, aynı kartla arızaya çevrilip atanır
+  isKartiYeni() {
+    this.konumYenile();
+    this.setState({
+      tab: 'isKarti',
+      isKarti: {
+        tur: 'n', ad: '', tel: '', sifat: 'muhtar', kanal: 'telefon', aciklama: '', kvkk: false,
+        grup: 'su', ariza: ARIZA_GRUP.su.turler[0], oncelik: 'Normal', ilce: '', koy: '', assetId: null, tesisQ: '',
+        ekip: '', zaman: 'hemen', planli: '', not: '', gerekce: []
+      }
+    });
+  }
   // Bildirimin konumu (varsa) ya da köyün yerleşim listesindeki noktası
   isKartiNokta(kay) {
     if (kay && kay.lat != null && kay.lon != null) return { lat: +kay.lat, lon: +kay.lon };
@@ -39,6 +51,23 @@
     if (sebeke && !k.ilce) return this.duyur('İlçeyi seçin.', 4500, 'kotu');
     if (!sebeke && !k.assetId) return this.duyur('Arızanın olduğu tesisi seçin.', 4500, 'kotu');
     let t = k.tur === 't' ? (this.state.talepler || []).find(x => x.id === k.id) : null;
+    if (k.tur === 'n') {
+      if (!(k.ad || '').trim()) return this.duyur('Bildiren kişinin adını yazın.', 4500, 'kotu');
+      if (!(k.aciklama || '').trim()) return this.duyur('Talebin ne olduğunu yazın.', 4500, 'kotu');
+      if ((this.state.kvkk || {}).onayZorunlu && !k.kvkk) return this.duyur('Bildirene verisinin ne için kaydedildiği söylenmeli — onay kutusunu işaretleyin.', 6500, 'kotu');
+      const marka = 'TEL-' + Date.now().toString(36);
+      this.setState({ isKarti: { ...k, bekle: true } });
+      this.talepKaydet({
+        ad: k.ad, tel: k.tel, sifat: k.sifat, kanal: k.kanal, ilce: k.ilce, koy: (k.koy || 'Belirtilmedi'), konu: TALEP_KONU[0],
+        oncelik: k.oncelik, aciklama: k.aciklama, kvkkOnay: true, grup: k.grup, tur: k.ariza, takip: marka
+      });
+      // Numara sunucudan alınırken kayıt kısa süre gecikir: oluşana kadar beklenir
+      for (let i = 0; i < 30 && !t; i++) {
+        await new Promise(r => setTimeout(r, 200));
+        t = (this.state.talepler || []).find(x => x.takip === marka);
+      }
+      if (!t) return this.setState({ isKarti: { ...this.state.isKarti, bekle: false } }, () => this.duyur('Talep kaydedilemedi — formu kontrol edin.', 5000, 'kotu'));
+    }
     if (k.tur === 'b') {
       const b = (this.state.basvurular || []).find(x => x.id === k.id);
       if (!b) return;

@@ -48,6 +48,8 @@
     // varsayılanına düşüp herkese açılmasın.
     const sekmeYetki = id => { const g = SUZGEC_ESKI[id]; return g ? suzgecYetki(g.sayfa, g.suzgec) : yetki(id); };
     let tabId = s.tab;
+    // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
+    if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';
     if (sekmeYetki(tabId) === 'yok') tabId = SAYFALAR.map(x => x[0]).find(id => yetki(id) !== 'yok') || 'harita';
     // Aktif sayfanın yetkisi süzgeç haritasından okunur; haritada karşılığı
     // olmayan sayfa (yerleşim, kuyruk) eski yola düşer.

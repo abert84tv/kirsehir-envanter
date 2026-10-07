@@ -115,11 +115,11 @@ const NEDENLER = [
   [/isPanosuEkran|^masaustu:(k\.kartlar|r\.|h\.tik|g\.pick|o\.)|^telefon:t\.sec/, 'tasarım: İş panosu masaüstünde 4 sütun + sürükle-bırak + Excel benzeri Tablo görünümü, telefonda 4 renkli sekmeli tek liste (kartlar ve düğmeler aynı işi yapar, yalnız kapsayıcı farklı)'],
   [/^telefon:telSuz\./, 'tasarım: telefon süzgeç/araç şeridi'],
 ];
-const neden = k => { for (const [re, n] of NEDENLER) if (re.test(k)) return n; return 'başlangıç: incelenmedi (bilerek farklı olabilir; gerçek eksikse öteki tarafa ekleyin ve satırı silin)'; };
+const neden = (k, v) => { if (v && v.dosyalar.some(d => /tab-is-karti-ariza\.html$/.test(d))) return 'tasarım: arıza kartı masaüstünde tek sayfa (tab-is-karti-ariza); telefonda mevcut sade arıza ekranı (faultForm.sade) kullanılır'; for (const [re, n] of NEDENLER) if (re.test(k)) return n; return 'başlangıç: incelenmedi (bilerek farklı olabilir; gerçek eksikse öteki tarafa ekleyin ve satırı silin)'; };
 
 if (arg.includes('--yaz')) {
   const yeni = {};
-  for (const k of Object.keys(farklar).sort()) yeni[k] = bilinen[k] || neden(k);
+  for (const k of Object.keys(farklar).sort()) yeni[k] = bilinen[k] || neden(k, farklar[k]);
   fs.writeFileSync(BILINEN, JSON.stringify(yeni, null, 2) + '\n');
   console.log(Object.keys(yeni).length + ' fark bilinen listesine yazıldı: src/esdeger-bilinen.json');
   process.exit(0);

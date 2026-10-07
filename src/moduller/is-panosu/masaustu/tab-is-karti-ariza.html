@@ -1,0 +1,328 @@
+<sc-if value="{{ isKartiEkran.arizaAcik }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }};display:flex;flex-direction:column">
+<div style="position:sticky;top:0;z-index:5;background:{{ ui.bg }};border-bottom:1px solid {{ ui.rule }};padding:12px 20px;display:flex;align-items:center;gap:12px">
+<button onClick="{{ isKartiEkran.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:700 13.5px/42px var(--font-body)">← İş panosu</button>
+<span style="flex:1;min-width:0;font:700 17px/1.2 var(--font-heading)">{{ faultForm.title }}</span>
+</div>
+<div style="width:100%;max-width:900px;margin:0 auto;padding:18px 20px 120px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box">
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Durum ve işlem</span>
+<sc-if value="{{ faultForm.isExisting }}" hint-placeholder-val="{{ false }}">
+<div style="border-top:1px solid {{ ui.rule }};padding-top:13px">
+<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }};margin-bottom:8px">İş akışı</div>
+<sc-if value="{{ faultForm.hizli.var }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-if value="{{ faultForm.hizli.vardimVar }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ faultForm.hizli.vardim }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 150px;height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/46px var(--font-body);text-align:center">Sahadayım</button>
+</sc-if>
+<sc-if value="{{ faultForm.hizli.tamamlaVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.hizli.tamamla }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 150px;height:46px;border-radius:12px;background:#34c759;color:#fff;font:700 14px/46px var(--font-body);text-align:center">İşi tamamla</button>
+</sc-if>
+</div>
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.hizli.not }}</span>
+</div>
+</sc-if>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ faultForm.workflow }}" as="w" hint-placeholder-count="4">
+<button onClick="{{ w.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;opacity:{{ w.op }};padding:9px 12px;border-radius:10px;border:1px solid {{ w.border }};background:{{ w.bg }};color:{{ w.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">{{ w.label }}</button>
+</sc-for>
+<sc-if value="{{ faultForm.yenidenAc.on }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:11px;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px 13px;display:flex;flex-direction:column;gap:10px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Kapanmış kayıt</span>
+<span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.yenidenAc.not }}</span>
+<button onClick="{{ faultForm.yenidenAc.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px;text-align:left" style-hover="background:var(--color-accent);color:#fff">Yeniden aç</button>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:11px;border-radius:10px;border:1px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Merkez denetimi</span>
+<span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.onay.not }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">Onayla ve kapat</button>
+<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Sahaya iade et</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.kanitVar }}" hint-placeholder-val="{{ false }}">
+<div class="ks-bilgi" style="margin-top:10px;font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.kanitNot }}</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Bildirim ve açıklama</span>
+<span style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sub }}</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Açıklama</span>
+<textarea value="{{ faultForm.note }}" onChange="{{ onFaultNote }}" rows="3" placeholder="Sahada görülen durum" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13.5px/1.45 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};resize:vertical"></textarea>
+</label>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Ne arızası</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İş grubu</span>
+<select value="{{ faultForm.yerGrup.grup }}" onChange="{{ faultForm.yerGrup.onGrup }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.gruplar }}" as="o" hint-placeholder-count="6"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Arıza türü</span>
+<select value="{{ faultForm.type }}" onChange="{{ onFaultType }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.typeOptions }}" as="t" hint-placeholder-count="4">
+<option value="{{ t }}">{{ t }}</option>
+</sc-for>
+</select>
+</label>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Öncelik</span>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ faultForm.priorities }}" as="p" hint-placeholder-count="3">
+<button onClick="{{ p.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:10px 4px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;background:{{ p.bg }};color:{{ p.fg }};border-right:1px solid {{ ui.rule }}">{{ p.label }}</button>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Nerede</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kayıt</span>
+<select value="{{ faultForm.assetId }}" onChange="{{ onFaultAsset }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<option value="">— Tesis yok (şebeke / boru hattı) —</option>
+<sc-for list="{{ assetOptions }}" as="o" hint-placeholder-count="4">
+<option value="{{ o.id }}">{{ o.label }}</option>
+</sc-for>
+</select>
+</label>
+<sc-if value="{{ faultForm.tesisYok }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px">
+<label style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İlçe</span>
+<select value="{{ faultForm.yerGrup.ilce }}" onChange="{{ faultForm.yerGrup.onIlce }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.ilceler }}" as="o" hint-placeholder-count="7"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+<label style="flex:1;display:flex;flex-direction:column;gap:5px;min-width:0">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Köy</span>
+<select value="{{ faultForm.yerGrup.koy }}" onChange="{{ faultForm.yerGrup.onKoy }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer">
+<sc-for list="{{ faultForm.yerGrup.koyler }}" as="o" hint-placeholder-count="8"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+</select>
+</label>
+</div>
+</sc-if>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><button onClick="{{ faultForm.haritada }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:42px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/40px var(--font-body)">Haritada göster</button><button onClick="{{ faultForm.yolTarifi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:42px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/42px var(--font-body)">Yol tarifi</button><span style="font:500 12px/1 ui-monospace,Menlo,monospace;color:{{ ui.mut }}">{{ faultForm.koord }}</span></div>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Kim gidecek</span>
+<div style="display:flex;gap:10px">
+<label style="flex:1;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ekip ataması</span>
+<select value="{{ faultForm.crew }}" onChange="{{ onFaultCrew }}" disabled="{{ faultForm.crewLocked }}" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }};cursor:pointer;opacity:{{ faultForm.crewOpacity }}">
+<sc-for list="{{ crews }}" as="c" hint-placeholder-count="3">
+<option value="{{ c }}">{{ c }}</option>
+</sc-for>
+</select>
+</label>
+<label style="width:118px;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre (saat)</span>
+<input value="{{ faultForm.hours }}" onChange="{{ onFaultHours }}" inputmode="decimal" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}">
+</label>
+</div>
+<sc-if value="{{ faultForm.ekipOneriVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:11px 13px;display:flex;flex-direction:column;gap:8px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Önerilen ekipler</span>
+<span style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.ekipOneriNot }}</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px">
+<sc-for list="{{ faultForm.ekipOneri }}" as="o" hint-placeholder-count="0">
+<button onClick="{{ o.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:10px 12px;min-height:50px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ o.bg }};text-align:left">
+<span style="font:600 12.5px/1.25 var(--font-body);color:{{ o.fg }}">{{ o.ad }}</span>
+<span style="font:400 11.5px/1.35 var(--font-body);color:{{ o.nedenFg }}">{{ o.neden }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<div style="border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:11px 13px;display:flex;flex-direction:column;gap:5px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Ekip durumu</span>
+<span style="font:600 12.5px/1.45 var(--font-body);color:{{ ui.fg }}">{{ faultForm.ekipBilgi }}</span>
+<sc-if value="{{ faultForm.ekipUyariVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12px/1.45 var(--font-body);color:{{ ui.acc }}">{{ faultForm.ekipUyari }}</span>
+</sc-if>
+</div>
+<button onClick="{{ faultForm.isEmri }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 13px/42px var(--font-body)">{{ faultForm.isEmriLabel }}</button>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Ne zaman ve hedef süre</span>
+<sc-if value="{{ faultForm.sla.goster }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre ve bağlantılar</span>
+<sc-if value="{{ faultForm.sla.bekleme }}" hint-placeholder-val="{{ false }}">
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Bekleme nedeni</span>
+<select value="{{ faultForm.sla.neden }}" onChange="{{ faultForm.sla.onNeden }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><option value="">Seçin…</option><sc-for list="{{ faultForm.sla.nedenler }}" as="n" hint-placeholder-count="3"><option value="{{ n.v }}">{{ n.v }}</option></sc-for></select></label>
+</sc-if>
+<sc-if value="{{ faultForm.sla.beklemeVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sla.beklemeYazi }}</span>
+</sc-if>
+<sc-if value="{{ faultForm.sla.yonetim }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+<label style="flex:1 1 130px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">SLA süresi (gün)</span>
+<input value="{{ faultForm.sla.gun }}" onChange="{{ faultForm.sla.onGun }}" inputmode="numeric" placeholder="{{ faultForm.sla.varsayilan }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+<label style="flex:1 1 150px;display:flex;align-items:center;gap:8px;min-height:42px;font:600 13px/1.2 var(--font-body)"><input type="checkbox" checked="{{ faultForm.sla.iptal }}" onChange="{{ faultForm.sla.onIptal }}" style="width:20px;height:20px;accent-color:var(--color-accent)"> SLA dışı say</label>
+</div>
+</sc-if>
+<sc-if value="{{ faultForm.sla.yonetimDegil }}" hint-placeholder-val="{{ false }}">
+<span style="font:500 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.sla.slaYazi }}</span>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Ana arıza (aynı sorunun ihbarı ise)</span>
+<select value="{{ faultForm.sla.ana }}" onChange="{{ faultForm.sla.onAna }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"><sc-for list="{{ faultForm.sla.anaSecenek }}" as="o" hint-placeholder-count="2"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></label>
+<sc-if value="{{ faultForm.sla.bagliVar }}" hint-placeholder-val="{{ false }}">
+<span style="font:600 12.5px/1.45 var(--font-body);color:{{ ui.acc }}">{{ faultForm.sla.bagliYazi }}</span>
+</sc-if>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Planlı zaman (ileri tarihli iş)</span>
+<input type="datetime-local" value="{{ faultForm.sla.planli }}" onChange="{{ faultForm.sla.onPlanli }}" style="all:unset;box-sizing:border-box;width:100%;height:42px;padding:0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)"></label>
+</div>
+</sc-if>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Fotoğraf ve ses</span>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Arıza fotoğrafı · {{ faultForm.photoCount }}</span>
+<span class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.assignNote }}</span>
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Aşama</span>
+<div style="display:flex;width:fit-content;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ asamaSec }}" as="as2" hint-placeholder-count="2">
+<button onClick="{{ as2.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:34px;display:flex;align-items:center;justify-content:center;padding:0 12px;background:{{ as2.bg }};color:{{ as2.fg }};font:600 11px/1 var(--font-body);border-right:1px solid {{ ui.rule }}">{{ as2.label }}</button>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ cekFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px">FOTOĞRAF ÇEK</button>
+<button onClick="{{ addFaultPhoto }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:66px;height:66px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 10.5px/1.3 var(--font-body);text-align:center;display:flex;align-items:center;justify-content:center;padding:5px" style-hover="background:var(--color-accent);color:#fff">GALERİDEN SEÇ</button>
+<sc-for list="{{ faultForm.kayitFoto }}" as="kp" hint-placeholder-count="0">
+<div title="Sunucuda kayıtlı" style="width:66px;height:66px;border-radius:10px;border:1px solid #34c759;position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+{{ kp.img }}
+<span style="position:absolute;left:0;bottom:0;background:#34c759;color:#fff;font:600 9.5px/1 var(--font-body);padding:3px 4px">{{ kp.etiket }}</span>
+</div>
+</sc-for>
+<sc-for list="{{ faultForm.photos }}" as="p" hint-placeholder-count="0">
+<div style="width:66px;height:66px;border-radius:10px;border:1px solid {{ p.border }};position:relative;overflow:hidden;background:{{ ui.surf2 }}">
+{{ p.img }}
+<button onClick="{{ p.isaretle }}" title="İşaretleme aç" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;inset:0"></button>
+<span style="position:absolute;left:0;bottom:0;background:{{ p.markBg }};color:{{ p.markFg }};font:600 9.5px/1 var(--font-body);letter-spacing:-.01em;padding:3px 4px">{{ p.mark }}</span>
+<button onClick="{{ p.indir }}" title="Cihaza indir" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:2px;left:2px;width:20px;height:20px;background:rgba(32,30,29,.8);color:#fff;font:600 12.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">↓</button>
+<button onClick="{{ p.kaldir }}" title="Kaldır" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(32,30,29,.8);color:#fff;font:600 12.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent)">✕</button>
+</div>
+</sc-for>
+</div>
+<span class="ks-bilgi" style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">Fotoğraflar kaydı kaydettiğinizde yüklenir — küçültme yapılır, tesisin fotoğraf listesine eklenir. Kareye dokununca işaretleme açılır: ok, daire veya yazıyla arızalı yeri gösterebilirsiniz.</span>
+</div>
+<sc-if value="{{ faultForm.isaretModu }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:10px;border:1px solid var(--color-accent);padding:13px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">İşaretleme · {{ faultForm.isaretFoto }}</span>
+<button onClick="{{ faultForm.isaretKapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kapat</button>
+</div>
+<div style="height:150px;border-radius:10px;border:1px solid {{ ui.rule }};background:repeating-linear-gradient(45deg,{{ ui.ph1 }} 0 8px,{{ ui.ph2 }} 8px 16px);margin-bottom:10px"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<sc-for list="{{ faultForm.isaretAraclar }}" as="t" hint-placeholder-count="3">
+<button onClick="{{ t.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 12px">{{ t.ad }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Sesli not</span>
+<span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">Yazmak yerine konuşun</span>
+</div>
+<sc-for list="{{ faultForm.kayitSes }}" as="ks" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:6px;border-radius:12px;border:1px solid #34c759;padding:8px 10px;margin-top:8px">
+<span style="font:600 11.5px/1.3 var(--font-body);color:#1b7a36">Kayıtlı sesli not · {{ ks.meta }}</span>
+{{ ks.player }}
+</div>
+</sc-for>
+<sc-for list="{{ faultForm.sesler }}" as="sn" hint-placeholder-count="0">
+<div style="display:flex;flex-direction:column;gap:8px;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 11px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:none;font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }}">{{ sn.sure }}</span>
+<span style="flex:1;font:600 10px/1 var(--font-body);letter-spacing:-.01em;color:{{ sn.durumFg }}">{{ sn.durum }}</span>
+<button onClick="{{ sn.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}" style-hover="color:var(--color-accent)">Sil</button>
+</div>
+<sc-if value="{{ sn.calinabilir }}" hint-placeholder-val="{{ false }}">
+{{ sn.player }}
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ faultForm.kaydediyor }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.sesBaslat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">■ Kaydı bitir</button>
+</sc-if>
+<sc-if value="{{ faultForm.kaydetmiyor }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ faultForm.sesBaslat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">● Sesli not kaydet</button>
+</sc-if>
+</div>
+</div>
+
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+<span style="font:700 14px/1 var(--font-heading)">Kapanış: malzeme ve maliyet</span>
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Kullanılan malzeme</span>
+<sc-for list="{{ faultForm.malzemeler }}" as="mz" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:12px;border-bottom:1px solid {{ ui.rule }};padding-bottom:7px">
+<span style="flex:1;font:600 12.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ mz.ad }}</span>
+<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }};width:60px">{{ mz.adet }}</span>
+<span style="font:600 12.5px/1 var(--font-body);color:{{ ui.fg }};width:86px;text-align:right">{{ mz.tutar }}</span>
+<button onClick="{{ mz.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 10.5px/1 var(--font-body);color:{{ ui.mut }}">Sil</button>
+</div>
+</sc-for>
+<input type="search" value="{{ faultForm.malzemeQ }}" onChange="{{ faultForm.onMalzemeQ }}" placeholder="Malzeme ara — ad ya da kod" aria-label="Malzeme ara" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:9px 11px;font:400 12.5px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
+<button onClick="{{ faultForm.malzemeTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:42px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}"><span>Malzeme listesi · {{ faultForm.malzemeSay }}</span><span style="color:{{ ui.mut }};font-size:11px">{{ faultForm.malzemeOk }}</span></button>
+<sc-if value="{{ faultForm.malzemeAcik }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="max-height:230px;overflow-y:auto;border-radius:10px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ faultForm.malzemeSecenek }}" as="mz" hint-placeholder-count="8">
+<button onClick="{{ mz.ekle }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:11px 12px;border-bottom:1px solid {{ ui.rule }}" style-hover="background:{{ ui.surf2 }}">
+<span style="flex:1;min-width:0;font:600 12.5px/1.25 var(--font-body);color:{{ ui.fg }}">{{ mz.ad }}</span>
+<span style="flex:none;font:400 11px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.mut }};text-align:right">{{ mz.fiyat }}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<span style="font:400 11px/1.35 var(--font-body);color:{{ ui.mut }}">{{ faultForm.malzemeNot }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Arıza maliyeti</span>
+<label style="display:flex;flex-direction:column;gap:5px">
+<span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }}">İşçilik (₺) — boş bırakırsanız süreden hesaplanır</span>
+<input value="{{ faultForm.iscilik }}" onChange="{{ faultForm.onIscilik }}" inputmode="decimal" placeholder="örn. 2800" style="all:unset;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:600 13.5px/1 ui-monospace,Menlo,monospace;color:{{ ui.fg }};background:{{ ui.bg }}" />
+</label>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }}">
+<div style="flex:1;padding:11px 12px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<span style="font:400 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Malzeme</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ faultForm.maliyet.malzeme }}</span>
+</div>
+<div style="flex:1;padding:11px 12px;border-right:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:3px">
+<span style="font:400 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">İşçilik</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ faultForm.maliyet.iscilik }}</span>
+</div>
+<div style="flex:1;padding:11px 12px;background:{{ ui.pend }};display:flex;flex-direction:column;gap:3px">
+<span style="font:400 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Toplam</span>
+<span style="font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ faultForm.maliyet.toplam }}</span>
+</div>
+</div>
+<span style="font:400 11.5px/1.45 var(--font-body);color:{{ ui.mut }}">{{ faultForm.maliyet.not }}</span>
+</div>
+</div>
+</div>
+<div style="position:sticky;bottom:0;z-index:5;background:{{ ui.bg }};border-top:1px solid {{ ui.rule }};padding:12px 20px;display:flex;align-items:center;gap:12px;justify-content:flex-end">
+<button onClick="{{ isKartiEkran.vazgec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:50px;padding:0 20px;border-radius:12px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 13.5px/48px var(--font-body)">Vazgeç</button>
+<button onClick="{{ isKartiEkran.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:52px;padding:0 28px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 15px/52px var(--font-body)">{{ faultForm.cta }}</button>
+</div>
+</div>
+</sc-if>

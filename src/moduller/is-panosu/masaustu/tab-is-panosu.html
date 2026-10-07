@@ -14,6 +14,7 @@
 <button onClick="{{ g.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 18px;background:{{ g.bg }};color:{{ g.fg }};font:700 13.5px/44px var(--font-body)">{{ g.ad }}</button>
 </sc-for>
 </div>
+<sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.muhtarDefteri }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};font:600 13px/42px var(--font-body)">Muhtar defteri</button></sc-if>
 <sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.yeniTalep }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;background:var(--color-accent);color:#fff;font:700 13.5px/44px var(--font-body)">+ Yeni talep (telefon)</button></sc-if>
 </div>
 <sc-if value="{{ isPanosuEkran.panoGorunumu }}" hint-placeholder-val="{{ true }}">

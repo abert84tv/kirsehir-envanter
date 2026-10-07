@@ -1,4 +1,8 @@
   // is-panosu modülü — İş panosu işlemleri. Hepsi var olan akışları çağırır; yeni iş kuralı eklemez.
+  // Panoyu Tablo görünümünde, verilen süzgeçle açar (durum: yeni|atandi|sahada|bitti, ekip, q)
+  panoGit(suz) {
+    this.setState({ tab: 'isPanosu', panoGorunum: 'tablo', panoSuz: { ...(suz || {}) }, isKarti: null, faultForm: null });
+  }
   // Başvuruyu tek adımda arıza formuna taşır (önce talep olur, sonra arıza formu açılır)
   async panoBasvuruArizaya(b) {
     await this.basvuruAktar(b);
@@ -12,7 +16,10 @@
   }
   // Arızayı ayrıntı formunda (masaüstü sağ panel / telefon sade ekran) açar
   panoAc(f) {
-    this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } });
+    const form = { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f };
+    // Masaüstü: tek sayfa kart. Telefon: mevcut sade arıza ekranı (alt sayfa)
+    if (this.state.device === 'phone') this.setState({ panel: 'ariza', faultForm: form });
+    else this.setState({ tab: 'isKarti', isKarti: { tur: 'a', id: f.id }, panel: 'yok', faultForm: form });
   }
   // "Sahada": ekip yerine vardı
   panoSahada(f) {

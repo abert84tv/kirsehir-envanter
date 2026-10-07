@@ -32,7 +32,7 @@
             kapa: seg(!talepOn, () => { if (talepOn) this.modulAnahtar('talep', false); }),
             sayi: (s.talepler || []).length + ' talep · '
               + (s.talepler || []).filter(t => !TALEP_KAPALI.includes(t.durum)).length + ' bekleyen',
-            aciklama: 'Köyden telefonla, WhatsApp’tan, dilekçeyle gelen istek ve ihbarların kaydı. Menüdeki Talep sekmesini kapsar; talep arızaya çevrilince arıza kaydına bağlanır.'
+            aciklama: 'Köyden telefonla, WhatsApp’tan, dilekçeyle gelen istek ve ihbarların kaydı. İş panosunun Yeni sütununda ve İş kartında görünür; talep arızaya çevrilince arıza kaydına bağlanır.'
           },
           {
             ad: 'Araç ve ekipman',

@@ -51,7 +51,7 @@
         } else {
           this.setState({
             faults: [{ ...f, id: yeniId, no: arizaNo, sync, reporter: s.role, opened: this.damga() }, ...s.faults],
-            panel: s.device === 'phone' ? 'yok' : 'ariza', faultForm: null, tab: 'ariza',
+            panel: s.device === 'phone' ? 'yok' : 'ariza', faultForm: null, tab: 'isPanosu',
             queue: [{ id: 'q' + Date.now(), title: `${arizaNo} · yeni arıza`, meta: `${aKod} · ${f.type} · ${(f.photos || []).length} fotoğraf`, state: s.offline ? 'pending' : 'synced', dotPend: s.offline }, ...s.queue]
           });
         }
@@ -125,15 +125,9 @@
                 : (acilMi && ekipVar
                   ? `. ${f.crew} atandı — mesaj gönderimi kapalı, Ayarlar > Bildirim bölümünden açabilirsiniz.`
                   : (acilMi ? '. Ekip atanmadığı için bildirim gönderilmedi — ekip seçip kaydedin.' : '. Kayıt eşitlendi.')))), 7000, 'ariza',
-            () => {
-              const yeni = this.state.faults[0];
-              this.setState({
-                tab: 'ariza', panel: 'ariza',
-                faultForm: yeni ? { malzeme: [], sesler: [], iscilik: '', isaret: null, ...yeni } : null
-              });
-            });
+            () => { const yeni = this.state.faults[0]; if (yeni) this.panoAc(yeni); });
         } else {
           this.duyur(`${f.no} güncellendi — durum ${STATUS_LABEL[f.status]}${s.offline ? ' · cihazda bekliyor' : ''}.`, 4500, 'bilgi',
-            () => this.setState({ tab: 'ariza', panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, ...f } }));
+            () => this.panoAc(f));
         }
       },

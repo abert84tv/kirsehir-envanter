@@ -88,7 +88,7 @@
             zemin: on ? (dark ? 'rgba(10,132,255,.12)' : 'rgba(0,113,227,.06)') : ui.surf2,
             halka: on ? '0 0 0 2px var(--color-accent)' : '0 0 0 1px ' + ui.rule,
             sec: () => this.setState({ ekipSec: on ? '' : e.ad }),
-            isler: () => this.setState({ tab: 'ariza', arzF: { ekip: e.ad }, arzQ: '' })
+            isler: () => this.panoGit({ ekip: e.ad })
           };
         }).sort((x, y) => (y.nobetci - x.nobetci) || 0);
         const atanmamis = acikF.filter(f => !f.crew || f.crew === ATANMADI).length;

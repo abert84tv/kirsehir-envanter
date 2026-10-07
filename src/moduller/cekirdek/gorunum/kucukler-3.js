@@ -18,14 +18,14 @@
         };
       })(),
       tab: {
-        harita: tabId === 'harita', envanter: tabId === 'envanter', ariza: tabId === 'ariza',
+        harita: tabId === 'harita', envanter: tabId === 'envanter',
         yerlesim: tabId === 'yerlesim', kuyruk: tabId === 'kuyruk', profil: tabId === 'profil',
         islem: tabId === 'islem', ayarlar: tabId === 'ayarlar', aktarim: tabId === 'aktarim',
         // Denetim izi ve çöp kutusu Özet sayfasının süzgeçleri oldu; gövdeleri
         // ayarlar kabının içinde durduğu için kap bu üç sekmede açılır.
         ayarKap: tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop',
         ozet: tabId === 'ozet', gunluk: tabId === 'gunluk', bakim: tabId === 'bakim',
-        ambar: tabId === 'ambar', arac: tabId === 'arac', talep: tabId === 'talep',
+        ambar: tabId === 'ambar', arac: tabId === 'arac',
         isPano: tabId === 'isPano', isPanosu: tabId === 'isPanosu', isKarti: tabId === 'isKarti', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
       },
       // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez

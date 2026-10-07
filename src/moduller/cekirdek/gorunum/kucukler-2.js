@@ -36,11 +36,7 @@
           aracKenar: s.telAracAcik ? 'var(--color-accent)' : ui.rule, aracZemin: s.telAracAcik ? 'var(--color-accent)' : 'transparent', aracYazi: s.telAracAcik ? '#fff' : ui.fg,
           aracTog: () => { const v = !this.state.telAracAcik; this.setState({ telAracAcik: v }); const w = this.profilWin(); if (w) try { w.postMessage({ ks: 'arac', acik: v }, '*'); } catch (e) { /* çerçeve yok */ } },
           tamIk: s.telTam ? '⤡' : '⤢',
-          tamTog: () => { const v = !this.state.telTam; this.setState({ telTam: v }); try { document.documentElement.classList.toggle('ks-tam', v); } catch (e) { /* belge yok */ } setTimeout(() => { const w = this.mapWin(); const p = this.profilWin(); try { w && w.dispatchEvent(new Event('resize')); p && p.dispatchEvent(new Event('resize')); } catch (e) { /* çerçeve yok */ } }, 120); },
-          arzAcik: !!s.telArzSuzAcik, arzOk: s.telArzSuzAcik ? '▴' : '▾',
-          arzTog: () => this.setState({ telArzSuzAcik: !this.state.telArzSuzAcik }),
-          arzKenar: s.telArzSuzAcik ? 'var(--color-accent)' : ui.rule,
-          arzEtiket: (typeof arzKontrol !== 'undefined' && arzKontrol.suzuluyor) ? 'süzülüyor' : ''
+          tamTog: () => { const v = !this.state.telTam; this.setState({ telTam: v }); try { document.documentElement.classList.toggle('ks-tam', v); } catch (e) { /* belge yok */ } setTimeout(() => { const w = this.mapWin(); const p = this.profilWin(); try { w && w.dispatchEvent(new Event('resize')); p && p.dispatchEvent(new Event('resize')); } catch (e) { /* çerçeve yok */ } }, 120); }
         };
       })(),
       telMenu: {

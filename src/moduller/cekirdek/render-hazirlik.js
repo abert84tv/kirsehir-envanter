@@ -1,7 +1,6 @@
 //@dahil moduller/cekirdek/hazirlik-temel.js
 //@dahil moduller/harita/hazirlik-isaretler.js
 //@dahil moduller/envanter/hazirlik-tablo.js
-//@dahil moduller/ariza/hazirlik-liste.js
 //@dahil moduller/harita/hazirlik-arama.js
 //@dahil moduller/yerlesim/hazirlik-koyler.js
 //@dahil moduller/harita/hazirlik-donusum.js

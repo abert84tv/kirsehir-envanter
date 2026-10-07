@@ -115,7 +115,7 @@
       if (!(yonetim || (me.crew && f.crew === me.crew))) continue;
       goruldu.push(anahtar);
       this.duyur('Planlı iş zamanı geldi: ' + (f.no || '') + ' · ' + (f.type || '') + (f.crew && f.crew !== ATANMADI ? ' · ' + f.crew : ''), 12000, 'bilgi',
-        () => this.setState({ tab: 'ariza', panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f } }));
+        () => this.panoAc(f));
     }
     try { localStorage.setItem('ks-planli-uyari', JSON.stringify(goruldu.slice(-200))); } catch (e) { /* depolama kapalı */ }
   }

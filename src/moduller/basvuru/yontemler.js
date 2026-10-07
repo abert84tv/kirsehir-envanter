@@ -30,7 +30,7 @@
     try {
       if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         const n = new Notification('Yeni başvuru — Kırşehir Envanter', { body: metin, tag: 'ks-basvuru', renotify: true, requireInteraction: true });
-        n.onclick = () => { try { window.focus(); } catch (e) { /* odak yok */ } this.setState({ tab: 'talep' }); n.close(); };
+        n.onclick = () => { try { window.focus(); } catch (e) { /* odak yok */ } this.setState({ tab: 'isPanosu' }); n.close(); };
       }
     } catch (e) { /* bildirim desteklenmiyor */ }
     // Sekme başlığı, kullanıcı geri dönene kadar yanıp söner

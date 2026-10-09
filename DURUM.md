@@ -2142,3 +2142,6 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-170 — Harita menüsü katman simgesinin altında
 - Envanter ve Hat kesiti haritalarında katman simgesi sağ üstte, **Harita menüsü** düğmesi ve açılan seçenekleri onun altında alt alta.
+
+## 2026.10.10-171 — Harita menüsü katman simgesinin içinde
+- Envanter ve Hat kesiti haritalarında ayrı “Harita menüsü” düğmesi kalktı: sağ üstteki **tek simgeye** basınca açılan menüde önce **Harita katmanı** (Sokak · Uydu · Uydu + ad), altında **Harita menüsü** seçenekleri (Yol tarifi modu, Mesafe ölç, Git — konumum, Kayıt etiketleri ✓, Hat güzergâhları ✓, Koordinat işaretini temizle, İl sınırına sığdır) yer alır. Bir zemin ya da araç seçilince menü kapanır; etiket/hat anahtarları açık kalır; başka yere basınca kapanır.

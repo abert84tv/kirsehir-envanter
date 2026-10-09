@@ -205,24 +205,22 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <div id="mapKap">
       <div id="map"></div>
       <div id="sonUz"><span class="u">Son nokta, öncekine</span><input id="sonUzM" type="number" inputmode="decimal" min="1" step="1"><span class="u">m</span><button id="sonUzGo" type="button">Ayarla</button></div>
-      <div class="panel" id="tools">
-<div class="ust">
+<div class="panel" id="tools">
 <div class="ks-katman" id="katman">
-  <button class="k-dugme" id="katman-dugme" aria-label="Harita katmanları" title="Harita katmanları"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
+  <button class="k-dugme" id="katman-dugme" aria-label="Harita katmanları ve menüsü" title="Harita katmanları ve menüsü"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
   <div class="k-menu">
+    <div class="k-baslik">Harita katmanı</div>
     <button data-z="street"><i></i>Sokak</button>
     <button data-z="sat"><i></i>Uydu</button>
     <button data-z="hyb"><i></i>Uydu + ad</button>
+    <div class="k-ayrac"></div>
+    <div class="k-baslik">Harita menüsü</div>
+          <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
+          <button class="arac kal" id="t-hat">Hat güzergâhları</button>
+          <button class="arac" id="t-fit">İl sınırına sığdır</button>
   </div>
 </div>
-        <button id="menu"><span class="bars"><i></i><i></i><i></i></span><span id="menu-lbl">Harita menüsü</span></button>
 </div>
-        <div class="body">
-          <button id="t-labels" class="on">Kayıt etiketleri</button>
-          <button id="t-hat" class="on">Hat güzergâhları</button>
-          <button id="t-fit">İl sınırına sığdır</button>
-        </div>
-      </div>
     </div>
     <button id="sideTog" type="button">▾ Ölçüm ve profili gizle</button>
     <div id="side">
@@ -704,12 +702,7 @@ import('./harita-katman.js').then(m => {
   etiketDugme(); hatDugme();
 }).catch(() => { /* modül yüklenemedi — harita zemini yok */ });
 
-const tools = el('tools');
-el('menu').onclick = e => { e.stopPropagation(); tools.classList.toggle('open'); };
-const menuKapat = () => tools.classList.remove('open');
-map.on('click movestart', menuKapat);
-document.addEventListener('pointerdown', e => { if (!tools.contains(e.target)) menuKapat(); });
-window.addEventListener('blur', menuKapat);
+map.on('click movestart', () => katmanMenu.kapat());
 const katmanMenu = ksKatmanKur(k => Kcalis(K => { K.setBase(k); zeminDugme(k); try { parent.postMessage({ ks: 'base', base: k }, '*'); } catch (e) { /* çerçeve yok */ } }));
 katmanMenu.isaret('street');
 function zeminDugme(kind) { katmanMenu.isaret(kind); }

@@ -85,7 +85,7 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 #tools .ks-katman .k-dugme{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:9px}
 #tools .ks-katman .k-dugme svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 #tools .ks-katman.acik .k-dugme{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
-#tools .ks-katman .k-menu{display:none;position:absolute;top:42px;right:0;z-index:700;min-width:150px;flex-direction:column;border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;background:var(--color-bg);box-shadow:0 8px 26px rgba(0,0,0,.3)}
+#tools .ks-katman .k-menu{display:none;position:absolute;top:42px;right:0;z-index:700;min-width:210px;max-height:calc(100vh - 90px);overflow:auto;flex-direction:column;border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;background:var(--color-bg);box-shadow:0 8px 26px rgba(0,0,0,.3)}
 #tools .ks-katman.acik .k-menu{display:flex;animation:ksMenuAc .14s ease-out}
 #tools .ks-katman .k-menu button{border:none;border-radius:0;border-bottom:1px solid var(--color-divider);padding:12px 14px;display:flex;align-items:center;gap:10px;font:600 13px/1 var(--font-body);background:transparent;color:var(--color-text);text-align:left}
 #tools .ks-katman .k-menu button:last-child{border-bottom:none}
@@ -93,3 +93,8 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 #tools .ks-katman .k-menu button.on{background:transparent;color:var(--color-text)}
 #tools .ks-katman .k-menu button i{width:14px;height:14px;box-sizing:border-box;border-radius:50%;border:2px solid #9a9aa0;flex:none}
 #tools .ks-katman .k-menu button.on i{border-color:var(--color-accent);background:radial-gradient(var(--color-accent) 45%,transparent 50%)}
+#tools .ks-katman .k-baslik{padding:10px 14px 6px;font:700 10.5px/1 var(--font-body);letter-spacing:-.01em;color:var(--color-neutral-600)}
+#tools .ks-katman .k-ayrac{height:1px;background:var(--color-divider);margin:4px 0}
+#tools .ks-katman .k-menu button.arac{font-weight:500;font-size:12.5px;padding:11px 14px}
+#tools .ks-katman .k-menu button.arac.on::after{content:'✓';margin-left:auto;color:var(--color-accent);font-weight:700}
+#tools .ks-katman .k-menu button.arac.on{background:transparent;color:var(--color-text)}

@@ -67,13 +67,14 @@ function ksKatmanKur(sec) {
   const k = document.getElementById('katman');
   if (!k) return { isaret() {}, kapat() {} };
   const kapat = () => k.classList.remove('acik');
-  const isaret = kind => k.querySelectorAll('.k-menu button').forEach(b => b.classList.toggle('on', b.dataset.z === kind));
+  const isaret = kind => k.querySelectorAll('.k-menu button[data-z]').forEach(b => b.classList.toggle('on', b.dataset.z === kind));
   document.getElementById('katman-dugme').addEventListener('click', e => {
     e.stopPropagation();
-    const t = document.getElementById('tools'); if (t) t.classList.remove('open');
     k.classList.toggle('acik');
   });
-  k.querySelectorAll('.k-menu button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); kapat(); sec(b.dataset.z); }));
+  k.querySelectorAll('.k-menu button[data-z]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); kapat(); sec(b.dataset.z); }));
+  // Harita menüsü seçenekleri: bir seçeneğe basınca menü kapanır (açma-kapama anahtarları — etiketler, hatlar — açık kalır)
+  k.querySelectorAll('.k-menu button.arac').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); if (!b.classList.contains('kal')) kapat(); }));
   document.addEventListener('pointerdown', e => { if (!k.contains(e.target)) kapat(); });
   addEventListener('blur', kapat);
   return { isaret, kapat };

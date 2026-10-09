@@ -2124,3 +2124,6 @@ Sürüm 2026.10.05-114.
 - **Harita > Harita menüsü > Mesafe ölç:** kuyu/depo ya da haritaya dokunarak noktalar eklenir (kuyu–depo arası dahil); aralar ve toplam kuş uçuşu mesafe (m/km) çizgi üstünde ve panelde görünür; son noktayı sil / temizle / bitir.
 - **Yedek (Ayarlar > Veri):** tesisler (tüm alanlarıyla), saha notları, arızalar, ekipler tek JSON; ayrıca tesisleri Excel olarak indirme.
 - Özet > Son hareketler satırlarında işlemi yapan kişinin adı.
+
+## 2026.10.10-165 — Barkod okut
+- Envanter > Liste’deki “▮▯▮ Barkod okut” düğmesi ve telefonda ⋮ menüsündeki “Barkod okut”: kamerayla barkodu okur (BarcodeDetector destekleyen tarayıcılarda), desteklemeyen cihazda ya da izin verilmezse barkodu elle yazma kutusu çıkar. Kuyu barkodu (BK-KUY-0043), direk barkodu (BD-0043) ve kayıt kodu (KS-KUY-0043) kabul edilir; bulunca kartı haritada açar.

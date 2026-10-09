@@ -47,6 +47,7 @@
         ogeler: (() => {
           const k = fn => () => { this.geziMenu(); this.setState({ telMenuAcik: false }); fn(); };
           return [
+            { ikon: '▮', ad: 'Barkod okut', renk: ui.fg, git: k(() => this.barkodAc()) },
             { ikon: '↻', ad: 'Şimdi eşitle / yenile', renk: ui.fg, git: k(() => { this.say('Yenileniyor…'); this.senkron(); this.veriYenile(); }) },
             { ikon: dark ? '☀' : '☾', ad: dark ? 'Açık tema' : 'Koyu tema', renk: ui.fg, git: k(() => this.temaSec(dark ? 'light' : 'dark')) },
             { ikon: '?', ad: s.yardim ? 'Açıklamaları gizle' : 'Açıklamaları göster', renk: ui.fg, git: k(() => this.yardimDegistir()) },

@@ -545,14 +545,15 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <div style="flex:0 0 auto;min-width:170px;display:flex"><select value="{{ envKontrol.durumVal }}" onChange="{{ envKontrol.onDurum }}" style="all:unset;box-sizing:border-box;width:100%;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:9px 8px;min-height:38px;cursor:pointer"><sc-for list="{{ envKontrol.durumlar }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.n }}</option></sc-for></select></div>
 </div>
 <div style="padding:8px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<sc-if value="{{ envKontrol.hazirlar.length }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }};margin-right:2px">Hızlı süzgeç:</span>
+<button onClick="{{ barkod.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 13px;border-radius:18px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body)">▮▯▮ Barkod okut</button>
+<sc-if value="{{ envKontrol.hazirlar.length }}" hint-placeholder-val="{{ true }}">
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }};margin:0 2px 0 6px">Hızlı süzgeç:</span>
 <sc-for list="{{ envKontrol.hazirlar }}" as="h" hint-placeholder-count="4">
 <button onClick="{{ h.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1px solid {{ h.kenar }};background:{{ h.bg }};color:{{ h.fg }};font:600 12px/1 var(--font-body)">{{ h.ad }} <span style="opacity:.7;font-weight:500">{{ h.n }}</span></button>
 </sc-for>
-</div>
 </sc-if>
+</div>
 
 </div>
 <table class="table" style="width:100%;font-size:12px">
@@ -4389,6 +4390,26 @@ Hareket gir
 </div>
 </div>
 </sc-if>
+<sc-if value="{{ barkod.acik }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px">
+<div style="width:min(560px,100%);display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff">
+<span style="font:700 17px/1.2 var(--font-heading)">Barkod okut</span>
+<button onClick="{{ barkod.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;border:1px solid rgba(255,255,255,.3);color:#fff;font:600 13px/42px var(--font-body)">Kapat</button>
+</div>
+<div style="position:relative;border-radius:16px;overflow:hidden;background:#111;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
+<video id="ks-bk-video" playsinline muted autoplay style="width:100%;height:100%;object-fit:cover"></video>
+<sc-if value="{{ barkod.kameraVar }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12%;right:12%;top:38%;bottom:38%;border:2px solid #fff;border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none"></div></sc-if>
+</div>
+<div style="color:#fff;font:500 13.5px/1.45 var(--font-body);text-align:center;min-height:40px">{{ barkod.mesaj }}</div>
+<div style="display:flex;gap:8px">
+<input value="{{ barkod.deger }}" onChange="{{ barkod.onYaz }}" onKeyDown="{{ barkod.anahtar }}" placeholder="Barkodu yazın (örn. BK-KUY-0043)" autocomplete="off" autocapitalize="characters" style="all:unset;box-sizing:border-box;flex:1;min-width:0;min-height:48px;padding:0 14px;border-radius:12px;background:#fff;color:#111;font:600 15px/48px var(--font-body)">
+<button onClick="{{ barkod.ara }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:48px;padding:0 20px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/48px var(--font-body)">Aç</button>
+</div>
+</div>
+</div>
+</sc-if>
+
 
 <sc-if value="{{ buyut.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;inset:0;z-index:90;background:rgba(18,17,16,.94);display:flex;flex-direction:column">
@@ -5283,14 +5304,15 @@ Hareket gir
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <input value="{{ envKontrol.q }}" onChange="{{ envKontrol.onQ }}" placeholder="Envanterde ara — kod, köy, ilçe, alan" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:12px 11px;min-height:46px"></input>
-<sc-if value="{{ envKontrol.hazirlar.length }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }};margin-right:2px">Hızlı süzgeç:</span>
+<button onClick="{{ barkod.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 13px;border-radius:18px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body)">▮▯▮ Barkod okut</button>
+<sc-if value="{{ envKontrol.hazirlar.length }}" hint-placeholder-val="{{ true }}">
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }};margin:0 2px 0 6px">Hızlı süzgeç:</span>
 <sc-for list="{{ envKontrol.hazirlar }}" as="h" hint-placeholder-count="4">
 <button onClick="{{ h.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1px solid {{ h.kenar }};background:{{ h.bg }};color:{{ h.fg }};font:600 12px/1 var(--font-body)">{{ h.ad }} <span style="opacity:.7;font-weight:500">{{ h.n }}</span></button>
 </sc-for>
-</div>
 </sc-if>
+</div>
 
 <button onClick="{{ telSuz.listeTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid {{ telSuz.listeKenar }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)"><span>Süzgeç ve sıralama</span><span style="color:{{ ui.mut }};font-size:11px">{{ telSuz.listeEtiket }} {{ telSuz.listeOk }}</span></button>
 <sc-if value="{{ telSuz.listeAcik }}" hint-placeholder-val="{{ false }}">
@@ -9426,6 +9448,26 @@ Hareket gir
 </div>
 </div>
 </sc-if>
+<sc-if value="{{ barkod.acik }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px">
+<div style="width:min(560px,100%);display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff">
+<span style="font:700 17px/1.2 var(--font-heading)">Barkod okut</span>
+<button onClick="{{ barkod.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;border:1px solid rgba(255,255,255,.3);color:#fff;font:600 13px/42px var(--font-body)">Kapat</button>
+</div>
+<div style="position:relative;border-radius:16px;overflow:hidden;background:#111;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
+<video id="ks-bk-video" playsinline muted autoplay style="width:100%;height:100%;object-fit:cover"></video>
+<sc-if value="{{ barkod.kameraVar }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12%;right:12%;top:38%;bottom:38%;border:2px solid #fff;border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none"></div></sc-if>
+</div>
+<div style="color:#fff;font:500 13.5px/1.45 var(--font-body);text-align:center;min-height:40px">{{ barkod.mesaj }}</div>
+<div style="display:flex;gap:8px">
+<input value="{{ barkod.deger }}" onChange="{{ barkod.onYaz }}" onKeyDown="{{ barkod.anahtar }}" placeholder="Barkodu yazın (örn. BK-KUY-0043)" autocomplete="off" autocapitalize="characters" style="all:unset;box-sizing:border-box;flex:1;min-width:0;min-height:48px;padding:0 14px;border-radius:12px;background:#fff;color:#111;font:600 15px/48px var(--font-body)">
+<button onClick="{{ barkod.ara }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:48px;padding:0 20px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/48px var(--font-body)">Aç</button>
+</div>
+</div>
+</div>
+</sc-if>
+
 
 <sc-if value="{{ buyut.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;inset:0;z-index:90;background:rgba(18,17,16,.96);display:flex;flex-direction:column">
@@ -10310,7 +10352,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-164';
+const SURUM = '2026.10.10-165';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10416,7 +10458,7 @@ class Component extends DCLogic {
       return v;
     })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
-    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', gezi: [], ozetHist: 'derinlik',
+    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', barkodTara: null, gezi: [], ozetHist: 'derinlik',
     log: {}, trash: [], cop: [], card: null,
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
@@ -13585,6 +13627,58 @@ class Component extends DCLogic {
     };
     this.dosyaIndir('kirsehir-envanter-yedek-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify(yedek, null, 1), 'application/json');
     this.duyur('Yedek indirildi: ' + yedek.tesisler.length + ' tesis, ' + yedek.arizalar.length + ' arıza, ' + yedek.sahaNotlari.length + ' saha notu.', 7000, 'iyi');
+  }
+
+  // ── Barkod okut: kamerayla (ya da elle yazarak) barkodu okuyup o kaydın kartını açar
+  // Kuyu barkodu (BK-KUY-0043), direk barkodu (BD-0043) ve kayıt kodu (KS-KUY-0043) kabul edilir.
+  async barkodAc() {
+    this.setState({ barkodTara: { mesaj: 'Kamera açılıyor…', deger: '', kamera: false } });
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return this.setState({ barkodTara: { mesaj: 'Bu cihazda kamera erişimi yok — barkodu aşağıya yazın.', deger: '', kamera: false } });
+    try {
+      this._bkAkis = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    } catch (e) {
+      return this.setState({ barkodTara: { mesaj: 'Kamera izni verilmedi — barkodu aşağıya yazabilirsiniz.', deger: '', kamera: false } });
+    }
+    await new Promise(r => setTimeout(r, 120));
+    const v = document.getElementById('ks-bk-video');
+    if (!this.state.barkodTara || !v) { this.barkodKapat(); return; }
+    v.srcObject = this._bkAkis;
+    try { await v.play(); } catch (e) { /* kullanıcı etkileşimi gerekebilir */ }
+    if (!window.BarcodeDetector) {
+      this.setState({ barkodTara: { ...this.state.barkodTara, kamera: true, mesaj: 'Bu tarayıcı barkodu kameradan okuyamıyor — barkodu aşağıya yazın.' } });
+      return;
+    }
+    this.setState({ barkodTara: { ...this.state.barkodTara, kamera: true, mesaj: 'Barkodu çerçevenin içine getirin.' } });
+    let det; try { det = new window.BarcodeDetector(); } catch (e) { return; }
+    const dongu = async () => {
+      if (!this.state.barkodTara || !this._bkAkis) return;
+      try {
+        const r = await det.detect(v);
+        if (r && r.length) {
+          const t = String(r[0].rawValue || '').trim();
+          if (t && t !== this._bkSon) { this._bkSon = t; setTimeout(() => { this._bkSon = ''; }, 2500); if (this.barkodBul(t)) return; }
+        }
+      } catch (e) { /* kare okunamadı */ }
+      this._bkZaman = setTimeout(dongu, 260);
+    };
+    dongu();
+  }
+  barkodKapat() {
+    clearTimeout(this._bkZaman);
+    if (this._bkAkis) { try { this._bkAkis.getTracks().forEach(t => t.stop()); } catch (e) { /* */ } this._bkAkis = null; }
+    this.setState({ barkodTara: null });
+  }
+  barkodBul(metin) {
+    const t = String(metin || '').trim().toUpperCase();
+    if (!t) return false;
+    const a = (this.state.assets || []).find(x => [x.code, x.barkod, x.direkBarkod].some(k => k && String(k).toUpperCase() === t));
+    if (!a) { this.setState({ barkodTara: { ...(this.state.barkodTara || {}), mesaj: '“' + metin + '” ile eşleşen kayıt bulunamadı.', deger: (this.state.barkodTara || {}).deger || '' } }); return false; }
+    try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) { /* */ }
+    this.barkodKapat();
+    this.flyTo(a.lat, a.lon, 16);
+    this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' });
+    this.duyur(a.code + ' açıldı.', 3000, 'iyi');
+    return true;
   }
 
 
@@ -16991,6 +17085,7 @@ class Component extends DCLogic {
         ogeler: (() => {
           const k = fn => () => { this.geziMenu(); this.setState({ telMenuAcik: false }); fn(); };
           return [
+            { ikon: '▮', ad: 'Barkod okut', renk: ui.fg, git: k(() => this.barkodAc()) },
             { ikon: '↻', ad: 'Şimdi eşitle / yenile', renk: ui.fg, git: k(() => { this.say('Yenileniyor…'); this.senkron(); this.veriYenile(); }) },
             { ikon: dark ? '☀' : '☾', ad: dark ? 'Açık tema' : 'Koyu tema', renk: ui.fg, git: k(() => this.temaSec(dark ? 'light' : 'dark')) },
             { ikon: '?', ad: s.yardim ? 'Açıklamaları gizle' : 'Açıklamaları göster', renk: ui.fg, git: k(() => this.yardimDegistir()) },
@@ -20732,6 +20827,17 @@ class Component extends DCLogic {
         yukle: () => this.topluYukle(), yedek: () => this.yedekIndir(),
         kuyuSayi: (s.assets || []).filter(a => a.type === 'kuyu').length, depoSayi: (s.assets || []).filter(a => a.type === 'depo').length
       },
+      // Barkod okuma katmanı
+      barkod: (() => {
+        const b = s.barkodTara;
+        return {
+          acik: !!b, mesaj: b ? b.mesaj : '', deger: b ? b.deger || '' : '', kameraVar: !!(b && b.kamera),
+          ac: () => this.barkodAc(), kapat: () => this.barkodKapat(),
+          onYaz: e => this.setState({ barkodTara: { ...this.state.barkodTara, deger: e.target.value } }),
+          ara: () => this.barkodBul((this.state.barkodTara || {}).deger),
+          anahtar: e => { if (e.key === 'Enter') this.barkodBul((this.state.barkodTara || {}).deger); }
+        };
+      })(),
 
 
       modulEsitleme: (() => {

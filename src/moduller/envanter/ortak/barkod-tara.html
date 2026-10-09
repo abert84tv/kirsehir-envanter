@@ -1,0 +1,19 @@
+<sc-if value="{{ barkod.acik }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px">
+<div style="width:min(560px,100%);display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff">
+<span style="font:700 17px/1.2 var(--font-heading)">Barkod okut</span>
+<button onClick="{{ barkod.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;border:1px solid rgba(255,255,255,.3);color:#fff;font:600 13px/42px var(--font-body)">Kapat</button>
+</div>
+<div style="position:relative;border-radius:16px;overflow:hidden;background:#111;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
+<video id="ks-bk-video" playsinline muted autoplay style="width:100%;height:100%;object-fit:cover"></video>
+<sc-if value="{{ barkod.kameraVar }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:12%;right:12%;top:38%;bottom:38%;border:2px solid #fff;border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none"></div></sc-if>
+</div>
+<div style="color:#fff;font:500 13.5px/1.45 var(--font-body);text-align:center;min-height:40px">{{ barkod.mesaj }}</div>
+<div style="display:flex;gap:8px">
+<input value="{{ barkod.deger }}" onChange="{{ barkod.onYaz }}" onKeyDown="{{ barkod.anahtar }}" placeholder="Barkodu yazın (örn. BK-KUY-0043)" autocomplete="off" autocapitalize="characters" style="all:unset;box-sizing:border-box;flex:1;min-width:0;min-height:48px;padding:0 14px;border-radius:12px;background:#fff;color:#111;font:600 15px/48px var(--font-body)">
+<button onClick="{{ barkod.ara }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:48px;padding:0 20px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 14px/48px var(--font-body)">Aç</button>
+</div>
+</div>
+</div>
+</sc-if>

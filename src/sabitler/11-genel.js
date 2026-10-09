@@ -1,4 +1,4 @@
-const SURUM = '2026.10.10-172';
+const SURUM = '2026.10.10-173';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';

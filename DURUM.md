@@ -2151,3 +2151,6 @@ Sürüm 2026.10.05-114.
 - **Yol tarifi** ve **Mesafe ölç** haritanın sağ üstünde katman simgesinin altında küçük simgeler (rota ve cetvel); açıkken mavi yanar.
 - Çift tıklayınca (telefonda basılı tutunca) konan mavi koordinat işaretini silmek için ayrı düğme yok; **işaretin kendisine basmak** yeter.
 - **Konumuma git** düğmesi (sağ alt) yeni “hedef” simgesiyle: yüzeyle uyumlu yuvarlak kare, mavi nişan simgesi.
+
+## 2026.10.10-173 — Yol tarifi ve mesafe simgeleri sol altta
+- **Yol tarifi** simgesi “yönlendirme” (dönüş okuyla baklava) simgesi oldu; **Mesafe ölç** cetvel simgesiyle birlikte haritanın **sol altına** alındı (sağ üstte yalnız katman menüsü kaldı). Ölçüm paneli simgelerin sağında açılır; toplam mesafe satırındaki yazı boşluğu düzeltildi.

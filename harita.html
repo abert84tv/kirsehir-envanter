@@ -69,14 +69,15 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .ks-dist{background:rgba(29,29,31,.9);border:none;border-radius:13px;color:#fff;
     padding:3px 10px;font:600 12px/1.35 var(--font-body);letter-spacing:-.01em;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .ks-dist:before{display:none}
-  #olc{left:12px;bottom:12px;width:min(300px,calc(100% - 24px));padding:0;display:none}
+  #olc{left:60px;bottom:12px;width:min(300px,calc(100% - 72px));padding:0;display:none}
   #olc.show{display:block}
   #olc .rt-head{background:var(--color-accent);color:#fff;padding:7px 10px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;border-radius:8px 8px 0 0}
   #olc .rt-body{padding:10px}
   #olc .olc-not{font:400 11.5px/1.45 var(--font-body);color:var(--color-neutral-600)}
   #olc .olc-sat{display:flex;gap:8px;align-items:baseline;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--color-divider);font:500 12px/1.3 var(--font-body);color:var(--color-text)}
   #olc .olc-sat b{font:700 12.5px/1 var(--font-heading);white-space:nowrap}
-  #olc .rt-nums b{color:var(--color-accent)}
+  #olc .rt-nums b{color:var(--color-accent);display:block}
+  #olc .rt-nums span{font:600 10px/1.4 var(--font-body);color:var(--color-neutral-600)}
   #olc .rt-acts button{all:unset;cursor:pointer;flex:1;text-align:center;padding:10px 4px;border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1.1 var(--font-body);color:var(--color-text)}
   #olc .rt-acts button#olc-bit{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   .ks-olcnokta{background:var(--color-accent);color:#fff;border:2px solid #fff;border-radius:50%;width:20px!important;height:20px!important;margin:-10px 0 0 -10px!important;display:flex;align-items:center;justify-content:center;font:700 11px/1 var(--font-body);box-shadow:0 1px 4px rgba(0,0,0,.35)}
@@ -125,7 +126,9 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button class="arac kal" id="t-hat">Hat güzergâhları</button>
   </div>
 </div>
-<button class="ks-ikon" id="t-nav" aria-label="Yol tarifi" title="Yol tarifi — açınca bir kayda dokunun"><svg viewBox="0 0 24 24"><circle cx="6" cy="18.5" r="2.3"/><circle cx="18" cy="5.5" r="2.3"/><path d="M6 16.2c0-5.5 12-3.5 12-8.4"/></svg></button>
+</div>
+<div id="araclar">
+<button class="ks-ikon" id="t-nav" aria-label="Yol tarifi" title="Yol tarifi — açın, sonra bir kayda dokunun"><svg viewBox="0 0 24 24"><path d="M12 2.8 21.2 12 12 21.2 2.8 12 12 2.8Z"/><path d="M8.6 14.6v-2.3a1.4 1.4 0 0 1 1.4-1.4h5.2m0 0-2.1-2.1m2.1 2.1-2.1 2.1"/></svg></button>
 <button class="ks-ikon" id="t-olc" aria-label="Mesafe ölç" title="Mesafe ölç — noktalara dokunun"><svg viewBox="0 0 24 24"><path d="M3.5 16.5 16.5 3.5l4 4-13 13-4-4Z"/><path d="m7.5 12.5 2 2m1.5-5.5 2 2m1.5-5.5 2 2"/></svg></button>
 </div>
 <div class="panel" id="olc">

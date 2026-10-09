@@ -82,8 +82,8 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 /* Katman simgesi (Sokak / Uydu / Uydu + ad): Harita menüsü düğmesinin üstünde; basınca açılır, başka yere basınca kapanır */
 #tools .ust{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
 .ks-katman{position:relative}
-#tools .ks-katman .k-dugme,#tools .ks-ikon{width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:11px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-#tools .ks-katman .k-dugme svg,#tools .ks-ikon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#tools .ks-katman .k-dugme{width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:11px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+#tools .ks-katman .k-dugme svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 #tools .ks-katman.acik .k-dugme{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
 #tools .ks-katman .k-menu{display:none;position:absolute;top:44px;right:0;z-index:700;min-width:210px;max-height:calc(100vh - 90px);overflow:auto;flex-direction:column;border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;background:var(--color-bg);box-shadow:0 8px 26px rgba(0,0,0,.3)}
 #tools .ks-katman.acik .k-menu{display:flex;animation:ksMenuAc .14s ease-out}
@@ -98,3 +98,10 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 #tools .ks-katman .k-menu button.arac{font-weight:500;font-size:12.5px;padding:11px 14px}
 #tools .ks-katman .k-menu button.arac.on::after{content:'✓';margin-left:auto;color:var(--color-accent);font-weight:700}
 #tools .ks-katman .k-menu button.arac.on{background:transparent;color:var(--color-text)}
+
+/* Sol alt araç simgeleri: yol tarifi ve mesafe ölç */
+#araclar{position:absolute;left:12px;bottom:12px;z-index:500;display:flex;flex-direction:column;gap:8px}
+#araclar .ks-ikon{all:unset;box-sizing:border-box;cursor:pointer;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:var(--color-bg);border:1px solid var(--color-divider);color:var(--color-text);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+#araclar .ks-ikon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#araclar .ks-ikon:hover{background:var(--color-neutral-200)}
+#araclar .ks-ikon.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}

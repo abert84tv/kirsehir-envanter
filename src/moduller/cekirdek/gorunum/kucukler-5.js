@@ -25,7 +25,7 @@
           : (s.sunucu
               ? `Ortak veritabanı bağlı${s.sonEsitleme ? ' · son eşitleme ' + s.sonEsitleme : ''}${pendA.length + pendF.length ? ' · ' + (pendA.length + pendF.length) + ' bekleyen işlem' : ''}`
               : `Cihazdaki kopya — ortak veritabanına bağlı değil${pendA.length + pendF.length ? ' · ' + (pendA.length + pendF.length) + ' bekleyen işlem' : ''}`),
-        right: `${s.assets.length} envanter kaydı · ${s.faults.length} arıza · sürüm ${SURUM}`
+        right: `${s.assets.length} envanter kaydı${arizaOn ? ' · ' + s.faults.length + ' arıza' : ''} · sürüm ${SURUM}`
       },
       toast: { show: !!s.toast, text: s.toast || '' },
       extendNotes: [

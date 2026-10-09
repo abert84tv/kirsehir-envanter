@@ -76,6 +76,112 @@
           kod: a.code, yer: a.village ? a.village + ' · ' + (a.district || '') : (a.district || ''), km: km.toFixed(1) + ' km', renk: REN[a.type] || DIGER, route: () => this.yolTarifiVer(a)
         }));
 
+
+        // ── sayısal alan okuyucu: “45”, “45 kW”, “12,5” → sayı; “—”, boş → yok
+        const say = v => { const m = String(v == null ? '' : v).replace(',', '.').match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : null; };
+        const kuyular = A.filter(a => a.type === 'kuyu');
+        const al = k => kuyular.map(a => say((a.d || {})[k])).filter(v => v != null && v > 0);
+        const motorlar = al('motor'), derinlikler = al('derinlik'), debiler = al('debi');
+        const topla = d => d.reduce((t, v) => t + v, 0);
+        const ond = n => (Math.round(n * 10) / 10).toLocaleString('tr-TR');
+
+        // 7) Teknik özet
+        const teknik = [
+          { ad: 'Toplam pompa gücü', birim: 'kW', n: motorlar.length, deger: motorlar.length ? Math.round(topla(motorlar)) : null, ipucu: 'Pompa gücü girilmiş kuyuların toplamı' },
+          { ad: 'Ortalama kuyu derinliği', birim: 'm', n: derinlikler.length, deger: derinlikler.length ? Math.round(topla(derinlikler) / derinlikler.length) : null, ipucu: 'Derinliği girilmiş kuyuların ortalaması' },
+          { ad: 'Toplam debi', birim: 'L/sn', n: debiler.length, deger: debiler.length ? Math.round(topla(debiler)) : null, ipucu: 'Debisi girilmiş kuyuların toplamı' }
+        ].map(x => ({ ...x, var: x.deger != null, yok: x.deger == null, kayit: x.n ? x.n + ' kuyuda girilmiş' : 'henüz girilmemiş' }));
+
+        // 8) Dağılım grafikleri (yapım yılı / derinlik / debi)
+        const sekmeHist = s.ozetHist || 'derinlik';
+        const HIST = {
+          yil: { ad: 'Yapım yılı', birim: '', veri: kuyular.map(a => say(a.year)).filter(v => v != null && v > 1800),
+                 kutu: [['2000 öncesi', 0, 2000], ['2000–09', 2000, 2010], ['2010–19', 2010, 2020], ['2020 ve sonrası', 2020, 9999]] },
+          derinlik: { ad: 'Derinlik', birim: 'm', veri: derinlikler, kutu: [['0–50', 0, 50], ['50–100', 50, 100], ['100–150', 100, 150], ['150–200', 150, 200], ['200+', 200, 1e9]] },
+          debi: { ad: 'Debi', birim: 'L/sn', veri: debiler, kutu: [['0–5', 0, 5], ['5–10', 5, 10], ['10–20', 10, 20], ['20+', 20, 1e9]] }
+        };
+        const H = HIST[sekmeHist] || HIST.derinlik;
+        const hSay = H.kutu.map(([ad, lo, hi]) => ({ ad, n: H.veri.filter(v => v >= lo && v < hi).length }));
+        const hMax = Math.max(1, ...hSay.map(x => x.n));
+        const hist = {
+          sekmeler: Object.entries(HIST).map(([k, h]) => ({ ad: h.ad, ...seg(sekmeHist === k, () => this.setState({ ozetHist: k })) })),
+          var: H.veri.length > 0, yok: H.veri.length === 0, n: H.veri.length, birim: H.birim,
+          sutunlar: hSay.map((x, i) => ({ ad: x.ad, n: x.n, h: Math.max(x.n ? 4 : 0, Math.round(x.n / hMax * 100)) + '%', i, ipucu: x.ad + (H.birim ? ' ' + H.birim : '') + ': ' + x.n + ' kuyu' })),
+          not: H.veri.length ? H.veri.length + ' kuyunun ' + H.ad.toLocaleLowerCase('tr') + ' bilgisi girilmiş' : 'Henüz ' + H.ad.toLocaleLowerCase('tr') + ' bilgisi girilmiş kuyu yok. Kuyu kartında “Düzenle” ile girildikçe grafik dolar.'
+        };
+
+        // 9) Su kalitesi
+        const tarihMs = v => { const t = String(v || ''); let m = t.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/); if (m) return new Date(+m[3], +m[2] - 1, +m[1]).getTime(); m = t.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]).getTime() : 0; };
+        const analizli = kuyular.filter(a => tarihMs((a.d || {}).suAnalizTarih) > 0);
+        const yilOnce = Date.now() - 365 * 86400000;
+        const eskiAnaliz = analizli.filter(a => tarihMs(a.d.suAnalizTarih) < yilOnce).length;
+        const klorlar = kuyular.map(a => say((a.d || {}).klorDeger)).filter(v => v != null);
+        const su = {
+          analizli: analizli.length, eski: eskiAnaliz, guncel: analizli.length - eskiAnaliz,
+          klorSayi: klorlar.length, klorAralik: klorlar.length ? ond(Math.min(...klorlar)) + ' – ' + ond(Math.max(...klorlar)) + ' mg/L' : '',
+          var: analizli.length > 0 || klorlar.length > 0, yok: analizli.length === 0 && klorlar.length === 0,
+          eskiVar: eskiAnaliz > 0, klorVar: klorlar.length > 0
+        };
+
+        // 10) Nüfusa göre kuyu (10 bin kişiye düşen)
+        const IL = (this.state.data && this.state.data.DISTRICTS) || [];
+        const nufusSatir = IL.map(d => {
+          const k = kuyular.filter(a => a.district === d.name).length;
+          const oran = d.pop ? k / d.pop * 10000 : null;
+          return { ad: d.name, k, pop: d.pop, oran };
+        }).sort((x, y) => (y.oran == null ? -1 : y.oran) - (x.oran == null ? -1 : x.oran));
+        const maxO = Math.max(0.0001, ...nufusSatir.map(x => x.oran || 0));
+        const nufus = nufusSatir.map((x, i) => ({
+          ad: x.ad, i, deger: x.oran == null ? '—' : ond(x.oran), w: x.oran == null ? '0%' : (x.oran / maxO * 100) + '%',
+          alt: x.oran == null ? 'nüfus verisi yok' : x.k + ' kuyu · ' + x.pop.toLocaleString('tr-TR') + ' kişi',
+          ipucu: x.ad + ': ' + (x.oran == null ? 'nüfus verisi yok' : x.k + ' kuyu, ' + x.pop.toLocaleString('tr-TR') + ' kişi'), git: git({ ilce: x.ad, tur: 'kuyu' })
+        }));
+
+        // 11) Konum kaynağı
+        const progMu = a => /program/i.test(a.coordSource || a.source || '');
+        const kaynak = [
+          { ad: 'Programdan girilen', n: A.filter(a => !a.coordApprox && progMu(a)).length, renk: REN.kuyu },
+          { ad: 'Dosyadan aktarılan (KML/Excel)', n: A.filter(a => !a.coordApprox && !progMu(a)).length, renk: REN.depo },
+          { ad: 'Yaklaşık — sahada doğrulanacak', n: A.filter(a => a.coordApprox).length, renk: REN.ges }
+        ].filter(x => x.n > 0).map((x, i) => ({ ...x, i, w: yuzde(x.n, toplam) + '%', pct: yuzde(x.n, toplam) + '%', ipucu: x.ad + ': ' + x.n + ' kayıt' }));
+
+        // 12) Son hareketler (toplu yazma izleri — aynı dakikada 20'den çok kayıt — sayılmaz)
+        const dk = iso => String(iso || '').slice(0, 16);
+        const sayim = {};
+        for (const a of A) for (const k of [a.guncellendi, a.olusturuldu]) if (k) sayim[dk(k)] = (sayim[dk(k)] || 0) + 1;
+        const gercek = iso => iso && sayim[dk(iso)] < 20;
+        const yas = ms => { const d = Math.max(0, Math.round((Date.now() - ms) / 60000)); return d < 2 ? 'şimdi' : d < 60 ? d + ' dk önce' : d < 1440 ? Math.floor(d / 60) + ' sa önce' : Math.floor(d / 1440) + ' gün önce'; };
+        const olaylar = [];
+        for (const a of A) {
+          const g = gercek(a.guncellendi) ? Date.parse(a.guncellendi) : 0, o = gercek(a.olusturuldu) ? Date.parse(a.olusturuldu) : 0;
+          const ms = Math.max(g || 0, o || 0); if (!ms) continue;
+          const yeniKayit = o && (!g || Math.abs(g - o) < 120000);
+          olaylar.push({ a, ms, ne: yeniKayit ? 'eklendi' : 'güncellendi' });
+        }
+        const son = olaylar.sort((x, y) => y.ms - x.ms).slice(0, 6).map(({ a, ms, ne }) => ({
+          kod: a.code, ne, zaman: yas(ms), yer: a.village ? a.village + ' · ' + (a.district || '') : (a.district || ''), renk: REN[a.type] || DIGER,
+          ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' })
+        }));
+
+        // 3b) Dağılım haritası: koordinatlar enlem düzeltmesiyle (cos) ekrana yerleştirilir
+        const nokta = A.filter(a => a.lat != null && a.lon != null);
+        let harita = { var: false, nokta: [], etiket: [], oran: '1.4' };
+        if (nokta.length) {
+          const enMin = Math.min(...nokta.map(a => a.lat)), enMax = Math.max(...nokta.map(a => a.lat));
+          const boyMin = Math.min(...nokta.map(a => a.lon)), boyMax = Math.max(...nokta.map(a => a.lon));
+          const k = Math.cos(((enMin + enMax) / 2) * Math.PI / 180);
+          const gen = Math.max(1e-6, (boyMax - boyMin) * k), yuk = Math.max(1e-6, enMax - enMin);
+          const pad = 4;
+          const konum = a => ({ x: pad + ((a.lon - boyMin) * k / gen) * (100 - 2 * pad), y: pad + (1 - (a.lat - enMin) / yuk) * (100 - 2 * pad) });
+          const ilceMerkez = {};
+          for (const a of nokta) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
+          harita = {
+            var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
+            nokta: nokta.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
+            etiket: Object.entries(ilceMerkez).filter(([ad]) => ad !== '—').map(([ad, o]) => ({ ad, x: (o.x / o.n) + '%', y: (o.y / o.n) + '%' }))
+          };
+        }
+
         return {
           var: true, bos: toplam === 0, zemin,
           renkKuyu: REN.kuyu, renkDepo: REN.depo, renkDiger: DIGER, renkVurgu: 'var(--color-accent)', iz: ui.rule,
@@ -85,6 +191,7 @@
           pasifGit: git({ aktiflik: 'Pasif' }),
           fotolu, fotoSayi, fotoYuzde, fotoTur,
           fotoHalka: `conic-gradient(var(--color-accent) 0deg ${fotoYuzde * 3.6}deg, ${ui.rule} 0)`,
-          ilceSatir, koySatir, koyVar: koySatir.length > 0, yakin, yakinVar: yakin.length > 0
+          ilceSatir, koySatir, koyVar: koySatir.length > 0, yakin, yakinVar: yakin.length > 0,
+          teknik, hist, su, nufus, nufusVar: nufus.length > 0, kaynak, kaynakVar: kaynak.length > 0, son, sonVar: son.length > 0, harita
         };
       })(),

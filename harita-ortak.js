@@ -60,3 +60,21 @@ function ksPinZoom(map, esik) {
   const uygula = () => map.getContainer().classList.toggle('ksz-ince', map.getZoom() < esik);
   map.on('zoomend', uygula); uygula();
 }
+
+// Katman menüsü (Sokak / Uydu / Uydu + ad): simgeye basınca açılır, seçim yapınca ya da başka yere basınca kapanır.
+//   sec(kind) — seçilen zemin için çağrılır; dönen nesnenin isaret(kind) işlevi seçili zemini işaretler.
+function ksKatmanKur(sec) {
+  const k = document.getElementById('katman');
+  if (!k) return { isaret() {}, kapat() {} };
+  const kapat = () => k.classList.remove('acik');
+  const isaret = kind => k.querySelectorAll('.k-menu button').forEach(b => b.classList.toggle('on', b.dataset.z === kind));
+  document.getElementById('katman-dugme').addEventListener('click', e => {
+    e.stopPropagation();
+    const t = document.getElementById('tools'); if (t) t.classList.remove('open');
+    k.classList.toggle('acik');
+  });
+  k.querySelectorAll('.k-menu button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); kapat(); sec(b.dataset.z); }));
+  document.addEventListener('pointerdown', e => { if (!k.contains(e.target)) kapat(); });
+  addEventListener('blur', kapat);
+  return { isaret, kapat };
+}

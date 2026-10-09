@@ -2136,3 +2136,6 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-168 — Özet haritasında katman simgesi
 - Zemin seçici (Sokak · Uydu · Uydu + ad) haritanın sağ üst köşesinde bir **katman simgesine** gömüldü: simgeye basınca menü açılır, seçim yapınca ya da haritada/sayfada başka bir yere basınca kapanır. Seçim hatırlanır. Başlıktaki üç düğme kalktı.
+
+## 2026.10.10-169 — Envanter haritasında katman simgesi
+- Envanter > Harita ve Hat kesiti haritalarında da zemin seçimi **katman simgesine** taşındı: “Harita menüsü” düğmesinin yanındaki simgeye basınca Sokak · Uydu · Uydu + ad menüsü açılır; seçince ya da başka yere basınca kapanır. Harita menüsünün içindeki üçlü zemin düğmesi kalktı. Ortak kod `harita-ortak.js` (ksKatmanKur) ve `harita-ortak.css`.

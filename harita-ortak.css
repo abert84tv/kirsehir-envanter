@@ -7,7 +7,7 @@ body.dark .ks-sat{filter:brightness(.86) contrast(1.04)}
 /* Panel görünümü (2026.10.06) — ana pencereyle aynı dil: yuvarlak, yumuşak gölge, ince kaydırma çubuğu.
    Renkler değişmez. */
 *{scrollbar-width:thin;scrollbar-color:rgba(128,128,140,.38) transparent}
-#bar,#durum,#panel,#alt,#tools>*,#route,#menu,#side,.leaflet-popup-content-wrapper{
+#bar,#durum,#panel,#alt,#tools .body,#route,#menu,#side,.leaflet-popup-content-wrapper{
   border-radius:18px;
   box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 12px 30px -8px rgba(16,24,40,.22);}
 #side{border-radius:0;box-shadow:none}
@@ -62,7 +62,7 @@ body.dark .ksp.ges{--ksp:#f5c542}body.dark .ksp.kaynak{--ksp:#22d3ee}body.dark .
     color:var(--color-text);text-align:left}
   /* #tools button kuralı all:unset ile #menu'nün display:flex'ini siliyordu;
      çizgiler yazının üstüne iniyordu — burada tek satıra sabitlenir */
-  #tools > #menu{display:flex;align-items:center;gap:8px;padding:9px 12px;white-space:nowrap;text-align:left}
+  #tools #menu{display:flex;align-items:center;gap:8px;padding:9px 12px;white-space:nowrap;text-align:left}
   #tools button:hover{background:var(--color-neutral-200)}
   #tools button.on{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
   #tools .grp{display:flex;border:1px solid var(--color-divider);border-radius:9px;background:var(--color-bg)}
@@ -78,3 +78,18 @@ body.dark .leaflet-bar a,body.dark .leaflet-bar a:hover{background:#1c1c1e;color
 body.dark .leaflet-control-attribution{background:rgba(28,28,30,.8)!important;color:#aeaeb2}
 body.dark .leaflet-control-attribution a{color:#8ab8ff}
 body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background:#1c1c1e;color:#f5f5f7}
+
+/* Katman simgesi (Sokak / Uydu / Uydu + ad): Harita menüsü düğmesinin yanında; basınca açılır, başka yere basınca kapanır */
+#tools .ust{display:flex;gap:6px;align-items:flex-start;justify-content:flex-end}
+.ks-katman{position:relative}
+#tools .ks-katman .k-dugme{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:9px}
+#tools .ks-katman .k-dugme svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#tools .ks-katman.acik .k-dugme{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+#tools .ks-katman .k-menu{display:none;position:absolute;top:42px;right:0;z-index:700;min-width:150px;flex-direction:column;border:1px solid var(--color-divider);border-radius:12px;overflow:hidden;background:var(--color-bg);box-shadow:0 8px 26px rgba(0,0,0,.3)}
+#tools .ks-katman.acik .k-menu{display:flex;animation:ksMenuAc .14s ease-out}
+#tools .ks-katman .k-menu button{border:none;border-radius:0;border-bottom:1px solid var(--color-divider);padding:12px 14px;display:flex;align-items:center;gap:10px;font:600 13px/1 var(--font-body);background:transparent;color:var(--color-text);text-align:left}
+#tools .ks-katman .k-menu button:last-child{border-bottom:none}
+#tools .ks-katman .k-menu button:hover{background:var(--color-neutral-200)}
+#tools .ks-katman .k-menu button.on{background:transparent;color:var(--color-text)}
+#tools .ks-katman .k-menu button i{width:14px;height:14px;box-sizing:border-box;border-radius:50%;border:2px solid #9a9aa0;flex:none}
+#tools .ks-katman .k-menu button.on i{border-color:var(--color-accent);background:radial-gradient(var(--color-accent) 45%,transparent 50%)}

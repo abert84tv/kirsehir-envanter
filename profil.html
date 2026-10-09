@@ -206,14 +206,18 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
       <div id="map"></div>
       <div id="sonUz"><span class="u">Son nokta, öncekine</span><input id="sonUzM" type="number" inputmode="decimal" min="1" step="1"><span class="u">m</span><button id="sonUzGo" type="button">Ayarla</button></div>
       <div class="panel" id="tools">
+<div class="ust">
+<div class="ks-katman" id="katman">
+  <button class="k-dugme" id="katman-dugme" aria-label="Harita katmanları" title="Harita katmanları"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
+  <div class="k-menu">
+    <button data-z="street"><i></i>Sokak</button>
+    <button data-z="sat"><i></i>Uydu</button>
+    <button data-z="hyb"><i></i>Uydu + ad</button>
+  </div>
+</div>
         <button id="menu"><span class="bars"><i></i><i></i><i></i></span><span id="menu-lbl">Harita menüsü</span></button>
+</div>
         <div class="body">
-          <div class="grp">
-            <button id="b-street" class="on">Sokak</button>
-            <button id="b-sat">Uydu</button>
-            <button id="b-hyb">Uydu + ad</button>
-          </div>
-          <div class="sep"></div>
           <button id="t-labels" class="on">Kayıt etiketleri</button>
           <button id="t-hat" class="on">Hat güzergâhları</button>
           <button id="t-fit">İl sınırına sığdır</button>
@@ -706,12 +710,11 @@ const menuKapat = () => tools.classList.remove('open');
 map.on('click movestart', menuKapat);
 document.addEventListener('pointerdown', e => { if (!tools.contains(e.target)) menuKapat(); });
 window.addEventListener('blur', menuKapat);
-function zeminDugme(kind) { for (const [id, k] of [['b-street', 'street'], ['b-sat', 'sat'], ['b-hyb', 'hyb']]) el(id).classList.toggle('on', k === kind); }
+const katmanMenu = ksKatmanKur(k => Kcalis(K => { K.setBase(k); zeminDugme(k); try { parent.postMessage({ ks: 'base', base: k }, '*'); } catch (e) { /* çerçeve yok */ } }));
+katmanMenu.isaret('street');
+function zeminDugme(kind) { katmanMenu.isaret(kind); }
 function etiketDugme() { if (K) el('t-labels').classList.toggle('on', K.etiket()); }
 function hatDugme() { if (K) el('t-hat').classList.toggle('on', K.hatAcik()); }
-for (const [id, k] of [['b-street', 'street'], ['b-sat', 'sat'], ['b-hyb', 'hyb']]) {
-  el(id).onclick = () => Kcalis(K => { K.setBase(k); zeminDugme(k); try { parent.postMessage({ ks: 'base', base: k }, '*'); } catch (e) { /* çerçeve yok */ } });
-}
 el('t-labels').onclick = () => Kcalis(K => { K.setEtiket(!K.etiket()); etiketDugme(); });
 el('t-hat').onclick = () => Kcalis(K => { K.hatKatman(!K.hatAcik()); hatDugme(); try { parent.postMessage({ ks: 'hatKatman', on: K.hatAcik() }, '*'); } catch (e) { /* çerçeve yok */ } });
 el('t-fit').onclick = () => Kcalis(K => map.fitBounds(K.bounds().pad(.08)));

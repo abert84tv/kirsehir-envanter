@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Özet haritası</title>
+<link rel="stylesheet" href="./vendor/leaflet.css">
+<script src="./vendor/leaflet.js"></script>
+<link rel="stylesheet" href="harita-ortak.css">
+<style>
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  #map{position:absolute;inset:0;background:#e8e8ed}
+  body.dark #map{background:#1c1c1e}
+  .leaflet-container{font-family:inherit}
+  .ks-ot{font:600 12px/1.35 inherit;letter-spacing:-.01em;border-radius:8px}
+  .ks-ot small{display:block;font-weight:500;opacity:.7;font-size:10.5px}
+  body.dark .leaflet-tooltip.ks-ot{background:rgba(28,28,30,.94);border-color:rgba(255,255,255,.14);color:#f5f5f7}
+  body.dark .leaflet-tooltip.ks-ot:before{display:none}
+  .leaflet-control-attribution{font-size:9px}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+// Özet > Dağılım haritası: gerçek harita zemini (sokak / uydu / uydu + yer adları) üzerinde kayıtlar tür renginde noktalar.
+// Veri ana pencereden gelir ({ks:'ozetVeri'}); noktaya basınca ana pencereye {ks:'ozetSec'} gider.
+const mobil = L.Browser.mobile;
+const map = L.map('map', {
+  center: [39.15, 34.16], zoom: 9, zoomSnap: .5, zoomDelta: .5, preferCanvas: true,
+  scrollWheelZoom: false,          // sayfayı kaydırırken harita kaçırmasın; yakınlaştırma düğmeleri / çift dokunuş
+  dragging: !mobil,                // telefonda tek parmak sayfayı kaydırır, iki parmak haritayı yakınlaştırır
+  tap: false
+});
+const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap katkıcıları', maxZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1 });
+const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 19, className: 'ks-sat', updateWhenZooming: false, keepBuffer: 1 });
+const satAd = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { attribution: 'Yer adları: Esri', maxZoom: 19, pane: 'shadowPane' });
+let zemin = null;
+function zeminSec(k) {
+  if (k === zemin) return;
+  zemin = k;
+  street.remove(); sat.remove(); satAd.remove();
+  if (k === 'street') street.addTo(map); else { sat.addTo(map); if (k === 'hyb') satAd.addTo(map); }
+}
+zeminSec('hyb');
+const noktalar = L.layerGroup().addTo(map);
+let sigdi = false, sonImza = '';
+function ciz(d) {
+  document.body.classList.toggle('dark', !!d.dark);
+  zeminSec(d.zemin || 'hyb');
+  const tum = d.noktalar || [], gizli = d.gizli || [], renk = d.renk || {};
+  // imza değişmediyse yeniden çizme (yalnız zemin değiştiyse noktalar kalır)
+  const imza = tum.length + ':' + tum.filter(a => a.pasif).length + '|' + gizli.join(',') + '|' + (d.dark ? 1 : 0);
+  if (imza !== sonImza) {
+    sonImza = imza; noktalar.clearLayers();
+    for (const a of tum) {
+      if (gizli.includes(a.type)) continue;
+      const m = L.circleMarker([a.lat, a.lon], { radius: 5.5, weight: 1.6, color: '#fff', fillColor: renk[a.type] || '#0071e3', fillOpacity: a.pasif ? .45 : .95 });
+      m.bindTooltip('<b>' + esc(a.code) + '</b><small>' + esc(a.village ? a.village + ' · ' + a.district : a.district) + '</small>', { direction: 'top', offset: [0, -6], className: 'ks-ot' });
+      m.on('mouseover', () => m.setRadius(8)); m.on('mouseout', () => m.setRadius(5.5));
+      m.on('click', () => parent.postMessage({ ks: 'ozetSec', id: a.id }, '*'));
+      m.addTo(noktalar);
+    }
+  }
+  // ilk veride (ve kayıt sayısı değişince) harita bütün kayıtlara sığdırılır; süzgeç değişince kaymaz
+  if (!sigdi && tum.length) {
+    sigdi = true;
+    map.invalidateSize();
+    map.fitBounds(L.latLngBounds(tum.map(a => [a.lat, a.lon])).pad(0.08));
+  }
+}
+function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+addEventListener('message', e => { const d = e.data || {}; if (d.ks === 'ozetVeri') ciz(d); });
+addEventListener('resize', () => map.invalidateSize());
+parent.postMessage({ ks: 'ozetHaritaHazir' }, '*');
+</script>
+</body>
+</html>

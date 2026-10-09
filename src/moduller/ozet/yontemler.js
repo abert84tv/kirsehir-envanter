@@ -191,3 +191,11 @@
     ];
     return out;
   }
+  // Özet haritası çerçevesine kayıtları, süzgeci, zemini ve temayı gönderir
+  ozetHaritaGonder() {
+    const f = document.getElementById('ks-ozet-harita');
+    if (!f || !f.contentWindow) return;
+    const s = this.state;
+    const noktalar = (s.assets || []).filter(a => a.lat != null && a.lon != null).map(a => ({ id: a.id, code: a.code, type: a.type, lat: a.lat, lon: a.lon, village: a.village || '', district: a.district || '', pasif: !aktifMi(a) }));
+    try { f.contentWindow.postMessage({ ks: 'ozetVeri', noktalar, gizli: s.ozetGizli || [], zemin: s.ozetZemin || 'hyb', dark: this.th().dark, renk: turRenk(this.th().dark) }, '*'); } catch (e) { /* çerçeve yok */ }
+  }

@@ -126,7 +126,6 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-asama{transition:transform .15s ease,box-shadow .25s ease}
 .ks-asama:hover{transform:translateY(-2px)}
 @media (prefers-reduced-motion:reduce){.ks-ciz{animation:none;stroke-dashoffset:0}.ks-akis,.ks-parla{animation:none}}
-.ks-nokta{position:absolute;border-radius:50%;box-shadow:0 0 0 2px var(--ks-nokta-kenar,#fff)}
 .ks-nokta.ks-ping::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid currentColor;animation:ksPing 1.6s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.ks-nokta.ks-ping::after{animation:none}}
 /* Açıklama / yardım metinleri: varsayılan gizli, üst çubuktaki ⓘ ile açılır */
@@ -168,14 +167,8 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 .ks-satir:active{transform:scale(.995)}
 @media (prefers-reduced-motion:reduce){.ks-say,.ks-halka::after,.ks-cubuk,.ks-modul{animation:none}.ks-halka::after{background:transparent}}
 @keyframes ksSutun{from{clip-path:inset(100% 0 0 0 round 5px)}to{clip-path:inset(0 0 0 0 round 5px)}}
-@keyframes ksNokta{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .ks-sutun{animation:ksSutun .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*80ms + 150ms);border-radius:5px 5px 0 0}
-.ks-harita{position:relative;width:min(100%,calc(340px * var(--oran)));aspect-ratio:var(--oran);margin:0 auto}
-.ks-nokta{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;padding:0;border:0;border-radius:50%;cursor:pointer;box-shadow:0 0 0 1.5px var(--zemin);animation:ksNokta .45s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i)*3ms + 200ms);transition:transform .15s ease}
-.ks-nokta:hover,.ks-nokta:focus-visible{transform:scale(1.9);z-index:3;outline:none}
-.ks-etiket{position:absolute;z-index:4;transform:translate(-50%,-50%);pointer-events:none;font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--etiket);text-shadow:0 0 4px var(--zemin),0 0 4px var(--zemin),0 0 8px var(--zemin);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){.ks-sutun,.ks-nokta{animation:none}}
-
+@media (prefers-reduced-motion:reduce){.ks-sutun,
 </style>
 </helmet>
 
@@ -2151,6 +2144,11 @@ Hareket gir
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
+<sc-for list="{{ ozetPano.harita.zeminler }}" as="z" hint-placeholder-count="3">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;padding:0 13px;font:600 12px/1 var(--font-body);background:{{ z.bg }};color:{{ z.fg }}">{{ z.ad }}</button>
+</sc-for>
+</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
@@ -2158,15 +2156,8 @@ Hareket gir
 <sc-if value="{{ ozetPano.harita.hepsiVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ozetPano.harita.hepsi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;font:600 12px/36px var(--font-body);color:{{ ui.acc }}">Hepsini göster</button></sc-if>
 </div>
 </div>
-<div style="border-radius:12px;background:{{ ui.surf2 }};padding:14px">
-<div class="ks-harita" style="--oran:{{ ozetPano.harita.oran }};--zemin:{{ ui.surf2 }};--etiket:{{ ui.mut }}">
-<sc-for list="{{ ozetPano.harita.nokta }}" as="p" hint-placeholder-count="20">
-<button class="ks-nokta" onClick="{{ p.ac }}" title="{{ p.ipucu }}" aria-label="{{ p.ipucu }}" style="left:{{ p.x }};top:{{ p.y }};background:{{ p.renk }};--i:{{ p.i }}"></button>
-</sc-for>
-<sc-for list="{{ ozetPano.harita.etiket }}" as="e" hint-placeholder-count="7">
-<span class="ks-etiket" style="left:{{ e.x }};top:{{ e.y }}">{{ e.ad }}</span>
-</sc-for>
-</div>
+<div style="border-radius:12px;overflow:hidden;border:1px solid {{ ui.rule }};height:380px;position:relative;background:{{ ui.surf2 }}">
+<iframe id="ks-ozet-harita" src="ozet-harita.html" title="Kayıtların dağılım haritası" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:none;display:block"></iframe>
 </div>
 </div>
 </sc-if>
@@ -6826,6 +6817,11 @@ Hareket gir
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
+<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
+<sc-for list="{{ ozetPano.harita.zeminler }}" as="z" hint-placeholder-count="3">
+<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;padding:0 13px;font:600 12px/1 var(--font-body);background:{{ z.bg }};color:{{ z.fg }}">{{ z.ad }}</button>
+</sc-for>
+</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
@@ -6833,15 +6829,8 @@ Hareket gir
 <sc-if value="{{ ozetPano.harita.hepsiVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ozetPano.harita.hepsi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;font:600 12px/36px var(--font-body);color:{{ ui.acc }}">Hepsini göster</button></sc-if>
 </div>
 </div>
-<div style="border-radius:12px;background:{{ ui.surf2 }};padding:14px">
-<div class="ks-harita" style="--oran:{{ ozetPano.harita.oran }};--zemin:{{ ui.surf2 }};--etiket:{{ ui.mut }}">
-<sc-for list="{{ ozetPano.harita.nokta }}" as="p" hint-placeholder-count="20">
-<button class="ks-nokta" onClick="{{ p.ac }}" title="{{ p.ipucu }}" aria-label="{{ p.ipucu }}" style="left:{{ p.x }};top:{{ p.y }};background:{{ p.renk }};--i:{{ p.i }}"></button>
-</sc-for>
-<sc-for list="{{ ozetPano.harita.etiket }}" as="e" hint-placeholder-count="7">
-<span class="ks-etiket" style="left:{{ e.x }};top:{{ e.y }}">{{ e.ad }}</span>
-</sc-for>
-</div>
+<div style="border-radius:12px;overflow:hidden;border:1px solid {{ ui.rule }};height:380px;position:relative;background:{{ ui.surf2 }}">
+<iframe id="ks-ozet-harita" src="ozet-harita.html" title="Kayıtların dağılım haritası" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:none;display:block"></iframe>
 </div>
 </div>
 </sc-if>
@@ -9930,6 +9919,9 @@ function arizaGrubu(f, a) {
 // ile eklenir, fiyatı ve kritik eşiği değişir; sunucuda "malzeme"
 // anahtarında durur. Ambar mevcudu ve zimmet malzeme ADINA göre tutulur,
 // bu yüzden hareketi olan malzemenin adı değiştirilemez.
+// Özet haritası ve göstergeler: türe göre sabit renkler (haritadaki işaretlerle aynı; koyu temada ayrı adımlar)
+const turRenk = dark => dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };
+
 const MALZEME_BASLANGIC = [
   ['Dalgıç pompa (kademe değişimi)', 18500, 'adet', 'pompa'],
   ['Dalgıç motor', 24000, 'adet', 'pompa'],
@@ -10354,7 +10346,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-166';
+const SURUM = '2026.10.10-167';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10460,7 +10452,7 @@ class Component extends DCLogic {
       return v;
     })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
-    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', ozetGizli: [], barkodTara: null, gezi: [], ozetHist: 'derinlik',
+    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', ozetGizli: [], ozetZemin: (() => { try { const z = localStorage.getItem('ks-ozet-zemin'); return ['street', 'sat', 'hyb'].includes(z) ? z : 'hyb'; } catch (e) { return 'hyb'; } })(), barkodTara: null, gezi: [], ozetHist: 'derinlik',
     log: {}, trash: [], cop: [], card: null,
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
@@ -10736,6 +10728,11 @@ class Component extends DCLogic {
     // Alarm (ses tekrarı, sekme başlığı) iş panosu açılınca susar; işlerin kendisi panoda yanıp söner
     if (s.tab === 'isPanosu' && s.basvuruUyari) this.setState({ basvuruUyari: null });
     this.geziIzle();
+    // Özet haritası: kayıt, süzgeç, zemin ya da tema değişince çerçeveye yeniden gönderilir
+    if (s.tab === 'ozet') {
+      const imza = [s.assets, s.ozetGizli, s.ozetZemin, s.theme];
+      if (!this._ozetImza || imza.some((x, i) => x !== this._ozetImza[i])) { this._ozetImza = imza; setTimeout(() => this.ozetHaritaGonder(), 30); }
+    } else this._ozetImza = null;
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir
@@ -14544,6 +14541,13 @@ class Component extends DCLogic {
     this._msg = e => {
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
+      if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
+      // Özet haritasında bir noktaya basıldı: kaydın kartı haritada açılır
+      if (d.ks === 'ozetSec') {
+        const a = (this.state.assets || []).find(x => x.id === d.id);
+        if (a) { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' }); if (a.dbId) this.fotoYenile(a.dbId); }
+        return;
+      }
       if (d.ks === 'hatKatman') {
         try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
         this.setState({ hatKatman: !!d.on });
@@ -15319,6 +15323,15 @@ class Component extends DCLogic {
     ];
     return out;
   }
+  // Özet haritası çerçevesine kayıtları, süzgeci, zemini ve temayı gönderir
+  ozetHaritaGonder() {
+    const f = document.getElementById('ks-ozet-harita');
+    if (!f || !f.contentWindow) return;
+    const s = this.state;
+    const noktalar = (s.assets || []).filter(a => a.lat != null && a.lon != null).map(a => ({ id: a.id, code: a.code, type: a.type, lat: a.lat, lon: a.lon, village: a.village || '', district: a.district || '', pasif: !aktifMi(a) }));
+    try { f.contentWindow.postMessage({ ks: 'ozetVeri', noktalar, gizli: s.ozetGizli || [], zemin: s.ozetZemin || 'hyb', dark: this.th().dark, renk: turRenk(this.th().dark) }, '*'); } catch (e) { /* çerçeve yok */ }
+  }
+
   // Muhtar numara defteri — madde 1: talep formunda telefon girilince köy
   // otomatik önerilir. Basit tutuldu: köy/ilçe serbest metin, listeye göre
   // eşleştirme yalnız telefon numarası üzerinden.
@@ -21798,7 +21811,7 @@ class Component extends DCLogic {
         if (tabId !== 'ozet') return { var: false };
         const A = s.assets || [];
         const toplam = A.length;
-        const REN = dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };
+        const REN = turRenk(dark);
         const DIGER = dark ? '#8e8e93' : '#a8a29e';
         const SIRA = ['kuyu', 'depo', 'ag', 'ges'];
         const yuzde = (n, t) => t ? Math.round(n / t * 100) : 0;
@@ -21956,33 +21969,21 @@ class Component extends DCLogic {
           ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' })
         }));
 
-        // 3b) Dağılım haritası: koordinatlar enlem düzeltmesiyle (cos) ekrana yerleştirilir
+        // 3b) Dağılım haritası: gerçek harita zemini ozet-harita.html çerçevesinde çizilir (ozetHaritaGonder); burada yalnız süzgeç ve zemin seçimi
         const gizli = s.ozetGizli || [];
         const nokta = A.filter(a => a.lat != null && a.lon != null);
         const gorunen = nokta.filter(a => !gizli.includes(a.type));
-        // Türe göre süz: efsanedeki türe basınca o tür haritadan gizlenir / geri gelir (sınırlar hep tüm kayıtlardan hesaplanır, harita kaymaz)
         const turler = SIRA.map(t => ({ t, n: A.filter(a => a.type === t && a.lat != null).length })).filter(x => x.n > 0).map(x => {
           const acik = !gizli.includes(x.t);
           return { ad: TYPES[x.t].kind, n: x.n, renk: REN[x.t], acik, kapali: !acik,
             fg: acik ? ui.fg : ui.mut, kenar: acik ? REN[x.t] : ui.rule, op: acik ? '1' : '.55', ipucu: (acik ? 'Gizle: ' : 'Göster: ') + TYPES[x.t].kind,
             pick: () => this.setState(st => { const g = st.ozetGizli || []; return { ozetGizli: g.includes(x.t) ? g.filter(y => y !== x.t) : [...g, x.t] }; }) };
         });
-        let harita = { var: false, nokta: [], etiket: [], oran: '1.4', turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }) };
-        if (nokta.length) {
-          const enMin = Math.min(...nokta.map(a => a.lat)), enMax = Math.max(...nokta.map(a => a.lat));
-          const boyMin = Math.min(...nokta.map(a => a.lon)), boyMax = Math.max(...nokta.map(a => a.lon));
-          const k = Math.cos(((enMin + enMax) / 2) * Math.PI / 180);
-          const gen = Math.max(1e-6, (boyMax - boyMin) * k), yuk = Math.max(1e-6, enMax - enMin);
-          const pad = 4;
-          const konum = a => ({ x: pad + ((a.lon - boyMin) * k / gen) * (100 - 2 * pad), y: pad + (1 - (a.lat - enMin) / yuk) * (100 - 2 * pad) });
-          const ilceMerkez = {};
-          for (const a of gorunen) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
-          harita = {
-            ...harita, var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
-            nokta: gorunen.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
-            etiket: Object.entries(ilceMerkez).filter(([ad]) => ad !== '—').map(([ad, o]) => ({ ad, x: (o.x / o.n) + '%', y: (o.y / o.n) + '%' }))
-          };
-        }
+        const zeminAd = [['street', 'Sokak'], ['sat', 'Uydu'], ['hyb', 'Uydu + ad']];
+        const harita = {
+          var: nokta.length > 0, turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }),
+          zeminler: zeminAd.map(([k, ad]) => ({ ad, ...seg((s.ozetZemin || 'hyb') === k, () => { try { localStorage.setItem('ks-ozet-zemin', k); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: k }); }) }))
+        };
 
         return {
           var: true, bos: toplam === 0, zemin,

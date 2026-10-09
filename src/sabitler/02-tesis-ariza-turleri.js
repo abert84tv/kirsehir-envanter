@@ -49,3 +49,5 @@ function arizaGrubu(f, a) {
 // ile eklenir, fiyatı ve kritik eşiği değişir; sunucuda "malzeme"
 // anahtarında durur. Ambar mevcudu ve zimmet malzeme ADINA göre tutulur,
 // bu yüzden hareketi olan malzemenin adı değiştirilemez.
+// Özet haritası ve göstergeler: türe göre sabit renkler (haritadaki işaretlerle aynı; koyu temada ayrı adımlar)
+const turRenk = dark => dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };

@@ -2,6 +2,13 @@
     this._msg = e => {
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
+      if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
+      // Özet haritasında bir noktaya basıldı: kaydın kartı haritada açılır
+      if (d.ks === 'ozetSec') {
+        const a = (this.state.assets || []).find(x => x.id === d.id);
+        if (a) { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' }); if (a.dbId) this.fotoYenile(a.dbId); }
+        return;
+      }
       if (d.ks === 'hatKatman') {
         try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
         this.setState({ hatKatman: !!d.on });

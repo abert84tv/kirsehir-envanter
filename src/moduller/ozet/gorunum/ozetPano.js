@@ -5,7 +5,7 @@
         if (tabId !== 'ozet') return { var: false };
         const A = s.assets || [];
         const toplam = A.length;
-        const REN = dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };
+        const REN = turRenk(dark);
         const DIGER = dark ? '#8e8e93' : '#a8a29e';
         const SIRA = ['kuyu', 'depo', 'ag', 'ges'];
         const yuzde = (n, t) => t ? Math.round(n / t * 100) : 0;
@@ -163,33 +163,21 @@
           ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' })
         }));
 
-        // 3b) Dağılım haritası: koordinatlar enlem düzeltmesiyle (cos) ekrana yerleştirilir
+        // 3b) Dağılım haritası: gerçek harita zemini ozet-harita.html çerçevesinde çizilir (ozetHaritaGonder); burada yalnız süzgeç ve zemin seçimi
         const gizli = s.ozetGizli || [];
         const nokta = A.filter(a => a.lat != null && a.lon != null);
         const gorunen = nokta.filter(a => !gizli.includes(a.type));
-        // Türe göre süz: efsanedeki türe basınca o tür haritadan gizlenir / geri gelir (sınırlar hep tüm kayıtlardan hesaplanır, harita kaymaz)
         const turler = SIRA.map(t => ({ t, n: A.filter(a => a.type === t && a.lat != null).length })).filter(x => x.n > 0).map(x => {
           const acik = !gizli.includes(x.t);
           return { ad: TYPES[x.t].kind, n: x.n, renk: REN[x.t], acik, kapali: !acik,
             fg: acik ? ui.fg : ui.mut, kenar: acik ? REN[x.t] : ui.rule, op: acik ? '1' : '.55', ipucu: (acik ? 'Gizle: ' : 'Göster: ') + TYPES[x.t].kind,
             pick: () => this.setState(st => { const g = st.ozetGizli || []; return { ozetGizli: g.includes(x.t) ? g.filter(y => y !== x.t) : [...g, x.t] }; }) };
         });
-        let harita = { var: false, nokta: [], etiket: [], oran: '1.4', turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }) };
-        if (nokta.length) {
-          const enMin = Math.min(...nokta.map(a => a.lat)), enMax = Math.max(...nokta.map(a => a.lat));
-          const boyMin = Math.min(...nokta.map(a => a.lon)), boyMax = Math.max(...nokta.map(a => a.lon));
-          const k = Math.cos(((enMin + enMax) / 2) * Math.PI / 180);
-          const gen = Math.max(1e-6, (boyMax - boyMin) * k), yuk = Math.max(1e-6, enMax - enMin);
-          const pad = 4;
-          const konum = a => ({ x: pad + ((a.lon - boyMin) * k / gen) * (100 - 2 * pad), y: pad + (1 - (a.lat - enMin) / yuk) * (100 - 2 * pad) });
-          const ilceMerkez = {};
-          for (const a of gorunen) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
-          harita = {
-            ...harita, var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
-            nokta: gorunen.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
-            etiket: Object.entries(ilceMerkez).filter(([ad]) => ad !== '—').map(([ad, o]) => ({ ad, x: (o.x / o.n) + '%', y: (o.y / o.n) + '%' }))
-          };
-        }
+        const zeminAd = [['street', 'Sokak'], ['sat', 'Uydu'], ['hyb', 'Uydu + ad']];
+        const harita = {
+          var: nokta.length > 0, turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }),
+          zeminler: zeminAd.map(([k, ad]) => ({ ad, ...seg((s.ozetZemin || 'hyb') === k, () => { try { localStorage.setItem('ks-ozet-zemin', k); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: k }); }) }))
+        };
 
         return {
           var: true, bos: toplam === 0, zemin,

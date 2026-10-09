@@ -2130,3 +2130,6 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-166 — Özet dağılım haritasında türe göre süzme
 - Dağılım haritasının üstündeki türler (Su kuyusu · Su deposu · AG şebeke / pano · Güneş enerji santrali) birer süzgeç düğmesi: basınca o tür haritadan gizlenir, tekrar basınca gelir; “Hepsini göster” ve “27 / 291 kayıt gösteriliyor” sayacı. Harita kaymaz (sınırlar tüm kayıtlardan hesaplanır).
+
+## 2026.10.10-167 — Özet dağılım haritası gerçek harita zemininde
+- Dağılım haritası artık Kırşehir’in gerçek haritası üzerinde (yeni sayfa `ozet-harita.html`, ana pencereye çerçeveyle gömülü): **Sokak · Uydu · Uydu + ad** zemin seçici (seçim cihazda hatırlanır), kayıtlar tür renginde noktalar, nokta üstüne gelince kod · köy · ilçe, basınca kayıt kartı haritada açılır. Tür düğmeleri hâlâ süzgeç; zemin yüklenirken harita kaymaz. Telefonda tek parmak sayfayı kaydırır, iki parmak haritayı yakınlaştırır/kaydırır.

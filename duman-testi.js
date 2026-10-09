@@ -85,7 +85,7 @@ try {
 
 // 1) HTML dosyalarındaki gömülü <script> bloklarının sözdizimi
 console.log('1) Gömülü <script> sözdizimi');
-const htmlDosyalari = ['index.html', 'harita.html', 'profil.html', 'hat.html'];
+const htmlDosyalari = ['index.html', 'harita.html', 'profil.html', 'hat.html', 'ozet-harita.html'];
 for (const f of htmlDosyalari) {
   const p = path.join(ROOT, f);
   if (!fs.existsSync(p)) { basarisiz(f + ' bulunamadı'); continue; }
@@ -156,7 +156,7 @@ if (fs.existsSync(vercelPath)) {
 //    aksi hâlde koyu tema karo kısması sessizce üçe bölünüp tekrar
 //    birbirinden kopabilir (2026.09.15 hatası)
 console.log('4) Paylaşılan harita-ortak.css kullanımı');
-for (const f of ['harita.html', 'profil.html', 'hat.html']) {
+for (const f of ['harita.html', 'profil.html', 'hat.html', 'ozet-harita.html']) {
   const p = path.join(ROOT, f);
   if (!fs.existsSync(p)) continue;
   const html = fs.readFileSync(p, 'utf8');

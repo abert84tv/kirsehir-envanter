@@ -43,6 +43,11 @@
     // Alarm (ses tekrarı, sekme başlığı) iş panosu açılınca susar; işlerin kendisi panoda yanıp söner
     if (s.tab === 'isPanosu' && s.basvuruUyari) this.setState({ basvuruUyari: null });
     this.geziIzle();
+    // Özet haritası: kayıt, süzgeç, zemin ya da tema değişince çerçeveye yeniden gönderilir
+    if (s.tab === 'ozet') {
+      const imza = [s.assets, s.ozetGizli, s.ozetZemin, s.theme];
+      if (!this._ozetImza || imza.some((x, i) => x !== this._ozetImza[i])) { this._ozetImza = imza; setTimeout(() => this.ozetHaritaGonder(), 30); }
+    } else this._ozetImza = null;
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir

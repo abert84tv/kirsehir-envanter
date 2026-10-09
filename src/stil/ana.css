@@ -109,7 +109,6 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-asama{transition:transform .15s ease,box-shadow .25s ease}
 .ks-asama:hover{transform:translateY(-2px)}
 @media (prefers-reduced-motion:reduce){.ks-ciz{animation:none;stroke-dashoffset:0}.ks-akis,.ks-parla{animation:none}}
-.ks-nokta{position:absolute;border-radius:50%;box-shadow:0 0 0 2px var(--ks-nokta-kenar,#fff)}
 .ks-nokta.ks-ping::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid currentColor;animation:ksPing 1.6s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.ks-nokta.ks-ping::after{animation:none}}
 /* Açıklama / yardım metinleri: varsayılan gizli, üst çubuktaki ⓘ ile açılır */
@@ -151,10 +150,5 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 .ks-satir:active{transform:scale(.995)}
 @media (prefers-reduced-motion:reduce){.ks-say,.ks-halka::after,.ks-cubuk,.ks-modul{animation:none}.ks-halka::after{background:transparent}}
 @keyframes ksSutun{from{clip-path:inset(100% 0 0 0 round 5px)}to{clip-path:inset(0 0 0 0 round 5px)}}
-@keyframes ksNokta{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .ks-sutun{animation:ksSutun .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*80ms + 150ms);border-radius:5px 5px 0 0}
-.ks-harita{position:relative;width:min(100%,calc(340px * var(--oran)));aspect-ratio:var(--oran);margin:0 auto}
-.ks-nokta{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;padding:0;border:0;border-radius:50%;cursor:pointer;box-shadow:0 0 0 1.5px var(--zemin);animation:ksNokta .45s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i)*3ms + 200ms);transition:transform .15s ease}
-.ks-nokta:hover,.ks-nokta:focus-visible{transform:scale(1.9);z-index:3;outline:none}
-.ks-etiket{position:absolute;z-index:4;transform:translate(-50%,-50%);pointer-events:none;font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:var(--etiket);text-shadow:0 0 4px var(--zemin),0 0 4px var(--zemin),0 0 8px var(--zemin);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){.ks-sutun,.ks-nokta{animation:none}}
+@media (prefers-reduced-motion:reduce){.ks-sutun,

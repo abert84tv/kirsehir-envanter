@@ -17,10 +17,36 @@
   body.dark .leaflet-tooltip.ks-ot{background:rgba(28,28,30,.94);border-color:rgba(255,255,255,.14);color:#f5f5f7}
   body.dark .leaflet-tooltip.ks-ot:before{display:none}
   .leaflet-control-attribution{font-size:9px}
+  /* Katman simgesi: tıklayınca zemin menüsü açılır, başka yere tıklayınca kapanır */
+  #katman{position:absolute;top:10px;right:10px;z-index:1000;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  #katman-dugme{all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#fff;color:#1d1d1f;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+  #katman-dugme svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  #katman.acik #katman-dugme{background:#0071e3;color:#fff}
+  #katman-menu{display:none;flex-direction:column;min-width:150px;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 26px rgba(0,0,0,.35)}
+  #katman.acik #katman-menu{display:flex;animation:ac .14s ease-out}
+  @keyframes ac{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+  #katman-menu button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 14px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#1d1d1f;border-bottom:1px solid rgba(0,0,0,.07)}
+  #katman-menu button:last-child{border-bottom:none}
+  #katman-menu button:hover{background:rgba(0,113,227,.08)}
+  #katman-menu button i{width:14px;height:14px;border-radius:50%;border:2px solid #9a9aa0;flex:none;box-sizing:border-box}
+  #katman-menu button.on i{border-color:#0071e3;background:radial-gradient(#0071e3 45%,transparent 50%)}
+  body.dark #katman-dugme{background:#2c2c2e;color:#f5f5f7}
+  body.dark #katman.acik #katman-dugme{background:#0a84ff;color:#fff}
+  body.dark #katman-menu{background:#2c2c2e}
+  body.dark #katman-menu button{color:#f5f5f7;border-bottom-color:rgba(255,255,255,.1)}
+  body.dark #katman-menu button.on i{border-color:#0a84ff;background:radial-gradient(#0a84ff 45%,transparent 50%)}
 </style>
 </head>
 <body>
 <div id="map"></div>
+<div id="katman">
+  <button id="katman-dugme" aria-label="Harita katmanları" title="Harita katmanları"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
+  <div id="katman-menu">
+    <button data-z="street"><i></i>Sokak</button>
+    <button data-z="sat"><i></i>Uydu</button>
+    <button data-z="hyb"><i></i>Uydu + ad</button>
+  </div>
+</div>
 <script>
 // Özet > Dağılım haritası: gerçek harita zemini (sokak / uydu / uydu + yer adları) üzerinde kayıtlar tür renginde noktalar.
 // Veri ana pencereden gelir ({ks:'ozetVeri'}); noktaya basınca ana pencereye {ks:'ozetSec'} gider.
@@ -42,6 +68,19 @@ function zeminSec(k) {
   if (k === 'street') street.addTo(map); else { sat.addTo(map); if (k === 'hyb') satAd.addTo(map); }
 }
 zeminSec('hyb');
+// Katman menüsü: simgeye basınca açılır; bir seçenek seçince ya da başka bir yere (harita dahil) basınca kapanır
+const katman = document.getElementById('katman');
+function menuIsaret() { document.querySelectorAll('#katman-menu button').forEach(b => b.classList.toggle('on', b.dataset.z === zemin)); }
+function menuKapat() { katman.classList.remove('acik'); }
+document.getElementById('katman-dugme').addEventListener('click', e => { e.stopPropagation(); menuIsaret(); katman.classList.toggle('acik'); });
+document.querySelectorAll('#katman-menu button').forEach(b => b.addEventListener('click', e => {
+  e.stopPropagation();
+  zeminSec(b.dataset.z); menuIsaret(); menuKapat();
+  parent.postMessage({ ks: 'ozetZemin', zemin: b.dataset.z }, '*');     // seçim ana pencerede hatırlanır
+}));
+document.addEventListener('click', menuKapat);
+addEventListener('blur', menuKapat);   // sayfanın harita dışındaki bir yerine basılınca da kapanır
+map.on('click movestart zoomstart', menuKapat);
 const noktalar = L.layerGroup().addTo(map);
 let sigdi = false, sonImza = '';
 function ciz(d) {

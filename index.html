@@ -2144,11 +2144,6 @@ Hareket gir
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
-<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
-<sc-for list="{{ ozetPano.harita.zeminler }}" as="z" hint-placeholder-count="3">
-<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;padding:0 13px;font:600 12px/1 var(--font-body);background:{{ z.bg }};color:{{ z.fg }}">{{ z.ad }}</button>
-</sc-for>
-</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
@@ -6817,11 +6812,6 @@ Hareket gir
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
-<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
-<sc-for list="{{ ozetPano.harita.zeminler }}" as="z" hint-placeholder-count="3">
-<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;padding:0 13px;font:600 12px/1 var(--font-body);background:{{ z.bg }};color:{{ z.fg }}">{{ z.ad }}</button>
-</sc-for>
-</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
@@ -10346,7 +10336,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-167';
+const SURUM = '2026.10.10-168';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -14542,6 +14532,7 @@ class Component extends DCLogic {
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
+      if (d.ks === 'ozetZemin' && ['street', 'sat', 'hyb'].includes(d.zemin)) { try { localStorage.setItem('ks-ozet-zemin', d.zemin); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: d.zemin }); return; }
       // Özet haritasında bir noktaya basıldı: kaydın kartı haritada açılır
       if (d.ks === 'ozetSec') {
         const a = (this.state.assets || []).find(x => x.id === d.id);
@@ -21979,10 +21970,8 @@ class Component extends DCLogic {
             fg: acik ? ui.fg : ui.mut, kenar: acik ? REN[x.t] : ui.rule, op: acik ? '1' : '.55', ipucu: (acik ? 'Gizle: ' : 'Göster: ') + TYPES[x.t].kind,
             pick: () => this.setState(st => { const g = st.ozetGizli || []; return { ozetGizli: g.includes(x.t) ? g.filter(y => y !== x.t) : [...g, x.t] }; }) };
         });
-        const zeminAd = [['street', 'Sokak'], ['sat', 'Uydu'], ['hyb', 'Uydu + ad']];
         const harita = {
-          var: nokta.length > 0, turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }),
-          zeminler: zeminAd.map(([k, ad]) => ({ ad, ...seg((s.ozetZemin || 'hyb') === k, () => { try { localStorage.setItem('ks-ozet-zemin', k); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: k }); }) }))
+          var: nokta.length > 0, turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] })
         };
 
         return {

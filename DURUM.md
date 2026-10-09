@@ -2133,3 +2133,6 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-167 — Özet dağılım haritası gerçek harita zemininde
 - Dağılım haritası artık Kırşehir’in gerçek haritası üzerinde (yeni sayfa `ozet-harita.html`, ana pencereye çerçeveyle gömülü): **Sokak · Uydu · Uydu + ad** zemin seçici (seçim cihazda hatırlanır), kayıtlar tür renginde noktalar, nokta üstüne gelince kod · köy · ilçe, basınca kayıt kartı haritada açılır. Tür düğmeleri hâlâ süzgeç; zemin yüklenirken harita kaymaz. Telefonda tek parmak sayfayı kaydırır, iki parmak haritayı yakınlaştırır/kaydırır.
+
+## 2026.10.10-168 — Özet haritasında katman simgesi
+- Zemin seçici (Sokak · Uydu · Uydu + ad) haritanın sağ üst köşesinde bir **katman simgesine** gömüldü: simgeye basınca menü açılır, seçim yapınca ya da haritada/sayfada başka bir yere basınca kapanır. Seçim hatırlanır. Başlıktaki üç düğme kalktı.

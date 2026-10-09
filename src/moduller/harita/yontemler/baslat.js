@@ -3,6 +3,7 @@
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
+      if (d.ks === 'ozetZemin' && ['street', 'sat', 'hyb'].includes(d.zemin)) { try { localStorage.setItem('ks-ozet-zemin', d.zemin); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: d.zemin }); return; }
       // Özet haritasında bir noktaya basıldı: kaydın kartı haritada açılır
       if (d.ks === 'ozetSec') {
         const a = (this.state.assets || []).find(x => x.id === d.id);

@@ -173,10 +173,8 @@
             fg: acik ? ui.fg : ui.mut, kenar: acik ? REN[x.t] : ui.rule, op: acik ? '1' : '.55', ipucu: (acik ? 'Gizle: ' : 'Göster: ') + TYPES[x.t].kind,
             pick: () => this.setState(st => { const g = st.ozetGizli || []; return { ozetGizli: g.includes(x.t) ? g.filter(y => y !== x.t) : [...g, x.t] }; }) };
         });
-        const zeminAd = [['street', 'Sokak'], ['sat', 'Uydu'], ['hyb', 'Uydu + ad']];
         const harita = {
-          var: nokta.length > 0, turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }),
-          zeminler: zeminAd.map(([k, ad]) => ({ ad, ...seg((s.ozetZemin || 'hyb') === k, () => { try { localStorage.setItem('ks-ozet-zemin', k); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: k }); }) }))
+          var: nokta.length > 0, turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] })
         };
 
         return {

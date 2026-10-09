@@ -62,11 +62,6 @@
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
-<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};overflow:hidden">
-<sc-for list="{{ ozetPano.harita.zeminler }}" as="z" hint-placeholder-count="3">
-<button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;padding:0 13px;font:600 12px/1 var(--font-body);background:{{ z.bg }};color:{{ z.fg }}">{{ z.ad }}</button>
-</sc-for>
-</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
 <button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>

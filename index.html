@@ -147,6 +147,27 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 @media (prefers-reduced-motion:reduce){.ks-pop{animation:none}.ks-tik{animation:none;stroke-dashoffset:0}}
 /* Dar masaüstü penceresinde üst çubuk düğmeleri yalnız ikona iner, başlık kaybolmaz */
 @media (max-width:1180px){.ks-ust-etiket{display:none}}
+/* ── Özet gösterge paneli: sayaç, halka ve çubuk animasyonları ── */
+@property --say{syntax:'<integer>';initial-value:0;inherits:false}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes ksSay{from{--say:0}to{--say:var(--hedef)}}
+@keyframes ksSup{from{--a:0deg}to{--a:360deg}}
+@keyframes ksCubuk{from{clip-path:inset(0 100% 0 0 round 4px)}to{clip-path:inset(0 0 0 0 round 4px)}}
+@keyframes ksYukari{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ks-say{--say:var(--hedef);counter-reset:say var(--say);animation:ksSay 1.2s cubic-bezier(.2,.7,.2,1) both;font-variant-numeric:tabular-nums}
+.ks-say::after{content:counter(say)}
+.ks-say.yuzde::after{content:counter(say) '%'}
+.ks-halka{position:relative;border-radius:50%;flex:none}
+.ks-halka::after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(transparent var(--a),var(--zemin) 0);animation:ksSup 1.15s .12s cubic-bezier(.3,.7,.2,1) both}
+.ks-halka-orta{position:absolute;inset:17%;border-radius:50%;background:var(--zemin);z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.ks-cubuk{animation:ksCubuk .95s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms + 120ms)}
+.ks-modul{animation:ksYukari .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--m,0)*70ms)}
+.ks-satir{transition:background-color .15s ease,transform .15s ease}
+.ks-satir:hover{background:rgba(128,128,128,.13)}
+.ks-satir:hover .ks-cubuk-iz{filter:brightness(1.12)}
+.ks-satir:active{transform:scale(.995)}
+@media (prefers-reduced-motion:reduce){.ks-say,.ks-halka::after,.ks-cubuk,.ks-modul{animation:none}.ks-halka::after{background:transparent}}
+
 </style>
 </helmet>
 
@@ -2019,21 +2040,23 @@ Hareket gir
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
 <div>
-<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy bazında sayılar, bu hafta yapılanlar ve size en yakın tesisler.</div>
+<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">Envanterin dağılımı, hizmet durumu ve size en yakın tesisler.</div>
 </div>
 <div style="display:flex;gap:8px;flex:none">
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">Excel’e aktar</button>
 <button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">PDF rapor</button>
 </div>
 </div>
+<sc-if value="{{ ozet.statsVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
 <div style="padding:14px 16px;border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:6px">
-<span style="font:700 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ st.n }}</span>
+<span class="ks-say" style="--hedef:{{ st.n }};font:700 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}"></span>
 <span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
 </div>
+</sc-if>
 <sc-if value="{{ ozet.sekmeVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;padding:12px 18px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.sekmeSec }}" as="sk" hint-placeholder-count="3">
@@ -2043,75 +2066,153 @@ Hareket gir
 </sc-if>
 
 <sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
-<div style="display:grid;grid-template-columns:1fr 1fr">
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
-<span style="font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Aktif / pasif dağılımı</span>
-<span class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};flex:1 1 280px;min-width:0">{{ ozet.aktiflik.note }}</span>
+<!-- Özet > Envanter: kutu kutu hareketli gösterge paneli (masaüstü ve telefonda aynı şablon; kutular genişliğe göre dizilir) -->
+<sc-if value="{{ ozetPano.bos }}" hint-placeholder-val="{{ false }}">
+<div style="padding:40px 20px;text-align:center;font:500 14px/1.5 var(--font-body);color:{{ ui.mut }}">Henüz envanter kaydı yok. Haritadan ya da Ayarlar › Dış veri aktarımı ile ekleyebilirsiniz.</div>
+</sc-if>
+<sc-if value="{{ !ozetPano.bos }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:14px;padding:16px 18px 28px;align-items:start">
+
+<!-- 1 · Envanter dağılımı -->
+<div class="ks-modul" style="--m:0;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Envanter dağılımı</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca kayıtlar listede açılır</span>
 </div>
-<div style="display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }}">
-<span style="flex:1;min-width:0;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tür</span>
-<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Aktif</span>
-<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Pasif</span>
-<span style="width:56px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Toplam</span>
-</div>
-<sc-for list="{{ ozet.aktiflik.satir }}" as="r" hint-placeholder-count="4">
-<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="flex:1;min-width:0;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ r.tur }}</span>
-<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.aktif }}</span>
-<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.acc }}">{{ r.pasif }}</span>
-<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ r.toplam }}</span>
-</div>
-<div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }};position:relative">
-<span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.barW }};background:var(--color-accent);border-radius:3px"></span>
+<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
+<div class="ks-halka" style="width:178px;height:178px;background:{{ ozetPano.turDonut }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta">
+<span class="ks-say" style="--hedef:{{ ozetPano.toplam }};font:700 34px/1 var(--font-heading);letter-spacing:-.03em;color:{{ ui.fg }}"></span>
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }}">kayıt</span>
 </div>
 </div>
-</sc-for>
-<div style="padding:11px 18px;display:flex;align-items:center;gap:10px;background:{{ ui.surf }}">
-<span style="flex:1;min-width:0;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.tur }} · {{ ozet.aktiflik.toplam.oran }} aktif</span>
-<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
-<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
-<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ ozet.aktiflik.toplam.toplam }}</span>
-</div>
-</div>
-<div style="border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">İlçe bazında</div>
-<sc-for list="{{ ozet.districts }}" as="d" hint-placeholder-count="7">
-<div style="padding:11px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-<span style="font:600 14px/1.1 var(--font-heading);color:{{ ui.fg }}">{{ d.name }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ d.n }}</span>
-</div>
-<div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }}"><div style="height:6px;width:{{ d.barW }};background:var(--color-accent);border-radius:3px"></div></div>
-<div style="display:flex;justify-content:space-between;gap:10px">
-<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">{{ d.mix }}</span>
-</div>
-</div>
-</sc-for>
-</div>
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Köy bazında (en çok kayıtlı 12)</div>
-<sc-for list="{{ ozet.villages }}" as="v" hint-placeholder-count="12">
-<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:12px">
-<span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ v.name }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }};width:64px;text-align:right">{{ v.n }}</span>
-<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }};width:80px;text-align:right">{{ v.photos }}</span>
-</div>
+<div style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.turSatir }}" as="t" hint-placeholder-count="4">
+<button class="ks-satir" onClick="{{ t.git }}" title="{{ t.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px">
+<span style="flex:none;width:12px;height:12px;border-radius:4px;background:{{ t.renk }}"></span>
+<span style="flex:1;min-width:0;font:500 13.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ t.ad }}</span>
+<span style="font:700 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ t.n }}</span>
+<span style="width:38px;text-align:right;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">{{ t.pct }}</span>
+</button>
 </sc-for>
 </div>
 </div>
-<div>
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>
-<sc-for list="{{ ozet.near }}" as="n" hint-placeholder-count="8">
-<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:12px">
-<span style="font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }};width:64px">{{ n.km }}</span>
-<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:120px">{{ n.code }}</span>
-<span style="flex:1;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ n.place }}</span>
-<button onClick="{{ n.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:8px 10px">Yol tarifi</button>
+</div>
+
+<!-- 2 · Hizmet durumu -->
+<div class="ks-modul" style="--m:1;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Hizmet durumu</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Pasif kayıtlar silinmez, hizmet dışı sayılır</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
+<div class="ks-halka" style="width:150px;height:150px;background:{{ ozetPano.aktifHalka }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta">
+<span class="ks-say yuzde" style="--hedef:{{ ozetPano.aktifYuzde }};font:700 30px/1 var(--font-heading);letter-spacing:-.03em;color:{{ ui.fg }}"></span>
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }}">hizmette</span>
+</div>
+</div>
+<div style="flex:1 1 130px;min-width:0;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:baseline;gap:8px"><span class="ks-say" style="--hedef:{{ ozetPano.aktif }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span><span style="font:500 13px/1 var(--font-body);color:{{ ui.mut }}">aktif</span></div>
+<div style="display:flex;align-items:baseline;gap:8px"><span class="ks-say" style="--hedef:{{ ozetPano.pasif }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span><span style="font:500 13px/1 var(--font-body);color:{{ ui.mut }}">pasif</span></div>
+<sc-if value="{{ ozetPano.pasifVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ozetPano.pasifGit }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:36px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/34px var(--font-body);color:{{ ui.acc }}">Pasifleri göster</button>
+</sc-if>
+</div>
+</div>
+</div>
+
+<!-- 3 · Fotoğraf kapsamı -->
+<div class="ks-modul" style="--m:2;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Fotoğraf kapsamı</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}"><span class="ks-say" style="--hedef:{{ ozetPano.fotolu }}"></span> kayıtta fotoğraf var · toplam <span class="ks-say" style="--hedef:{{ ozetPano.fotoSayi }}"></span> fotoğraf</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
+<div class="ks-halka" style="width:118px;height:118px;background:{{ ozetPano.fotoHalka }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta"><span class="ks-say yuzde" style="--hedef:{{ ozetPano.fotoYuzde }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span></div>
+</div>
+<div style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ ozetPano.fotoTur }}" as="f" hint-placeholder-count="4">
+<div title="{{ f.ipucu }}" style="display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;justify-content:space-between;gap:8px;font:500 12.5px/1 var(--font-body);color:{{ ui.fg }}"><span>{{ f.ad }}</span><span style="color:{{ ui.mut }}">{{ f.f }} / {{ f.n }}</span></div>
+<div style="height:8px;border-radius:4px;background:{{ ui.rule }};overflow:hidden"><div class="ks-cubuk" style="--i:{{ f.i }};height:8px;width:{{ f.w }};background:{{ f.renk }}"></div></div>
 </div>
 </sc-for>
 </div>
+</div>
+</div>
+
+<!-- 4 · İlçelere göre -->
+<div class="ks-modul" style="--m:3;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">İlçelere göre</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">İlçeye basınca kayıtlar listede açılır</span>
+</div>
+<div style="display:flex;gap:12px;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkKuyu }}"></span>Kuyu</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDepo }}"></span>Depo</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDiger }}"></span>Diğer</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.ilceSatir }}" as="r" hint-placeholder-count="7">
+<button class="ks-satir" onClick="{{ r.git }}" title="{{ r.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px">
+<span style="flex:none;width:76px;font:500 13px/1.2 var(--font-body);color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="flex:1;min-width:0;display:flex;gap:2px;height:12px">
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wK }};background:{{ ozetPano.renkKuyu }}"></span>
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wD }};background:{{ ozetPano.renkDepo }}"></span>
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wO }};background:{{ ozetPano.renkDiger }}"></span>
+</span>
+<span style="flex:none;width:34px;text-align:right;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.n }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<!-- 5 · Köyler -->
+<sc-if value="{{ ozetPano.koyVar }}" hint-placeholder-val="{{ true }}">
+<div class="ks-modul" style="--m:4;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">En çok kayıtlı köyler</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Köyü yazılmış kayıtlar üzerinden</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.koySatir }}" as="k" hint-placeholder-count="8">
+<button class="ks-satir" onClick="{{ k.git }}" title="{{ k.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:10px">
+<span style="flex:none;width:112px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font:500 13px/1.15 var(--font-body);color:{{ ui.fg }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ k.ad }}</span><span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }}">{{ k.ilce }}</span></span>
+<span style="flex:1;min-width:0;height:12px;border-radius:4px;background:{{ ui.rule }}"><span class="ks-cubuk ks-cubuk-iz" style="--i:{{ k.i }};display:block;height:12px;width:{{ k.w }};background:{{ ozetPano.renkVurgu }}"></span></span>
+<span style="flex:none;width:30px;text-align:right;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ k.n }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<!-- 6 · Yakınımdaki tesisler -->
+<sc-if value="{{ ozetPano.yakinVar }}" hint-placeholder-val="{{ true }}">
+<div class="ks-modul" style="--m:5;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Yakınımdaki tesisler</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Bulunduğunuz yere en yakın beş kayıt</span>
+</div>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ ozetPano.yakin }}" as="y" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;width:6px;align-self:stretch;border-radius:3px;background:{{ y.renk }}"></span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13.5px/1.1 var(--font-body);color:{{ ui.fg }}">{{ y.kod }}</span><span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ y.yer }}</span></span>
+<span style="flex:none;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ y.km }}</span>
+<button onClick="{{ y.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.acc }}">Yol tarifi</button>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+</div>
+</sc-if>
+
 </sc-if>
 
 <sc-if value="{{ ozet.ekipSekmesi }}" hint-placeholder-val="{{ false }}">
@@ -6367,16 +6468,18 @@ Hareket gir
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Özet</div>
-<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy sayıları, bu hafta, yakınımdaki tesisler.</div>
+<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Envanterin dağılımı, hizmet durumu ve yakınımdaki tesisler.</div>
 </div>
+<sc-if value="{{ ozet.statsVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
 <div style="padding:10px 12px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:46px">
 <span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ st.label }}</span>
-<span style="font:700 20px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ st.n }}</span>
+<span class="ks-say" style="--hedef:{{ st.n }};font:700 20px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}"></span>
 </div>
 </sc-for>
 </div>
+</sc-if>
 <div style="display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:13px 10px">Excel</button>
 <button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body);padding:13px 10px">PDF rapor</button>
@@ -6390,55 +6493,153 @@ Hareket gir
 </sc-if>
 
 <sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
-<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>
-<sc-for list="{{ ozet.near }}" as="n" hint-placeholder-count="8">
-<div style="padding:11px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
-<span style="font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }};width:56px">{{ n.km }}</span>
-<span style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0">
-<span style="font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ n.code }}</span>
-<span style="font:400 11.5px/1.3 var(--font-body);color:{{ ui.mut }}">{{ n.place }}</span>
+<!-- Özet > Envanter: kutu kutu hareketli gösterge paneli (masaüstü ve telefonda aynı şablon; kutular genişliğe göre dizilir) -->
+<sc-if value="{{ ozetPano.bos }}" hint-placeholder-val="{{ false }}">
+<div style="padding:40px 20px;text-align:center;font:500 14px/1.5 var(--font-body);color:{{ ui.mut }}">Henüz envanter kaydı yok. Haritadan ya da Ayarlar › Dış veri aktarımı ile ekleyebilirsiniz.</div>
+</sc-if>
+<sc-if value="{{ !ozetPano.bos }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:14px;padding:16px 18px 28px;align-items:start">
+
+<!-- 1 · Envanter dağılımı -->
+<div class="ks-modul" style="--m:0;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Envanter dağılımı</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca kayıtlar listede açılır</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
+<div class="ks-halka" style="width:178px;height:178px;background:{{ ozetPano.turDonut }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta">
+<span class="ks-say" style="--hedef:{{ ozetPano.toplam }};font:700 34px/1 var(--font-heading);letter-spacing:-.03em;color:{{ ui.fg }}"></span>
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }}">kayıt</span>
+</div>
+</div>
+<div style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.turSatir }}" as="t" hint-placeholder-count="4">
+<button class="ks-satir" onClick="{{ t.git }}" title="{{ t.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px">
+<span style="flex:none;width:12px;height:12px;border-radius:4px;background:{{ t.renk }}"></span>
+<span style="flex:1;min-width:0;font:500 13.5px/1.2 var(--font-body);color:{{ ui.fg }}">{{ t.ad }}</span>
+<span style="font:700 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ t.n }}</span>
+<span style="width:38px;text-align:right;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">{{ t.pct }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</div>
+
+<!-- 2 · Hizmet durumu -->
+<div class="ks-modul" style="--m:1;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Hizmet durumu</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Pasif kayıtlar silinmez, hizmet dışı sayılır</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
+<div class="ks-halka" style="width:150px;height:150px;background:{{ ozetPano.aktifHalka }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta">
+<span class="ks-say yuzde" style="--hedef:{{ ozetPano.aktifYuzde }};font:700 30px/1 var(--font-heading);letter-spacing:-.03em;color:{{ ui.fg }}"></span>
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }}">hizmette</span>
+</div>
+</div>
+<div style="flex:1 1 130px;min-width:0;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:baseline;gap:8px"><span class="ks-say" style="--hedef:{{ ozetPano.aktif }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span><span style="font:500 13px/1 var(--font-body);color:{{ ui.mut }}">aktif</span></div>
+<div style="display:flex;align-items:baseline;gap:8px"><span class="ks-say" style="--hedef:{{ ozetPano.pasif }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span><span style="font:500 13px/1 var(--font-body);color:{{ ui.mut }}">pasif</span></div>
+<sc-if value="{{ ozetPano.pasifVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ozetPano.pasifGit }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:36px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/34px var(--font-body);color:{{ ui.acc }}">Pasifleri göster</button>
+</sc-if>
+</div>
+</div>
+</div>
+
+<!-- 3 · Fotoğraf kapsamı -->
+<div class="ks-modul" style="--m:2;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Fotoğraf kapsamı</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}"><span class="ks-say" style="--hedef:{{ ozetPano.fotolu }}"></span> kayıtta fotoğraf var · toplam <span class="ks-say" style="--hedef:{{ ozetPano.fotoSayi }}"></span> fotoğraf</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
+<div class="ks-halka" style="width:118px;height:118px;background:{{ ozetPano.fotoHalka }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta"><span class="ks-say yuzde" style="--hedef:{{ ozetPano.fotoYuzde }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span></div>
+</div>
+<div style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ ozetPano.fotoTur }}" as="f" hint-placeholder-count="4">
+<div title="{{ f.ipucu }}" style="display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;justify-content:space-between;gap:8px;font:500 12.5px/1 var(--font-body);color:{{ ui.fg }}"><span>{{ f.ad }}</span><span style="color:{{ ui.mut }}">{{ f.f }} / {{ f.n }}</span></div>
+<div style="height:8px;border-radius:4px;background:{{ ui.rule }};overflow:hidden"><div class="ks-cubuk" style="--i:{{ f.i }};height:8px;width:{{ f.w }};background:{{ f.renk }}"></div></div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+
+<!-- 4 · İlçelere göre -->
+<div class="ks-modul" style="--m:3;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">İlçelere göre</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">İlçeye basınca kayıtlar listede açılır</span>
+</div>
+<div style="display:flex;gap:12px;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkKuyu }}"></span>Kuyu</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDepo }}"></span>Depo</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDiger }}"></span>Diğer</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.ilceSatir }}" as="r" hint-placeholder-count="7">
+<button class="ks-satir" onClick="{{ r.git }}" title="{{ r.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px">
+<span style="flex:none;width:76px;font:500 13px/1.2 var(--font-body);color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="flex:1;min-width:0;display:flex;gap:2px;height:12px">
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wK }};background:{{ ozetPano.renkKuyu }}"></span>
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wD }};background:{{ ozetPano.renkDepo }}"></span>
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wO }};background:{{ ozetPano.renkDiger }}"></span>
 </span>
-<button onClick="{{ n.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);padding:10px 11px">Tarif</button>
+<span style="flex:none;width:34px;text-align:right;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.n }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<!-- 5 · Köyler -->
+<sc-if value="{{ ozetPano.koyVar }}" hint-placeholder-val="{{ true }}">
+<div class="ks-modul" style="--m:4;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">En çok kayıtlı köyler</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Köyü yazılmış kayıtlar üzerinden</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.koySatir }}" as="k" hint-placeholder-count="8">
+<button class="ks-satir" onClick="{{ k.git }}" title="{{ k.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:10px">
+<span style="flex:none;width:112px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font:500 13px/1.15 var(--font-body);color:{{ ui.fg }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ k.ad }}</span><span style="font:400 11px/1 var(--font-body);color:{{ ui.mut }}">{{ k.ilce }}</span></span>
+<span style="flex:1;min-width:0;height:12px;border-radius:4px;background:{{ ui.rule }}"><span class="ks-cubuk ks-cubuk-iz" style="--i:{{ k.i }};display:block;height:12px;width:{{ k.w }};background:{{ ozetPano.renkVurgu }}"></span></span>
+<span style="flex:none;width:30px;text-align:right;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ k.n }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<!-- 6 · Yakınımdaki tesisler -->
+<sc-if value="{{ ozetPano.yakinVar }}" hint-placeholder-val="{{ true }}">
+<div class="ks-modul" style="--m:5;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Yakınımdaki tesisler</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Bulunduğunuz yere en yakın beş kayıt</span>
+</div>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ ozetPano.yakin }}" as="y" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid {{ ui.rule }}">
+<span style="flex:none;width:6px;align-self:stretch;border-radius:3px;background:{{ y.renk }}"></span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13.5px/1.1 var(--font-body);color:{{ ui.fg }}">{{ y.kod }}</span><span style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ y.yer }}</span></span>
+<span style="flex:none;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ y.km }}</span>
+<button onClick="{{ y.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.acc }}">Yol tarifi</button>
 </div>
 </sc-for>
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
-<span style="font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Aktif / pasif dağılımı</span>
-<span class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};flex:1 1 280px;min-width:0">{{ ozet.aktiflik.note }}</span>
-</div>
-<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }}">
-<span style="flex:1;min-width:0;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tür</span>
-<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Aktif</span>
-<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Pasif</span>
-<span style="width:56px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Toplam</span>
-</div>
-<sc-for list="{{ ozet.aktiflik.satir }}" as="r" hint-placeholder-count="4">
-<div style="padding:10px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="flex:1;min-width:0;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ r.tur }}</span>
-<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.aktif }}</span>
-<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.acc }}">{{ r.pasif }}</span>
-<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ r.toplam }}</span>
-</div>
-<div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }};position:relative">
-<span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.barW }};background:var(--color-accent);border-radius:3px"></span>
 </div>
 </div>
-</sc-for>
-<div style="padding:11px 14px;display:flex;align-items:center;gap:10px;background:{{ ui.surf }}">
-<span style="flex:1;min-width:0;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.tur }} · {{ ozet.aktiflik.toplam.oran }} aktif</span>
-<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
-<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
-<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ ozet.aktiflik.toplam.toplam }}</span>
+</sc-if>
+
 </div>
-</div>
-<div style="padding:12px 14px;border-top:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">İlçe bazında</div>
-<sc-for list="{{ ozet.districts }}" as="d" hint-placeholder-count="7">
-<div style="padding:10px 14px;border-top:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
-<span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ d.name }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ d.n }}</span>
-</div>
-</sc-for>
+</sc-if>
+
 </sc-if>
 
 <sc-if value="{{ ozet.ekipSekmesi }}" hint-placeholder-val="{{ false }}">
@@ -9645,7 +9846,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.10-157';
+const SURUM = '2026.10.10-158';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -20610,18 +20811,8 @@ class Component extends DCLogic {
       ozet: (() => {
         const sekmeler = [['envanter', 'Envanter'], ...(arizaOn ? [['ekip', 'Ekip ve arıza']] : []), ...(arizaOn || ambarOn ? [['rapor', 'Rapor']] : [])];
         const sekAktif = sekmeler.some(x => x[0] === s.ozetSekme) ? s.ozetSekme : 'envanter';
-        const byD = {}, byV = {};
-        for (const a of s.assets) {
-          (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
-          byD[a.district].n++;
-          if (aktifMi(a)) byD[a.district].aktif++; else byD[a.district].pasif++;
-          if (a.type === 'kuyu') byD[a.district].kuyu++;
-          if (a.type === 'depo') byD[a.district].depo++;
-          const key = this.yer(a);
-          (byV[key] = byV[key] || { n: 0, photos: 0 });
-          byV[key].n++; byV[key].photos += a.photos;
-        }
-        const near = [...s.assets].map(a => ({ a, km: this.distKm(a) })).sort((x, y) => x.km - y.km).slice(0, 8);
+        const byD = {};
+        for (const a of s.assets) byD[a.district] = true;
         const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
         // Tekrarlayan arıza: aynı tesiste birden çok kayıt — kalıcı çözüm işareti
         const tekrarList = (() => {
@@ -20772,41 +20963,6 @@ class Component extends DCLogic {
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
             ...(arizaOn ? [{ n: String(openF.length), label: 'Açık arıza' }] : [])
           ],
-          districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
-            name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
-            barW: Math.round(v.n / Math.max(...Object.values(byD).map(z => z.n)) * 100) + '%'
-          })),
-          villages: Object.entries(byV).filter(([ad]) => !/^Köy girilmedi/.test(ad)).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
-            name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf'
-          })),
-          aktiflik: (() => {
-            const satir = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
-              const hepsi = s.assets.filter(a => a.type === t);
-              const ak = hepsi.filter(a => aktifMi(a)).length;
-              return {
-                tur: TYPES[t].kind, aktif: String(ak), pasif: String(hepsi.length - ak),
-                toplam: String(hepsi.length),
-                oran: hepsi.length ? Math.round(ak / hepsi.length * 100) + '%' : '—',
-                barW: hepsi.length ? Math.round(ak / hepsi.length * 100) + '%' : '0%'
-              };
-            });
-            const ta = s.assets.filter(a => aktifMi(a)).length;
-            return {
-              satir,
-              toplam: {
-                tur: 'Toplam', aktif: String(ta), pasif: String(s.assets.length - ta),
-                toplam: String(s.assets.length),
-                oran: s.assets.length ? Math.round(ta / s.assets.length * 100) + '%' : '—'
-              },
-              note: 'Pasif kayıtlar envanterden düşmez; hizmet dışı sayılır. İlçe kırılımı aşağıdaki tabloda, kayıt bazında Envanter sekmesindeki Durum süzgecinde.'
-            };
-          })(),
-          near: near.map(({ a, km }) => ({
-            code: a.code, place: this.yer(a),
-            km: km.toFixed(1) + ' km',
-            kind: TYPES[a.type].kind,
-            route: () => this.yolTarifiVer(a)
-          })),
           zamanSec: [['bugun', 'Bugün'], ['hafta', 'Hafta'], ['ay', 'Ay'], ['yil', 'Yıl'], ['tum', 'Tümü'], ['ozel', 'Özel']]
             .map(([k, ad]) => ({
               label: ad, ...seg((s.ozetZaman || 'hafta') === k, () => this.setState({ ozetZaman: k }))
@@ -20837,6 +20993,8 @@ class Component extends DCLogic {
           // Rapor (tarih aralıklı arıza+stok özeti + köy bazlı malzeme
           // maliyeti — ikisi de aynı zaman/ilçe süzgecini paylaşıyor).
           // Yalnız envanter açıkken (diğer modüller kapalı) sekme çubuğu hiç çıkmaz
+          // Envanter sekmesinde, arıza kapalıyken üstteki sayı kutuları gösterge panelinin kendisidir (tekrar etmesin)
+          statsVar: sekAktif !== 'envanter' || arizaOn,
           sekmeVar: sekmeler.length > 1,
           sekmeSec: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
           sekmeSecTel: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
@@ -20845,6 +21003,97 @@ class Component extends DCLogic {
           raporSekmesi: sekAktif === 'rapor'
         };
       })(),
+      // Özet > Envanter: kutu kutu (modül modül) hareketli gösterge paneli.
+      // Renkler haritadaki tür renkleriyle aynıdır (kuyu mavi, depo kehribar, AG mor, GES sarı);
+      // koyu temada ayrı adımlar kullanılır. Her kutu bir "modül"dür; şablon ortaktır (masaüstü ve telefon aynı).
+      ozetPano: (() => {
+        if (tabId !== 'ozet') return { var: false };
+        const A = s.assets || [];
+        const toplam = A.length;
+        const REN = dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };
+        const DIGER = dark ? '#8e8e93' : '#a8a29e';
+        const SIRA = ['kuyu', 'depo', 'ag', 'ges'];
+        const yuzde = (n, t) => t ? Math.round(n / t * 100) : 0;
+        const git = f => () => this.setState({ tab: 'envanter', envQ: '', envF: f });
+        const zemin = ui.surf;
+        // ring: dilimler arası ince boşluk (zemin renginde)
+        const halka = parcalar => {
+          const T = parcalar.reduce((t, p) => t + p.n, 0);
+          if (!T) return `conic-gradient(${ui.rule} 0 360deg)`;
+          let a = 0; const GAP = parcalar.filter(p => p.n > 0).length > 1 ? 1.8 : 0; const out = [];
+          for (const p of parcalar) {
+            if (!p.n) continue;
+            const d = p.n / T * 360;
+            out.push(`${p.renk} ${a}deg ${a + d - GAP}deg`);
+            if (GAP) out.push(`${zemin} ${a + d - GAP}deg ${a + d}deg`);
+            a += d;
+          }
+          return `conic-gradient(${out.join(',')})`;
+        };
+
+        // 1) Tür dağılımı
+        const tur = SIRA.map(t => ({ t, n: A.filter(a => a.type === t).length })).filter(x => x.n > 0);
+        const turSatir = tur.map((x, i) => ({
+          ad: TYPES[x.t].kind, n: x.n, pct: yuzde(x.n, toplam) + '%', renk: REN[x.t], i,
+          ipucu: TYPES[x.t].kind + ': ' + x.n + ' kayıt — listede göster', git: git({ tur: x.t })
+        }));
+
+        // 2) Hizmet durumu
+        const aktif = A.filter(a => aktifMi(a)).length, pasif = toplam - aktif;
+        const aktifYuzde = toplam ? (pasif ? Math.min(99, yuzde(aktif, toplam)) : 100) : 0;
+
+        // 3) Fotoğraf kapsamı
+        const fotolu = A.filter(a => (a.photos || 0) > 0).length;
+        const fotoSayi = A.reduce((t, a) => t + (a.photos || 0), 0);
+        const fotoYuzde = yuzde(fotolu, toplam);
+        const fotoTur = SIRA.map(t => {
+          const h = A.filter(a => a.type === t); const f = h.filter(a => (a.photos || 0) > 0).length;
+          return { t, n: h.length, f };
+        }).filter(x => x.n > 0).map((x, i) => ({ ad: TYPES[x.t].kind, f: x.f, n: x.n, w: yuzde(x.f, x.n) + '%', renk: REN[x.t], i, ipucu: x.f + ' / ' + x.n + ' kayıtta fotoğraf var' }));
+
+        // 4) İlçeler (kuyu / depo / diğer üst üste)
+        const byD = {};
+        for (const a of A) {
+          const o = (byD[a.district || '—'] = byD[a.district || '—'] || { kuyu: 0, depo: 0, diger: 0 });
+          if (a.type === 'kuyu') o.kuyu++; else if (a.type === 'depo') o.depo++; else o.diger++;
+        }
+        const ilceler = Object.entries(byD).map(([ad, o]) => ({ ad, ...o, n: o.kuyu + o.depo + o.diger })).sort((x, y) => y.n - x.n);
+        const maxI = Math.max(1, ...ilceler.map(x => x.n));
+        const ilceSatir = ilceler.map((x, i) => ({
+          ad: x.ad, n: x.n, i,
+          wK: (x.kuyu / maxI * 100) + '%', wD: (x.depo / maxI * 100) + '%', wO: (x.diger / maxI * 100) + '%',
+          ipucu: x.ad + ': ' + x.kuyu + ' kuyu, ' + x.depo + ' depo' + (x.diger ? ', ' + x.diger + ' diğer' : '') + ' — listede göster',
+          git: git({ ilce: x.ad })
+        }));
+
+        // 5) Köyler (en çok kayıtlı 8; köyü yazılmamış kayıtlar sayılmaz)
+        const byV = {};
+        for (const a of A) { if (!a.village) continue; const k = a.village + ' · ' + (a.district || ''); (byV[k] = byV[k] || { n: 0, ad: a.village, ilce: a.district || '' }).n++; }
+        const koyler = Object.values(byV).sort((x, y) => y.n - x.n).slice(0, 8);
+        const maxK = Math.max(1, ...koyler.map(x => x.n));
+        const koySatir = koyler.map((x, i) => ({
+          ad: x.ad, ilce: x.ilce, n: x.n, w: (x.n / maxK * 100) + '%', i, ipucu: x.ad + ': ' + x.n + ' kayıt — listede göster',
+          git: () => this.setState({ tab: 'envanter', envF: {}, envQ: x.ad })
+        }));
+
+        // 6) Yakınımdaki tesisler
+        const yakin = [...A].map(a => ({ a, km: this.distKm(a) })).sort((x, y) => x.km - y.km).slice(0, 5).map(({ a, km }) => ({
+          kod: a.code, yer: a.village ? a.village + ' · ' + (a.district || '') : (a.district || ''), km: km.toFixed(1) + ' km', renk: REN[a.type] || DIGER, route: () => this.yolTarifiVer(a)
+        }));
+
+        return {
+          var: true, bos: toplam === 0, zemin,
+          renkKuyu: REN.kuyu, renkDepo: REN.depo, renkDiger: DIGER, renkVurgu: 'var(--color-accent)', iz: ui.rule,
+          toplam, turDonut: halka(tur.map(x => ({ n: x.n, renk: REN[x.t] }))), turSatir,
+          aktif, pasif, aktifYuzde, pasifVar: pasif > 0,
+          aktifHalka: toplam ? `conic-gradient(var(--color-accent) 0deg ${aktifYuzde * 3.6}deg, ${ui.rule} 0)` : `conic-gradient(${ui.rule} 0 360deg)`,
+          pasifGit: git({ aktiflik: 'Pasif' }),
+          fotolu, fotoSayi, fotoYuzde, fotoTur,
+          fotoHalka: `conic-gradient(var(--color-accent) 0deg ${fotoYuzde * 3.6}deg, ${ui.rule} 0)`,
+          ilceSatir, koySatir, koyVar: koySatir.length > 0, yakin, yakinVar: yakin.length > 0
+        };
+      })(),
+
       exportReport: kind => () => kind === 'excel' ? this.excelVer() : this.pdfVer(),
       exportExcel: () => this.excelVer(),
       exportPdf: () => this.pdfVer(),

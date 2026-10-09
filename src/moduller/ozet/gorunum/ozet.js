@@ -1,18 +1,8 @@
       ozet: (() => {
         const sekmeler = [['envanter', 'Envanter'], ...(arizaOn ? [['ekip', 'Ekip ve arıza']] : []), ...(arizaOn || ambarOn ? [['rapor', 'Rapor']] : [])];
         const sekAktif = sekmeler.some(x => x[0] === s.ozetSekme) ? s.ozetSekme : 'envanter';
-        const byD = {}, byV = {};
-        for (const a of s.assets) {
-          (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
-          byD[a.district].n++;
-          if (aktifMi(a)) byD[a.district].aktif++; else byD[a.district].pasif++;
-          if (a.type === 'kuyu') byD[a.district].kuyu++;
-          if (a.type === 'depo') byD[a.district].depo++;
-          const key = this.yer(a);
-          (byV[key] = byV[key] || { n: 0, photos: 0 });
-          byV[key].n++; byV[key].photos += a.photos;
-        }
-        const near = [...s.assets].map(a => ({ a, km: this.distKm(a) })).sort((x, y) => x.km - y.km).slice(0, 8);
+        const byD = {};
+        for (const a of s.assets) byD[a.district] = true;
         const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
         // Tekrarlayan arıza: aynı tesiste birden çok kayıt — kalıcı çözüm işareti
         const tekrarList = (() => {
@@ -163,41 +153,6 @@
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
             ...(arizaOn ? [{ n: String(openF.length), label: 'Açık arıza' }] : [])
           ],
-          districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
-            name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
-            barW: Math.round(v.n / Math.max(...Object.values(byD).map(z => z.n)) * 100) + '%'
-          })),
-          villages: Object.entries(byV).filter(([ad]) => !/^Köy girilmedi/.test(ad)).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
-            name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf'
-          })),
-          aktiflik: (() => {
-            const satir = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
-              const hepsi = s.assets.filter(a => a.type === t);
-              const ak = hepsi.filter(a => aktifMi(a)).length;
-              return {
-                tur: TYPES[t].kind, aktif: String(ak), pasif: String(hepsi.length - ak),
-                toplam: String(hepsi.length),
-                oran: hepsi.length ? Math.round(ak / hepsi.length * 100) + '%' : '—',
-                barW: hepsi.length ? Math.round(ak / hepsi.length * 100) + '%' : '0%'
-              };
-            });
-            const ta = s.assets.filter(a => aktifMi(a)).length;
-            return {
-              satir,
-              toplam: {
-                tur: 'Toplam', aktif: String(ta), pasif: String(s.assets.length - ta),
-                toplam: String(s.assets.length),
-                oran: s.assets.length ? Math.round(ta / s.assets.length * 100) + '%' : '—'
-              },
-              note: 'Pasif kayıtlar envanterden düşmez; hizmet dışı sayılır. İlçe kırılımı aşağıdaki tabloda, kayıt bazında Envanter sekmesindeki Durum süzgecinde.'
-            };
-          })(),
-          near: near.map(({ a, km }) => ({
-            code: a.code, place: this.yer(a),
-            km: km.toFixed(1) + ' km',
-            kind: TYPES[a.type].kind,
-            route: () => this.yolTarifiVer(a)
-          })),
           zamanSec: [['bugun', 'Bugün'], ['hafta', 'Hafta'], ['ay', 'Ay'], ['yil', 'Yıl'], ['tum', 'Tümü'], ['ozel', 'Özel']]
             .map(([k, ad]) => ({
               label: ad, ...seg((s.ozetZaman || 'hafta') === k, () => this.setState({ ozetZaman: k }))
@@ -228,6 +183,8 @@
           // Rapor (tarih aralıklı arıza+stok özeti + köy bazlı malzeme
           // maliyeti — ikisi de aynı zaman/ilçe süzgecini paylaşıyor).
           // Yalnız envanter açıkken (diğer modüller kapalı) sekme çubuğu hiç çıkmaz
+          // Envanter sekmesinde, arıza kapalıyken üstteki sayı kutuları gösterge panelinin kendisidir (tekrar etmesin)
+          statsVar: sekAktif !== 'envanter' || arizaOn,
           sekmeVar: sekmeler.length > 1,
           sekmeSec: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
           sekmeSecTel: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),

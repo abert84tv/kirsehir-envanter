@@ -130,3 +130,23 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 @media (prefers-reduced-motion:reduce){.ks-pop{animation:none}.ks-tik{animation:none;stroke-dashoffset:0}}
 /* Dar masaüstü penceresinde üst çubuk düğmeleri yalnız ikona iner, başlık kaybolmaz */
 @media (max-width:1180px){.ks-ust-etiket{display:none}}
+/* ── Özet gösterge paneli: sayaç, halka ve çubuk animasyonları ── */
+@property --say{syntax:'<integer>';initial-value:0;inherits:false}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes ksSay{from{--say:0}to{--say:var(--hedef)}}
+@keyframes ksSup{from{--a:0deg}to{--a:360deg}}
+@keyframes ksCubuk{from{clip-path:inset(0 100% 0 0 round 4px)}to{clip-path:inset(0 0 0 0 round 4px)}}
+@keyframes ksYukari{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ks-say{--say:var(--hedef);counter-reset:say var(--say);animation:ksSay 1.2s cubic-bezier(.2,.7,.2,1) both;font-variant-numeric:tabular-nums}
+.ks-say::after{content:counter(say)}
+.ks-say.yuzde::after{content:counter(say) '%'}
+.ks-halka{position:relative;border-radius:50%;flex:none}
+.ks-halka::after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(transparent var(--a),var(--zemin) 0);animation:ksSup 1.15s .12s cubic-bezier(.3,.7,.2,1) both}
+.ks-halka-orta{position:absolute;inset:17%;border-radius:50%;background:var(--zemin);z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.ks-cubuk{animation:ksCubuk .95s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms + 120ms)}
+.ks-modul{animation:ksYukari .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--m,0)*70ms)}
+.ks-satir{transition:background-color .15s ease,transform .15s ease}
+.ks-satir:hover{background:rgba(128,128,128,.13)}
+.ks-satir:hover .ks-cubuk-iz{filter:brightness(1.12)}
+.ks-satir:active{transform:scale(.995)}
+@media (prefers-reduced-motion:reduce){.ks-say,.ks-halka::after,.ks-cubuk,.ks-modul{animation:none}.ks-halka::after{background:transparent}}

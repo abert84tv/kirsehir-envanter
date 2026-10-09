@@ -2,21 +2,23 @@
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
 <div>
-<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy bazında sayılar, bu hafta yapılanlar ve size en yakın tesisler.</div>
+<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">Envanterin dağılımı, hizmet durumu ve size en yakın tesisler.</div>
 </div>
 <div style="display:flex;gap:8px;flex:none">
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">Excel’e aktar</button>
 <button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">PDF rapor</button>
 </div>
 </div>
+<sc-if value="{{ ozet.statsVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
 <div style="padding:14px 16px;border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;flex-direction:column;gap:6px">
-<span style="font:700 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ st.n }}</span>
+<span class="ks-say" style="--hedef:{{ st.n }};font:700 28px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}"></span>
 <span style="font:600 11.5px/1.2 var(--font-body);color:{{ ui.mut }}">{{ st.label }}</span>
 </div>
 </sc-for>
 </div>
+</sc-if>
 <sc-if value="{{ ozet.sekmeVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;padding:12px 18px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.sekmeSec }}" as="sk" hint-placeholder-count="3">
@@ -26,75 +28,7 @@
 </sc-if>
 
 <sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
-<div style="display:grid;grid-template-columns:1fr 1fr">
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
-<span style="font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Aktif / pasif dağılımı</span>
-<span class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }};flex:1 1 280px;min-width:0">{{ ozet.aktiflik.note }}</span>
-</div>
-<div style="display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }}">
-<span style="flex:1;min-width:0;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Tür</span>
-<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Aktif</span>
-<span style="width:52px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Pasif</span>
-<span style="width:56px;text-align:right;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Toplam</span>
-</div>
-<sc-for list="{{ ozet.aktiflik.satir }}" as="r" hint-placeholder-count="4">
-<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="flex:1;min-width:0;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ r.tur }}</span>
-<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.aktif }}</span>
-<span style="width:52px;text-align:right;font:600 14px/1 var(--font-heading);color:{{ ui.acc }}">{{ r.pasif }}</span>
-<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ r.toplam }}</span>
-</div>
-<div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }};position:relative">
-<span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.barW }};background:var(--color-accent);border-radius:3px"></span>
-</div>
-</div>
-</sc-for>
-<div style="padding:11px 18px;display:flex;align-items:center;gap:10px;background:{{ ui.surf }}">
-<span style="flex:1;min-width:0;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.tur }} · {{ ozet.aktiflik.toplam.oran }} aktif</span>
-<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ozet.aktiflik.toplam.aktif }}</span>
-<span style="width:52px;text-align:right;font:600 15px/1 var(--font-heading);letter-spacing:-.022em;color:{{ ui.acc }}">{{ ozet.aktiflik.toplam.pasif }}</span>
-<span style="width:56px;text-align:right;font:600 13px/1 var(--font-body);color:{{ ui.mut }}">{{ ozet.aktiflik.toplam.toplam }}</span>
-</div>
-</div>
-<div style="border-right:1px solid {{ ui.rule }};border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">İlçe bazında</div>
-<sc-for list="{{ ozet.districts }}" as="d" hint-placeholder-count="7">
-<div style="padding:11px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-<span style="font:600 14px/1.1 var(--font-heading);color:{{ ui.fg }}">{{ d.name }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ d.n }}</span>
-</div>
-<div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }}"><div style="height:6px;width:{{ d.barW }};background:var(--color-accent);border-radius:3px"></div></div>
-<div style="display:flex;justify-content:space-between;gap:10px">
-<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">{{ d.mix }}</span>
-</div>
-</div>
-</sc-for>
-</div>
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Köy bazında (en çok kayıtlı 12)</div>
-<sc-for list="{{ ozet.villages }}" as="v" hint-placeholder-count="12">
-<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:12px">
-<span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ v.name }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }};width:64px;text-align:right">{{ v.n }}</span>
-<span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }};width:80px;text-align:right">{{ v.photos }}</span>
-</div>
-</sc-for>
-</div>
-</div>
-<div>
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>
-<sc-for list="{{ ozet.near }}" as="n" hint-placeholder-count="8">
-<div style="padding:10px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:center;gap:12px">
-<span style="font:600 13px/1 ui-monospace,Menlo,monospace;color:{{ ui.acc }};width:64px">{{ n.km }}</span>
-<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:120px">{{ n.code }}</span>
-<span style="flex:1;font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ n.place }}</span>
-<button onClick="{{ n.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:8px 10px">Yol tarifi</button>
-</div>
-</sc-for>
-</div>
+<!--@dahil moduller/ozet/ortak/pano-envanter.html-->
 </sc-if>
 
 <sc-if value="{{ ozet.ekipSekmesi }}" hint-placeholder-val="{{ false }}">

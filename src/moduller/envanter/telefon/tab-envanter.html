@@ -2,6 +2,7 @@
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <input value="{{ envKontrol.q }}" onChange="{{ envKontrol.onQ }}" placeholder="Envanterde ara — kod, köy, ilçe, alan" style="all:unset;box-sizing:border-box;width:100%;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:12px 11px;min-height:46px"></input>
+<!--@dahil moduller/envanter/ortak/hazir-suzgec.html-->
 <button onClick="{{ telSuz.listeTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid {{ telSuz.listeKenar }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)"><span>Süzgeç ve sıralama</span><span style="color:{{ ui.mut }};font-size:11px">{{ telSuz.listeEtiket }} {{ telSuz.listeOk }}</span></button>
 <sc-if value="{{ telSuz.listeAcik }}" hint-placeholder-val="{{ false }}">
 <div class="ks-gir" style="display:flex;flex-direction:column;gap:8px">

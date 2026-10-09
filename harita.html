@@ -69,6 +69,17 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .ks-dist{background:rgba(29,29,31,.9);border:none;border-radius:13px;color:#fff;
     padding:3px 10px;font:600 12px/1.35 var(--font-body);letter-spacing:-.01em;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   .ks-dist:before{display:none}
+  #olc{left:12px;bottom:12px;width:min(300px,calc(100% - 24px));padding:0;display:none}
+  #olc.show{display:block}
+  #olc .rt-head{background:var(--color-accent);color:#fff;padding:7px 10px;font:600 11px/1 var(--font-body);letter-spacing:-.01em;border-radius:8px 8px 0 0}
+  #olc .rt-body{padding:10px}
+  #olc .olc-not{font:400 11.5px/1.45 var(--font-body);color:var(--color-neutral-600)}
+  #olc .olc-sat{display:flex;gap:8px;align-items:baseline;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--color-divider);font:500 12px/1.3 var(--font-body);color:var(--color-text)}
+  #olc .olc-sat b{font:700 12.5px/1 var(--font-heading);white-space:nowrap}
+  #olc .rt-nums b{color:var(--color-accent)}
+  #olc .rt-acts button{all:unset;cursor:pointer;flex:1;text-align:center;padding:10px 4px;border:1px solid var(--color-divider);border-radius:9px;font:600 11px/1.1 var(--font-body);color:var(--color-text)}
+  #olc .rt-acts button#olc-bit{background:var(--color-accent);border-color:var(--color-accent);color:#fff}
+  .ks-olcnokta{background:var(--color-accent);color:#fff;border:2px solid #fff;border-radius:50%;width:20px!important;height:20px!important;margin:-10px 0 0 -10px!important;display:flex;align-items:center;justify-content:center;font:700 11px/1 var(--font-body);box-shadow:0 1px 4px rgba(0,0,0,.35)}
   #route{right:12px;bottom:12px;max-width:280px;padding:0;display:none}
   #route.show{display:block}
   #route .rt-head{background:var(--color-text);color:#fff;padding:7px 10px;
@@ -110,12 +121,26 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   </div>
   <div class="sep"></div>
   <button id="t-nav">Yol tarifi modu</button>
+  <button id="t-olc">Mesafe ölç</button>
   <button id="t-go">Git — konumum</button>
   <div class="sep"></div>
   <button id="t-labels" class="on">Kayıt etiketleri</button>
   <button id="t-hat" class="on">Hat güzergâhları</button>
   <button id="t-coord">Koordinat işaretini temizle</button>
   <button id="t-fit">İl sınırına sığdır</button>
+  </div>
+</div>
+<div class="panel" id="olc">
+  <div class="rt-head">Mesafe ölçümü</div>
+  <div class="rt-body">
+    <div class="olc-not" id="olc-not">Kuyu, depo ya da haritada herhangi bir noktaya dokunun; ikinci noktadan sonra mesafe görünür.</div>
+    <div id="olc-list"></div>
+    <div class="rt-nums" id="olc-top" style="display:none"><div><b id="olc-km">—</b><span>toplam (kuş uçuşu)</span></div></div>
+    <div class="rt-acts">
+      <button id="olc-geri">Son noktayı sil</button>
+      <button id="olc-temiz">Temizle</button>
+      <button id="olc-bit">Bitir</button>
+    </div>
   </div>
 </div>
 <div class="panel" id="route">
@@ -145,6 +170,7 @@ const SUZ_KEY = 'ks-suzgec';
 // (Hat Kesiti haritasıyla birebir aynı). Burada yalnız tıklama davranışı tanımlıdır.
 const K = katmanKur(map, {
   tikla(g) {
+    if (olcAcik) { olcEkle(g.lat, g.kind === 'a' ? g.a.code : (g.isu ? g.isu.ad : 'Nokta'), g.lon); return; }
     if (g.kind === 'a') {
       if (navMode) routeTo(g.a);
       else parent.postMessage({ ks: 'select', id: g.a.id, code: g.a.code }, '*');
@@ -211,6 +237,52 @@ let me = { ...STD };
 const meMarker = L.marker([me.lat, me.lon], {
   icon: L.divIcon({ className: '', iconSize: [18, 18], iconAnchor: [9, 9], html: '<div class="ks-me"></div>' })
 }).bindTooltip('Konumum', { direction: 'top', offset: [0, -10] }).addTo(map);
+
+// ── Mesafe ölçümü: kayıtlara (kuyu, depo…) ya da haritaya dokunarak noktalar eklenir; aralar ve toplam kuş uçuşu mesafedir
+let olcAcik = false, olcNokta = [];
+const olcKatman = L.layerGroup().addTo(map);
+const olcMetin = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(m < 10000 ? 2 : 1).replace('.', ',') + ' km';
+function olcCiz() {
+  olcKatman.clearLayers();
+  const liste = document.getElementById('olc-list');
+  liste.innerHTML = '';
+  let toplam = 0;
+  olcNokta.forEach((p, i) => {
+    L.marker([p.lat, p.lon], { interactive: false, icon: L.divIcon({ className: 'ks-olcnokta', html: String(i + 1), iconSize: [20, 20] }) }).addTo(olcKatman);
+    if (i === 0) return;
+    const o = olcNokta[i - 1], m = map.distance([o.lat, o.lon], [p.lat, p.lon]);
+    toplam += m;
+    L.polyline([[o.lat, o.lon], [p.lat, p.lon]], { color: '#0071e3', weight: 3, dashArray: '7 6', opacity: .95, interactive: false }).addTo(olcKatman)
+      .bindTooltip(olcMetin(m), { permanent: true, direction: 'center', className: 'ks-dist' });
+    const s = document.createElement('div'); s.className = 'olc-sat';
+    const ad = document.createElement('span'); ad.textContent = o.ad + ' → ' + p.ad;
+    const b = document.createElement('b'); b.textContent = olcMetin(m);
+    s.append(ad, b); liste.appendChild(s);
+  });
+  document.getElementById('olc-not').style.display = olcNokta.length < 2 ? 'block' : 'none';
+  document.getElementById('olc-not').textContent = olcNokta.length === 0 ? 'Kuyu, depo ya da haritada herhangi bir noktaya dokunun; ikinci noktadan sonra mesafe görünür.' : 'Mesafeyi sürdürmek için sıradaki noktaya dokunun.';
+  document.getElementById('olc-top').style.display = olcNokta.length > 1 ? 'flex' : 'none';
+  document.getElementById('olc-km').textContent = olcNokta.length > 1 ? olcMetin(toplam) : '—';
+}
+function olcEkle(lat, ad, lon) {
+  const son = olcNokta[olcNokta.length - 1];
+  if (son && Math.abs(son.lat - lat) < 1e-7 && Math.abs(son.lon - lon) < 1e-7) return;
+  olcNokta.push({ lat, lon, ad: ad || ('Nokta ' + (olcNokta.length + 1)) });
+  olcCiz();
+}
+function olcKur(ac) {
+  olcAcik = ac;
+  document.getElementById('t-olc').classList.toggle('on', ac);
+  document.getElementById('olc').classList.toggle('show', ac);
+  map.getContainer().style.cursor = ac ? 'crosshair' : '';
+  if (ac && typeof setNav === 'function' && navMode) setNav(false);
+  if (!ac) { olcNokta = []; olcCiz(); }
+}
+document.getElementById('t-olc').onclick = () => olcKur(!olcAcik);
+document.getElementById('olc-geri').onclick = () => { olcNokta.pop(); olcCiz(); };
+document.getElementById('olc-temiz').onclick = () => { olcNokta = []; olcCiz(); };
+document.getElementById('olc-bit').onclick = () => olcKur(false);
+map.on('click', e => { if (olcAcik) olcEkle(+e.latlng.lat.toFixed(6), '', +e.latlng.lng.toFixed(6)); });
 
 let navMode = false, routeLine = null;
 function setNav(on) {

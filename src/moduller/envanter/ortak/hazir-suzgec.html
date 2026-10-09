@@ -1,0 +1,8 @@
+<sc-if value="{{ envKontrol.hazirlar.length }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+<span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }};margin-right:2px">Hızlı süzgeç:</span>
+<sc-for list="{{ envKontrol.hazirlar }}" as="h" hint-placeholder-count="4">
+<button onClick="{{ h.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1px solid {{ h.kenar }};background:{{ h.bg }};color:{{ h.fg }};font:600 12px/1 var(--font-body)">{{ h.ad }} <span style="opacity:.7;font-weight:500">{{ h.n }}</span></button>
+</sc-for>
+</div>
+</sc-if>

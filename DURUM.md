@@ -2117,3 +2117,10 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-163 — Telefonda tesis kartı başlığı sıkılaştı
 - Pasife al · ✎ Köyü düzelt · ✓ Köy doğru düğmeleri tek satırda yan yana (alt alta üç satır yerine bir satır).
+
+## 2026.10.10-164 — Toplu veri girişi, hazır süzgeçler, mesafe ölçümü, yedek
+- **Toplu veri girişi (Ayarlar > Kayıt araçları):** kuyu / depo şablonu (CSV, mevcut değerlerle) indirilir, Excel’de doldurulur, “Doldurulmuş dosyayı yükle” ile geri verilir (CSV ya da .xlsx). Yalnız dolu hücreler yazılır, kod bulunamazsa atlanır, onay ister, sunucuya yazar. Köy sütunu doldurulursa “elle girildi” işaretlenir.
+- **Hazır süzgeçler (Envanter > Liste):** Köyü boş · Fotoğrafı yok · Kuyu bilgisi girilmemiş · Köyü otomatik yazılan; Özet’teki Fotoğraf ve Teknik özet kutularından da açılır.
+- **Harita > Harita menüsü > Mesafe ölç:** kuyu/depo ya da haritaya dokunarak noktalar eklenir (kuyu–depo arası dahil); aralar ve toplam kuş uçuşu mesafe (m/km) çizgi üstünde ve panelde görünür; son noktayı sil / temizle / bitir.
+- **Yedek (Ayarlar > Veri):** tesisler (tüm alanlarıyla), saha notları, arızalar, ekipler tek JSON; ayrıca tesisleri Excel olarak indirme.
+- Özet > Son hareketler satırlarında işlemi yapan kişinin adı.

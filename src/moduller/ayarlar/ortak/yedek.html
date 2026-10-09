@@ -1,0 +1,8 @@
+<div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:10px">
+<span style="font:700 15px/1.2 var(--font-heading)">Yedek</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:640px">Bütün tesisleri (tüm alanlarıyla), saha notlarını, arızaları ve ekipleri tek dosya olarak bilgisayara indirir. Fotoğraflar sunucuda saklanır, dosyada yalnız sayıları bulunur. Düzenli aralıklarla almanız önerilir.</span>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ topluGiris.yedek }}" class="btn btn-primary" style="width:fit-content;display:flex;align-items:center;min-height:42px;border:none;cursor:pointer;font:600 12.5px/1 var(--font-body);padding:0 16px">Yedeği indir (JSON)</button>
+<button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;display:flex;align-items:center;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">Tesisleri Excel olarak indir</button>
+</div>
+</div>

@@ -156,10 +156,10 @@
           const g = gercek(a.guncellendi) ? Date.parse(a.guncellendi) : 0, o = gercek(a.olusturuldu) ? Date.parse(a.olusturuldu) : 0;
           const ms = Math.max(g || 0, o || 0); if (!ms) continue;
           const yeniKayit = o && (!g || Math.abs(g - o) < 120000);
-          olaylar.push({ a, ms, ne: yeniKayit ? 'eklendi' : 'güncellendi' });
+          olaylar.push({ a, ms, ne: yeniKayit ? 'eklendi' : 'güncellendi', kim: (yeniKayit ? a.olusturan : a.guncelleyen) || '' });
         }
-        const son = olaylar.sort((x, y) => y.ms - x.ms).slice(0, 6).map(({ a, ms, ne }) => ({
-          kod: a.code, ne, zaman: yas(ms), yer: a.village ? a.village + ' · ' + (a.district || '') : (a.district || ''), renk: REN[a.type] || DIGER,
+        const son = olaylar.sort((x, y) => y.ms - x.ms).slice(0, 6).map(({ a, ms, ne, kim }) => ({
+          kod: a.code, ne: ne + (kim ? ' · ' + kim : ''), zaman: yas(ms), yer: a.village ? a.village + ' · ' + (a.district || '') : (a.district || ''), renk: REN[a.type] || DIGER,
           ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' })
         }));
 
@@ -189,6 +189,7 @@
           aktif, pasif, aktifYuzde, pasifVar: pasif > 0,
           aktifHalka: toplam ? `conic-gradient(var(--color-accent) 0deg ${aktifYuzde * 3.6}deg, ${ui.rule} 0)` : `conic-gradient(${ui.rule} 0 360deg)`,
           pasifGit: git({ aktiflik: 'Pasif' }),
+          fotosuzGit: git({ hazir: 'fotosuz' }), teknikGit: git({ hazir: 'teknikbos' }),
           fotolu, fotoSayi, fotoYuzde, fotoTur,
           fotoHalka: `conic-gradient(var(--color-accent) 0deg ${fotoYuzde * 3.6}deg, ${ui.rule} 0)`,
           ilceSatir, koySatir, koyVar: koySatir.length > 0, yakin, yakinVar: yakin.length > 0,

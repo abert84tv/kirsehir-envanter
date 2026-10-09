@@ -14,3 +14,4 @@
 //@dahil moduller/envanter/gorunum/kucukler-6.js
 //@dahil moduller/envanter/gorunum/alanDuzenle.js
 //@dahil moduller/envanter/gorunum/kucukler-7.js
+//@dahil moduller/envanter/gorunum/topluGiris.js

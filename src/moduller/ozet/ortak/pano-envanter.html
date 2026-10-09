@@ -87,6 +87,7 @@
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Kuyuların teknik özeti</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Yalnız bilgisi girilmiş kuyular hesaba katılır</span>
 </div>
+<button onClick="{{ ozetPano.teknikGit }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:36px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/34px var(--font-body);color:{{ ui.acc }}">Bilgisi girilecek kuyuları göster</button>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
 <sc-for list="{{ ozetPano.teknik }}" as="x" hint-placeholder-count="3">
 <div title="{{ x.ipucu }}" style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:12px;background:{{ ui.surf2 }}">
@@ -199,6 +200,7 @@
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Fotoğraf kapsamı</span>
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}"><span class="ks-say" style="--hedef:{{ ozetPano.fotolu }}"></span> kayıtta fotoğraf var · toplam <span class="ks-say" style="--hedef:{{ ozetPano.fotoSayi }}"></span> fotoğraf</span>
 </div>
+<button onClick="{{ ozetPano.fotosuzGit }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:36px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/34px var(--font-body);color:{{ ui.acc }}">Fotoğrafı olmayanları göster</button>
 <div style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
 <div class="ks-halka" style="width:118px;height:118px;background:{{ ozetPano.fotoHalka }};--zemin:{{ ozetPano.zemin }}">
 <div class="ks-halka-orta"><span class="ks-say yuzde" style="--hedef:{{ ozetPano.fotoYuzde }};font:700 24px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span></div>

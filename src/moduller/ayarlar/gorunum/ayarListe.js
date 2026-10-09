@@ -4,7 +4,7 @@
         satirlar: satirlar
           // Modüller yalnız yöneticide; ayrı sekmesi olanlar SUZGEC_TANIM'daki
           // kendi yetkisinden okur (AYAR_TAB_YETKI), ötekiler ayarlar yetkisinden
-          .filter(([id]) => (id !== 'modul' || can('admin'))
+          .filter(([id]) => (id !== 'modul' || can('admin')) && ayarGorunur(id, s.modul)
             && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok'))
           .map(([id, ad, alt]) => ({
             ad,

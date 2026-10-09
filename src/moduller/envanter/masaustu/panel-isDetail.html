@@ -16,9 +16,9 @@
 </div>
 </div>
 <div class="ks-gir" style="padding:12px 18px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
-<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+<div style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px">
 <button onClick="{{ routeToSel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.pin }}Yol tarifi</button>
-<button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--color-uyari);font:600 11px/1 var(--font-body)">{{ ikonlar.uyariKucuk }}Arıza aç</button>
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--color-uyari);font:600 11px/1 var(--font-body)">{{ ikonlar.uyariKucuk }}Arıza aç</button></sc-if>
 <button onClick="{{ detail.fotoSekme }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.kamera }}Fotoğraf</button>
 <button onClick="{{ editDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.acc }};font:600 11px/1 var(--font-body)">{{ ikonlar.kalemOrta }}Düzenle</button>
 </div>

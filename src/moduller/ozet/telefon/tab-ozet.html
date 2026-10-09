@@ -16,11 +16,13 @@
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:13px 10px">Excel</button>
 <button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body);padding:13px 10px">PDF rapor</button>
 </div>
+<sc-if value="{{ ozet.sekmeVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.sekmeSecTel }}" as="sk" hint-placeholder-count="2">
 <button onClick="{{ sk.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 8px;border-radius:10px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;background:{{ sk.bg }};color:{{ sk.fg }}">{{ sk.ad }}</button>
 </sc-for>
 </div>
+</sc-if>
 
 <sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
 <div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>

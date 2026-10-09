@@ -1,3 +1,4 @@
+      newFaultVar: arizaOn,
       newFault: () => {
         if (!canCreateFault) return this.say(arizaOn ? 'Bu rol arıza kaydı açamaz.' : 'Arıza modülü pasif.');
         // Telefonda seçili tesis yoksa tesis boş başlar: listenin ilk kaydı

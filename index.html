@@ -499,7 +499,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 </div>
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
-<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border-radius:10px;border:1px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.ariza }}</button>
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border-radius:10px;border:1px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.ariza }}</button></sc-if>
 <button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:var(--color-accent);border-radius:10px;border:1px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent-600);border-color:var(--color-accent-600)">{{ ikonlar.gpsBuyuk }}</button>
 </div>
 </div>
@@ -2034,11 +2034,13 @@ Hareket gir
 </div>
 </sc-for>
 </div>
+<sc-if value="{{ ozet.sekmeVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;padding:12px 18px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.sekmeSec }}" as="sk" hint-placeholder-count="3">
 <button onClick="{{ sk.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:9px 16px;border-radius:10px;font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;background:{{ sk.bg }};color:{{ sk.fg }}">{{ sk.ad }}</button>
 </sc-for>
 </div>
+</sc-if>
 
 <sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:1fr 1fr">
@@ -4107,9 +4109,9 @@ Hareket gir
 </div>
 </div>
 <div class="ks-gir" style="padding:12px 18px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
-<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+<div style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px">
 <button onClick="{{ routeToSel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.pin }}Yol tarifi</button>
-<button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--color-uyari);font:600 11px/1 var(--font-body)">{{ ikonlar.uyariKucuk }}Arıza aç</button>
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--color-uyari);font:600 11px/1 var(--font-body)">{{ ikonlar.uyariKucuk }}Arıza aç</button></sc-if>
 <button onClick="{{ detail.fotoSekme }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.kamera }}Fotoğraf</button>
 <button onClick="{{ editDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.acc }};font:600 11px/1 var(--font-body)">{{ ikonlar.kalemOrta }}Düzenle</button>
 </div>
@@ -4934,7 +4936,7 @@ Hareket gir
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-<button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button>
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button></sc-if>
 <button onClick="{{ goToMyLocation }}" title="Cihaz GPS'i ile konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:60px;height:60px;background:var(--color-accent);border-radius:10px;border:1px solid var(--color-accent);color:#fff;display:flex;align-items:center;justify-content:center">{{ ikonlar.gpsBuyuk }}</button>
 </div>
 </div>
@@ -6379,11 +6381,13 @@ Hareket gir
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:13px 10px">Excel</button>
 <button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body);padding:13px 10px">PDF rapor</button>
 </div>
+<sc-if value="{{ ozet.sekmeVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.sekmeSecTel }}" as="sk" hint-placeholder-count="2">
 <button onClick="{{ sk.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;padding:11px 8px;border-radius:10px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;background:{{ sk.bg }};color:{{ sk.fg }}">{{ sk.ad }}</button>
 </sc-for>
 </div>
+</sc-if>
 
 <sc-if value="{{ ozet.envanterSekmesi }}" hint-placeholder-val="{{ true }}">
 <div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>
@@ -9523,9 +9527,15 @@ const ayarBolumu = id => {
   const d = AYAR_ESKI[id] || id;
   return AYAR_BOLUMLER.some(([bid]) => bid === d) ? d : null;
 };
+// Ayar sayfası yalnız ilgili modül açıksa görünür (anahtarlardan biri açıksa yeter); boş liste = her zaman
+const AYAR_MODUL = {
+  ekip: ['ariza', 'arac'], personel: ['ariza', 'arac'], konum: ['ariza', 'arac'], bildirim: ['ariza'],
+  uyari: ['talep'], yapayzeka: ['talep'], kvkk: ['talep']
+};
+const ayarGorunur = (id, modul) => !AYAR_MODUL[id] || AYAR_MODUL[id].some(k => (modul || {})[k] !== false);
 // Masaüstünde Ayarlar iki sütundur (solda bölüm listesi, sağda içerik): hiçbir bölüm seçili değilse ilki açılır.
 // Telefonda liste tek başına açılır, bölüm seçilince tam ekran olur.
-const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : 'ekip');
+const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : (ayarGorunur('ekip', s.modul) ? 'ekip' : 'yetki'));
 const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'])[1];
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {
@@ -9635,7 +9645,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.10-155';
+const SURUM = '2026.10.10-156';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11761,6 +11771,7 @@ class Component extends DCLogic {
   async basvuruYenile() {
     const M = this._sb;
     if (!M || !M.tokenOku() || !M.basvuruListesi || this.state.offline) return;
+    if (this.state.modul.talep === false) return;
     const r = await M.basvuruListesi();
     if (!r.ok) return;
     const liste = (r.data || []).map(x => ({
@@ -15951,7 +15962,7 @@ class Component extends DCLogic {
     const acikAriza = myFaults.filter(f => !KAPALI_DURUM.includes(f.status)).length;
     const acikTalep = (s.talepler || []).filter(t => !TALEP_KAPALI.includes(t.durum)).length;
     // Modül anahtarı kapalıysa o süzgeç hiç çıkmaz
-    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn, telemetri: telemetriOn,
+    const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn, telemetri: telemetriOn, ekipPano: arizaOn || aracOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };
@@ -17203,6 +17214,7 @@ class Component extends DCLogic {
           hareketBos: 'Henüz görev kaydı yok. “Görev ver” ile bir aracı ekibe çıkarın; dönüşte “Teslim al” deyince kat edilen km ya da çalışma saati burada birikir.'
         };
       })(),
+      newFaultVar: arizaOn,
       newFault: () => {
         if (!canCreateFault) return this.say(arizaOn ? 'Bu rol arıza kaydı açamaz.' : 'Arıza modülü pasif.');
         // Telefonda seçili tesis yoksa tesis boş başlar: listenin ilk kaydı
@@ -18289,7 +18301,7 @@ class Component extends DCLogic {
         satirlar: satirlar
           // Modüller yalnız yöneticide; ayrı sekmesi olanlar SUZGEC_TANIM'daki
           // kendi yetkisinden okur (AYAR_TAB_YETKI), ötekiler ayarlar yetkisinden
-          .filter(([id]) => (id !== 'modul' || can('admin'))
+          .filter(([id]) => (id !== 'modul' || can('admin')) && ayarGorunur(id, s.modul)
             && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok'))
           .map(([id, ad, alt]) => ({
             ad,
@@ -20596,6 +20608,8 @@ class Component extends DCLogic {
         };
       })(),
       ozet: (() => {
+        const sekmeler = [['envanter', 'Envanter'], ...(arizaOn ? [['ekip', 'Ekip ve arıza']] : []), ...(arizaOn || ambarOn ? [['rapor', 'Rapor']] : [])];
+        const sekAktif = sekmeler.some(x => x[0] === s.ozetSekme) ? s.ozetSekme : 'envanter';
         const byD = {}, byV = {};
         for (const a of s.assets) {
           (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
@@ -20756,7 +20770,7 @@ class Component extends DCLogic {
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
-            { n: String(openF.length), label: 'Açık arıza' }
+            ...(arizaOn ? [{ n: String(openF.length), label: 'Açık arıza' }] : [])
           ],
           districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
@@ -20822,18 +20836,13 @@ class Component extends DCLogic {
           // eksik bilgi/yakın tesisler), Ekip ve arıza (performans/tekrar),
           // Rapor (tarih aralıklı arıza+stok özeti + köy bazlı malzeme
           // maliyeti — ikisi de aynı zaman/ilçe süzgecini paylaşıyor).
-          sekmeSec: [['envanter', 'Envanter'], ['ekip', 'Ekip ve arıza'], ['rapor', 'Rapor']]
-            .map(([k, ad]) => ({
-              ad, ...seg((s.ozetSekme || 'envanter') === k, () => this.setState({ ozetSekme: k }))
-            })),
-          // Telefonda da üç sekme: Rapor (esnek tarih raporu, köy bazlı arıza ve malzeme maliyeti) 2026-10-07'de eklendi
-          sekmeSecTel: [['envanter', 'Envanter'], ['ekip', 'Ekip ve arıza'], ['rapor', 'Rapor']]
-            .map(([k, ad]) => ({
-              ad, ...seg((s.ozetSekme || 'envanter') === k, () => this.setState({ ozetSekme: k }))
-            })),
-          envanterSekmesi: (s.ozetSekme || 'envanter') === 'envanter',
-          ekipSekmesi: s.ozetSekme === 'ekip',
-          raporSekmesi: s.ozetSekme === 'rapor'
+          // Yalnız envanter açıkken (diğer modüller kapalı) sekme çubuğu hiç çıkmaz
+          sekmeVar: sekmeler.length > 1,
+          sekmeSec: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
+          sekmeSecTel: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
+          envanterSekmesi: sekAktif === 'envanter',
+          ekipSekmesi: sekAktif === 'ekip',
+          raporSekmesi: sekAktif === 'rapor'
         };
       })(),
       exportReport: kind => () => kind === 'excel' ? this.excelVer() : this.pdfVer(),

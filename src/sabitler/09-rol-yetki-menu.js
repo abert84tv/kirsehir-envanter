@@ -95,9 +95,15 @@ const ayarBolumu = id => {
   const d = AYAR_ESKI[id] || id;
   return AYAR_BOLUMLER.some(([bid]) => bid === d) ? d : null;
 };
+// Ayar sayfası yalnız ilgili modül açıksa görünür (anahtarlardan biri açıksa yeter); boş liste = her zaman
+const AYAR_MODUL = {
+  ekip: ['ariza', 'arac'], personel: ['ariza', 'arac'], konum: ['ariza', 'arac'], bildirim: ['ariza'],
+  uyari: ['talep'], yapayzeka: ['talep'], kvkk: ['talep']
+};
+const ayarGorunur = (id, modul) => !AYAR_MODUL[id] || AYAR_MODUL[id].some(k => (modul || {})[k] !== false);
 // Masaüstünde Ayarlar iki sütundur (solda bölüm listesi, sağda içerik): hiçbir bölüm seçili değilse ilki açılır.
 // Telefonda liste tek başına açılır, bölüm seçilince tam ekran olur.
-const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : 'ekip');
+const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : (ayarGorunur('ekip', s.modul) ? 'ekip' : 'yetki'));
 const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'])[1];
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {

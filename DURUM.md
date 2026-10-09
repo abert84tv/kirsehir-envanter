@@ -2089,3 +2089,7 @@ Sürüm 2026.10.05-114.
 - Tesis kartından “Kayıt tamlığı %” çubuğu kalktı; boş alanlar “— eksik” yerine yalnız “—” görünür. “Bana atanan” listesinden “EKSİK BİLGİ” satırları çıktı. Özet’te köy listesinden “Köy girilmedi” satırları çıktı. Kullanılmayan `missingOf` ve arıza listesi kodu silindi.
 - Ayarlar: sayfa başlığıyla aynı olan küçük etiketler (Ekipler, Modüller, KVKK) kaldırıldı.
 - Veritabanı: `gecmis` tablosundaki 551.761 gereksiz toplu satır silindi (103 MB → 184 kB; veritabanı 119 MB → 16 MB).
+
+## 2026.10.10-156 — Yalnız envanter kullanımı: kapalı modüllerin menü/düğme/sayfaları gizlenir
+- Modül anahtarı kapalıysa ilgili her şey artık görünmez: Ekipler menüsü (arıza ve araç ikisi de kapalıysa), harita üstündeki “Yeni arıza” düğmesi, tesis kartındaki “Arıza aç”, Özet’te “Açık arıza” kutusu ile “Ekip ve arıza”/“Rapor” sekmeleri (tek sekme kalınca çubuk da kalkar), Ayarlar’da ekip/personel/ekip konumu/ekip mesajları/Telegram/yapay zekâ/KVKK sayfaları. Talep kapalıyken başvuru yoklaması ve alarmı çalışmaz.
+- Açık kalan: Envanter (Harita · Hat kesiti · Liste), Özet, Ayarlar (Yetkiler, Denetim izi, Veri, Köy listesi, Kayıt araçları, Dış veri aktarımı, Çöp kutusu, Harita ve görünüm, Modüller). Modüller Ayarlar > Modüller’den istenince yeniden açılır.

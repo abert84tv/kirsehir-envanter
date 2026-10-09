@@ -2,6 +2,7 @@
   async basvuruYenile() {
     const M = this._sb;
     if (!M || !M.tokenOku() || !M.basvuruListesi || this.state.offline) return;
+    if (this.state.modul.talep === false) return;
     const r = await M.basvuruListesi();
     if (!r.ok) return;
     const liste = (r.data || []).map(x => ({

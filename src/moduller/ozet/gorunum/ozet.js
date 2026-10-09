@@ -1,4 +1,6 @@
       ozet: (() => {
+        const sekmeler = [['envanter', 'Envanter'], ...(arizaOn ? [['ekip', 'Ekip ve arıza']] : []), ...(arizaOn || ambarOn ? [['rapor', 'Rapor']] : [])];
+        const sekAktif = sekmeler.some(x => x[0] === s.ozetSekme) ? s.ozetSekme : 'envanter';
         const byD = {}, byV = {};
         for (const a of s.assets) {
           (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
@@ -159,7 +161,7 @@
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
-            { n: String(openF.length), label: 'Açık arıza' }
+            ...(arizaOn ? [{ n: String(openF.length), label: 'Açık arıza' }] : [])
           ],
           districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
@@ -225,17 +227,12 @@
           // eksik bilgi/yakın tesisler), Ekip ve arıza (performans/tekrar),
           // Rapor (tarih aralıklı arıza+stok özeti + köy bazlı malzeme
           // maliyeti — ikisi de aynı zaman/ilçe süzgecini paylaşıyor).
-          sekmeSec: [['envanter', 'Envanter'], ['ekip', 'Ekip ve arıza'], ['rapor', 'Rapor']]
-            .map(([k, ad]) => ({
-              ad, ...seg((s.ozetSekme || 'envanter') === k, () => this.setState({ ozetSekme: k }))
-            })),
-          // Telefonda da üç sekme: Rapor (esnek tarih raporu, köy bazlı arıza ve malzeme maliyeti) 2026-10-07'de eklendi
-          sekmeSecTel: [['envanter', 'Envanter'], ['ekip', 'Ekip ve arıza'], ['rapor', 'Rapor']]
-            .map(([k, ad]) => ({
-              ad, ...seg((s.ozetSekme || 'envanter') === k, () => this.setState({ ozetSekme: k }))
-            })),
-          envanterSekmesi: (s.ozetSekme || 'envanter') === 'envanter',
-          ekipSekmesi: s.ozetSekme === 'ekip',
-          raporSekmesi: s.ozetSekme === 'rapor'
+          // Yalnız envanter açıkken (diğer modüller kapalı) sekme çubuğu hiç çıkmaz
+          sekmeVar: sekmeler.length > 1,
+          sekmeSec: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
+          sekmeSecTel: sekmeler.map(([k, ad]) => ({ ad, ...seg(sekAktif === k, () => this.setState({ ozetSekme: k })) })),
+          envanterSekmesi: sekAktif === 'envanter',
+          ekipSekmesi: sekAktif === 'ekip',
+          raporSekmesi: sekAktif === 'rapor'
         };
       })(),

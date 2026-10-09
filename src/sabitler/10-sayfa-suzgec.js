@@ -90,3 +90,6 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
+// Sayfa kimliğinden (tab) görünen ad: “‹ Geri” düğmesi “‹ Özet” gibi yazar
+const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
+const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';

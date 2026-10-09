@@ -29,3 +29,10 @@
           })
         };
       })(),
+      // “‹ Geri”: bir sayfadan başka sayfaya geçince (örn. Özet > ilçe > liste) önceki sayfaya döner
+      geziGeri: (() => {
+        const g = s.gezi || [];
+        const son = g[g.length - 1];
+        const gizli = !son || tabId === 'isKarti' || !s.session;
+        return { var: !gizli, ad: son ? son.ad : '', git: () => this.geziGeri(), telAcik: !gizli && !(s.device === 'phone' && (tabId === 'harita' || tabId === 'profil')) };
+      })(),

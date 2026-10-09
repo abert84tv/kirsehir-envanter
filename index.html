@@ -312,6 +312,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <!-- main -->
 <div style="flex:1;min-width:0;display:flex;flex-direction:column">
 <div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
+<sc-if value="{{ geziGeri.var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ geziGeri.git }}" title="Önceki sayfaya dön" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 13px/1 var(--font-body)"><span style="font-size:18px;line-height:1;margin-top:-1px">‹</span>{{ geziGeri.ad }}</button></sc-if>
 <div style="flex:1 1 140px;min-width:110px;display:flex;flex-direction:column;gap:3px">
 <span style="font:700 17px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.baslik }}</span>
 <span class="ks-bilgi" style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.alt }}</span>
@@ -5167,6 +5168,9 @@ Hareket gir
 </sc-if>
 </div>
 
+<sc-if value="{{ geziGeri.telAcik }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;padding:7px 12px 0;background:{{ ui.surf }}"><button onClick="{{ geziGeri.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:40px;padding:0 16px 0 12px;border-radius:11px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 14px/1 var(--font-body)"><span style="font-size:20px;line-height:1;margin-top:-1px">‹</span>{{ geziGeri.ad }}</button></div>
+</sc-if>
 <sc-if value="{{ sayfaBar.telAcik }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;display:flex;flex-direction:column;gap:7px;padding:9px 14px 10px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <span style="font:600 20px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ sayfaBar.baslik }}</span>
@@ -10172,7 +10176,11 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.10-159';
+// Sayfa kimliğinden (tab) görünen ad: “‹ Geri” düğmesi “‹ Özet” gibi yazar
+const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
+const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
+
+const SURUM = '2026.10.10-160';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10278,7 +10286,7 @@ class Component extends DCLogic {
       return v;
     })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
-    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', ozetHist: 'derinlik',
+    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', gezi: [], ozetHist: 'derinlik',
     log: {}, trash: [], cop: [], card: null,
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
@@ -10553,6 +10561,7 @@ class Component extends DCLogic {
     if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (['uyari', 'yapayzeka', 'konum'].includes(ayarBolumu(s.ayarBolum)) && s.tab === 'ayarlar') this.entegrasyonYenile(); }
     // Alarm (ses tekrarı, sekme başlığı) iş panosu açılınca susar; işlerin kendisi panoda yanıp söner
     if (s.tab === 'isPanosu' && s.basvuruUyari) this.setState({ basvuruUyari: null });
+    this.geziIzle();
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir
@@ -10917,6 +10926,34 @@ class Component extends DCLogic {
         + 'cihazın saatini elle de düzeltmeniz iyi olur.', 9000, 'kotu');
     }
   }
+  // Gezinme geçmişi: bir sayfadan başka sayfaya geçince önceki sayfa yığına girer; “‹ Geri” düğmesi oradan döner.
+  // Menüden (sol menü, alt çubuk) geçiş yığını sıfırlar — oradaki geçiş “yeni başlangıç”tır.
+  geziMenu() { this._geziIs = { m: 'menu', t: Date.now() }; }
+  geziIzle() {
+    const s = this.state;
+    if (this._geziTab === undefined) { this._geziTab = s.tab; return; }
+    if (this._geziTab === s.tab) return;
+    const onceki = this._geziTab; this._geziTab = s.tab;
+    const is = this._geziIs; this._geziIs = null;
+    const taze = is && Date.now() - is.t < 1500;
+    if (taze && is.m === 'geri') return;
+    if (taze && is.m === 'menu') { if ((s.gezi || []).length) this.setState({ gezi: [] }); return; }
+    // iş kartı kendi geri düğmesine sahiptir; geçici ekranlar yığına girmez
+    if (['isKarti', 'giris'].includes(onceki)) return;
+    const g = s.gezi || [];
+    if (g.length && g[g.length - 1].tab === onceki) return;
+    this.setState({ gezi: [...g, { tab: onceki, ad: sayfaAdi(onceki) }].slice(-8) });
+  }
+  geziGeri() {
+    const g = [...(this.state.gezi || [])];
+    const e = g.pop();
+    if (!e) return;
+    this._geziIs = { m: 'geri', t: Date.now() };
+    // Listeden geri dönerken Özet'ten gelen süzgeç (ilçe, tür…) temizlenir; liste bir sonraki açılışta tam gelir
+    const sifirla = this.state.tab === 'envanter' ? { envF: {}, envQ: '' } : {};
+    this.setState({ ...sifirla, tab: e.tab, gezi: g, panel: e.tab === 'harita' ? this.state.panel : 'yok', isKarti: null, faultForm: null });
+  }
+
   baslatDurum() {
     let dm = 'auto';
     try { dm = localStorage.getItem('ks-device-mode') || 'auto'; } catch (e) { /* depolama kapalı */ }
@@ -16506,7 +16543,7 @@ class Component extends DCLogic {
     // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
     const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length);
     const navItem = g => ({
-      label: g.ad, go: () => this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }),
+      label: g.ad, go: () => { this.geziMenu(); this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }); },
       // Etkin sayfa dolu mavi hap; ötekiler zeminsiz
       pill: g.acik ? 'var(--color-accent)' : 'transparent',
       hover: g.acik ? 'var(--color-accent)' : (dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.045)'),
@@ -16647,7 +16684,7 @@ class Component extends DCLogic {
         ac: () => this.setState({ telMenuAcik: !this.state.telMenuAcik }),
         kapat: () => this.setState({ telMenuAcik: false }),
         ogeler: (() => {
-          const k = fn => () => { this.setState({ telMenuAcik: false }); fn(); };
+          const k = fn => () => { this.geziMenu(); this.setState({ telMenuAcik: false }); fn(); };
           return [
             { ikon: '↻', ad: 'Şimdi eşitle / yenile', renk: ui.fg, git: k(() => { this.say('Yenileniyor…'); this.senkron(); this.veriYenile(); }) },
             { ikon: dark ? '☀' : '☾', ad: dark ? 'Açık tema' : 'Koyu tema', renk: ui.fg, git: k(() => this.temaSec(dark ? 'light' : 'dark')) },
@@ -16712,6 +16749,14 @@ class Component extends DCLogic {
           })
         };
       })(),
+      // “‹ Geri”: bir sayfadan başka sayfaya geçince (örn. Özet > ilçe > liste) önceki sayfaya döner
+      geziGeri: (() => {
+        const g = s.gezi || [];
+        const son = g[g.length - 1];
+        const gizli = !son || tabId === 'isKarti' || !s.session;
+        return { var: !gizli, ad: son ? son.ad : '', git: () => this.geziGeri(), telAcik: !gizli && !(s.device === 'phone' && (tabId === 'harita' || tabId === 'profil')) };
+      })(),
+
       // Sürüm ve önbellek. Telefon eski kopyayı önbellekte tuttuğunda
       // ekranda kaldırılmış kayıtlar görünmeye devam eder; tazeleme bunu çözer.
       surumBilgi: (() => {

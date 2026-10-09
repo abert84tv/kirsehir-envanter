@@ -2101,3 +2101,7 @@ Sürüm 2026.10.05-114.
 ## 2026.10.10-159 — Özet: yedi yeni kutu
 - Eklendi: **Dağılım haritası** (her kayıt tür renginde nokta, ilçe adları, noktaya basınca kart), **Kuyuların teknik özeti** (toplam pompa gücü, ortalama derinlik, toplam debi — yalnız bilgisi girilmiş kuyular), **Kuyuların dağılımı** (yapım yılı / derinlik / debi sütun grafiği), **10 bin kişiye düşen kuyu** (ilçe nüfusu TÜİK), **Su kalitesi** (analizi girilmiş, 12 aydan eski, klor aralığı), **Konumlar nereden geldi**, **Son hareketler** (aynı dakikada 20’den çok kaydı değiştiren toplu yazma izleri sayılmaz).
 - Bilgisi girilmemiş kutular boş grafik yerine ne yapılacağını söyleyen kısa not gösterir; kuyu kartından girildikçe dolar.
+
+## 2026.10.10-160 — Her sayfada “‹ Geri”, harita etiketlerinde köy · ilçe
+- Bir sayfadan başka sayfaya geçince (Özet > ilçe > liste, listeden kayda, Ayarlar > Denetim izi/Çöp kutusu…) üstte **‹ önceki sayfa** düğmesi çıkar; basınca bir önceki sayfaya döner, zincir halinde geri gidilir. Menüden (sol menü, alt çubuk) geçiş geçmişi sıfırlar. Masaüstünde üst çubukta, telefonda üst alanın altında.
+- Harita “Kayıt etiketleri” artık iki satır: kod ve altında **köy · ilçe** (köyü girilmemiş kayıtta yalnız ilçe).

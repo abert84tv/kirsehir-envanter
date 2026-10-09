@@ -42,6 +42,7 @@
     if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (['uyari', 'yapayzeka', 'konum'].includes(ayarBolumu(s.ayarBolum)) && s.tab === 'ayarlar') this.entegrasyonYenile(); }
     // Alarm (ses tekrarı, sekme başlığı) iş panosu açılınca susar; işlerin kendisi panoda yanıp söner
     if (s.tab === 'isPanosu' && s.basvuruUyari) this.setState({ basvuruUyari: null });
+    this.geziIzle();
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir

@@ -24,7 +24,7 @@
     // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
     const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length);
     const navItem = g => ({
-      label: g.ad, go: () => this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }),
+      label: g.ad, go: () => { this.geziMenu(); this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }); },
       // Etkin sayfa dolu mavi hap; ötekiler zeminsiz
       pill: g.acik ? 'var(--color-accent)' : 'transparent',
       hover: g.acik ? 'var(--color-accent)' : (dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.045)'),

@@ -45,7 +45,7 @@
         ac: () => this.setState({ telMenuAcik: !this.state.telMenuAcik }),
         kapat: () => this.setState({ telMenuAcik: false }),
         ogeler: (() => {
-          const k = fn => () => { this.setState({ telMenuAcik: false }); fn(); };
+          const k = fn => () => { this.geziMenu(); this.setState({ telMenuAcik: false }); fn(); };
           return [
             { ikon: '↻', ad: 'Şimdi eşitle / yenile', renk: ui.fg, git: k(() => { this.say('Yenileniyor…'); this.senkron(); this.veriYenile(); }) },
             { ikon: dark ? '☀' : '☾', ad: dark ? 'Açık tema' : 'Koyu tema', renk: ui.fg, git: k(() => this.temaSec(dark ? 'light' : 'dark')) },

@@ -2,4 +2,5 @@
 //@dahil moduller/cekirdek/yontemler/tema-tercih.js
 //@dahil moduller/cekirdek/yontemler/yardimci.js
 //@dahil moduller/cekirdek/yontemler/zaman.js
+//@dahil moduller/cekirdek/yontemler/gezi.js
 //@dahil moduller/cekirdek/yontemler/baslat.js

@@ -106,6 +106,9 @@ export function katmanKur(map, o) {
     ogeAcik();
     gorunumGuncelle();
   }
+  // Etiket iki satır: kod ve altında köy · ilçe (köyü yazılmamış kayıtta yalnız ilçe)
+  const kacis = x => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const etiketHtml = a => '<span class="ks-l1">' + kacis(a.code) + '</span><span class="ks-l2">' + kacis(a.village ? a.village + ' · ' + (a.district || '') : (a.district || '')) + '</span>';
   function isaretYap(g, mod) {
     const a = g.a;
     const pasif = g.kind === 'a' && a.status === 'pasif', pend = g.kind === 'a' && a.sync === 'pending';
@@ -121,10 +124,10 @@ export function katmanKur(map, o) {
     }
     if (g.kind === 'a') {
       if (mod === 'e') {
-        mk.bindTooltip(a.code, { permanent: true, direction: 'right', className: 'ks-lbl', offset: [18, 0], interactive: true });
+        mk.bindTooltip(etiketHtml(a), { permanent: true, direction: 'right', className: 'ks-lbl', offset: [18, 0], interactive: true });
         const tt = mk.getTooltip();
         if (tt) tt.on('click', () => o.tikla(g));
-      } else if (mod === 'd') mk.bindTooltip(a.code, { direction: 'right', className: 'ks-lbl', offset: [18, 0] });
+      } else if (mod === 'd') mk.bindTooltip(etiketHtml(a), { direction: 'right', className: 'ks-lbl', offset: [18, 0] });
     } else {
       mk.bindTooltip(g.isu.ad, { direction: 'top' });
     }

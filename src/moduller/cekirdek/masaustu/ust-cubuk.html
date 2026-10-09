@@ -1,6 +1,7 @@
 <!-- main -->
 <div style="flex:1;min-width:0;display:flex;flex-direction:column">
 <div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
+<sc-if value="{{ geziGeri.var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ geziGeri.git }}" title="Önceki sayfaya dön" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 13px/1 var(--font-body)"><span style="font-size:18px;line-height:1;margin-top:-1px">‹</span>{{ geziGeri.ad }}</button></sc-if>
 <div style="flex:1 1 140px;min-width:110px;display:flex;flex-direction:column;gap:3px">
 <span style="font:700 17px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.baslik }}</span>
 <span class="ks-bilgi" style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.alt }}</span>

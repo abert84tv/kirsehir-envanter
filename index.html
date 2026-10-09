@@ -523,7 +523,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
 <sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border-radius:10px;border:1px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.ariza }}</button></sc-if>
-<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
+<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
 </div>
 </div>
 
@@ -5283,7 +5283,7 @@ Hareket gir
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
 <sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button></sc-if>
-<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
+<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
 </div>
 </div>
 
@@ -10336,7 +10336,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-174';
+const SURUM = '2026.10.10-175';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';

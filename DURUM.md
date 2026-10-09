@@ -2159,3 +2159,8 @@ Sürüm 2026.10.05-114.
 - Envanter haritasındaki bütün simgeler (katman, yol tarifi, mesafe ölç, konumuma git) aynı dilde: yüzey renginde yuvarlak kare, **mavi simge**; açık/etkin olunca mavi dolu + beyaz simge.
 - **Hat kesiti** haritası da aynı düzende: sağ üstte katman simgesi, **sol altta** Nokta ekle (açık/kapalı) · Son noktayı sil · Temizle · Profili yenile simgeleri (üstteki çubuktaki yazılı düğmeler kalktı).
 - Düzeltme: Hat kesiti sayfasındaki `#araclar` kapsayıcısı ile ortak CSS çakışması önlendi (Envanter haritasındaki kapsayıcı `#ks-araclar` oldu).
+
+## 2026.10.10-175 — Özet haritasında tekerlek yakınlaştırma, simge uyumu, Hat kesiti nokta ekleme düzeltmesi
+- **Özet dağılım haritası:** masaüstünde fare haritanın üstündeyken tekerlek yakınlaştırır/uzaklaştırır (telefonda iki parmak).
+- **Simge uyumu:** Envanter haritasındaki sol alt simgeler açık temada beyaz, üst katman simgesi koyuydu; hepsi ortak değişkenlerden (`--ikon-bg`, `--ikon-hover`…) aynı renge bağlandı. Üzerine gelince mavi tonlu zemin + mavi kenar, etkin olunca mavi dolu + beyaz simge. Aynı dil Özet haritasındaki katman simgesinde, Hat kesitinde ve konumuma git düğmesinde de.
+- **Hat kesiti > Nokta ekle (mantık düzeltildi):** simge eskiden varsayılan açıktı ve açıp kapatmak yalnız çift tıklamayı kilitliyordu; yeni mantık: **kapalıyken** tesis işaretine dokunma, çift tıklama ve basılı tutma nokta koyar; **açıkken** haritaya tek dokunuşla nokta konur (imleç artı olur). Varsayılan kapalı.

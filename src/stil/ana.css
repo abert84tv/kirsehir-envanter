@@ -94,6 +94,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-kart{transition:transform .15s ease,box-shadow .2s ease}
 .ks-kart:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.2)}
 .ks-kart[draggable=true]:active{cursor:grabbing;opacity:.7}
+.ks-yeni{animation:ksYeni 1.15s ease-in-out infinite;position:relative}
+@keyframes ksYeni{0%,100%{box-shadow:0 0 0 0 rgba(236,48,19,0),0 0 0 rgba(236,48,19,0);background-color:rgba(236,48,19,.0)}50%{box-shadow:0 0 0 3px rgba(236,48,19,.7),0 0 22px rgba(236,48,19,.5);background-color:rgba(236,48,19,.13)}}
+@media (prefers-reduced-motion:reduce){.ks-yeni{animation:none;box-shadow:0 0 0 3px rgba(236,48,19,.7)}}
 .ks-pdot{position:relative;flex:none;width:11px;height:11px;border-radius:50%;display:inline-block}
 .ks-pdot.acil::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--color-uyari);animation:ksPing 1.4s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.ks-canli::after,.ks-nabiz,.ks-gir{animation:none}}

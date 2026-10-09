@@ -19,7 +19,7 @@
           onIlce: e => this.setState(st => ({ alanForm: { ...st.alanForm, ilce: e.target.value, koy: '' } })),
           onKoy: e => this.setState(st => ({ alanForm: { ...st.alanForm, koy: e.target.value } })),
           baslik: TYPES[a.type].kind + ' · alanları düzenle',
-          not: 'Boş bıraktığınız alan “— eksik” kalır ve Özet ekranındaki eksik listesinde durur. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
+          not: 'Boş bıraktığınız alan “— eksik” kalır. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
           gruplar: (ALANLAR[a.type] || []).map(([baslik, alanlar]) => ({
             baslik,
             alanlar: alanlar.map(([k, label, unit, tip]) => {
@@ -75,10 +75,36 @@
             }, () => { if (yerDegisti) this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }); });
             if (yerDegisti) this.iz(a.id, 'Köy bilgisi düzeltildi', `${a.village || '(boş)'} → ${koy || '(boş)'} · ${ilce}`);
             this.iz(a.id, 'Alanlar güncellendi', dolu + ' alan dolu');
-            if (yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline) {
-              this._sb.tesisKaydet(yeni).then(r => { if (r && !r.ok && r.cevrimdisi) this.tesisBekle(yeni.id); else this.veriYenile(true); });
+            if (!(yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline)) {
+              this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
+              return;
             }
-            this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
+            // Sunucuya yazma: sonuç beklenir. Eskiden hata sessizce yutuluyor, ekran sunucudaki eski veriyle yenileniyor
+            // ve “güncellendi” deniyordu — girilen alanlar kayboluyordu.
+            (async () => {
+              let r;
+              try { r = await this._sb.tesisKaydet(yeni); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+              // Başkası kaydı bu arada değiştirmişse (sürüm çakışması): güncel kaydı çek, girilenleri onun üstüne uygula, bir kez daha dene
+              if (r && !r.ok && !r.cevrimdisi && /değiştirdi|sürüm/i.test(r.err || '')) {
+                await this.veriYenile(true);
+                const g2 = (this.state.assets || []).find(x => x.id === a.id);
+                if (g2) {
+                  const yeni2 = { ...g2, village: koy, district: ilce, year: yil, d: { ...(g2.d || {}), ...temiz } };
+                  this.setState(st => ({ assets: (st.assets || []).map(x => x.id === a.id ? yeni2 : x) }));
+                  try { r = await this._sb.tesisKaydet(yeni2); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+                }
+              }
+              if (r && r.ok) {
+                await this.veriYenile(true);
+                this.duyur(`${a.code} kaydedildi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.`, 6000, 'iyi');
+              } else if (r && r.cevrimdisi) {
+                this.tesisBekle(a.id);
+                this.duyur(`${a.code} cihaza kaydedildi; bağlantı gelince sunucuya gönderilecek.`, 7000, 'bilgi');
+              } else {
+                // Reddedildi: ekrandaki veri korunur (yenileme yapılmaz), kullanıcıya gerçek neden söylenir
+                this.duyur(`${a.code} SUNUCUYA KAYDEDİLEMEDİ: ${(r && r.err) || 'bilinmeyen hata'}`, 14000, 'kotu');
+              }
+            })();
           }
         };
       })(),

@@ -111,6 +111,9 @@ button{transition:background-color .18s ease,border-color .18s ease,color .18s e
 .ks-kart{transition:transform .15s ease,box-shadow .2s ease}
 .ks-kart:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.2)}
 .ks-kart[draggable=true]:active{cursor:grabbing;opacity:.7}
+.ks-yeni{animation:ksYeni 1.15s ease-in-out infinite;position:relative}
+@keyframes ksYeni{0%,100%{box-shadow:0 0 0 0 rgba(236,48,19,0),0 0 0 rgba(236,48,19,0);background-color:rgba(236,48,19,.0)}50%{box-shadow:0 0 0 3px rgba(236,48,19,.7),0 0 22px rgba(236,48,19,.5);background-color:rgba(236,48,19,.13)}}
+@media (prefers-reduced-motion:reduce){.ks-yeni{animation:none;box-shadow:0 0 0 3px rgba(236,48,19,.7)}}
 .ks-pdot{position:relative;flex:none;width:11px;height:11px;border-radius:50%;display:inline-block}
 .ks-pdot.acil::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--color-uyari);animation:ksPing 1.4s ease-out infinite}
 @media (prefers-reduced-motion:reduce){.ks-canli::after,.ks-nabiz,.ks-gir{animation:none}}
@@ -2016,7 +2019,7 @@ Hareket gir
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
 <div>
-<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy bazında sayılar, eksik bilgisi olan kayıtlar, bu hafta yapılanlar ve size en yakın tesisler.</div>
+<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy bazında sayılar, bu hafta yapılanlar ve size en yakın tesisler.</div>
 </div>
 <div style="display:flex;gap:8px;flex:none">
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">Excel’e aktar</button>
@@ -2081,7 +2084,6 @@ Hareket gir
 <div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }}"><div style="height:6px;width:{{ d.barW }};background:var(--color-accent);border-radius:3px"></div></div>
 <div style="display:flex;justify-content:space-between;gap:10px">
 <span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">{{ d.mix }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ d.missFg }}">{{ d.miss }}</span>
 </div>
 </div>
 </sc-for>
@@ -2093,24 +2095,9 @@ Hareket gir
 <span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ v.name }}</span>
 <span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }};width:64px;text-align:right">{{ v.n }}</span>
 <span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }};width:80px;text-align:right">{{ v.photos }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ v.missFg }};width:62px;text-align:right">{{ v.miss }}</span>
 </div>
 </sc-for>
 </div>
-</div>
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:14px">
-<span style="font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Eksik bilgisi olan kayıtlar</span>
-<span class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ozet.missingNote }}</span>
-</div>
-<sc-for list="{{ ozet.missing }}" as="m" hint-placeholder-count="10">
-<button onClick="{{ m.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:10px 18px;border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
-<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:130px">{{ m.code }}</span>
-<span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }};width:190px">{{ m.place }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.acc }};width:64px">{{ m.count }}</span>
-<span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ m.fields }}</span>
-</button>
-</sc-for>
 </div>
 <div>
 <div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>
@@ -3266,7 +3253,7 @@ Hareket gir
 <span class="ks-nabiz" style="min-width:26px;text-align:center;font:700 13px/1 var(--font-body);color:#fff;background:{{ k.renk }};padding:5px 8px;border-radius:10px">{{ k.n }}</span>
 </div>
 <sc-for list="{{ k.kartlar }}" as="c" hint-placeholder-count="2">
-<div draggable="{{ c.suruklenir }}" onDragStart="{{ c.surukleBasla }}" onDragEnd="{{ c.surukleBitti }}" onClick="{{ c.tikla }}" class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px;cursor:{{ c.imlec }}">
+<div draggable="{{ c.suruklenir }}" onDragStart="{{ c.surukleBasla }}" onDragEnd="{{ c.surukleBitti }}" onClick="{{ c.tikla }}" class="{{ c.sinif }}" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px;cursor:{{ c.imlec }}">
 <div style="display:flex;align-items:center;gap:9px">
 <span class="{{ c.noktaSinif }}" style="background:{{ c.renk }}"></span>
 <button onClick="{{ c.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;font:700 14.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ c.baslik }}</button>
@@ -3318,7 +3305,7 @@ Hareket gir
 <span></span>
 </div>
 <sc-for list="{{ isPanosuEkran.tablo.satirlar }}" as="r" hint-placeholder-count="5">
-<div onClick="{{ r.tikla }}" class="ks-gir" style="cursor:pointer;display:grid;grid-template-columns:24px 118px minmax(130px,1.2fr) minmax(120px,1fr) minmax(170px,1fr) 92px 112px 118px;gap:10px;align-items:center;padding:6px 14px;min-height:54px;border-bottom:1px solid {{ ui.rule }};border-left:5px solid {{ r.renk }}">
+<div onClick="{{ r.tikla }}" class="{{ r.sinifSatir }}" style="cursor:pointer;display:grid;grid-template-columns:24px 118px minmax(130px,1.2fr) minmax(120px,1fr) minmax(170px,1fr) 92px 112px 118px;gap:10px;align-items:center;padding:6px 14px;min-height:54px;border-bottom:1px solid {{ ui.rule }};border-left:5px solid {{ r.renk }}">
 <span class="{{ r.noktaSinif }}" style="background:{{ r.renk }}"></span>
 <span style="font:600 12px/1.2 ui-monospace,Menlo,monospace;color:{{ ui.mut }}">{{ r.tur }}</span>
 <button onClick="{{ r.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:700 13.5px/1.25 var(--font-body);color:{{ ui.fg }}">{{ r.baslik }}</button>
@@ -4061,14 +4048,6 @@ Hareket gir
 </div>
 </sc-if>
 
-<sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ksAlarm .9s ease-in-out infinite">
-<span style="flex:none;font:700 24px/1">🔔</span>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span><span style="font:700 12px/1.3 var(--font-body)">{{ basvuruBanner.sesNot }}</span></button>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
-<button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
-</div>
-</sc-if>
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;top:0;right:0;z-index:80;display:flex;justify-content:flex-end;padding:56px 18px 0;pointer-events:none;max-width:100%">
 <div onClick="{{ duyuru.git }}" style="pointer-events:auto;width:372px;max-width:calc(100vw - 36px);display:flex;align-items:flex-start;gap:12px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:18px;padding:13px 14px;box-shadow:0 16px 40px rgba(0,0,0,.20),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
@@ -6397,7 +6376,7 @@ Hareket gir
 <div class="scroll" style="flex:1;overflow:auto;min-height:0">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Özet</div>
-<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy sayıları, eksik bilgiler, bu hafta, yakınımdaki tesisler.</div>
+<div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy sayıları, bu hafta, yakınımdaki tesisler.</div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
@@ -6428,13 +6407,6 @@ Hareket gir
 </span>
 <button onClick="{{ n.route }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 10.5px/1 var(--font-body);padding:10px 11px">Tarif</button>
 </div>
-</sc-for>
-<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Eksik bilgisi olan kayıtlar</div>
-<sc-for list="{{ ozet.missing }}" as="m" hint-placeholder-count="10">
-<button onClick="{{ m.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;width:100%;padding:11px 14px;border-bottom:1px solid {{ ui.rule }};text-align:left">
-<span style="font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ m.code }} · {{ m.count }}</span>
-<span style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ m.place }} — {{ m.fields }}</span>
-</button>
 </sc-for>
 <div style="border-bottom:1px solid {{ ui.rule }}">
 <div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
@@ -6472,7 +6444,6 @@ Hareket gir
 <div style="padding:10px 14px;border-top:1px solid {{ ui.rule }};display:flex;align-items:center;gap:10px">
 <span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ d.name }}</span>
 <span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }}">{{ d.n }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ d.missFg }}">{{ d.miss }}</span>
 </div>
 </sc-for>
 </sc-if>
@@ -7596,7 +7567,7 @@ Hareket gir
 </div>
 <div style="padding:12px;display:flex;flex-direction:column;gap:10px">
 <sc-for list="{{ isPanosuEkran.telKartlar }}" as="c" hint-placeholder-count="3">
-<div onClick="{{ c.tikla }}" class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px">
+<div onClick="{{ c.tikla }}" class="{{ c.sinif }}" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px">
 <div style="display:flex;align-items:center;gap:9px">
 <span class="{{ c.noktaSinif }}" style="background:{{ c.renk }}"></span>
 <button onClick="{{ c.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;font:700 14.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ c.baslik }}</button>
@@ -8789,14 +8760,6 @@ Hareket gir
 
 <!-- ══════════════ TELEFON — ORTAK KATMANLAR ══════════════ -->
 <sc-if value="{{ isPhone }}" hint-placeholder-val="{{ false }}">
-<sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ksAlarm .9s ease-in-out infinite">
-<span style="flex:none;font:700 24px/1">🔔</span>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span><span style="font:700 12px/1.3 var(--font-body)">{{ basvuruBanner.sesNot }}</span></button>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
-<button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
-</div>
-</sc-if>
 <sc-if value="{{ duyuru.show }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;top:0;left:0;right:0;z-index:80;padding:calc(var(--tel-bas) + 8px) 10px 0;pointer-events:none">
 <div onClick="{{ duyuru.git }}" style="pointer-events:auto;display:flex;align-items:flex-start;gap:11px;background:{{ duyuru.bg }};border:1px solid {{ duyuru.border }};border-radius:20px;padding:12px 13px;box-shadow:0 14px 34px rgba(0,0,0,.22),0 2px 6px rgba(0,0,0,.08);backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);animation:bildirimGir .42s cubic-bezier(.2,.9,.28,1.06) both;cursor:{{ duyuru.imlec }}">
@@ -9686,7 +9649,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.07-153';
+const SURUM = '2026.10.09-154';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -9732,7 +9695,7 @@ const ALANLAR = {
     ['Kuyu ve ölçüm', [['year', 'Yapım (sondaj) yılı', '', 'sayi'], ['derinlik', 'Kuyu derinliği', 'm', 'sayi'], ['pompaD', 'Pompa / montaj derinliği', 'm', 'sayi'], ['cap', 'Kuyu çapı', 'mm', 'sayi'], ['statik', 'Statik seviye', 'm', 'sayi'], ['dinamik', 'Dinamik seviye', 'm', 'sayi'], ['debi', 'Debi', 'L/s', 'sayi'], ['kolon', 'Kolon borusu', '', 'metin'], ['kolonCap', 'Kolon borusu çapı', 'mm', 'sayi'], ['rf', 'RF haberleşme', '', 'metin']]],
     ['Belge ve sondaj', [['ruhsat', 'DSİ ruhsat / izin no', '', 'metin'], ['sondajFirma', 'Sondaj firması', '', 'metin'], ['sondajTarih', 'Sondaj tarihi', '', 'tarih'], ['kot', 'Kuyu başı kotu', 'm', 'sayi'], ['kuyuLog', 'Kuyu logu', '', 'uzun'], ['filtre', 'Filtre aralıkları', '', 'metin'], ['cakil', 'Çakıl zarfı / şap', '', 'metin']]],
     ['Su kalitesi', [['suAnaliz', 'Su analizi sonucu', '', 'metin'], ['suAnalizTarih', 'Analiz tarihi', '', 'tarih'], ['klorDeger', 'Klor ölçümü', 'mg/L', 'metin']]],
-    ['Pompa ve elektrik', [['pompaMarka', 'Pompa markası', '', 'metin'], ['pompaModel', 'Pompa modeli', '', 'metin'], ['kademe', 'Kademe', '', 'metin'], ['motor', 'Pompa motoru', 'kW', 'sayi'], ['motorSeri', 'Motor seri no', '', 'metin'], ['montajTarih', 'Montaj tarihi', '', 'tarih'], ['kablo', 'Motor kablosu', 'mm²', 'sayi'], ['kalkis', 'Kalkış tipi', '', 'metin'], ['termik', 'Termik ayar değeri', 'A', 'metin'], ['akim', 'Ölçülen akım', 'A', 'metin'], ['isletmeSaat', 'İşletme saati', 'saat', 'sayi'], ['sayac', 'Sayaç değeri', 'kWh', 'metin'], ['yedekPompa', 'Yedek pompa', '', 'metin'], ['pompaHesap', 'Pompa hesabı', '', 'metin']]],
+    ['Pompa ve elektrik', [['pompaMarka', 'Pompa markası', '', 'metin'], ['pompaModel', 'Pompa modeli', '', 'metin'], ['kademe', 'Kademe', '', 'metin'], ['motor', 'Pompa gücü', 'kW', 'sayi'], ['motorSeri', 'Motor seri no', '', 'metin'], ['montajTarih', 'Montaj tarihi', '', 'tarih'], ['kablo', 'Motor kablosu', 'mm²', 'sayi'], ['kalkis', 'Kalkış tipi', '', 'metin'], ['termik', 'Termik ayar değeri', 'A', 'metin'], ['akim', 'Ölçülen akım', 'A', 'metin'], ['isletmeSaat', 'İşletme saati', 'saat', 'sayi'], ['sayac', 'Sayaç değeri', 'kWh', 'metin'], ['yedekPompa', 'Yedek pompa', '', 'metin'], ['pompaHesap', 'Pompa hesabı', '', 'metin']]],
     ['Bakım', [['bakim', 'Son bakım', '', 'tarih']]]
   ],
   depo: [
@@ -9837,6 +9800,8 @@ class Component extends DCLogic {
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
+    // Panoda “yeni geldi” uyarısı vermeyi bırakılan işler (kart açılınca eklenir); cihazda kalır
+    panoGoruldu: (() => { try { const p = JSON.parse(localStorage.getItem('ks-pano-goruldu') || '[]'); return Array.isArray(p) ? p : []; } catch (e) { return []; } })(),
     basvuruUyari: null, panoGorunum: (() => { try { return localStorage.getItem('ks-pano-gorunum') === 'tablo' ? 'tablo' : 'pano'; } catch (e) { return 'pano'; } })(), panoSira: { k: 'onc', dir: 1 }, panoSuz: {}, isKarti: null, ekipKonum: {}, konumForm: null, konumCihazlar: [], konumHata: '', konumSon: 0, konumPaylasim: (() => { try { return localStorage.getItem('ks-konum-paylas') === '1'; } catch (e) { return false; } })(), panoKolon: 'yeni', panoEkip: null, panoHedef: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
@@ -10063,6 +10028,8 @@ class Component extends DCLogic {
     // Bekleyen arızalar cihazda saklanır (arizaBekleyenYaz)
     if (this._arizaRef !== s.faults) { this._arizaRef = s.faults; this.arizaBekleyenYaz(); }
     if (this._entAyar !== s.ayarBolum) { this._entAyar = s.ayarBolum; if (['uyari', 'yapayzeka', 'konum'].includes(ayarBolumu(s.ayarBolum)) && s.tab === 'ayarlar') this.entegrasyonYenile(); }
+    // Alarm (ses tekrarı, sekme başlığı) iş panosu açılınca susar; işlerin kendisi panoda yanıp söner
+    if (s.tab === 'isPanosu' && s.basvuruUyari) this.setState({ basvuruUyari: null });
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir
@@ -14285,13 +14252,13 @@ class Component extends DCLogic {
     const dKeys = [];
     for (const a of list) for (const k of Object.keys(a.d || {})) if (dKeys.indexOf(k) < 0) dKeys.push(k);
     const bas = ['Kod', 'Tür', 'Durum', 'Köy', 'İlçe', 'Yapım yılı', 'Enlem', 'Boylam', 'Son bakım',
-      'Eksik alan sayısı', 'Fotoğraf', 'Açık arıza'];
+      'Fotoğraf', 'Açık arıza'];
     const out = [bas.concat(dKeys).map(x => this.csvKac(x)).join(';')];
     for (const a of list) {
       const acik = s.faults.filter(f => f.assetId === a.id && !KAPALI_DURUM.includes(f.status)).length;
       out.push([a.code, TYPES[a.type].kind, aktifAd(a), a.village || '', a.district || '', a.year || '',
         String(a.lat).replace('.', ','), String(a.lon).replace('.', ','), (a.d || {}).bakim || '',
-        this.missingOf(a).length, a.photos || 0, acik]
+        a.photos || 0, acik]
         .concat(dKeys.map(k => (a.d || {})[k])).map(x => this.csvKac(x)).join(';'));
     }
     this.dosyaIndir('kirsehir-envanter-' + new Date().toISOString().slice(0, 10) + '.csv',
@@ -14304,21 +14271,19 @@ class Component extends DCLogic {
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const byD = {};
     for (const a of s.assets) {
-      const o = (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, miss: 0, aktif: 0, pasif: 0 });
+      const o = (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
       o.n++;
       if (aktifMi(a)) o.aktif++; else o.pasif++;
       if (a.type === 'kuyu') o.kuyu++;
       if (a.type === 'depo') o.depo++;
-      if (this.missingOf(a).length) o.miss++;
     }
-    const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
     const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
     const w = window.open('', '_blank');
     if (!w) return this.duyur('Tarayıcı yeni sekmeyi engelledi — açılır pencere iznini verip yeniden deneyin.', 8000);
     const satirD = Object.keys(byD).sort((x, y) => byD[y].n - byD[x].n)
       .map(n => '<tr><td>' + esc(n) + '</td><td>' + byD[n].n + '</td><td>' + byD[n].kuyu +
         '</td><td>' + byD[n].depo + '</td><td>' + byD[n].aktif + '</td><td>' + byD[n].pasif +
-        '</td><td>' + byD[n].miss + '</td></tr>').join('');
+        '</td></tr>').join('');
     const satirT = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
       const hep = s.assets.filter(a => a.type === t);
       const ak = hep.filter(a => aktifMi(a)).length;
@@ -14363,8 +14328,6 @@ class Component extends DCLogic {
     const malzToplam = malzAd.reduce((t, n) => t + malz[n].tutar, 0);
     const satirMz = malzAd.map(n => '<tr><td>' + esc(n) + '</td><td>' + malz[n].kayit + '</td><td>' +
       malz[n].adet + ' ' + esc(malz[n].birim) + '</td><td>' + this.tl(malz[n].tutar) + '</td></tr>').join('');
-    const satirM = miss.slice(0, 120).map(x => '<tr><td>' + esc(x.a.code) + '</td><td>' + esc(this.yer(x.a)) +
-      '</td><td>' + x.m.length + '</td><td>' + esc(x.m.slice(0, 6).join(', ')) + '</td></tr>').join('');
     w.document.write('<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8">' +
       '<title>Kırşehir envanter özeti</title><style>' +
       '@page{size:A4;margin:14mm}body{font:11px/1.5 Archivo,system-ui,sans-serif;color:#201e1d;margin:0}' +
@@ -14375,12 +14338,12 @@ class Component extends DCLogic {
       'text-transform:uppercase}.k{color:#666;font-size:10px}</style></head><body>' +
       '<h1>Kırşehir su ve elektrik tesisleri — envanter özeti</h1>' +
       '<div class="k">' + esc(this.damga()) + ' · ' + s.assets.length + ' kayıt · ' + topAk + ' aktif · ' + (s.assets.length - topAk) + ' pasif · ' + acik.length +
-      ' açık arıza · ' + miss.length + ' eksik bilgili kayıt</div>' +
+      ' açık arıza</div>' +
       '<h2>Tür bazında aktif / pasif</h2><table><tr><th>Tür</th><th>Aktif</th><th>Pasif</th><th>Toplam</th><th>Aktif oranı</th></tr>' +
       satirT + '<tr><th>Toplam</th><th>' + topAk + '</th><th>' + (s.assets.length - topAk) +
       '</th><th>' + s.assets.length + '</th><th>' +
       (s.assets.length ? Math.round(topAk / s.assets.length * 100) + '%' : '—') + '</th></tr></table>' +
-      '<h2>İlçe dağılımı</h2><table><tr><th>İlçe</th><th>Kayıt</th><th>Kuyu</th><th>Depo</th><th>Aktif</th><th>Pasif</th><th>Eksik bilgili</th></tr>' +
+      '<h2>İlçe dağılımı</h2><table><tr><th>İlçe</th><th>Kayıt</th><th>Kuyu</th><th>Depo</th><th>Aktif</th><th>Pasif</th></tr>' +
       satirD + '</table>' +
       '<h2>Açık arızalar</h2>' + (acik.length
         ? '<table><tr><th>No</th><th>Tesis</th><th>Arıza</th><th>Öncelik</th><th>Durum</th><th>Ekip</th></tr>' + satirF + '</table>'
@@ -14396,8 +14359,7 @@ class Component extends DCLogic {
           '<tr><th>Toplam</th><th></th><th></th><th>' + this.tl(malzToplam) + '</th></tr></table>' +
           '<div class="k">Tutarlar programdaki birim fiyat listesinden hesaplanır; gerçek fatura tutarları farklı olabilir.</div>'
         : '<div class="k">Arıza kayıtlarında malzeme girilmemiş.</div>') +
-      '<h2>Eksik bilgili kayıtlar</h2><table><tr><th>Kod</th><th>Yer</th><th>Boş alan</th><th>Alanlar</th></tr>' +
-      satirM + '</table></body></html>');
+      '</body></html>');
     w.document.close();
     setTimeout(() => { try { w.focus(); w.print(); } catch (e) { /* engelli */ } }, 500);
     this.duyur('Yazdırma penceresi açıldı — “Hedef: PDF olarak kaydet”i seçin.', 7000);
@@ -14432,7 +14394,7 @@ class Component extends DCLogic {
       ['Su analizi', f(d.suAnaliz)], ['Analiz tarihi', f(d.suAnalizTarih)], ['Klor ölçümü', f(d.klorDeger)],
       hd('Pompa ve elektrik'),
       ['Pompa markası', f(d.pompaMarka)], ['Pompa modeli', f(d.pompaModel)], ['Kademe', f(d.kademe)],
-      ['Pompa motoru', u(d.motor, 'kW')], ['Motor seri no', f(d.motorSeri)],
+      ['Pompa gücü', u(d.motor, 'kW')], ['Motor seri no', f(d.motorSeri)],
       ['Montaj derinliği', u(d.pompaD, 'm')], ['Montaj tarihi', f(d.montajTarih)],
       ['Motor kablosu', u(d.kablo, 'mm²')], ['Kalkış tipi', f(d.kalkis)],
       ['Termik ayar değeri', f(d.termik)], ['Ölçülen akım', f(d.akim)],
@@ -15321,6 +15283,33 @@ class Component extends DCLogic {
     this.duyur(`${dosyaAd ? dosyaAd + ' \u2014 ' : ''}${n} sat\u0131r okundu \u00b7 ${nufuslu} yerle\u015fimde n\u00fcfus, ${hayvanli} yerle\u015fimde hayvan say\u0131s\u0131${atlanan ? ' \u00b7 ' + atlanan + ' sat\u0131r atland\u0131' : ''}.`, 8000, 'iyi');
   }
   // is-panosu modülü — İş panosu işlemleri. Hepsi var olan akışları çağırır; yeni iş kuralı eklemez.
+  // “Yeni geldi” uyarısı: Yeni sütunundaki, son 12 saatte gelmiş ve henüz açılıp bakılmamış iş
+  panoYeniMi(anahtar, ms) {
+    return !!ms && Date.now() - ms < 12 * 3600000 && !(this.state.panoGoruldu || []).includes(anahtar);
+  }
+  panoGoruldu(anahtar) {
+    const g = this.state.panoGoruldu || [];
+    if (g.includes(anahtar)) return;
+    const yeni = [...g, anahtar].slice(-400);
+    try { localStorage.setItem('ks-pano-goruldu', JSON.stringify(yeni)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ panoGoruldu: yeni });
+  }
+  // Menüdeki sayı: bakılmamış yeni işler
+  panoYeniSayi() {
+    const s = this.state;
+    let n = 0;
+    if (s.modul.talep !== false) {
+      for (const b of (s.basvurular || [])) if (b.durum === 'yeni' && this.panoYeniMi('b' + b.id, Date.parse(b.zaman) || 0)) n++;
+      for (const t of (s.talepler || [])) if (!TALEP_KAPALI.includes(t.durum) && this.panoYeniMi('t' + t.id, this.damgaMs(t.acilis))) n++;
+    }
+    if (s.modul.ariza !== false) {
+      for (const f of (s.faults || [])) {
+        if (f.status !== 'acik' && f.status !== 'yeniden') continue;
+        if (this.panoYeniMi('f' + f.id, this.damgaMs(f.opened) || (f.openedIso ? Date.parse(f.openedIso) : 0))) n++;
+      }
+    }
+    return n;
+  }
   // Panoyu Tablo görünümünde, verilen süzgeçle açar (durum: yeni|atandi|sahada|bitti, ekip, q)
   panoGit(suz) {
     this.setState({ tab: 'isPanosu', panoGorunum: 'tablo', panoSuz: { ...(suz || {}) }, isKarti: null, faultForm: null });
@@ -15338,6 +15327,7 @@ class Component extends DCLogic {
   }
   // Arızayı ayrıntı formunda (masaüstü sağ panel / telefon sade ekran) açar
   panoAc(f) {
+    this.panoGoruldu('f' + f.id);
     const form = { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f };
     // Masaüstü: tek sayfa kart. Telefon: mevcut sade arıza ekranı (alt sayfa)
     if (this.state.device === 'phone') this.setState({ panel: 'ariza', faultForm: form });
@@ -15389,6 +15379,7 @@ class Component extends DCLogic {
   }
   // ── İş kartı (tek sayfa): başvuru / talep → arıza + ekip, eski Talep ekranına gitmeden
   isKartiAc(tur, id) {
+    this.panoGoruldu((tur === 'b' ? 'b' : 't') + id);
     const kay = tur === 'b' ? (this.state.basvurular || []).find(x => x.id === id) : (this.state.talepler || []).find(x => x.id === id);
     if (!kay) return;
     const metin = [kay.konu === 'Telegram bildirimi' ? '' : kay.konu, kay.aciklama].filter(Boolean).join('. ');
@@ -15992,7 +15983,7 @@ class Component extends DCLogic {
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };
-    const suzgecSayi = { ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
+    const suzgecSayi = { isPanosu: this.panoYeniSayi(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
       const zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
@@ -18487,15 +18478,6 @@ class Component extends DCLogic {
           note: 'Periyot: kuyular 6 ayda bir, depo ve elektrik tesisleri 12 ayda bir. Bakımı yaptığınızda satırdaki “Yapıldı” düğmesine basın; tarih bugüne çekilir ve sonraki bakım günü kendiliğinden hesaplanır.'
         };
       })(),
-      basvuruBanner: (() => {
-        const u = s.basvuruUyari;
-        return {
-          show: !!u && !!s.session, baslik: u ? (u.n > 1 ? u.n + ' yeni başvuru geldi' : 'Yeni başvuru geldi') : '', metin: u ? u.metin : '',
-          sesNot: s.sesAcik ? '' : 'Ses kapalı görünüyor — ekrana bir kez dokunun',
-          ac: () => { this.setState({ basvuruUyari: null, tab: 'isPanosu' }); },
-          kapat: () => this.setState({ basvuruUyari: null })
-        };
-      })(),
       webBasvuru: (() => {
         const kopyala = () => {
           const u = location.origin + '/bildirim';
@@ -19797,7 +19779,7 @@ class Component extends DCLogic {
           onIlce: e => this.setState(st => ({ alanForm: { ...st.alanForm, ilce: e.target.value, koy: '' } })),
           onKoy: e => this.setState(st => ({ alanForm: { ...st.alanForm, koy: e.target.value } })),
           baslik: TYPES[a.type].kind + ' · alanları düzenle',
-          not: 'Boş bıraktığınız alan “— eksik” kalır ve Özet ekranındaki eksik listesinde durur. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
+          not: 'Boş bıraktığınız alan “— eksik” kalır. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
           gruplar: (ALANLAR[a.type] || []).map(([baslik, alanlar]) => ({
             baslik,
             alanlar: alanlar.map(([k, label, unit, tip]) => {
@@ -19853,10 +19835,36 @@ class Component extends DCLogic {
             }, () => { if (yerDegisti) this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }); });
             if (yerDegisti) this.iz(a.id, 'Köy bilgisi düzeltildi', `${a.village || '(boş)'} → ${koy || '(boş)'} · ${ilce}`);
             this.iz(a.id, 'Alanlar güncellendi', dolu + ' alan dolu');
-            if (yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline) {
-              this._sb.tesisKaydet(yeni).then(r => { if (r && !r.ok && r.cevrimdisi) this.tesisBekle(yeni.id); else this.veriYenile(true); });
+            if (!(yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline)) {
+              this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
+              return;
             }
-            this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
+            // Sunucuya yazma: sonuç beklenir. Eskiden hata sessizce yutuluyor, ekran sunucudaki eski veriyle yenileniyor
+            // ve “güncellendi” deniyordu — girilen alanlar kayboluyordu.
+            (async () => {
+              let r;
+              try { r = await this._sb.tesisKaydet(yeni); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+              // Başkası kaydı bu arada değiştirmişse (sürüm çakışması): güncel kaydı çek, girilenleri onun üstüne uygula, bir kez daha dene
+              if (r && !r.ok && !r.cevrimdisi && /değiştirdi|sürüm/i.test(r.err || '')) {
+                await this.veriYenile(true);
+                const g2 = (this.state.assets || []).find(x => x.id === a.id);
+                if (g2) {
+                  const yeni2 = { ...g2, village: koy, district: ilce, year: yil, d: { ...(g2.d || {}), ...temiz } };
+                  this.setState(st => ({ assets: (st.assets || []).map(x => x.id === a.id ? yeni2 : x) }));
+                  try { r = await this._sb.tesisKaydet(yeni2); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+                }
+              }
+              if (r && r.ok) {
+                await this.veriYenile(true);
+                this.duyur(`${a.code} kaydedildi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.`, 6000, 'iyi');
+              } else if (r && r.cevrimdisi) {
+                this.tesisBekle(a.id);
+                this.duyur(`${a.code} cihaza kaydedildi; bağlantı gelince sunucuya gönderilecek.`, 7000, 'bilgi');
+              } else {
+                // Reddedildi: ekrandaki veri korunur (yenileme yapılmaz), kullanıcıya gerçek neden söylenir
+                this.duyur(`${a.code} SUNUCUYA KAYDEDİLEMEDİ: ${(r && r.err) || 'bilinmeyen hata'}`, 14000, 'kotu');
+              }
+            })();
           }
         };
       })(),
@@ -20630,18 +20638,15 @@ class Component extends DCLogic {
       ozet: (() => {
         const byD = {}, byV = {};
         for (const a of s.assets) {
-          (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, miss: 0, aktif: 0, pasif: 0 });
+          (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
           byD[a.district].n++;
           if (aktifMi(a)) byD[a.district].aktif++; else byD[a.district].pasif++;
           if (a.type === 'kuyu') byD[a.district].kuyu++;
           if (a.type === 'depo') byD[a.district].depo++;
-          if (this.missingOf(a).length) byD[a.district].miss++;
           const key = this.yer(a);
-          (byV[key] = byV[key] || { n: 0, miss: 0, photos: 0 });
+          (byV[key] = byV[key] || { n: 0, photos: 0 });
           byV[key].n++; byV[key].photos += a.photos;
-          if (this.missingOf(a).length) byV[key].miss++;
         }
-        const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
         const near = [...s.assets].map(a => ({ a, km: this.distKm(a) })).sort((x, y) => x.km - y.km).slice(0, 8);
         const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
         // Tekrarlayan arıza: aynı tesiste birden çok kayıt — kalıcı çözüm işareti
@@ -20791,24 +20796,14 @@ class Component extends DCLogic {
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
-            { n: String(miss.length), label: 'Eksik bilgili' },
             { n: String(openF.length), label: 'Açık arıza' }
           ],
           districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
-            miss: v.miss + ' eksik',
-            missFg: v.miss ? ui.acc : ui.mut,
             barW: Math.round(v.n / Math.max(...Object.values(byD).map(z => z.n)) * 100) + '%'
           })),
           villages: Object.entries(byV).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
-            name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf',
-            miss: v.miss ? v.miss + ' eksik' : 'tam',
-            missFg: v.miss ? ui.acc : ui.mut
-          })),
-          missing: miss.slice(0, 20).map(({ a, m }) => ({
-            code: a.code, place: this.yer(a),
-            fields: m.join(' · '), count: m.length + ' alan',
-            open: () => { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi' }); }
+            name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf'
           })),
           aktiflik: (() => {
             const satir = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
@@ -20832,7 +20827,6 @@ class Component extends DCLogic {
               note: 'Pasif kayıtlar envanterden düşmez; hizmet dışı sayılır. İlçe kırılımı aşağıdaki tabloda, kayıt bazında Envanter sekmesindeki Durum süzgecinde.'
             };
           })(),
-          missingNote: miss.length + ' kayıtta zorunlu alan boş. Toplu aktarımla gelen noktalar burada listelenir — tek tek açıp doldurabilirsiniz.',
           near: near.map(({ a, km }) => ({
             code: a.code, place: this.yer(a),
             km: km.toFixed(1) + ' km',
@@ -21410,6 +21404,9 @@ class Component extends DCLogic {
 
         const tamam = k => {
           const surukle = k.surukle;
+          // Yeni gelen, henüz açılıp bakılmamış iş: kutunun/satırın kendisi yanıp söner (üst şerit yerine)
+          const yeniMi = k.kolon === 'yeni' && this.panoYeniMi(k.anahtar, k.ms);
+          const gor = fn => (...a) => { if (yeniMi) this.panoGoruldu(k.anahtar); return fn(...a); };
           const renk = oncRenk(k.onc);
           const ms = k.ms;
           return {
@@ -21417,11 +21414,13 @@ class Component extends DCLogic {
             kimRenk: k.kimBos ? '#d97706' : ui.fg, kanal: k.kanal, kanalVar: !!k.kanal,
             aciklama: k.aciklama, aciklamaVar: !!k.aciklama,
             onc: k.onc, renk, noktaSinif: 'ks-pdot' + (k.onc === 'Acil' ? ' acil' : ''),
-            sure: yasMetin(ms), uyari: k.uyari || '', uyariVar: !!k.uyari, uyariRenk: k.uyariKirmizi ? 'var(--color-uyari)' : '#d97706',
-            dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: k.git,
-            ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: k.ac,
+            sure: yasMetin(ms), uyari: k.uyari || (yeniMi ? 'YENİ GELDİ — açıp bakın' : ''), uyariVar: !!k.uyari || yeniMi,
+            uyariRenk: k.uyariKirmizi || (yeniMi && !k.uyari) ? 'var(--color-uyari)' : '#d97706',
+            sinif: 'ks-kart ks-gir' + (yeniMi ? ' ks-yeni' : ''), sinifSatir: 'ks-gir' + (yeniMi ? ' ks-yeni' : ''),
+            dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: gor(k.git),
+            ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: gor(k.ac),
             // kutunun/satırın her yerine basınca kart açılır (düğme, seçim kutusu ve yazı alanları kendi işini yapar)
-            tikla: e => { const h = e && e.target; if (h && h.closest && h.closest('button,select,input,option,textarea,a')) return; k.ac(); },
+            tikla: e => { const h = e && e.target; if (h && h.closest && h.closest('button,select,input,option,textarea,a')) return; gor(k.ac)(); },
             ekipSec: !!k.ekipSec, ekipSecenek: k.ekipSecenek || [],
             ekipDegisir: !!k.ekipDegisir, ekipDeger: k.ekipDeger || '', ekipDegis: k.ekipDegis || (() => {}),
             kolonAd: KOLON_AD[k.kolon], kolonRenk: (KOLON.find(x => x[0] === k.kolon) || [])[2], onc2: ONC[k.onc] ?? 9, ms2: k.ms || 0, kimAd: k.kimBos ? '' : k.kim,

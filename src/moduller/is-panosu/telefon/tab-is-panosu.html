@@ -18,7 +18,7 @@
 </div>
 <div style="padding:12px;display:flex;flex-direction:column;gap:10px">
 <sc-for list="{{ isPanosuEkran.telKartlar }}" as="c" hint-placeholder-count="3">
-<div onClick="{{ c.tikla }}" class="ks-kart ks-gir" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px">
+<div onClick="{{ c.tikla }}" class="{{ c.sinif }}" style="border-radius:13px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};border-left:6px solid {{ c.renk }};padding:12px 13px;display:flex;flex-direction:column;gap:8px">
 <div style="display:flex;align-items:center;gap:9px">
 <span class="{{ c.noktaSinif }}" style="background:{{ c.renk }}"></span>
 <button onClick="{{ c.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;font:700 14.5px/1.25 var(--font-heading);color:{{ ui.fg }}">{{ c.baslik }}</button>

@@ -83,6 +83,8 @@
     yardim: (() => { try { const v = localStorage.getItem('ks-yardim') === '1'; document.documentElement.classList.toggle('ks-yardim', v); return v; } catch (e) { return false; } })(),
     telemetri: { yuk: false, cihazlar: [], alarmlar: [], kurallar: [], sek: 'cihaz', sec: null, kanal: null,
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
+    // Panoda “yeni geldi” uyarısı vermeyi bırakılan işler (kart açılınca eklenir); cihazda kalır
+    panoGoruldu: (() => { try { const p = JSON.parse(localStorage.getItem('ks-pano-goruldu') || '[]'); return Array.isArray(p) ? p : []; } catch (e) { return []; } })(),
     basvuruUyari: null, panoGorunum: (() => { try { return localStorage.getItem('ks-pano-gorunum') === 'tablo' ? 'tablo' : 'pano'; } catch (e) { return 'pano'; } })(), panoSira: { k: 'onc', dir: 1 }, panoSuz: {}, isKarti: null, ekipKonum: {}, konumForm: null, konumCihazlar: [], konumHata: '', konumSon: 0, konumPaylasim: (() => { try { return localStorage.getItem('ks-konum-paylas') === '1'; } catch (e) { return false; } })(), panoKolon: 'yeni', panoEkip: null, panoHedef: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,

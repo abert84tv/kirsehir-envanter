@@ -1,4 +1,4 @@
-const SURUM = '2026.10.07-153';
+const SURUM = '2026.10.09-154';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -44,7 +44,7 @@ const ALANLAR = {
     ['Kuyu ve ölçüm', [['year', 'Yapım (sondaj) yılı', '', 'sayi'], ['derinlik', 'Kuyu derinliği', 'm', 'sayi'], ['pompaD', 'Pompa / montaj derinliği', 'm', 'sayi'], ['cap', 'Kuyu çapı', 'mm', 'sayi'], ['statik', 'Statik seviye', 'm', 'sayi'], ['dinamik', 'Dinamik seviye', 'm', 'sayi'], ['debi', 'Debi', 'L/s', 'sayi'], ['kolon', 'Kolon borusu', '', 'metin'], ['kolonCap', 'Kolon borusu çapı', 'mm', 'sayi'], ['rf', 'RF haberleşme', '', 'metin']]],
     ['Belge ve sondaj', [['ruhsat', 'DSİ ruhsat / izin no', '', 'metin'], ['sondajFirma', 'Sondaj firması', '', 'metin'], ['sondajTarih', 'Sondaj tarihi', '', 'tarih'], ['kot', 'Kuyu başı kotu', 'm', 'sayi'], ['kuyuLog', 'Kuyu logu', '', 'uzun'], ['filtre', 'Filtre aralıkları', '', 'metin'], ['cakil', 'Çakıl zarfı / şap', '', 'metin']]],
     ['Su kalitesi', [['suAnaliz', 'Su analizi sonucu', '', 'metin'], ['suAnalizTarih', 'Analiz tarihi', '', 'tarih'], ['klorDeger', 'Klor ölçümü', 'mg/L', 'metin']]],
-    ['Pompa ve elektrik', [['pompaMarka', 'Pompa markası', '', 'metin'], ['pompaModel', 'Pompa modeli', '', 'metin'], ['kademe', 'Kademe', '', 'metin'], ['motor', 'Pompa motoru', 'kW', 'sayi'], ['motorSeri', 'Motor seri no', '', 'metin'], ['montajTarih', 'Montaj tarihi', '', 'tarih'], ['kablo', 'Motor kablosu', 'mm²', 'sayi'], ['kalkis', 'Kalkış tipi', '', 'metin'], ['termik', 'Termik ayar değeri', 'A', 'metin'], ['akim', 'Ölçülen akım', 'A', 'metin'], ['isletmeSaat', 'İşletme saati', 'saat', 'sayi'], ['sayac', 'Sayaç değeri', 'kWh', 'metin'], ['yedekPompa', 'Yedek pompa', '', 'metin'], ['pompaHesap', 'Pompa hesabı', '', 'metin']]],
+    ['Pompa ve elektrik', [['pompaMarka', 'Pompa markası', '', 'metin'], ['pompaModel', 'Pompa modeli', '', 'metin'], ['kademe', 'Kademe', '', 'metin'], ['motor', 'Pompa gücü', 'kW', 'sayi'], ['motorSeri', 'Motor seri no', '', 'metin'], ['montajTarih', 'Montaj tarihi', '', 'tarih'], ['kablo', 'Motor kablosu', 'mm²', 'sayi'], ['kalkis', 'Kalkış tipi', '', 'metin'], ['termik', 'Termik ayar değeri', 'A', 'metin'], ['akim', 'Ölçülen akım', 'A', 'metin'], ['isletmeSaat', 'İşletme saati', 'saat', 'sayi'], ['sayac', 'Sayaç değeri', 'kWh', 'metin'], ['yedekPompa', 'Yedek pompa', '', 'metin'], ['pompaHesap', 'Pompa hesabı', '', 'metin']]],
     ['Bakım', [['bakim', 'Son bakım', '', 'tarih']]]
   ],
   depo: [

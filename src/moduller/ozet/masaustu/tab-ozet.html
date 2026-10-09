@@ -2,7 +2,7 @@
 <div class="scroll" style="flex:1;overflow:auto;min-height:0;background:{{ ui.bg }}">
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
 <div>
-<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy bazında sayılar, eksik bilgisi olan kayıtlar, bu hafta yapılanlar ve size en yakın tesisler.</div>
+<div class="ks-bilgi" style="font:400 13.5px/1.45 var(--font-body);color:{{ ui.mut }}">İlçe ve köy bazında sayılar, bu hafta yapılanlar ve size en yakın tesisler.</div>
 </div>
 <div style="display:flex;gap:8px;flex:none">
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 14px">Excel’e aktar</button>
@@ -67,7 +67,6 @@
 <div style="height:6px;border-radius:3px;overflow:hidden;background:{{ ui.surf2 }}"><div style="height:6px;width:{{ d.barW }};background:var(--color-accent);border-radius:3px"></div></div>
 <div style="display:flex;justify-content:space-between;gap:10px">
 <span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">{{ d.mix }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ d.missFg }}">{{ d.miss }}</span>
 </div>
 </div>
 </sc-for>
@@ -79,24 +78,9 @@
 <span style="flex:1;font:600 13px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ v.name }}</span>
 <span style="font:600 12px/1 var(--font-body);color:{{ ui.fg }};width:64px;text-align:right">{{ v.n }}</span>
 <span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }};width:80px;text-align:right">{{ v.photos }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ v.missFg }};width:62px;text-align:right">{{ v.miss }}</span>
 </div>
 </sc-for>
 </div>
-</div>
-<div style="border-bottom:1px solid {{ ui.rule }}">
-<div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:14px">
-<span style="font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Eksik bilgisi olan kayıtlar</span>
-<span class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ ozet.missingNote }}</span>
-</div>
-<sc-for list="{{ ozet.missing }}" as="m" hint-placeholder-count="10">
-<button onClick="{{ m.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:10px 18px;border-bottom:1px solid {{ ui.rule }};text-align:left" style-hover="background:{{ ui.surf }}">
-<span style="font:600 13px/1 var(--font-body);color:{{ ui.fg }};width:130px">{{ m.code }}</span>
-<span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }};width:190px">{{ m.place }}</span>
-<span style="font:600 12px/1 var(--font-body);color:{{ ui.acc }};width:64px">{{ m.count }}</span>
-<span style="flex:1;font:400 12px/1.35 var(--font-body);color:{{ ui.mut }}">{{ m.fields }}</span>
-</button>
-</sc-for>
 </div>
 <div>
 <div style="padding:13px 18px;border-bottom:1px solid {{ ui.rule }};font:700 13px/1.1 var(--font-heading);letter-spacing:-.01em;color:{{ ui.fg }}">Yakınımdaki tesisler</div>

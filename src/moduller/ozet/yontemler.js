@@ -10,13 +10,13 @@
     const dKeys = [];
     for (const a of list) for (const k of Object.keys(a.d || {})) if (dKeys.indexOf(k) < 0) dKeys.push(k);
     const bas = ['Kod', 'Tür', 'Durum', 'Köy', 'İlçe', 'Yapım yılı', 'Enlem', 'Boylam', 'Son bakım',
-      'Eksik alan sayısı', 'Fotoğraf', 'Açık arıza'];
+      'Fotoğraf', 'Açık arıza'];
     const out = [bas.concat(dKeys).map(x => this.csvKac(x)).join(';')];
     for (const a of list) {
       const acik = s.faults.filter(f => f.assetId === a.id && !KAPALI_DURUM.includes(f.status)).length;
       out.push([a.code, TYPES[a.type].kind, aktifAd(a), a.village || '', a.district || '', a.year || '',
         String(a.lat).replace('.', ','), String(a.lon).replace('.', ','), (a.d || {}).bakim || '',
-        this.missingOf(a).length, a.photos || 0, acik]
+        a.photos || 0, acik]
         .concat(dKeys.map(k => (a.d || {})[k])).map(x => this.csvKac(x)).join(';'));
     }
     this.dosyaIndir('kirsehir-envanter-' + new Date().toISOString().slice(0, 10) + '.csv',
@@ -29,21 +29,19 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const byD = {};
     for (const a of s.assets) {
-      const o = (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, miss: 0, aktif: 0, pasif: 0 });
+      const o = (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
       o.n++;
       if (aktifMi(a)) o.aktif++; else o.pasif++;
       if (a.type === 'kuyu') o.kuyu++;
       if (a.type === 'depo') o.depo++;
-      if (this.missingOf(a).length) o.miss++;
     }
-    const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
     const acik = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
     const w = window.open('', '_blank');
     if (!w) return this.duyur('Tarayıcı yeni sekmeyi engelledi — açılır pencere iznini verip yeniden deneyin.', 8000);
     const satirD = Object.keys(byD).sort((x, y) => byD[y].n - byD[x].n)
       .map(n => '<tr><td>' + esc(n) + '</td><td>' + byD[n].n + '</td><td>' + byD[n].kuyu +
         '</td><td>' + byD[n].depo + '</td><td>' + byD[n].aktif + '</td><td>' + byD[n].pasif +
-        '</td><td>' + byD[n].miss + '</td></tr>').join('');
+        '</td></tr>').join('');
     const satirT = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
       const hep = s.assets.filter(a => a.type === t);
       const ak = hep.filter(a => aktifMi(a)).length;
@@ -88,8 +86,6 @@
     const malzToplam = malzAd.reduce((t, n) => t + malz[n].tutar, 0);
     const satirMz = malzAd.map(n => '<tr><td>' + esc(n) + '</td><td>' + malz[n].kayit + '</td><td>' +
       malz[n].adet + ' ' + esc(malz[n].birim) + '</td><td>' + this.tl(malz[n].tutar) + '</td></tr>').join('');
-    const satirM = miss.slice(0, 120).map(x => '<tr><td>' + esc(x.a.code) + '</td><td>' + esc(this.yer(x.a)) +
-      '</td><td>' + x.m.length + '</td><td>' + esc(x.m.slice(0, 6).join(', ')) + '</td></tr>').join('');
     w.document.write('<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8">' +
       '<title>Kırşehir envanter özeti</title><style>' +
       '@page{size:A4;margin:14mm}body{font:11px/1.5 Archivo,system-ui,sans-serif;color:#201e1d;margin:0}' +
@@ -100,12 +96,12 @@
       'text-transform:uppercase}.k{color:#666;font-size:10px}</style></head><body>' +
       '<h1>Kırşehir su ve elektrik tesisleri — envanter özeti</h1>' +
       '<div class="k">' + esc(this.damga()) + ' · ' + s.assets.length + ' kayıt · ' + topAk + ' aktif · ' + (s.assets.length - topAk) + ' pasif · ' + acik.length +
-      ' açık arıza · ' + miss.length + ' eksik bilgili kayıt</div>' +
+      ' açık arıza</div>' +
       '<h2>Tür bazında aktif / pasif</h2><table><tr><th>Tür</th><th>Aktif</th><th>Pasif</th><th>Toplam</th><th>Aktif oranı</th></tr>' +
       satirT + '<tr><th>Toplam</th><th>' + topAk + '</th><th>' + (s.assets.length - topAk) +
       '</th><th>' + s.assets.length + '</th><th>' +
       (s.assets.length ? Math.round(topAk / s.assets.length * 100) + '%' : '—') + '</th></tr></table>' +
-      '<h2>İlçe dağılımı</h2><table><tr><th>İlçe</th><th>Kayıt</th><th>Kuyu</th><th>Depo</th><th>Aktif</th><th>Pasif</th><th>Eksik bilgili</th></tr>' +
+      '<h2>İlçe dağılımı</h2><table><tr><th>İlçe</th><th>Kayıt</th><th>Kuyu</th><th>Depo</th><th>Aktif</th><th>Pasif</th></tr>' +
       satirD + '</table>' +
       '<h2>Açık arızalar</h2>' + (acik.length
         ? '<table><tr><th>No</th><th>Tesis</th><th>Arıza</th><th>Öncelik</th><th>Durum</th><th>Ekip</th></tr>' + satirF + '</table>'
@@ -121,8 +117,7 @@
           '<tr><th>Toplam</th><th></th><th></th><th>' + this.tl(malzToplam) + '</th></tr></table>' +
           '<div class="k">Tutarlar programdaki birim fiyat listesinden hesaplanır; gerçek fatura tutarları farklı olabilir.</div>'
         : '<div class="k">Arıza kayıtlarında malzeme girilmemiş.</div>') +
-      '<h2>Eksik bilgili kayıtlar</h2><table><tr><th>Kod</th><th>Yer</th><th>Boş alan</th><th>Alanlar</th></tr>' +
-      satirM + '</table></body></html>');
+      '</body></html>');
     w.document.close();
     setTimeout(() => { try { w.focus(); w.print(); } catch (e) { /* engelli */ } }, 500);
     this.duyur('Yazdırma penceresi açıldı — “Hedef: PDF olarak kaydet”i seçin.', 7000);
@@ -157,7 +152,7 @@
       ['Su analizi', f(d.suAnaliz)], ['Analiz tarihi', f(d.suAnalizTarih)], ['Klor ölçümü', f(d.klorDeger)],
       hd('Pompa ve elektrik'),
       ['Pompa markası', f(d.pompaMarka)], ['Pompa modeli', f(d.pompaModel)], ['Kademe', f(d.kademe)],
-      ['Pompa motoru', u(d.motor, 'kW')], ['Motor seri no', f(d.motorSeri)],
+      ['Pompa gücü', u(d.motor, 'kW')], ['Motor seri no', f(d.motorSeri)],
       ['Montaj derinliği', u(d.pompaD, 'm')], ['Montaj tarihi', f(d.montajTarih)],
       ['Motor kablosu', u(d.kablo, 'mm²')], ['Kalkış tipi', f(d.kalkis)],
       ['Termik ayar değeri', f(d.termik)], ['Ölçülen akım', f(d.akim)],

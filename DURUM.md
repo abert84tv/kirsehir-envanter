@@ -2077,3 +2077,10 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.07-153 — Arıza durum seçici sadeleşti
 - Arıza kartındaki durum seçici 8 adımdan 6'ya indi: Açık · Atandı · Sahada · Beklemede · Çözüldü · İptal (Merkez onayı açıksa Kontrolde de görünür). “Bilgi bekliyor” ve “Başka birime” artık **Beklemede + bekleme nedeni** (dış kurum, malzeme, abone/muhtar…) olarak girilir; neden listesi hedef süre modülü kapalıyken de çıkar. Eski kayıtlar bu iki durumdaysa kendi adımı görünmeye devam eder, veri değişmedi.
+
+## 2026.10.09-154 — Kuyu kartı kaydı düzeltildi, yeni iş satırda uyarıyor, Özet'ten eksik bilgi kalktı
+- **Kuyu/tesis kartı kaydı (ciddi hata):** sunucudaki `cop_temizle` her veri yenilemede (30 sn) bütün tesislerin kaydını yeniden yazıyordu → her tesisin sürümü sürekli artıyor, kullanıcı kaydedince sunucu “başkası değiştirdi” diye reddediyordu; program hatayı yutup eski veriyi geri yüklüyor ve “güncellendi” diyordu. Düzeltme: (1) sunucu fonksiyonu artık yalnız fotoğraf sayısı değişen kaydı yazar (`SQL-cop-temizle-surum-duzelt.sql`, migration uygulandı); (2) program sürüm çakışmasında güncel kaydı çekip girilenleri üstüne uygulayıp yeniden dener, hâlâ olmazsa gerçek nedeni kırmızı uyarıyla söyler, ekranı geri yüklemez. Gerçek sunucuda uçtan uca denendi.
+- `gecmis` tablosunda bu hata yüzünden ~550 bin gereksiz “Kayıt güncellendi” satırı birikti (temizlenmedi).
+- **Pompa gücü:** kuyu kartında “Pompa motoru (kW)” alanı “Pompa gücü (kW)” oldu (aynı alan, veri korunur).
+- **Yeni gelen iş:** üstteki kırmızı şerit kalktı. İş panosunda Yeni sütunundaki, son 12 saatte gelmiş ve açılıp bakılmamış kutu/satır kırmızı yanıp söner (“YENİ GELDİ”); açılınca söner. Menüde İş panosu üzerinde bakılmamış sayısı görünür. Ses siren alarmı iş panosu açılana kadar tekrarlar.
+- **Özet:** “Eksik bilgili” kutusu, ilçe/köy “eksik” sayıları, “Eksik bilgisi olan kayıtlar” listesi ve Excel/PDF’teki eksik sütun/bölümleri kaldırıldı.

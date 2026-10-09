@@ -1,18 +1,15 @@
       ozet: (() => {
         const byD = {}, byV = {};
         for (const a of s.assets) {
-          (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, miss: 0, aktif: 0, pasif: 0 });
+          (byD[a.district] = byD[a.district] || { n: 0, kuyu: 0, depo: 0, aktif: 0, pasif: 0 });
           byD[a.district].n++;
           if (aktifMi(a)) byD[a.district].aktif++; else byD[a.district].pasif++;
           if (a.type === 'kuyu') byD[a.district].kuyu++;
           if (a.type === 'depo') byD[a.district].depo++;
-          if (this.missingOf(a).length) byD[a.district].miss++;
           const key = this.yer(a);
-          (byV[key] = byV[key] || { n: 0, miss: 0, photos: 0 });
+          (byV[key] = byV[key] || { n: 0, photos: 0 });
           byV[key].n++; byV[key].photos += a.photos;
-          if (this.missingOf(a).length) byV[key].miss++;
         }
-        const miss = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length);
         const near = [...s.assets].map(a => ({ a, km: this.distKm(a) })).sort((x, y) => x.km - y.km).slice(0, 8);
         const openF = s.faults.filter(f => !KAPALI_DURUM.includes(f.status));
         // Tekrarlayan arıza: aynı tesiste birden çok kayıt — kalıcı çözüm işareti
@@ -162,24 +159,14 @@
           stats: [
             { n: String(s.assets.length), label: 'Kayıt' },
             { n: String(s.assets.filter(a => aktifMi(a)).length), label: 'Aktif' },
-            { n: String(miss.length), label: 'Eksik bilgili' },
             { n: String(openF.length), label: 'Açık arıza' }
           ],
           districts: Object.entries(byD).sort((x, y) => y[1].n - x[1].n).map(([name, v]) => ({
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
-            miss: v.miss + ' eksik',
-            missFg: v.miss ? ui.acc : ui.mut,
             barW: Math.round(v.n / Math.max(...Object.values(byD).map(z => z.n)) * 100) + '%'
           })),
           villages: Object.entries(byV).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
-            name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf',
-            miss: v.miss ? v.miss + ' eksik' : 'tam',
-            missFg: v.miss ? ui.acc : ui.mut
-          })),
-          missing: miss.slice(0, 20).map(({ a, m }) => ({
-            code: a.code, place: this.yer(a),
-            fields: m.join(' · '), count: m.length + ' alan',
-            open: () => { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi' }); }
+            name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf'
           })),
           aktiflik: (() => {
             const satir = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
@@ -203,7 +190,6 @@
               note: 'Pasif kayıtlar envanterden düşmez; hizmet dışı sayılır. İlçe kırılımı aşağıdaki tabloda, kayıt bazında Envanter sekmesindeki Durum süzgecinde.'
             };
           })(),
-          missingNote: miss.length + ' kayıtta zorunlu alan boş. Toplu aktarımla gelen noktalar burada listelenir — tek tek açıp doldurabilirsiniz.',
           near: near.map(({ a, km }) => ({
             code: a.code, place: this.yer(a),
             km: km.toFixed(1) + ' km',

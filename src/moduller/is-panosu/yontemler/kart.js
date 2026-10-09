@@ -1,5 +1,6 @@
   // ── İş kartı (tek sayfa): başvuru / talep → arıza + ekip, eski Talep ekranına gitmeden
   isKartiAc(tur, id) {
+    this.panoGoruldu((tur === 'b' ? 'b' : 't') + id);
     const kay = tur === 'b' ? (this.state.basvurular || []).find(x => x.id === id) : (this.state.talepler || []).find(x => x.id === id);
     if (!kay) return;
     const metin = [kay.konu === 'Telegram bildirimi' ? '' : kay.konu, kay.aciklama].filter(Boolean).join('. ');

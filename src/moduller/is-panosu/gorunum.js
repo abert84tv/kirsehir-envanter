@@ -92,6 +92,9 @@
 
         const tamam = k => {
           const surukle = k.surukle;
+          // Yeni gelen, henüz açılıp bakılmamış iş: kutunun/satırın kendisi yanıp söner (üst şerit yerine)
+          const yeniMi = k.kolon === 'yeni' && this.panoYeniMi(k.anahtar, k.ms);
+          const gor = fn => (...a) => { if (yeniMi) this.panoGoruldu(k.anahtar); return fn(...a); };
           const renk = oncRenk(k.onc);
           const ms = k.ms;
           return {
@@ -99,11 +102,13 @@
             kimRenk: k.kimBos ? '#d97706' : ui.fg, kanal: k.kanal, kanalVar: !!k.kanal,
             aciklama: k.aciklama, aciklamaVar: !!k.aciklama,
             onc: k.onc, renk, noktaSinif: 'ks-pdot' + (k.onc === 'Acil' ? ' acil' : ''),
-            sure: yasMetin(ms), uyari: k.uyari || '', uyariVar: !!k.uyari, uyariRenk: k.uyariKirmizi ? 'var(--color-uyari)' : '#d97706',
-            dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: k.git,
-            ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: k.ac,
+            sure: yasMetin(ms), uyari: k.uyari || (yeniMi ? 'YENİ GELDİ — açıp bakın' : ''), uyariVar: !!k.uyari || yeniMi,
+            uyariRenk: k.uyariKirmizi || (yeniMi && !k.uyari) ? 'var(--color-uyari)' : '#d97706',
+            sinif: 'ks-kart ks-gir' + (yeniMi ? ' ks-yeni' : ''), sinifSatir: 'ks-gir' + (yeniMi ? ' ks-yeni' : ''),
+            dugme: k.dugme, dugmeVar: !!k.dugme, dugmeRenk: k.dugmeRenk, git: gor(k.git),
+            ikinci: k.ikinci, ikinciVar: !!k.ikinci, ikinciGit: k.ikinciGit, ac: gor(k.ac),
             // kutunun/satırın her yerine basınca kart açılır (düğme, seçim kutusu ve yazı alanları kendi işini yapar)
-            tikla: e => { const h = e && e.target; if (h && h.closest && h.closest('button,select,input,option,textarea,a')) return; k.ac(); },
+            tikla: e => { const h = e && e.target; if (h && h.closest && h.closest('button,select,input,option,textarea,a')) return; gor(k.ac)(); },
             ekipSec: !!k.ekipSec, ekipSecenek: k.ekipSecenek || [],
             ekipDegisir: !!k.ekipDegisir, ekipDeger: k.ekipDeger || '', ekipDegis: k.ekipDegis || (() => {}),
             kolonAd: KOLON_AD[k.kolon], kolonRenk: (KOLON.find(x => x[0] === k.kolon) || [])[2], onc2: ONC[k.onc] ?? 9, ms2: k.ms || 0, kimAd: k.kimBos ? '' : k.kim,

@@ -1,4 +1,31 @@
   // is-panosu modülü — İş panosu işlemleri. Hepsi var olan akışları çağırır; yeni iş kuralı eklemez.
+  // “Yeni geldi” uyarısı: Yeni sütunundaki, son 12 saatte gelmiş ve henüz açılıp bakılmamış iş
+  panoYeniMi(anahtar, ms) {
+    return !!ms && Date.now() - ms < 12 * 3600000 && !(this.state.panoGoruldu || []).includes(anahtar);
+  }
+  panoGoruldu(anahtar) {
+    const g = this.state.panoGoruldu || [];
+    if (g.includes(anahtar)) return;
+    const yeni = [...g, anahtar].slice(-400);
+    try { localStorage.setItem('ks-pano-goruldu', JSON.stringify(yeni)); } catch (e) { /* depolama kapalı */ }
+    this.setState({ panoGoruldu: yeni });
+  }
+  // Menüdeki sayı: bakılmamış yeni işler
+  panoYeniSayi() {
+    const s = this.state;
+    let n = 0;
+    if (s.modul.talep !== false) {
+      for (const b of (s.basvurular || [])) if (b.durum === 'yeni' && this.panoYeniMi('b' + b.id, Date.parse(b.zaman) || 0)) n++;
+      for (const t of (s.talepler || [])) if (!TALEP_KAPALI.includes(t.durum) && this.panoYeniMi('t' + t.id, this.damgaMs(t.acilis))) n++;
+    }
+    if (s.modul.ariza !== false) {
+      for (const f of (s.faults || [])) {
+        if (f.status !== 'acik' && f.status !== 'yeniden') continue;
+        if (this.panoYeniMi('f' + f.id, this.damgaMs(f.opened) || (f.openedIso ? Date.parse(f.openedIso) : 0))) n++;
+      }
+    }
+    return n;
+  }
   // Panoyu Tablo görünümünde, verilen süzgeçle açar (durum: yeni|atandi|sahada|bitti, ekip, q)
   panoGit(suz) {
     this.setState({ tab: 'isPanosu', panoGorunum: 'tablo', panoSuz: { ...(suz || {}) }, isKarti: null, faultForm: null });
@@ -16,6 +43,7 @@
   }
   // Arızayı ayrıntı formunda (masaüstü sağ panel / telefon sade ekran) açar
   panoAc(f) {
+    this.panoGoruldu('f' + f.id);
     const form = { malzeme: [], sesler: [], iscilik: '', isaret: null, photos: [], ...f };
     // Masaüstü: tek sayfa kart. Telefon: mevcut sade arıza ekranı (alt sayfa)
     if (this.state.device === 'phone') this.setState({ panel: 'ariza', faultForm: form });

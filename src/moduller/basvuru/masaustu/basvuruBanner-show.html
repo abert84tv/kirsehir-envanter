@@ -1,8 +1,0 @@
-<sc-if value="{{ basvuruBanner.show }}" hint-placeholder-val="{{ false }}">
-<div style="position:fixed;left:0;right:0;top:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#d92d20;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ksAlarm .9s ease-in-out infinite">
-<span style="flex:none;font:700 24px/1">🔔</span>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:700 15px/1.25 var(--font-body)">{{ basvuruBanner.baslik }}</span><span style="font:500 13px/1.3 var(--font-body);opacity:.95;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ basvuruBanner.metin }}</span><span style="font:700 12px/1.3 var(--font-body)">{{ basvuruBanner.sesNot }}</span></button>
-<button onClick="{{ basvuruBanner.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;height:42px;padding:0 16px;border-radius:10px;background:#fff;color:#d92d20;font:700 13.5px/42px var(--font-body)">Gelen’i aç</button>
-<button onClick="{{ basvuruBanner.kapat }}" aria-label="Sustur" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.6);text-align:center;font:600 18px/40px var(--font-body)">✕</button>
-</div>
-</sc-if>

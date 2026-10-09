@@ -2164,3 +2164,6 @@ Sürüm 2026.10.05-114.
 - **Özet dağılım haritası:** masaüstünde fare haritanın üstündeyken tekerlek yakınlaştırır/uzaklaştırır (telefonda iki parmak).
 - **Simge uyumu:** Envanter haritasındaki sol alt simgeler açık temada beyaz, üst katman simgesi koyuydu; hepsi ortak değişkenlerden (`--ikon-bg`, `--ikon-hover`…) aynı renge bağlandı. Üzerine gelince mavi tonlu zemin + mavi kenar, etkin olunca mavi dolu + beyaz simge. Aynı dil Özet haritasındaki katman simgesinde, Hat kesitinde ve konumuma git düğmesinde de.
 - **Hat kesiti > Nokta ekle (mantık düzeltildi):** simge eskiden varsayılan açıktı ve açıp kapatmak yalnız çift tıklamayı kilitliyordu; yeni mantık: **kapalıyken** tesis işaretine dokunma, çift tıklama ve basılı tutma nokta koyar; **açıkken** haritaya tek dokunuşla nokta konur (imleç artı olur). Varsayılan kapalı.
+
+## 2026.10.10-176 — Fazla satır ve gereksiz geri düğmesi kalktı
+- Envanter > Hat kesiti sayfasında sekmelerin altındaki “Hat Kesiti” başlık satırı kaldırıldı (sekme zaten işaretli). Aynı sayfanın sekmeleri arasında (Harita · Hat kesiti · Liste) geçince üstte **‹ geri** düğmesi artık çıkmaz; geri düğmesi yalnız bir sayfadan başka sayfaya inildiğinde (Özet > ilçe > liste, listeden kayda, Ayarlar alt sayfaları) çıkar.

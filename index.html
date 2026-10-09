@@ -714,12 +714,6 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <!-- profil: mesafe ve yol profili -->
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
-<div style="flex:none;display:flex;align-items:center;gap:16px;padding:8px 20px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
-<span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">Hat Kesiti</span>
-<span class="ks-bilgi" style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ profil.note }}</span>
-</div>
-</div>
 <div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
 <button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
@@ -10336,7 +10330,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-175';
+const SURUM = '2026.10.10-176';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11089,6 +11083,8 @@ class Component extends DCLogic {
   }
   // Gezinme geçmişi: bir sayfadan başka sayfaya geçince önceki sayfa yığına girer; “‹ Geri” düğmesi oradan döner.
   // Menüden (sol menü, alt çubuk) geçiş yığını sıfırlar — oradaki geçiş “yeni başlangıç”tır.
+  // Aynı sayfanın sekmeleri arasında geçiş (Harita / Hat kesiti / Liste): geri düğmesi gerektirmez
+  geziYanal() { this._geziIs = { m: 'yanal', t: Date.now() }; }
   geziMenu() { this._geziIs = { m: 'menu', t: Date.now() }; }
   geziIzle() {
     const s = this.state;
@@ -11097,7 +11093,7 @@ class Component extends DCLogic {
     const onceki = this._geziTab; this._geziTab = s.tab;
     const is = this._geziIs; this._geziIs = null;
     const taze = is && Date.now() - is.t < 1500;
-    if (taze && is.m === 'geri') return;
+    if (taze && (is.m === 'geri' || is.m === 'yanal')) return;
     if (taze && is.m === 'menu') { if ((s.gezi || []).length) this.setState({ gezi: [] }); return; }
     // iş kartı kendi geri düğmesine sahiptir; geçici ekranlar yığına girmez
     if (['isKarti', 'giris'].includes(onceki)) return;
@@ -17150,7 +17146,7 @@ class Component extends DCLogic {
               bg: tabId === z.hedef ? (dark ? '#48484a' : '#ffffff') : 'transparent',
               fg: tabId === z.hedef ? ui.fg : ui.mut,
               golge: tabId === z.hedef ? '0 1px 3px rgba(0,0,0,.12)' : 'none',
-              pick: () => this.setState({ tab: z.hedef })
+              pick: () => { this.geziYanal(); this.setState({ tab: z.hedef }); }
             };
           })
         };

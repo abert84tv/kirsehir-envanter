@@ -24,7 +24,7 @@
               bg: tabId === z.hedef ? (dark ? '#48484a' : '#ffffff') : 'transparent',
               fg: tabId === z.hedef ? ui.fg : ui.mut,
               golge: tabId === z.hedef ? '0 1px 3px rgba(0,0,0,.12)' : 'none',
-              pick: () => this.setState({ tab: z.hedef })
+              pick: () => { this.geziYanal(); this.setState({ tab: z.hedef }); }
             };
           })
         };

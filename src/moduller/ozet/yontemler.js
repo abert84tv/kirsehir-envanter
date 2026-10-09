@@ -129,7 +129,8 @@
       ['Sağa (ITRF96-3°)', gridE[0].toFixed(2) + ' m'],
       ['Yukarı (ITRF96-3°)', gridE[1].toFixed(2) + ' m'],
       ['WGS84', `${sel.lat.toFixed(5)}, ${sel.lon.toFixed(5)}`],
-      ['Koordinat kaynağı', sel.coordSource || (sel.coordApprox ? 'Yaklaşık — saha ölçümü bekliyor' : 'Saha GPS')]
+      ['Koordinat kaynağı', sel.coordSource || (sel.coordApprox ? 'Yaklaşık — saha ölçümü bekliyor' : 'Saha GPS')],
+      ...(d.koyOtomatik ? [['Köy bilgisi', 'otomatik yazıldı (' + d.koyOtomatik + ') — yanlışsa Köy ve ilçe düzelt']] : [])
     ];
     // Eski yeni-kayıt formu boş alanlara "—" ve bakıma "Yeni kayıt" yazıyordu;
     // bunlar gerçek değer değil, eksik sayılır.

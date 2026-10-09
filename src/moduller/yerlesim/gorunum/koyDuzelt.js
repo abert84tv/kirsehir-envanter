@@ -23,7 +23,7 @@
             const g = this.state.koyForm;
             if (!sel || !g) return;
             const koy = (g.village || '').trim();
-            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined };
+            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined, d: { ...(sel.d || {}), koyOtomatik: '' } };
             this.setState({ koyForm: null, assets: s.assets.map(x => x.id === sel.id ? yeni : x) },
               () => this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }));
             this.iz(sel.id, 'Köy bilgisi düzeltildi', `${sel.village || '(boş)'} → ${koy || '(boş)'} · ${yeni.district}`);

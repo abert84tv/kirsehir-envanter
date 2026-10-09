@@ -2749,6 +2749,30 @@ Hareket gir
 <button onClick="{{ vClear }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 13px;text-align:center">Elle işaretlenmiş konumları temizle</button>
 </div>
 </div>
+<sc-if value="{{ koyKontrol.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font:700 15px/1.2 var(--font-heading)">Köy kontrolü</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ koyKontrol.ozet }} Yanlış olanı “Düzelt” ile kaydın kartında değiştirin, boş kalsın dediğinizi “Geri al” ile silin. Doğru olanı “Doğru” ile onaylayın; liste kısalır.</span>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ koyKontrol.tumDogru }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body);color:{{ ui.fg }}">Hepsini doğru kabul et</button>
+<button onClick="{{ koyKontrol.tumGeriAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid #d92d20;font:600 12.5px/38px var(--font-body);color:#d92d20">Hepsini geri al</button>
+</div>
+<div style="max-height:420px;overflow:auto;border-radius:12px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ koyKontrol.satirlar }}" as="r" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1 1 160px;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13px/1.1 var(--font-body);color:{{ ui.fg }}">{{ r.kod }}</span><span style="font:400 12px/1.25 var(--font-body);color:{{ ui.mut }}">{{ r.koy }} · {{ r.ilce }}</span></span>
+<span style="flex:none;font:700 12.5px/1 var(--font-heading);color:{{ r.renk }}">{{ r.km }}</span>
+<button onClick="{{ r.dogru }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.fg }}">Doğru</button>
+<button onClick="{{ r.duzelt }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--color-accent);font:600 12px/34px var(--font-body);color:{{ ui.acc }}">Düzelt</button>
+<button onClick="{{ r.geriAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.mut }}">Geri al</button>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
 <div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px">
 <div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Yeni tesis kur</div>
@@ -7227,6 +7251,30 @@ Hareket gir
 <div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">{{ vFill.note }}</div>
 <button onClick="{{ vFill.run }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:14px">{{ vFill.label }}</button>
 </div>
+<sc-if value="{{ koyKontrol.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font:700 15px/1.2 var(--font-heading)">Köy kontrolü</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ koyKontrol.ozet }} Yanlış olanı “Düzelt” ile kaydın kartında değiştirin, boş kalsın dediğinizi “Geri al” ile silin. Doğru olanı “Doğru” ile onaylayın; liste kısalır.</span>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ koyKontrol.tumDogru }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body);color:{{ ui.fg }}">Hepsini doğru kabul et</button>
+<button onClick="{{ koyKontrol.tumGeriAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid #d92d20;font:600 12.5px/38px var(--font-body);color:#d92d20">Hepsini geri al</button>
+</div>
+<div style="max-height:420px;overflow:auto;border-radius:12px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ koyKontrol.satirlar }}" as="r" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1 1 160px;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13px/1.1 var(--font-body);color:{{ ui.fg }}">{{ r.kod }}</span><span style="font:400 12px/1.25 var(--font-body);color:{{ ui.mut }}">{{ r.koy }} · {{ r.ilce }}</span></span>
+<span style="flex:none;font:700 12.5px/1 var(--font-heading);color:{{ r.renk }}">{{ r.km }}</span>
+<button onClick="{{ r.dogru }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.fg }}">Doğru</button>
+<button onClick="{{ r.duzelt }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--color-accent);font:600 12px/34px var(--font-body);color:{{ ui.acc }}">Düzelt</button>
+<button onClick="{{ r.geriAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.mut }}">Geri al</button>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
 <div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Yeni tesis kur</div>
 <div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }};margin-bottom:10px">Kayıtta olmayan bir kuyu, depo, AG panosu veya GES için sıfırdan kayıt açın. Sahadaysanız daha kısa yol: haritada boş noktaya dokunun, çıkan şeritten “Buraya tesis kur”.</div>
@@ -10180,7 +10228,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-160';
+const SURUM = '2026.10.10-161';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -14918,7 +14966,8 @@ class Component extends DCLogic {
       ['Sağa (ITRF96-3°)', gridE[0].toFixed(2) + ' m'],
       ['Yukarı (ITRF96-3°)', gridE[1].toFixed(2) + ' m'],
       ['WGS84', `${sel.lat.toFixed(5)}, ${sel.lon.toFixed(5)}`],
-      ['Koordinat kaynağı', sel.coordSource || (sel.coordApprox ? 'Yaklaşık — saha ölçümü bekliyor' : 'Saha GPS')]
+      ['Koordinat kaynağı', sel.coordSource || (sel.coordApprox ? 'Yaklaşık — saha ölçümü bekliyor' : 'Saha GPS')],
+      ...(d.koyOtomatik ? [['Köy bilgisi', 'otomatik yazıldı (' + d.koyOtomatik + ') — yanlışsa Köy ve ilçe düzelt']] : [])
     ];
     // Eski yeni-kayıt formu boş alanlara "—" ve bakıma "Yeni kayıt" yazıyordu;
     // bunlar gerçek değer değil, eksik sayılır.
@@ -15580,43 +15629,50 @@ class Component extends DCLogic {
       setTimeout(() => this.setState({ toast: null }), 8000);
     }
   }
+  // Köyü boş kayıtlara en yakın yerleşimin adını yazar — yalnızca güvenli eşleşmelere:
+  // (1) yerleşim kaydın ilçesindendir (ilçesi bilinmeyenler de uygun sayılır) ve (2) 1,5 km’den yakındır.
+  // Yazılan her köy kayda “koyOtomatik: X km” diye işlenir (Ayarlar > Kayıt araçları > Köy kontrolü’nden
+  // doğrulanır, düzeltilir ya da toplu geri alınır). Sunucuya yazılır.
   async fillVillages() {
     if (this.state.vFill === 'loading') return;
-    this.setState({ vFill: 'loading' });
-    this.say('OpenStreetMap’ten Kırşehir köy noktaları çekiliyor…');
-    try {
-      // gömülü HGM listesi varsa internete hiç çıkmayız
-      const nodes = this._yer
-        ? this._yer.filter(r => r[3] === 'YKOY' || r[3] === 'BCK').map(r => ({ name: r[0], lat: r[1], lon: r[2], district: r[4] }))
-        : (await this.osmNodes()).slice();
-      if (!nodes.length) throw new Error('nokta yok');
-      const R = 6371, t = Math.PI / 180;
-      const d2 = (a, b) => {
-        const dLat = (b.lat - a.lat) * t, dLon = (b.lon - a.lon) * t;
-        const x = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * t) * Math.cos(b.lat * t) * Math.sin(dLon / 2) ** 2;
-        return 2 * R * Math.asin(Math.sqrt(x));
-      };
-      let n = 0, far = 0;
-      const notes = { ...this.state.notes };
-      const assets = this.state.assets.map(a => {
-        if (a.village) return a;
-        let best = null, bd = Infinity;
-        for (const v of nodes) { const dd = d2(a, v); if (dd < bd) { bd = dd; best = v; } }
-        if (!best) return a;
-        n++;
-        if (bd > 4) far++;
-        notes[a.id] = (notes[a.id] ? notes[a.id] + '\n' : '')
-          + `Köy adı HGM yerleşim listesinden otomatik dolduruldu: ${best.name}${best.district ? ' · ' + best.district : ''}, kuyudan ${bd.toFixed(1)} km. ${bd > 4 ? 'UZAK — kontrol edin.' : 'Yakın eşleşme.'}`;
-        return { ...a, village: best.name, district: best.district || a.district, villageAuto: +bd.toFixed(1) };
-      });
-      this.setState({ assets, notes, vFill: 'done' });
-      this.say(`${n} kayda köy adı yazıldı (${nodes.length} yerleşim noktası tarandı); ${far} tanesi 4 km’den uzak eşleşti, kontrol edin.`, true);
-      setTimeout(() => this.setState({ toast: null }), 7000);
-    } catch (err) {
-      this.setState({ vFill: 'error' });
-      this.say('Köy konum servisine ulaşılamadı — internet bağlantınızı kontrol edip tekrar deneyin.', true);
-      setTimeout(() => this.setState({ toast: null }), 6000);
+    const M = this._sb;
+    if (!M || !M.tokenOku() || this.state.offline) return this.say('Köy adı yazmak için sunucu bağlantısı gerekir.', true);
+    const nodes = (this._yer || []).filter(r => r[3] === 'YKOY' || r[3] === 'BCK').map(r => ({ name: r[0], lat: r[1], lon: r[2], ilce: r[4] }));
+    if (!nodes.length) return this.say('Yerleşim listesi yüklenemedi — sayfayı yenileyip tekrar deneyin.', true);
+    const R = 6371, t = Math.PI / 180;
+    const km = (a, b) => {
+      const dLat = (b.lat - a.lat) * t, dLon = (b.lon - a.lon) * t;
+      const x = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * t) * Math.cos(b.lat * t) * Math.sin(dLon / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(x));
+    };
+    const ESIK = 1.5;
+    const bos = this.state.assets.filter(a => !a.village && a.dbId != null && a.lat != null);
+    const adaylar = [];
+    for (const a of bos) {
+      if (!this.yazabilir(a)) continue;
+      let best = null, bd = Infinity;
+      for (const v of nodes) { if (v.ilce && v.ilce !== a.district) continue; const dd = km(a, v); if (dd < bd) { bd = dd; best = v; } }
+      if (best && bd <= ESIK) adaylar.push({ a, ad: best.name, km: bd });
     }
+    if (!adaylar.length) return this.say('Güvenle eşleşen kayıt bulunamadı (köyü boş ' + bos.length + ' kayıt var, hepsi 1,5 km’den uzak).', true);
+    const kalan = bos.length - adaylar.length;
+    if (!window.confirm(adaylar.length + ' kayda köy adı yazılacak (köyü boş ' + bos.length + ' kayıttan; ' + kalan + ' kayıt 1,5 km’den uzak ya da başka ilçeye yakın olduğu için boş kalacak).\n\n'
+      + 'Her biri “otomatik yazıldı” diye işaretlenir. Yanlış olanı kaydın kartında “Köy ve ilçe düzelt” ile ya da Ayarlar › Kayıt araçları › Köy kontrolü’nden düzeltebilir, hepsini geri alabilirsiniz.\n\nDevam edilsin mi?')) return;
+    this.setState({ vFill: 'loading' });
+    let ok = 0, hata = '';
+    for (let i = 0; i < adaylar.length; i++) {
+      const { a, ad, km: k } = adaylar[i];
+      const yeni = { ...a, village: ad, d: { ...(a.d || {}), koyOtomatik: k.toFixed(1) + ' km' } };
+      let r; try { r = await M.tesisKaydet(yeni); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+      if (r && r.ok) { ok++; this.iz(a.id, 'Köy otomatik yazıldı', ad + ' · en yakın yerleşim, ' + k.toFixed(1) + ' km'); }
+      else { hata = (r && r.err) || 'bağlantı kesildi'; if (r && r.cevrimdisi) break; }
+      if ((i + 1) % 25 === 0) this.say((i + 1) + ' / ' + adaylar.length + ' kayıt yazıldı…', true);
+    }
+    await this.veriYenile(true);
+    this.setState({ vFill: 'done' });
+    this.denetimYaz('veri', 'Köy adı otomatik yazıldı', ok + ' kayıt (en yakın yerleşim, en çok 1,5 km)', 'Kayıt araçları');
+    this.say(ok + ' kayda köy adı yazıldı' + (hata ? ' · durdu: ' + hata : '') + '. Köy kontrolü bölümünden gözden geçirin.', true);
+    setTimeout(() => this.setState({ toast: null }), 9000);
   }
   // ── kişisel ayarlar: her kullanıcının son kullandığı görünüm bu cihazda saklanır
   // Köyün konumu onaylanmış mı? vSave(…, true) onay ve elle işaretlemede
@@ -15829,6 +15885,44 @@ class Component extends DCLogic {
     const hayvanli = Object.values(yeni).filter(x => x.buyukbas != null || x.kucukbas != null).length;
     this.duyur(`${dosyaAd ? dosyaAd + ' \u2014 ' : ''}${n} sat\u0131r okundu \u00b7 ${nufuslu} yerle\u015fimde n\u00fcfus, ${hayvanli} yerle\u015fimde hayvan say\u0131s\u0131${atlanan ? ' \u00b7 ' + atlanan + ' sat\u0131r atland\u0131' : ''}.`, 8000, 'iyi');
   }
+  // Köy kontrolü: otomatik yazılan köyleri doğrulama / düzeltme / geri alma (sunucuya yazar)
+  async koyYaz(a, village, koyOtomatik) {
+    const M = this._sb;
+    const d = { ...(a.d || {}), koyOtomatik: koyOtomatik || '' };
+    const yeni = { ...a, village, d, villageAuto: undefined };
+    this.setState(st => ({ assets: st.assets.map(x => x.id === a.id ? yeni : x) }));
+    let r; try { r = await M.tesisKaydet(yeni); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+    if (!(r && r.ok)) { this.setState(st => ({ assets: st.assets.map(x => x.id === a.id ? a : x) })); this.duyur(a.code + ' kaydedilemedi: ' + ((r && r.err) || 'bağlantı yok'), 7000, 'kotu'); return false; }
+    return true;
+  }
+  koyKayitlar() { return (this.state.assets || []).filter(a => a.d && a.d.koyOtomatik); }
+  async koyDogru(a) {
+    if (await this.koyYaz(a, a.village, '')) { this.iz(a.id, 'Köy doğrulandı', a.village); await this.veriYenile(true); }
+  }
+  async koyGeriAl(a) {
+    if (await this.koyYaz(a, '', '')) { this.iz(a.id, 'Otomatik köy geri alındı', a.village + ' → (boş)'); await this.veriYenile(true); }
+  }
+  async koyTumDogru() {
+    const L = this.koyKayitlar();
+    if (!L.length || !window.confirm(L.length + ' kaydın köy adı doğru kabul edilsin mi? (“otomatik” işareti kalkar.)')) return;
+    for (const a of L) await this.koyYaz(a, a.village, '');
+    await this.veriYenile(true); this.duyur(L.length + ' kayıt doğrulandı.', 5000, 'iyi');
+  }
+  async koyTumGeriAl() {
+    const L = this.koyKayitlar();
+    if (!L.length || !window.confirm(L.length + ' kayıttaki otomatik köy adı silinsin mi? Köyler eskisi gibi boş döner (elle doğrulananlara dokunulmaz).')) return;
+    let n = 0; for (const a of L) if (await this.koyYaz(a, '', '')) n++;
+    await this.veriYenile(true);
+    this.denetimYaz('veri', 'Otomatik köy adları geri alındı', n + ' kayıt', 'Kayıt araçları');
+    this.duyur(n + ' kayıttaki otomatik köy adı geri alındı.', 6000, 'iyi');
+  }
+  // Kaydı haritada açar ve “Köy ve ilçe düzelt” formunu doldurur
+  koyDuzeltAc(a) {
+    this.flyTo(a.lat, a.lon, 16);
+    this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita', koyForm: { village: a.village || '', district: a.district || '' } });
+  }
+
+
   // is-panosu modülü — İş panosu işlemleri. Hepsi var olan akışları çağırır; yeni iş kuralı eklemez.
   // “Yeni geldi” uyarısı: Yeni sütunundaki, son 12 saatte gelmiş ve henüz açılıp bakılmamış iş
   panoYeniMi(anahtar, ms) {
@@ -20369,6 +20463,7 @@ class Component extends DCLogic {
             const koy = (g.koy || '').trim();
             const ilce = g.ilce || a.district;
             const yerDegisti = koy !== (a.village || '') || ilce !== a.district;
+            if (yerDegisti) temiz.koyOtomatik = '';
             const yeni = { ...a, village: koy, district: ilce, villageAuto: yerDegisti ? undefined : a.villageAuto, year: yil, d: { ...(a.d || {}), ...temiz }, sync: s.offline ? 'pending' : a.sync };
             this.setState({
               alanForm: null,
@@ -20664,17 +20759,12 @@ class Component extends DCLogic {
       openConv: () => this.setState({ panel: s.panel === 'donusum' ? 'yok' : 'donusum' }),
       vFill: {
         run: () => this.fillVillages(),
-        label: s.vFill === 'loading' ? 'Çalışıyor…' : (s.vFill === 'done' ? 'Yeniden çalıştır' : 'Kuyulara köy adı yaz'),
+        label: s.vFill === 'loading' ? 'Yazılıyor…' : 'Kuyulara köy adı yaz',
         note: (() => {
-          const auto = s.assets.filter(a => a.villageAuto !== undefined);
           const bos = s.assets.filter(a => !a.village).length;
-          if (s.vFill === 'loading') return 'Kayıtlar en yakın yerleşime bağlanıyor…';
-          if (s.vFill === 'error') return 'İşlem tamamlanamadı — tekrar deneyin.';
-          if (auto.length) {
-            const far = auto.filter(a => a.villageAuto > 4).length;
-            return `${auto.length} kayda köy adı otomatik yazıldı; ${far} tanesi 4 km’den uzak eşleşti — bunları kontrol edin. Her kaydın Not sekmesinde hangi köye kaç km uzaklıkta eşleştiği yazıyor.`;
-          }
-          return `Bu düğme bir kez çalıştırılır: köyü boş olan ${bos} kayda en yakın yerleşimin adını yazar. Bir daha basmanız gerekmez — yanlış eşleşen köyü kaydın kendi sayfasından (“Köy / ilçe düzelt” düğmesi) elle düzeltirsiniz. Köy konumları programda gömülü (HGM coğrafi ad dizini, ${(this._yer || []).length} yerleşim), köy araması internetsiz çalışır.`;
+          const oto = s.assets.filter(a => a.d && a.d.koyOtomatik).length;
+          if (s.vFill === 'loading') return 'Köy adları sunucuya yazılıyor — sayfayı kapatmayın…';
+          return `Köyü boş ${bos} kayıt var. Düğme, konumuna en yakın yerleşimin adını yalnızca güvenli eşleşmelere yazar (kaydın ilçesinden ve 1,5 km’den yakın); gerisi boş kalır. Yazılanlar “otomatik” işaretlenir.` + (oto ? ` Şu an ${oto} kayıt otomatik işaretli — aşağıdaki Köy kontrolü’nden gözden geçirin.` : '');
         })()
       },
       convSystems: [['ITRF96', 'ITRF96-3°'], ['ED50', 'ED50 3°'], ['DMS', 'Google / WGS84']].map(([id, label]) => ({
@@ -21990,7 +22080,7 @@ class Component extends DCLogic {
             const g = this.state.koyForm;
             if (!sel || !g) return;
             const koy = (g.village || '').trim();
-            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined };
+            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined, d: { ...(sel.d || {}), koyOtomatik: '' } };
             this.setState({ koyForm: null, assets: s.assets.map(x => x.id === sel.id ? yeni : x) },
               () => this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }));
             this.iz(sel.id, 'Köy bilgisi düzeltildi', `${sel.village || '(boş)'} → ${koy || '(boş)'} · ${yeni.district}`);
@@ -22006,6 +22096,24 @@ class Component extends DCLogic {
           }
         };
       })(),
+      // Ayarlar > Kayıt araçları > Köy kontrolü: köy adı otomatik yazılmış kayıtlar (uzaktan yakına)
+      koyKontrol: (() => {
+        const ac = tabId === 'ayarlar' && ayarAcik(s) === 'koyeslestir';
+        if (!ac) return { var: false, satirlar: [], sayi: 0 };
+        const L = (s.assets || []).filter(a => a.d && a.d.koyOtomatik).map(a => ({ a, km: parseFloat(String(a.d.koyOtomatik).replace(',', '.')) || 0 })).sort((x, y) => y.km - x.km);
+        return {
+          var: L.length > 0, sayi: L.length, yok: L.length === 0,
+          ozet: L.length + ' kayıtta köy adı otomatik yazıldı (en yakın yerleşimden; en uzağı ' + (L.length ? L[0].km.toFixed(1) : '0') + ' km).',
+          satirlar: L.map(({ a, km }) => ({
+            kod: a.code, koy: a.village, ilce: a.district, km: km.toFixed(1) + ' km',
+            renk: km > 1 ? '#d97706' : ui.mut,
+            dogru: () => this.koyDogru(a), duzelt: () => this.koyDuzeltAc(a), geriAl: () => this.koyGeriAl(a)
+          })),
+          tumDogru: () => this.koyTumDogru(), tumGeriAl: () => this.koyTumGeriAl()
+        };
+      })(),
+
+
       // is-panosu modülü — "İş panosu": başvuru, talep ve arızalar tek ekranda Yeni / Atandı / Sahada / Bitti sütunlarında.
       // Her kutucuk bir iş; solundaki renkli çubuk ve nokta önceliği, altındaki tek büyük düğme bir sonraki adımı gösterir.
       isPanosuEkran: (() => {

@@ -1,0 +1,23 @@
+<sc-if value="{{ koyKontrol.var }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-bottom:1px solid {{ ui.rule }};display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font:700 15px/1.2 var(--font-heading)">Köy kontrolü</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ koyKontrol.ozet }} Yanlış olanı “Düzelt” ile kaydın kartında değiştirin, boş kalsın dediğinizi “Geri al” ile silin. Doğru olanı “Doğru” ile onaylayın; liste kısalır.</span>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button onClick="{{ koyKontrol.tumDogru }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body);color:{{ ui.fg }}">Hepsini doğru kabul et</button>
+<button onClick="{{ koyKontrol.tumGeriAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid #d92d20;font:600 12.5px/38px var(--font-body);color:#d92d20">Hepsini geri al</button>
+</div>
+<div style="max-height:420px;overflow:auto;border-radius:12px;border:1px solid {{ ui.rule }}">
+<sc-for list="{{ koyKontrol.satirlar }}" as="r" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid {{ ui.rule }}">
+<span style="flex:1 1 160px;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font:600 13px/1.1 var(--font-body);color:{{ ui.fg }}">{{ r.kod }}</span><span style="font:400 12px/1.25 var(--font-body);color:{{ ui.mut }}">{{ r.koy }} · {{ r.ilce }}</span></span>
+<span style="flex:none;font:700 12.5px/1 var(--font-heading);color:{{ r.renk }}">{{ r.km }}</span>
+<button onClick="{{ r.dogru }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.fg }}">Doğru</button>
+<button onClick="{{ r.duzelt }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--color-accent);font:600 12px/34px var(--font-body);color:{{ ui.acc }}">Düzelt</button>
+<button onClick="{{ r.geriAl }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12px/34px var(--font-body);color:{{ ui.mut }}">Geri al</button>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>

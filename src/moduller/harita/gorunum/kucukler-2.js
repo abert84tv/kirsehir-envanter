@@ -79,16 +79,11 @@
       openConv: () => this.setState({ panel: s.panel === 'donusum' ? 'yok' : 'donusum' }),
       vFill: {
         run: () => this.fillVillages(),
-        label: s.vFill === 'loading' ? 'Çalışıyor…' : (s.vFill === 'done' ? 'Yeniden çalıştır' : 'Kuyulara köy adı yaz'),
+        label: s.vFill === 'loading' ? 'Yazılıyor…' : 'Kuyulara köy adı yaz',
         note: (() => {
-          const auto = s.assets.filter(a => a.villageAuto !== undefined);
           const bos = s.assets.filter(a => !a.village).length;
-          if (s.vFill === 'loading') return 'Kayıtlar en yakın yerleşime bağlanıyor…';
-          if (s.vFill === 'error') return 'İşlem tamamlanamadı — tekrar deneyin.';
-          if (auto.length) {
-            const far = auto.filter(a => a.villageAuto > 4).length;
-            return `${auto.length} kayda köy adı otomatik yazıldı; ${far} tanesi 4 km’den uzak eşleşti — bunları kontrol edin. Her kaydın Not sekmesinde hangi köye kaç km uzaklıkta eşleştiği yazıyor.`;
-          }
-          return `Bu düğme bir kez çalıştırılır: köyü boş olan ${bos} kayda en yakın yerleşimin adını yazar. Bir daha basmanız gerekmez — yanlış eşleşen köyü kaydın kendi sayfasından (“Köy / ilçe düzelt” düğmesi) elle düzeltirsiniz. Köy konumları programda gömülü (HGM coğrafi ad dizini, ${(this._yer || []).length} yerleşim), köy araması internetsiz çalışır.`;
+          const oto = s.assets.filter(a => a.d && a.d.koyOtomatik).length;
+          if (s.vFill === 'loading') return 'Köy adları sunucuya yazılıyor — sayfayı kapatmayın…';
+          return `Köyü boş ${bos} kayıt var. Düğme, konumuna en yakın yerleşimin adını yalnızca güvenli eşleşmelere yazar (kaydın ilçesinden ve 1,5 km’den yakın); gerisi boş kalır. Yazılanlar “otomatik” işaretlenir.` + (oto ? ` Şu an ${oto} kayıt otomatik işaretli — aşağıdaki Köy kontrolü’nden gözden geçirin.` : '');
         })()
       },

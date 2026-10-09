@@ -159,43 +159,50 @@
       setTimeout(() => this.setState({ toast: null }), 8000);
     }
   }
+  // Köyü boş kayıtlara en yakın yerleşimin adını yazar — yalnızca güvenli eşleşmelere:
+  // (1) yerleşim kaydın ilçesindendir (ilçesi bilinmeyenler de uygun sayılır) ve (2) 1,5 km’den yakındır.
+  // Yazılan her köy kayda “koyOtomatik: X km” diye işlenir (Ayarlar > Kayıt araçları > Köy kontrolü’nden
+  // doğrulanır, düzeltilir ya da toplu geri alınır). Sunucuya yazılır.
   async fillVillages() {
     if (this.state.vFill === 'loading') return;
-    this.setState({ vFill: 'loading' });
-    this.say('OpenStreetMap’ten Kırşehir köy noktaları çekiliyor…');
-    try {
-      // gömülü HGM listesi varsa internete hiç çıkmayız
-      const nodes = this._yer
-        ? this._yer.filter(r => r[3] === 'YKOY' || r[3] === 'BCK').map(r => ({ name: r[0], lat: r[1], lon: r[2], district: r[4] }))
-        : (await this.osmNodes()).slice();
-      if (!nodes.length) throw new Error('nokta yok');
-      const R = 6371, t = Math.PI / 180;
-      const d2 = (a, b) => {
-        const dLat = (b.lat - a.lat) * t, dLon = (b.lon - a.lon) * t;
-        const x = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * t) * Math.cos(b.lat * t) * Math.sin(dLon / 2) ** 2;
-        return 2 * R * Math.asin(Math.sqrt(x));
-      };
-      let n = 0, far = 0;
-      const notes = { ...this.state.notes };
-      const assets = this.state.assets.map(a => {
-        if (a.village) return a;
-        let best = null, bd = Infinity;
-        for (const v of nodes) { const dd = d2(a, v); if (dd < bd) { bd = dd; best = v; } }
-        if (!best) return a;
-        n++;
-        if (bd > 4) far++;
-        notes[a.id] = (notes[a.id] ? notes[a.id] + '\n' : '')
-          + `Köy adı HGM yerleşim listesinden otomatik dolduruldu: ${best.name}${best.district ? ' · ' + best.district : ''}, kuyudan ${bd.toFixed(1)} km. ${bd > 4 ? 'UZAK — kontrol edin.' : 'Yakın eşleşme.'}`;
-        return { ...a, village: best.name, district: best.district || a.district, villageAuto: +bd.toFixed(1) };
-      });
-      this.setState({ assets, notes, vFill: 'done' });
-      this.say(`${n} kayda köy adı yazıldı (${nodes.length} yerleşim noktası tarandı); ${far} tanesi 4 km’den uzak eşleşti, kontrol edin.`, true);
-      setTimeout(() => this.setState({ toast: null }), 7000);
-    } catch (err) {
-      this.setState({ vFill: 'error' });
-      this.say('Köy konum servisine ulaşılamadı — internet bağlantınızı kontrol edip tekrar deneyin.', true);
-      setTimeout(() => this.setState({ toast: null }), 6000);
+    const M = this._sb;
+    if (!M || !M.tokenOku() || this.state.offline) return this.say('Köy adı yazmak için sunucu bağlantısı gerekir.', true);
+    const nodes = (this._yer || []).filter(r => r[3] === 'YKOY' || r[3] === 'BCK').map(r => ({ name: r[0], lat: r[1], lon: r[2], ilce: r[4] }));
+    if (!nodes.length) return this.say('Yerleşim listesi yüklenemedi — sayfayı yenileyip tekrar deneyin.', true);
+    const R = 6371, t = Math.PI / 180;
+    const km = (a, b) => {
+      const dLat = (b.lat - a.lat) * t, dLon = (b.lon - a.lon) * t;
+      const x = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * t) * Math.cos(b.lat * t) * Math.sin(dLon / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(x));
+    };
+    const ESIK = 1.5;
+    const bos = this.state.assets.filter(a => !a.village && a.dbId != null && a.lat != null);
+    const adaylar = [];
+    for (const a of bos) {
+      if (!this.yazabilir(a)) continue;
+      let best = null, bd = Infinity;
+      for (const v of nodes) { if (v.ilce && v.ilce !== a.district) continue; const dd = km(a, v); if (dd < bd) { bd = dd; best = v; } }
+      if (best && bd <= ESIK) adaylar.push({ a, ad: best.name, km: bd });
     }
+    if (!adaylar.length) return this.say('Güvenle eşleşen kayıt bulunamadı (köyü boş ' + bos.length + ' kayıt var, hepsi 1,5 km’den uzak).', true);
+    const kalan = bos.length - adaylar.length;
+    if (!window.confirm(adaylar.length + ' kayda köy adı yazılacak (köyü boş ' + bos.length + ' kayıttan; ' + kalan + ' kayıt 1,5 km’den uzak ya da başka ilçeye yakın olduğu için boş kalacak).\n\n'
+      + 'Her biri “otomatik yazıldı” diye işaretlenir. Yanlış olanı kaydın kartında “Köy ve ilçe düzelt” ile ya da Ayarlar › Kayıt araçları › Köy kontrolü’nden düzeltebilir, hepsini geri alabilirsiniz.\n\nDevam edilsin mi?')) return;
+    this.setState({ vFill: 'loading' });
+    let ok = 0, hata = '';
+    for (let i = 0; i < adaylar.length; i++) {
+      const { a, ad, km: k } = adaylar[i];
+      const yeni = { ...a, village: ad, d: { ...(a.d || {}), koyOtomatik: k.toFixed(1) + ' km' } };
+      let r; try { r = await M.tesisKaydet(yeni); } catch (e) { r = { ok: false, cevrimdisi: true }; }
+      if (r && r.ok) { ok++; this.iz(a.id, 'Köy otomatik yazıldı', ad + ' · en yakın yerleşim, ' + k.toFixed(1) + ' km'); }
+      else { hata = (r && r.err) || 'bağlantı kesildi'; if (r && r.cevrimdisi) break; }
+      if ((i + 1) % 25 === 0) this.say((i + 1) + ' / ' + adaylar.length + ' kayıt yazıldı…', true);
+    }
+    await this.veriYenile(true);
+    this.setState({ vFill: 'done' });
+    this.denetimYaz('veri', 'Köy adı otomatik yazıldı', ok + ' kayıt (en yakın yerleşim, en çok 1,5 km)', 'Kayıt araçları');
+    this.say(ok + ' kayda köy adı yazıldı' + (hata ? ' · durdu: ' + hata : '') + '. Köy kontrolü bölümünden gözden geçirin.', true);
+    setTimeout(() => this.setState({ toast: null }), 9000);
   }
   // ── kişisel ayarlar: her kullanıcının son kullandığı görünüm bu cihazda saklanır
   // Köyün konumu onaylanmış mı? vSave(…, true) onay ve elle işaretlemede

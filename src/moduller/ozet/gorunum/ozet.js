@@ -165,7 +165,7 @@
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
             barW: Math.round(v.n / Math.max(...Object.values(byD).map(z => z.n)) * 100) + '%'
           })),
-          villages: Object.entries(byV).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
+          villages: Object.entries(byV).filter(([ad]) => !/^Köy girilmedi/.test(ad)).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
             name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf'
           })),
           aktiflik: (() => {

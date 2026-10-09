@@ -22,14 +22,6 @@
 <button onClick="{{ detail.fotoSekme }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.kamera }}Fotoğraf</button>
 <button onClick="{{ editDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.acc }};font:600 11px/1 var(--font-body)">{{ ikonlar.kalemOrta }}Düzenle</button>
 </div>
-<div style="border-radius:10px;background:{{ ui.surf2 }};padding:10px 12px">
-<div style="display:flex;align-items:baseline;gap:6px;font:400 12px/1.2 var(--font-body);color:{{ ui.mut }}">
-<b style="color:{{ ui.fg }}">Kayıt tamlığı %{{ detail.tam }}</b><span>· {{ detail.eksik }} alan eksik</span>
-<span style="flex:1"></span>
-<button onClick="{{ editDetail }}" style="all:unset;cursor:pointer;color:{{ ui.acc }};font:700 12px/1 var(--font-body)">Tamamla</button>
-</div>
-<div style="height:6px;border-radius:3px;background:{{ ui.rule }};overflow:hidden;margin-top:8px"><div style="height:6px;width:{{ detail.tamW }};background:{{ detail.tamC }};border-radius:3px;transition:width .6s ease"></div></div>
-</div>
 </div>
 <sc-if value="{{ kilit.on }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--color-accent);background:var(--color-accent-100)">

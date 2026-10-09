@@ -90,20 +90,6 @@
     if (n && norm(n).includes(qn)) return 'Notta geçiyor';
     return null;
   }
-  missingOf(a) {
-    const req = a.type === 'kuyu'
-      ? [['ruhsat', 'DSİ ruhsat'], ['sondajFirma', 'Sondaj firması'], ['kot', 'Kuyu başı kotu'],
-         ['kuyuLog', 'Kuyu logu'], ['filtre', 'Filtre aralıkları'], ['suAnaliz', 'Su analizi'],
-         ['pompaMarka', 'Pompa markası'], ['motorSeri', 'Motor seri no'], ['akim', 'Ölçülen akım']]
-      : a.type === 'depo'
-        ? [['klorCihaz', 'Klorlama cihazı'], ['seviyeSensor', 'Seviye sensörü'], ['terfiUzunluk', 'Terfi hattı'],
-           ['abone', 'Abone sayısı'], ['temizlik', 'Son temizlik'], ['kapak', 'Kapak / güvenlik']]
-        : [];
-    const base = [];
-    if (!a.village) base.push('Köy / yerleşim');
-    if (!a.year) base.push('Yapım yılı');
-    return base.concat(req.filter(([k]) => !a.d[k]).map(([, l]) => l));
-  }
   // Yalnız gerçekten girilmiş denemeler. 2026.10.01'e kadar statik/dinamik/debi
   // dolu her kuyuya hiç yapılmamış iki deneme ("Sondaj deneme ekibi" ve
   // 05.06.2026 "Kontrol denemesi", türetilmiş değerlerle) uyduruluyordu.

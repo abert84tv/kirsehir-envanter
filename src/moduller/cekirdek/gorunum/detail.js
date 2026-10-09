@@ -1,12 +1,7 @@
       detail: sel ? {
         ...(() => {
-          // Kayıt tamlığı: başlık satırları hariç, "— eksik" olmayan alanların oranı
-          const satir = this.rows(sel).filter(r => r[2] !== 2);
-          const eksik = satir.filter(r => String(r[1]).indexOf('— eksik') === 0).length;
-          const tam = satir.length ? Math.round((satir.length - eksik) / satir.length * 100) : 0;
           const acik = (s.faults || []).filter(f => f.assetId === sel.id && !KAPALI_DURUM.includes(f.status)).length;
           return {
-            tam, eksik, tamW: tam + '%', tamC: tam < 30 ? '#ff9f0a' : (tam < 70 ? 'var(--color-accent)' : '#34c759'),
             acikAriza: acik > 0, arizaEt: acik + ' açık arıza',
             fotoSekme: () => this.setState({ detailTab: 'medya' }, () => { if (sel.dbId && !(this.state.fotolar || {})[sel.dbId]) this.fotoYenile(sel.dbId); })
           };
@@ -123,7 +118,7 @@
         ).map(([label, value, hi]) => ({
           label: hi === 2 ? label.toUpperCase() : label,
           value: String(value),
-          color: hi === 2 ? ui.acc : (String(value).indexOf('— eksik') === 0 ? ui.acc : (hi ? ui.acc : ui.fg)),
+          color: hi === 2 ? ui.acc : (String(value) === '—' ? ui.mut : (hi ? ui.acc : ui.fg)),
           bg: hi === 2 ? ui.surf2 : (hi === 1 ? ui.pend : 'transparent')
         })),
         // sunucudan gelen gerçek fotoğraflar; bağlantı yoksa eski yer tutucular

@@ -2589,7 +2589,6 @@ Hareket gir
 </sc-if>
 <sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
 <div style="padding:16px 20px">
-<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Modüller</div>
 <div class="ks-bilgi" style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }};max-width:760px">{{ moduller.not }}</div>
 <div style="display:flex;flex-direction:column;margin-top:16px">
 <sc-for list="{{ moduller.list }}" as="m" hint-placeholder-count="2">
@@ -2614,7 +2613,6 @@ Hareket gir
 <sc-if value="{{ ayar.kvkk }}" hint-placeholder-val="{{ false }}">
 <div>
 <div style="padding:16px 20px;border-bottom:1px solid {{ ui.rule }}">
-<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">KVKK ve saklama politikası</div>
 <div class="ks-bilgi" style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ kvkkEkran.not }}</div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid {{ ui.rule }}">
@@ -2882,7 +2880,6 @@ Hareket gir
 <sc-if value="{{ ayar.ekip }}" hint-placeholder-val="{{ false }}">
 <div>
 <div style="padding:16px 20px">
-<div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ekipler</div>
 <div style="font:400 12.5px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px;margin-bottom:13px">{{ ekipYonetim.not }}</div>
 <sc-if value="{{ ekipYonetim.personelYok }}" hint-placeholder-val="{{ true }}">
 <div style="border-radius:10px;border:1px solid var(--color-accent);padding:13px 15px;font:600 12.5px/1.5 var(--font-body);color:{{ ui.acc }};max-width:700px;margin-bottom:13px">{{ ekipYonetim.personelYokNot }}</div>
@@ -4115,14 +4112,6 @@ Hareket gir
 <button onClick="{{ newFaultForAsset }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--color-uyari);font:600 11px/1 var(--font-body)">{{ ikonlar.uyariKucuk }}Arıza aç</button>
 <button onClick="{{ detail.fotoSekme }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.fg }};font:600 11px/1 var(--font-body)" style-hover="color:var(--color-accent)">{{ ikonlar.kamera }}Fotoğraf</button>
 <button onClick="{{ editDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:{{ ui.surf2 }};padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:5px;color:{{ ui.acc }};font:600 11px/1 var(--font-body)">{{ ikonlar.kalemOrta }}Düzenle</button>
-</div>
-<div style="border-radius:10px;background:{{ ui.surf2 }};padding:10px 12px">
-<div style="display:flex;align-items:baseline;gap:6px;font:400 12px/1.2 var(--font-body);color:{{ ui.mut }}">
-<b style="color:{{ ui.fg }}">Kayıt tamlığı %{{ detail.tam }}</b><span>· {{ detail.eksik }} alan eksik</span>
-<span style="flex:1"></span>
-<button onClick="{{ editDetail }}" style="all:unset;cursor:pointer;color:{{ ui.acc }};font:700 12px/1 var(--font-body)">Tamamla</button>
-</div>
-<div style="height:6px;border-radius:3px;background:{{ ui.rule }};overflow:hidden;margin-top:8px"><div style="height:6px;width:{{ detail.tamW }};background:{{ detail.tamC }};border-radius:3px;transition:width .6s ease"></div></div>
 </div>
 </div>
 <sc-if value="{{ kilit.on }}" hint-placeholder-val="{{ false }}">
@@ -7058,7 +7047,6 @@ Hareket gir
 </sc-if>
 <sc-if value="{{ ayar.modul }}" hint-placeholder-val="{{ false }}">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Modüller</div>
 <div class="ks-bilgi" style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ moduller.not }}</div>
 <sc-for list="{{ moduller.list }}" as="m" hint-placeholder-count="2">
 <div style="display:flex;flex-direction:column;gap:9px;padding:13px 0;border-top:1px solid {{ ui.rule }};margin-top:12px">
@@ -7077,7 +7065,6 @@ Hareket gir
 <sc-if value="{{ ayar.kvkk }}" hint-placeholder-val="{{ false }}">
 <div>
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">KVKK ve saklama politikası</div>
 <div class="ks-bilgi" style="font:400 12px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px">{{ kvkkEkran.not }}</div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid {{ ui.rule }}">
@@ -7342,7 +7329,6 @@ Hareket gir
 <sc-if value="{{ ayar.ekip }}" hint-placeholder-val="{{ false }}">
 <div>
 <div style="padding:13px 14px">
-<div style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">Ekipler</div>
 <div style="font:400 12px/1.55 var(--font-body);color:{{ ui.mut }};max-width:820px;margin-bottom:13px">{{ ekipYonetim.not }}</div>
 <sc-if value="{{ ekipYonetim.personelYok }}" hint-placeholder-val="{{ true }}">
 <div style="border-radius:10px;border:1px solid var(--color-accent);padding:12px;font:600 12px/1.5 var(--font-body);color:{{ ui.acc }};max-width:700px;margin-bottom:13px">{{ ekipYonetim.personelYokNot }}</div>
@@ -9649,7 +9635,7 @@ const SAYFA_GRUPLARI = ['isler', 'envanter', 'kaynaklar', 'ozet', 'ayarlar', 'go
 const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 // Sürüm damgası: yayına alınan kopyanın hangi sürüm olduğu programdan
 // görülebilsin — tarayıcı eski dosyayı önbellekten açtığında fark edilir.
-const SURUM = '2026.10.09-154';
+const SURUM = '2026.10.10-155';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -12523,20 +12509,6 @@ class Component extends DCLogic {
     if (n && norm(n).includes(qn)) return 'Notta geçiyor';
     return null;
   }
-  missingOf(a) {
-    const req = a.type === 'kuyu'
-      ? [['ruhsat', 'DSİ ruhsat'], ['sondajFirma', 'Sondaj firması'], ['kot', 'Kuyu başı kotu'],
-         ['kuyuLog', 'Kuyu logu'], ['filtre', 'Filtre aralıkları'], ['suAnaliz', 'Su analizi'],
-         ['pompaMarka', 'Pompa markası'], ['motorSeri', 'Motor seri no'], ['akim', 'Ölçülen akım']]
-      : a.type === 'depo'
-        ? [['klorCihaz', 'Klorlama cihazı'], ['seviyeSensor', 'Seviye sensörü'], ['terfiUzunluk', 'Terfi hattı'],
-           ['abone', 'Abone sayısı'], ['temizlik', 'Son temizlik'], ['kapak', 'Kapak / güvenlik']]
-        : [];
-    const base = [];
-    if (!a.village) base.push('Köy / yerleşim');
-    if (!a.year) base.push('Yapım yılı');
-    return base.concat(req.filter(([k]) => !a.d[k]).map(([, l]) => l));
-  }
   // Yalnız gerçekten girilmiş denemeler. 2026.10.01'e kadar statik/dinamik/debi
   // dolu her kuyuya hiç yapılmamış iki deneme ("Sondaj deneme ekibi" ve
   // 05.06.2026 "Kontrol denemesi", türetilmiş değerlerle) uyduruluyordu.
@@ -14376,16 +14348,16 @@ class Component extends DCLogic {
     // Eski yeni-kayıt formu boş alanlara "—" ve bakıma "Yeni kayıt" yazıyordu;
     // bunlar gerçek değer değil, eksik sayılır.
     const bos = v => v === '' || v === undefined || v === null || v === '—' || v === 'Yeni kayıt';
-    const f = v => bos(v) ? '— eksik' : v;
+    const f = v => bos(v) ? '—' : v;
     // Değer harfle bitiyorsa (ör. "21,450kw") birim zaten yazılmış — tekrar eklenmez
-    const u = (v, unit) => bos(v) ? '— eksik' : (/[A-Za-zÇĞİÖŞÜçğıöşü²³]$/.test(String(v).trim()) ? v : v + ' ' + unit);
-    const var_ = v => v === true || v === 'true' || v === 'Var' ? 'Var' : (v === false || v === 'false' || v === 'Yok' ? 'Yok' : '— eksik');
+    const u = (v, unit) => bos(v) ? '—' : (/[A-Za-zÇĞİÖŞÜçğıöşü²³]$/.test(String(v).trim()) ? v : v + ' ' + unit);
+    const var_ = v => v === true || v === 'true' || v === 'Var' ? 'Var' : (v === false || v === 'false' || v === 'Yok' ? 'Yok' : '—');
     const hd = t => [t, '', 2];
     let out;
     if (sel.type === 'kuyu') out = [
       ['Yapım (sondaj) yılı', f(sel.year), 1], ['Kuyu derinliği', u(d.derinlik, 'm')], ['Pompa derinliği', u(d.pompaD, 'm')],
       ['Kuyu çapı', u(d.cap, 'mm')], ['Statik seviye', u(d.statik, 'm')], ['Dinamik seviye', u(d.dinamik, 'm')],
-      ['Debi', u(d.debi, 'L/s')], ['Kolon borusu', d.kolon ? `${d.kolon} · Ø${d.kolonCap}` : '— eksik'], ['RF haberleşme', f(d.rf)],
+      ['Debi', u(d.debi, 'L/s')], ['Kolon borusu', d.kolon ? `${d.kolon} · Ø${d.kolonCap}` : '—'], ['RF haberleşme', f(d.rf)],
       hd('Belge ve sondaj'),
       ['DSİ ruhsat / izin no', f(d.ruhsat)], ['Sondaj firması', f(d.sondajFirma)], ['Sondaj tarihi', f(d.sondajTarih)],
       ['Kuyu başı kotu', f(d.kot)], ['Kuyu logu', f(d.kuyuLog)], ['Filtre aralıkları', f(d.filtre)],
@@ -16323,13 +16295,8 @@ class Component extends DCLogic {
       },
       detail: sel ? {
         ...(() => {
-          // Kayıt tamlığı: başlık satırları hariç, "— eksik" olmayan alanların oranı
-          const satir = this.rows(sel).filter(r => r[2] !== 2);
-          const eksik = satir.filter(r => String(r[1]).indexOf('— eksik') === 0).length;
-          const tam = satir.length ? Math.round((satir.length - eksik) / satir.length * 100) : 0;
           const acik = (s.faults || []).filter(f => f.assetId === sel.id && !KAPALI_DURUM.includes(f.status)).length;
           return {
-            tam, eksik, tamW: tam + '%', tamC: tam < 30 ? '#ff9f0a' : (tam < 70 ? 'var(--color-accent)' : '#34c759'),
             acikAriza: acik > 0, arizaEt: acik + ' açık arıza',
             fotoSekme: () => this.setState({ detailTab: 'medya' }, () => { if (sel.dbId && !(this.state.fotolar || {})[sel.dbId]) this.fotoYenile(sel.dbId); })
           };
@@ -16446,7 +16413,7 @@ class Component extends DCLogic {
         ).map(([label, value, hi]) => ({
           label: hi === 2 ? label.toUpperCase() : label,
           value: String(value),
-          color: hi === 2 ? ui.acc : (String(value).indexOf('— eksik') === 0 ? ui.acc : (hi ? ui.acc : ui.fg)),
+          color: hi === 2 ? ui.acc : (String(value) === '—' ? ui.mut : (hi ? ui.acc : ui.fg)),
           bg: hi === 2 ? ui.surf2 : (hi === 1 ? ui.pend : 'transparent')
         })),
         // sunucudan gelen gerçek fotoğraflar; bağlantı yoksa eski yer tutucular
@@ -18197,7 +18164,6 @@ class Component extends DCLogic {
         const gecikmis = s.assets.map(a => ({ a, b: this.bakimDurum(a) }))
           .filter(r => r.b.gun !== null && r.b.gun < 0)
           .sort((x, y) => x.b.gun - y.b.gun).slice(0, 6);
-        const eksik = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length >= 6).slice(0, 6);
         const items = [
           ...(arizaOn ? acik.slice(0, 8) : []).map(f => {
             const a = s.assets.find(x => x.id === f.assetId);
@@ -18205,7 +18171,7 @@ class Component extends DCLogic {
               kind: 'Arıza', kindFg: ui.acc,
               title: `${f.no} · ${f.type}`,
               meta: (a ? a.code + ' · ' + this.yer(a) + ' · ' : '') + (f.priority || 'Normal') + ' öncelik',
-              open: a ? () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'ariza', tab: 'harita' }) : () => this.setState({ tab: 'arizalar' })
+              open: a ? () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'ariza', tab: 'harita' }) : () => this.setState({ tab: 'isPanosu' })
             };
           }),
           ...(bakimOn ? gecikmis : []).map(r => ({
@@ -18213,12 +18179,6 @@ class Component extends DCLogic {
             title: r.a.code + ' — periyodik bakım',
             meta: this.yer(r.a) + ' · ' + r.b.label,
             open: () => this.setState({ tab: 'bakim' })
-          })),
-          ...eksik.map(({ a, m }) => ({
-            kind: 'EKSİK BİLGİ', kindFg: ui.mut,
-            title: a.code + ' — ' + m.length + ' alan boş',
-            meta: this.yer(a) + ' · ' + m.slice(0, 3).join(', '),
-            open: () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' })
           }))
         ];
         return {
@@ -18226,7 +18186,7 @@ class Component extends DCLogic {
           who: me ? (my ? `${me.name} · ${my}` : me.name) : '',
           date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }),
           note: (my ? 'Ekibinize düşen ' : 'Bugün ilgilenilmesi gereken işler: ')
-            + [arizaOn ? 'açık arızalar' : null, bakimOn ? 'geciken bakımlar' : null, 'bilgisi çok eksik kayıtlar']
+            + [arizaOn ? 'açık arızalar' : null, bakimOn ? 'geciken bakımlar' : null]
               .filter(Boolean).join(', ') + '.'
         };
       })(),
@@ -19779,7 +19739,7 @@ class Component extends DCLogic {
           onIlce: e => this.setState(st => ({ alanForm: { ...st.alanForm, ilce: e.target.value, koy: '' } })),
           onKoy: e => this.setState(st => ({ alanForm: { ...st.alanForm, koy: e.target.value } })),
           baslik: TYPES[a.type].kind + ' · alanları düzenle',
-          not: 'Boş bıraktığınız alan “— eksik” kalır. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
+          not: 'Boş bıraktığınız alan “—” kalır. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
           gruplar: (ALANLAR[a.type] || []).map(([baslik, alanlar]) => ({
             baslik,
             alanlar: alanlar.map(([k, label, unit, tip]) => {
@@ -20802,7 +20762,7 @@ class Component extends DCLogic {
             name, n: v.n + ' kayıt', mix: `${v.kuyu} kuyu · ${v.depo} depo · ${v.aktif} aktif · ${v.pasif} pasif`,
             barW: Math.round(v.n / Math.max(...Object.values(byD).map(z => z.n)) * 100) + '%'
           })),
-          villages: Object.entries(byV).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
+          villages: Object.entries(byV).filter(([ad]) => !/^Köy girilmedi/.test(ad)).sort((x, y) => y[1].n - x[1].n).slice(0, 12).map(([name, v]) => ({
             name, n: v.n + ' kayıt', photos: v.photos + ' fotoğraf'
           })),
           aktiflik: (() => {

@@ -19,7 +19,7 @@
           onIlce: e => this.setState(st => ({ alanForm: { ...st.alanForm, ilce: e.target.value, koy: '' } })),
           onKoy: e => this.setState(st => ({ alanForm: { ...st.alanForm, koy: e.target.value } })),
           baslik: TYPES[a.type].kind + ' · alanları düzenle',
-          not: 'Boş bıraktığınız alan “— eksik” kalır. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
+          not: 'Boş bıraktığınız alan “—” kalır. Kayıt önce cihaza yazılır, bağlantı varsa hemen eşitlenir.',
           gruplar: (ALANLAR[a.type] || []).map(([baslik, alanlar]) => ({
             baslik,
             alanlar: alanlar.map(([k, label, unit, tip]) => {

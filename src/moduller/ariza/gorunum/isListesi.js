@@ -6,7 +6,6 @@
         const gecikmis = s.assets.map(a => ({ a, b: this.bakimDurum(a) }))
           .filter(r => r.b.gun !== null && r.b.gun < 0)
           .sort((x, y) => x.b.gun - y.b.gun).slice(0, 6);
-        const eksik = s.assets.map(a => ({ a, m: this.missingOf(a) })).filter(x => x.m.length >= 6).slice(0, 6);
         const items = [
           ...(arizaOn ? acik.slice(0, 8) : []).map(f => {
             const a = s.assets.find(x => x.id === f.assetId);
@@ -14,7 +13,7 @@
               kind: 'Arıza', kindFg: ui.acc,
               title: `${f.no} · ${f.type}`,
               meta: (a ? a.code + ' · ' + this.yer(a) + ' · ' : '') + (f.priority || 'Normal') + ' öncelik',
-              open: a ? () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'ariza', tab: 'harita' }) : () => this.setState({ tab: 'arizalar' })
+              open: a ? () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'ariza', tab: 'harita' }) : () => this.setState({ tab: 'isPanosu' })
             };
           }),
           ...(bakimOn ? gecikmis : []).map(r => ({
@@ -22,12 +21,6 @@
             title: r.a.code + ' — periyodik bakım',
             meta: this.yer(r.a) + ' · ' + r.b.label,
             open: () => this.setState({ tab: 'bakim' })
-          })),
-          ...eksik.map(({ a, m }) => ({
-            kind: 'EKSİK BİLGİ', kindFg: ui.mut,
-            title: a.code + ' — ' + m.length + ' alan boş',
-            meta: this.yer(a) + ' · ' + m.slice(0, 3).join(', '),
-            open: () => this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' })
           }))
         ];
         return {
@@ -35,7 +28,7 @@
           who: me ? (my ? `${me.name} · ${my}` : me.name) : '',
           date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }),
           note: (my ? 'Ekibinize düşen ' : 'Bugün ilgilenilmesi gereken işler: ')
-            + [arizaOn ? 'açık arızalar' : null, bakimOn ? 'geciken bakımlar' : null, 'bilgisi çok eksik kayıtlar']
+            + [arizaOn ? 'açık arızalar' : null, bakimOn ? 'geciken bakımlar' : null]
               .filter(Boolean).join(', ') + '.'
         };
       })(),

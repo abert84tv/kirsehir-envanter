@@ -2084,3 +2084,8 @@ Sürüm 2026.10.05-114.
 - **Pompa gücü:** kuyu kartında “Pompa motoru (kW)” alanı “Pompa gücü (kW)” oldu (aynı alan, veri korunur).
 - **Yeni gelen iş:** üstteki kırmızı şerit kalktı. İş panosunda Yeni sütunundaki, son 12 saatte gelmiş ve açılıp bakılmamış kutu/satır kırmızı yanıp söner (“YENİ GELDİ”); açılınca söner. Menüde İş panosu üzerinde bakılmamış sayısı görünür. Ses siren alarmı iş panosu açılana kadar tekrarlar.
 - **Özet:** “Eksik bilgili” kutusu, ilçe/köy “eksik” sayıları, “Eksik bilgisi olan kayıtlar” listesi ve Excel/PDF’teki eksik sütun/bölümleri kaldırıldı.
+
+## 2026.10.10-155 — “Eksik bilgi” gürültüsü ve yinelenen başlıklar temizlendi
+- Tesis kartından “Kayıt tamlığı %” çubuğu kalktı; boş alanlar “— eksik” yerine yalnız “—” görünür. “Bana atanan” listesinden “EKSİK BİLGİ” satırları çıktı. Özet’te köy listesinden “Köy girilmedi” satırları çıktı. Kullanılmayan `missingOf` ve arıza listesi kodu silindi.
+- Ayarlar: sayfa başlığıyla aynı olan küçük etiketler (Ekipler, Modüller, KVKK) kaldırıldı.
+- Veritabanı: `gecmis` tablosundaki 551.761 gereksiz toplu satır silindi (103 MB → 184 kB; veritabanı 119 MB → 16 MB).

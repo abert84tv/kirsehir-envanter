@@ -2145,3 +2145,9 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-171 — Harita menüsü katman simgesinin içinde
 - Envanter ve Hat kesiti haritalarında ayrı “Harita menüsü” düğmesi kalktı: sağ üstteki **tek simgeye** basınca açılan menüde önce **Harita katmanı** (Sokak · Uydu · Uydu + ad), altında **Harita menüsü** seçenekleri (Yol tarifi modu, Mesafe ölç, Git — konumum, Kayıt etiketleri ✓, Hat güzergâhları ✓, Koordinat işaretini temizle, İl sınırına sığdır) yer alır. Bir zemin ya da araç seçilince menü kapanır; etiket/hat anahtarları açık kalır; başka yere basınca kapanır.
+
+## 2026.10.10-172 — Harita sadeleşti: simgeler
+- Harita menüsünden **Git — konumum**, **Koordinat işaretini temizle** ve **İl sınırına sığdır** kaldırıldı. Menüde yalnız Harita katmanı (Sokak · Uydu · Uydu + ad) ve Haritada göster (Kayıt etiketleri, Hat güzergâhları) kaldı.
+- **Yol tarifi** ve **Mesafe ölç** haritanın sağ üstünde katman simgesinin altında küçük simgeler (rota ve cetvel); açıkken mavi yanar.
+- Çift tıklayınca (telefonda basılı tutunca) konan mavi koordinat işaretini silmek için ayrı düğme yok; **işaretin kendisine basmak** yeter.
+- **Konumuma git** düğmesi (sağ alt) yeni “hedef” simgesiyle: yüzeyle uyumlu yuvarlak kare, mavi nişan simgesi.

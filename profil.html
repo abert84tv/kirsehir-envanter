@@ -214,10 +214,9 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button data-z="sat"><i></i>Uydu</button>
     <button data-z="hyb"><i></i>Uydu + ad</button>
     <div class="k-ayrac"></div>
-    <div class="k-baslik">Harita menüsü</div>
+    <div class="k-baslik">Haritada göster</div>
           <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
           <button class="arac kal" id="t-hat">Hat güzergâhları</button>
-          <button class="arac" id="t-fit">İl sınırına sığdır</button>
   </div>
 </div>
 </div>
@@ -710,7 +709,6 @@ function etiketDugme() { if (K) el('t-labels').classList.toggle('on', K.etiket()
 function hatDugme() { if (K) el('t-hat').classList.toggle('on', K.hatAcik()); }
 el('t-labels').onclick = () => Kcalis(K => { K.setEtiket(!K.etiket()); etiketDugme(); });
 el('t-hat').onclick = () => Kcalis(K => { K.hatKatman(!K.hatAcik()); hatDugme(); try { parent.postMessage({ ks: 'hatKatman', on: K.hatAcik() }, '*'); } catch (e) { /* çerçeve yok */ } });
-el('t-fit').onclick = () => Kcalis(K => map.fitBounds(K.bounds().pad(.08)));
 if (window.parent === window) map.fitBounds(L.latLngBounds([38.76, 33.28], [39.80, 34.66]));
 
 parent.postMessage({ ks: 'profilHazir' }, '*');

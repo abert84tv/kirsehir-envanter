@@ -120,17 +120,13 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button data-z="sat"><i></i>Uydu</button>
     <button data-z="hyb"><i></i>Uydu + ad</button>
     <div class="k-ayrac"></div>
-    <div class="k-baslik">Harita menüsü</div>
-    <button class="arac" id="t-nav">Yol tarifi modu</button>
-    <button class="arac" id="t-olc">Mesafe ölç</button>
-    <button class="arac" id="t-go">Git — konumum</button>
-    <div class="k-ayrac"></div>
+    <div class="k-baslik">Haritada göster</div>
     <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
     <button class="arac kal" id="t-hat">Hat güzergâhları</button>
-    <button class="arac" id="t-coord">Koordinat işaretini temizle</button>
-    <button class="arac" id="t-fit">İl sınırına sığdır</button>
   </div>
 </div>
+<button class="ks-ikon" id="t-nav" aria-label="Yol tarifi" title="Yol tarifi — açınca bir kayda dokunun"><svg viewBox="0 0 24 24"><circle cx="6" cy="18.5" r="2.3"/><circle cx="18" cy="5.5" r="2.3"/><path d="M6 16.2c0-5.5 12-3.5 12-8.4"/></svg></button>
+<button class="ks-ikon" id="t-olc" aria-label="Mesafe ölç" title="Mesafe ölç — noktalara dokunun"><svg viewBox="0 0 24 24"><path d="M3.5 16.5 16.5 3.5l4 4-13 13-4-4Z"/><path d="m7.5 12.5 2 2m1.5-5.5 2 2m1.5-5.5 2 2"/></svg></button>
 </div>
 <div class="panel" id="olc">
   <div class="rt-head">Mesafe ölçümü</div>
@@ -309,7 +305,6 @@ function konumBul(sessiz) {
     { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
   );
 }
-document.getElementById('t-go').onclick = () => konumBul();
 
 const rt = id => document.getElementById(id);
 function showRoute(a, km, min, note) {
@@ -353,7 +348,6 @@ async function routeTo(a) {
 }
 
 
-document.getElementById('t-fit').onclick = () => map.fitBounds(K.bounds().pad(0.08));
 
 map.on('click movestart', () => katmanMenu.kapat());
 
@@ -374,6 +368,8 @@ function noktaBirak(latlng) {
   parent.postMessage({ ks: 'coord', lat: +latlng.lat.toFixed(6), lon: +latlng.lng.toFixed(6) }, '*');
   if (coordMark) coordMark.remove();
   coordMark = L.circleMarker(latlng, { radius: 8, color: '#0071e3', weight: 3, fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+  // işaretin kendisine basınca kalkar (ayrı bir düğmeye gerek yok)
+  coordMark.on('click', ev => { L.DomEvent.stopPropagation(ev); if (coordMark) { coordMark.remove(); coordMark = null; } parent.postMessage({ ks: 'coordMode', on: false }, '*'); });
 }
 // Çift tıklamayı yakınlaştırmaya değil nokta bırakmaya verdik
 map.doubleClickZoom.disable();
@@ -394,10 +390,6 @@ map.on('click', e => {
 // Telefonda basılı tutmak çift tıklamanın karşılığı — bkz. harita-ortak.js
 ksUzunBasisKur(map, () => !pickName && !coordMode, noktaBirak);
 
-document.getElementById('t-coord').onclick = () => {
-  if (coordMark) { coordMark.remove(); coordMark = null; }
-  parent.postMessage({ ks: 'coordMode', on: false }, '*');
-};
 
 // dış uygulamadan tema / filtre / rota komutları
 addEventListener('message', e => {

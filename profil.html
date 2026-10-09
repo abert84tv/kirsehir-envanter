@@ -47,7 +47,6 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   #body{flex:1;min-height:0;display:flex}
   #mapKap{position:relative;flex:1 1 58%;min-width:0;min-height:220px}
   #map{position:absolute;top:0;left:0;right:0;bottom:0}
-  #araclar{display:flex;gap:6px;flex-wrap:wrap}
   #sideTog{display:none}
   .leaflet-container{background:#e8e8ed;font-family:var(--font-body)}
   #side{flex:0 0 340px;min-width:0;border-left:1px solid var(--color-divider);display:flex;
@@ -156,8 +155,6 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     #bar .ttl,#bar .hint{display:none}
     #ara{flex:1 1 100%;max-width:none}
     #araIn{min-height:40px}
-    #araclar{flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-    #araclar button{flex:1 0 auto;min-height:38px;padding:6px 12px;font-size:11.5px;white-space:nowrap;justify-content:center}
     #araList button{min-height:46px;align-items:center}
     .nums{grid-template-columns:repeat(4,1fr);gap:8px}
     .nums div b{font-size:16px}
@@ -192,12 +189,6 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
       <input id="araIn" type="search" autocomplete="off" placeholder="Köy adı ara — örnek Acıköy">
       <div id="araList"></div>
     </div>
-    <div id="araclar">
-      <button id="mod" class="on">Nokta ekle</button>
-      <button id="geri">Son noktayı sil</button>
-      <button id="temiz">Temizle</button>
-      <button id="yenile">Profili yenile</button>
-    </div>
     <span class="hint">Köy adını arayıp seçin, haritadaki tesis işaretine dokunun ya da boş yere çift tıklayarak (telefonda basılı tutarak) nokta koyun — iki veya daha çok nokta arasındaki uzaklık, kot farkı ve yol profili kendiliğinden hesaplanır.</span>
   </div>
   <div id="uyari"></div>
@@ -205,6 +196,12 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <div id="mapKap">
       <div id="map"></div>
       <div id="sonUz"><span class="u">Son nokta, öncekine</span><input id="sonUzM" type="number" inputmode="decimal" min="1" step="1"><span class="u">m</span><button id="sonUzGo" type="button">Ayarla</button></div>
+      <div id="ks-araclar">
+        <button class="ks-ikon on" id="mod" aria-label="Nokta ekle" title="Nokta ekle — açıkken haritaya dokunarak nokta koyun"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><path d="M12 7.2v5.6M9.2 10h5.6"/></svg></button>
+        <button class="ks-ikon" id="geri" aria-label="Son noktayı sil" title="Son noktayı sil"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg></button>
+        <button class="ks-ikon" id="temiz" aria-label="Temizle" title="Bütün noktaları temizle"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6"/><path d="m6 7 1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
+        <button class="ks-ikon" id="yenile" aria-label="Profili yenile" title="Profili yenile"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.2L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M4 13a8 8 0 0 0 14.5 4.2L20 15.5"/><path d="M20 20v-4.5h-4.5"/></svg></button>
+      </div>
 <div class="panel" id="tools">
 <div class="ks-katman" id="katman">
   <button class="k-dugme" id="katman-dugme" aria-label="Harita katmanları ve menüsü" title="Harita katmanları ve menüsü"><svg viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>

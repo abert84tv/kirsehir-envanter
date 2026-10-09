@@ -2154,3 +2154,8 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-173 — Yol tarifi ve mesafe simgeleri sol altta
 - **Yol tarifi** simgesi “yönlendirme” (dönüş okuyla baklava) simgesi oldu; **Mesafe ölç** cetvel simgesiyle birlikte haritanın **sol altına** alındı (sağ üstte yalnız katman menüsü kaldı). Ölçüm paneli simgelerin sağında açılır; toplam mesafe satırındaki yazı boşluğu düzeltildi.
+
+## 2026.10.10-174 — Harita simgeleri aynı renk dilinde; Hat kesiti aynı düzende
+- Envanter haritasındaki bütün simgeler (katman, yol tarifi, mesafe ölç, konumuma git) aynı dilde: yüzey renginde yuvarlak kare, **mavi simge**; açık/etkin olunca mavi dolu + beyaz simge.
+- **Hat kesiti** haritası da aynı düzende: sağ üstte katman simgesi, **sol altta** Nokta ekle (açık/kapalı) · Son noktayı sil · Temizle · Profili yenile simgeleri (üstteki çubuktaki yazılı düğmeler kalktı).
+- Düzeltme: Hat kesiti sayfasındaki `#araclar` kapsayıcısı ile ortak CSS çakışması önlendi (Envanter haritasındaki kapsayıcı `#ks-araclar` oldu).

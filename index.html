@@ -2149,12 +2149,13 @@ Hareket gir
 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
 <div style="display:flex;flex-direction:column;gap:3px">
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
-<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Her nokta bir kayıt; noktaya basınca kart açılır</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
-<div style="display:flex;gap:12px;flex-wrap:wrap;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">
-<sc-for list="{{ ozetPano.turSatir }}" as="t" hint-placeholder-count="4">
-<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }}</span>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+<sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
 </sc-for>
+<sc-if value="{{ ozetPano.harita.hepsiVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ozetPano.harita.hepsi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;font:600 12px/36px var(--font-body);color:{{ ui.acc }}">Hepsini göster</button></sc-if>
 </div>
 </div>
 <div style="border-radius:12px;background:{{ ui.surf2 }};padding:14px">
@@ -6823,12 +6824,13 @@ Hareket gir
 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
 <div style="display:flex;flex-direction:column;gap:3px">
 <span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
-<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Her nokta bir kayıt; noktaya basınca kart açılır</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
 </div>
-<div style="display:flex;gap:12px;flex-wrap:wrap;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">
-<sc-for list="{{ ozetPano.turSatir }}" as="t" hint-placeholder-count="4">
-<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }}</span>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+<sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
 </sc-for>
+<sc-if value="{{ ozetPano.harita.hepsiVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ozetPano.harita.hepsi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;font:600 12px/36px var(--font-body);color:{{ ui.acc }}">Hepsini göster</button></sc-if>
 </div>
 </div>
 <div style="border-radius:12px;background:{{ ui.surf2 }};padding:14px">
@@ -10352,7 +10354,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-165';
+const SURUM = '2026.10.10-166';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10458,7 +10460,7 @@ class Component extends DCLogic {
       return v;
     })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
-    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', barkodTara: null, gezi: [], ozetHist: 'derinlik',
+    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', ozetGizli: [], barkodTara: null, gezi: [], ozetHist: 'derinlik',
     log: {}, trash: [], cop: [], card: null,
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.
@@ -21955,8 +21957,17 @@ class Component extends DCLogic {
         }));
 
         // 3b) Dağılım haritası: koordinatlar enlem düzeltmesiyle (cos) ekrana yerleştirilir
+        const gizli = s.ozetGizli || [];
         const nokta = A.filter(a => a.lat != null && a.lon != null);
-        let harita = { var: false, nokta: [], etiket: [], oran: '1.4' };
+        const gorunen = nokta.filter(a => !gizli.includes(a.type));
+        // Türe göre süz: efsanedeki türe basınca o tür haritadan gizlenir / geri gelir (sınırlar hep tüm kayıtlardan hesaplanır, harita kaymaz)
+        const turler = SIRA.map(t => ({ t, n: A.filter(a => a.type === t && a.lat != null).length })).filter(x => x.n > 0).map(x => {
+          const acik = !gizli.includes(x.t);
+          return { ad: TYPES[x.t].kind, n: x.n, renk: REN[x.t], acik, kapali: !acik,
+            fg: acik ? ui.fg : ui.mut, kenar: acik ? REN[x.t] : ui.rule, op: acik ? '1' : '.55', ipucu: (acik ? 'Gizle: ' : 'Göster: ') + TYPES[x.t].kind,
+            pick: () => this.setState(st => { const g = st.ozetGizli || []; return { ozetGizli: g.includes(x.t) ? g.filter(y => y !== x.t) : [...g, x.t] }; }) };
+        });
+        let harita = { var: false, nokta: [], etiket: [], oran: '1.4', turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }) };
         if (nokta.length) {
           const enMin = Math.min(...nokta.map(a => a.lat)), enMax = Math.max(...nokta.map(a => a.lat));
           const boyMin = Math.min(...nokta.map(a => a.lon)), boyMax = Math.max(...nokta.map(a => a.lon));
@@ -21965,10 +21976,10 @@ class Component extends DCLogic {
           const pad = 4;
           const konum = a => ({ x: pad + ((a.lon - boyMin) * k / gen) * (100 - 2 * pad), y: pad + (1 - (a.lat - enMin) / yuk) * (100 - 2 * pad) });
           const ilceMerkez = {};
-          for (const a of nokta) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
+          for (const a of gorunen) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
           harita = {
-            var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
-            nokta: nokta.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
+            ...harita, var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
+            nokta: gorunen.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
             etiket: Object.entries(ilceMerkez).filter(([ad]) => ad !== '—').map(([ad, o]) => ({ ad, x: (o.x / o.n) + '%', y: (o.y / o.n) + '%' }))
           };
         }

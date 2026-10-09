@@ -38,7 +38,7 @@
       return v;
     })(),
     notes: {}, tests: {}, testForm: null, imp: null, vFill: null, seeking: null, pick: null, vFix: null,
-    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', barkodTara: null, gezi: [], ozetHist: 'derinlik',
+    ozetZaman: 'hafta', ozetBas: '', ozetBit: '', ozetIlce: '', ozetSekme: 'envanter', ozetGizli: [], barkodTara: null, gezi: [], ozetHist: 'derinlik',
     log: {}, trash: [], cop: [], card: null,
     // Arıza ve Bakım modüler: Ayarlar > Modüller'den kapatılabilir. Kapalı
     // modülün menüsü, sekmesi ve uyarıları görünmez; kayıtları silinmez.

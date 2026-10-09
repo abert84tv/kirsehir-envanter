@@ -164,8 +164,17 @@
         }));
 
         // 3b) Dağılım haritası: koordinatlar enlem düzeltmesiyle (cos) ekrana yerleştirilir
+        const gizli = s.ozetGizli || [];
         const nokta = A.filter(a => a.lat != null && a.lon != null);
-        let harita = { var: false, nokta: [], etiket: [], oran: '1.4' };
+        const gorunen = nokta.filter(a => !gizli.includes(a.type));
+        // Türe göre süz: efsanedeki türe basınca o tür haritadan gizlenir / geri gelir (sınırlar hep tüm kayıtlardan hesaplanır, harita kaymaz)
+        const turler = SIRA.map(t => ({ t, n: A.filter(a => a.type === t && a.lat != null).length })).filter(x => x.n > 0).map(x => {
+          const acik = !gizli.includes(x.t);
+          return { ad: TYPES[x.t].kind, n: x.n, renk: REN[x.t], acik, kapali: !acik,
+            fg: acik ? ui.fg : ui.mut, kenar: acik ? REN[x.t] : ui.rule, op: acik ? '1' : '.55', ipucu: (acik ? 'Gizle: ' : 'Göster: ') + TYPES[x.t].kind,
+            pick: () => this.setState(st => { const g = st.ozetGizli || []; return { ozetGizli: g.includes(x.t) ? g.filter(y => y !== x.t) : [...g, x.t] }; }) };
+        });
+        let harita = { var: false, nokta: [], etiket: [], oran: '1.4', turler, say: gorunen.length + ' / ' + nokta.length + ' kayıt gösteriliyor', hepsiVar: gizli.length > 0, hepsi: () => this.setState({ ozetGizli: [] }) };
         if (nokta.length) {
           const enMin = Math.min(...nokta.map(a => a.lat)), enMax = Math.max(...nokta.map(a => a.lat));
           const boyMin = Math.min(...nokta.map(a => a.lon)), boyMax = Math.max(...nokta.map(a => a.lon));
@@ -174,10 +183,10 @@
           const pad = 4;
           const konum = a => ({ x: pad + ((a.lon - boyMin) * k / gen) * (100 - 2 * pad), y: pad + (1 - (a.lat - enMin) / yuk) * (100 - 2 * pad) });
           const ilceMerkez = {};
-          for (const a of nokta) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
+          for (const a of gorunen) { const o = (ilceMerkez[a.district || '—'] = ilceMerkez[a.district || '—'] || { x: 0, y: 0, n: 0 }); const p = konum(a); o.x += p.x; o.y += p.y; o.n++; }
           harita = {
-            var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
-            nokta: nokta.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
+            ...harita, var: true, oran: String(Math.min(2.2, Math.max(1.1, gen / yuk))),
+            nokta: gorunen.map((a, i) => { const p = konum(a); return { x: p.x + '%', y: p.y + '%', renk: REN[a.type] || DIGER, i: Math.min(i, 300), ipucu: a.code + ' · ' + TYPES[a.type].kind + (a.village ? ' · ' + a.village : ''), ac: () => this.setState({ selected: a.id, panel: 'detay', tab: 'harita', detailTab: 'bilgi' }) }; }),
             etiket: Object.entries(ilceMerkez).filter(([ad]) => ad !== '—').map(([ad, o]) => ({ ad, x: (o.x / o.n) + '%', y: (o.y / o.n) + '%' }))
           };
         }

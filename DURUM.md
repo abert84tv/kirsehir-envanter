@@ -2127,3 +2127,6 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-165 — Barkod okut
 - Envanter > Liste’deki “▮▯▮ Barkod okut” düğmesi ve telefonda ⋮ menüsündeki “Barkod okut”: kamerayla barkodu okur (BarcodeDetector destekleyen tarayıcılarda), desteklemeyen cihazda ya da izin verilmezse barkodu elle yazma kutusu çıkar. Kuyu barkodu (BK-KUY-0043), direk barkodu (BD-0043) ve kayıt kodu (KS-KUY-0043) kabul edilir; bulunca kartı haritada açar.
+
+## 2026.10.10-166 — Özet dağılım haritasında türe göre süzme
+- Dağılım haritasının üstündeki türler (Su kuyusu · Su deposu · AG şebeke / pano · Güneş enerji santrali) birer süzgeç düğmesi: basınca o tür haritadan gizlenir, tekrar basınca gelir; “Hepsini göster” ve “27 / 291 kayıt gösteriliyor” sayacı. Harita kaymaz (sınırlar tüm kayıtlardan hesaplanır).

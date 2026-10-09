@@ -2109,3 +2109,8 @@ Sürüm 2026.10.05-114.
 ## 2026.10.10-161 — Köy adı otomatik yazma güvenli hale getirildi + Köy kontrolü
 - “Kuyulara köy adı yaz” artık sunucuya yazar (eskiden yalnız ekranda kalıyordu) ve yalnızca **güvenli eşleşmelere** yazar: yerleşim kaydın ilçesindendir ve 1,5 km’den yakındır; ilçeyi değiştirmez. Köyü boş 247 kayıttan **150’sine** yazıldı, 97’si boş bırakıldı. Her biri kayıtta `koyOtomatik: X km` ile işaretli.
 - **Ayarlar > Kayıt araçları > Köy kontrolü:** otomatik yazılanlar uzaktan yakına listelenir; her satırda **Doğru** (işareti kaldırır), **Düzelt** (kaydı açar, Köy ve ilçe düzelt formunu doldurur), **Geri al** (köyü siler); üstte **Hepsini doğru kabul et** ve **Hepsini geri al**. Kayıt kartında “Köy bilgisi: otomatik yazıldı (X km)” satırı görünür; köy kartından elle değiştirilince işaret kalkar.
+
+## 2026.10.10-162 — Kartta köy düzeltme, telefonda alt düğmeler listenin sonunda
+- Tesis kartında (telefon ve masaüstü) kodun altında **✎ Köyü düzelt** düğmesi; köy otomatik yazılmışsa yanında **✓ Köy doğru**. Ayarlara gitmeden kartta düzeltilir.
+- Elle düzeltilen ya da “doğru” denen köy kayıtta `koyElle` ile **hafızada kalır**: otomatik köy aracı ve “Hepsini geri al” bu kayıtlara bir daha dokunmaz; kart düzenlemesinde köy değişirse de aynı işaret konur.
+- Telefonda tesis kartındaki Kaydı düzenle / Tesis kartı / Kaydı sil / Kapat düğmeleri artık ekranın altına yapışık değil, kaydırılan listenin en sonunda (ekran daralmaz).

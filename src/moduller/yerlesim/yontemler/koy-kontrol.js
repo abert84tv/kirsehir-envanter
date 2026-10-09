@@ -1,7 +1,9 @@
   // Köy kontrolü: otomatik yazılan köyleri doğrulama / düzeltme / geri alma (sunucuya yazar)
-  async koyYaz(a, village, koyOtomatik) {
+  async koyYaz(a, village, koyOtomatik, elle) {
     const M = this._sb;
     const d = { ...(a.d || {}), koyOtomatik: koyOtomatik || '' };
+    // elle doğrulanan / düzeltilen köy “koyElle” ile hafızada tutulur: otomatik araç bir daha dokunmaz
+    if (elle === true) d.koyElle = true; else if (elle === false) delete d.koyElle;
     const yeni = { ...a, village, d, villageAuto: undefined };
     this.setState(st => ({ assets: st.assets.map(x => x.id === a.id ? yeni : x) }));
     let r; try { r = await M.tesisKaydet(yeni); } catch (e) { r = { ok: false, cevrimdisi: true }; }
@@ -10,21 +12,21 @@
   }
   koyKayitlar() { return (this.state.assets || []).filter(a => a.d && a.d.koyOtomatik); }
   async koyDogru(a) {
-    if (await this.koyYaz(a, a.village, '')) { this.iz(a.id, 'Köy doğrulandı', a.village); await this.veriYenile(true); }
+    if (await this.koyYaz(a, a.village, '', true)) { this.iz(a.id, 'Köy doğrulandı', a.village); await this.veriYenile(true); }
   }
   async koyGeriAl(a) {
-    if (await this.koyYaz(a, '', '')) { this.iz(a.id, 'Otomatik köy geri alındı', a.village + ' → (boş)'); await this.veriYenile(true); }
+    if (await this.koyYaz(a, '', '', false)) { this.iz(a.id, 'Otomatik köy geri alındı', a.village + ' → (boş)'); await this.veriYenile(true); }
   }
   async koyTumDogru() {
     const L = this.koyKayitlar();
     if (!L.length || !window.confirm(L.length + ' kaydın köy adı doğru kabul edilsin mi? (“otomatik” işareti kalkar.)')) return;
-    for (const a of L) await this.koyYaz(a, a.village, '');
+    for (const a of L) await this.koyYaz(a, a.village, '', true);
     await this.veriYenile(true); this.duyur(L.length + ' kayıt doğrulandı.', 5000, 'iyi');
   }
   async koyTumGeriAl() {
     const L = this.koyKayitlar();
     if (!L.length || !window.confirm(L.length + ' kayıttaki otomatik köy adı silinsin mi? Köyler eskisi gibi boş döner (elle doğrulananlara dokunulmaz).')) return;
-    let n = 0; for (const a of L) if (await this.koyYaz(a, '', '')) n++;
+    let n = 0; for (const a of L) if (await this.koyYaz(a, '', '', false)) n++;
     await this.veriYenile(true);
     this.denetimYaz('veri', 'Otomatik köy adları geri alındı', n + ' kayıt', 'Kayıt araçları');
     this.duyur(n + ' kayıttaki otomatik köy adı geri alındı.', 6000, 'iyi');

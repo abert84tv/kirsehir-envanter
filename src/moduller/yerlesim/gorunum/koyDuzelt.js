@@ -4,6 +4,9 @@
         return {
           on: !!f,
           acilir: !!sel,
+          otomatik: !!(sel && sel.d && sel.d.koyOtomatik),
+          otomatikYazi: sel && sel.d && sel.d.koyOtomatik ? 'Köy adı otomatik yazıldı (' + sel.d.koyOtomatik + ') — doğru mu?' : '',
+          dogru: () => sel && this.koyDogru(sel),
           koy: f ? f.village : '', ilce: f ? f.district : '',
           ilceler: ilceler.map(n => ({ n })),
           koyler: (() => {
@@ -23,7 +26,7 @@
             const g = this.state.koyForm;
             if (!sel || !g) return;
             const koy = (g.village || '').trim();
-            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined, d: { ...(sel.d || {}), koyOtomatik: '' } };
+            const yeni = { ...sel, village: koy, district: g.district || sel.district, villageAuto: undefined, d: { ...(sel.d || {}), koyOtomatik: '', koyElle: true } };
             this.setState({ koyForm: null, assets: s.assets.map(x => x.id === sel.id ? yeni : x) },
               () => this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }));
             this.iz(sel.id, 'Köy bilgisi düzeltildi', `${sel.village || '(boş)'} → ${koy || '(boş)'} · ${yeni.district}`);

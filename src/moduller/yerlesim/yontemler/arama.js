@@ -176,7 +176,7 @@
       return 2 * R * Math.asin(Math.sqrt(x));
     };
     const ESIK = 1.5;
-    const bos = this.state.assets.filter(a => !a.village && a.dbId != null && a.lat != null);
+    const bos = this.state.assets.filter(a => !a.village && a.dbId != null && a.lat != null && !(a.d && a.d.koyElle));
     const adaylar = [];
     for (const a of bos) {
       if (!this.yazabilir(a)) continue;

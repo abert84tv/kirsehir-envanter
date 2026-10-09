@@ -65,7 +65,7 @@
             const koy = (g.koy || '').trim();
             const ilce = g.ilce || a.district;
             const yerDegisti = koy !== (a.village || '') || ilce !== a.district;
-            if (yerDegisti) temiz.koyOtomatik = '';
+            if (yerDegisti) { temiz.koyOtomatik = ''; temiz.koyElle = true; }
             const yeni = { ...a, village: koy, district: ilce, villageAuto: yerDegisti ? undefined : a.villageAuto, year: yil, d: { ...(a.d || {}), ...temiz }, sync: s.offline ? 'pending' : a.sync };
             this.setState({
               alanForm: null,

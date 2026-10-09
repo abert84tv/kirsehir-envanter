@@ -10,6 +10,14 @@
 </sc-if>
 </div>
 <div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">{{ detail.meta }}</div>
+<sc-if value="{{ koyDuzelt.acilir }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px">
+<button onClick="{{ koyDuzelt.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;gap:6px;padding:0 13px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 12.5px/1 var(--font-body)">✎ Köyü düzelt</button>
+<sc-if value="{{ koyDuzelt.otomatik }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ koyDuzelt.dogru }}" title="{{ koyDuzelt.otomatikYazi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 13px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body)">✓ Köy doğru</button>
+</sc-if>
+</div>
+</sc-if>
 <sc-if value="{{ detail.acikAriza }}" hint-placeholder-val="{{ false }}">
 <span class="ks-nabiz" style="margin-top:8px;font:700 11px/1 var(--font-body);padding:4px 8px;border-radius:7px;background:var(--color-uyari-100);color:var(--color-uyari-700)">{{ detail.arizaEt }}</span>
 </sc-if>

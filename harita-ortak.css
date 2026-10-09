@@ -79,8 +79,8 @@ body.dark .leaflet-control-attribution{background:rgba(28,28,30,.8)!important;co
 body.dark .leaflet-control-attribution a{color:#8ab8ff}
 body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background:#1c1c1e;color:#f5f5f7}
 
-/* Katman simgesi (Sokak / Uydu / Uydu + ad): Harita menüsü düğmesinin yanında; basınca açılır, başka yere basınca kapanır */
-#tools .ust{display:flex;gap:6px;align-items:flex-start;justify-content:flex-end}
+/* Katman simgesi (Sokak / Uydu / Uydu + ad): Harita menüsü düğmesinin üstünde; basınca açılır, başka yere basınca kapanır */
+#tools .ust{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
 .ks-katman{position:relative}
 #tools .ks-katman .k-dugme{width:36px;height:36px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:9px}
 #tools .ks-katman .k-dugme svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}

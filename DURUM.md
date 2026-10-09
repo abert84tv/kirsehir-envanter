@@ -2114,3 +2114,6 @@ Sürüm 2026.10.05-114.
 - Tesis kartında (telefon ve masaüstü) kodun altında **✎ Köyü düzelt** düğmesi; köy otomatik yazılmışsa yanında **✓ Köy doğru**. Ayarlara gitmeden kartta düzeltilir.
 - Elle düzeltilen ya da “doğru” denen köy kayıtta `koyElle` ile **hafızada kalır**: otomatik köy aracı ve “Hepsini geri al” bu kayıtlara bir daha dokunmaz; kart düzenlemesinde köy değişirse de aynı işaret konur.
 - Telefonda tesis kartındaki Kaydı düzenle / Tesis kartı / Kaydı sil / Kapat düğmeleri artık ekranın altına yapışık değil, kaydırılan listenin en sonunda (ekran daralmaz).
+
+## 2026.10.10-163 — Telefonda tesis kartı başlığı sıkılaştı
+- Pasife al · ✎ Köyü düzelt · ✓ Köy doğru düğmeleri tek satırda yan yana (alt alta üç satır yerine bir satır).

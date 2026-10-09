@@ -8326,18 +8326,18 @@ Hareket gir
 <div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">{{ detail.code }}</div>
 <span style="flex:none;font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:5px 7px;border-radius:10px;border:1px solid {{ detail.aktif.kenar }};background:{{ detail.aktif.bg }};color:{{ detail.aktif.fg }}">{{ detail.aktif.etiket }}</span>
 </div>
-<sc-if value="{{ detail.aktif.gorunur }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ detail.aktif.tik }}" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:8px;min-height:44px;display:flex;align-items:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:0 12px">{{ detail.aktif.dugme }}</button>
-</sc-if>
 <div style="font:400 12.5px/1.35 var(--font-body);color:{{ ui.mut }};margin-top:5px">{{ detail.meta }}</div>
+<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px">
+<sc-if value="{{ detail.aktif.gorunur }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ detail.aktif.tik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);letter-spacing:-.01em;padding:0 11px">{{ detail.aktif.dugme }}</button>
+</sc-if>
 <sc-if value="{{ koyDuzelt.acilir }}" hint-placeholder-val="{{ false }}">
-<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px">
-<button onClick="{{ koyDuzelt.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;gap:6px;padding:0 13px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 12.5px/1 var(--font-body)">✎ Köyü düzelt</button>
+<button onClick="{{ koyDuzelt.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 11px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 12px/1 var(--font-body)">✎ Köyü düzelt</button>
 <sc-if value="{{ koyDuzelt.otomatik }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ koyDuzelt.dogru }}" title="{{ koyDuzelt.otomatikYazi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 13px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body)">✓ Köy doğru</button>
+<button onClick="{{ koyDuzelt.dogru }}" title="{{ koyDuzelt.otomatikYazi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 11px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body)">✓ Köy doğru</button>
+</sc-if>
 </sc-if>
 </div>
-</sc-if>
 </div>
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:700 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center;flex:none">×</button>
 </div>
@@ -10244,7 +10244,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-162';
+const SURUM = '2026.10.10-163';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';

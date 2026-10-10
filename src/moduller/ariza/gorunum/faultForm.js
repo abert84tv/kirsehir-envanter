@@ -11,10 +11,10 @@
           const kapali = KAPALI_DURUM.includes(ff.status);
           const yaz = y => this.setState({ faultForm: { ...this.state.faultForm, ...y } });
           const ADIM = [['acik', 'Açık'], ['atandi', 'Atandı'], ['sahada', 'Sahada'], ['cozuldu', 'Kapandı']];
-          const sira = { acik: 0, yeniden: 0, bilgi: 0, yonlendirildi: 0, atandi: 1, bekleme: 1, sahada: 2, kontrol: 2, cozuldu: 3, iptal: 3 };
+          const sira = { acik: 0, yeniden: 0, bilgi: 0, yonlendirildi: 0, atandi: 1, bekleme: 1, sahada: 2, kontrol: 2, mudur_onayi: 2, cozuldu: 3, iptal: 3 };
           const n = sira[ff.status] ?? 0;
           const PRC = { 'Acil': 'var(--color-uyari)', 'Yüksek': '#ff9f0a', 'Normal': 'var(--color-accent)', 'Düşük': '#8e8e93' };
-          const kayitAsama = ff.status === 'sahada' || ff.status === 'kontrol' ? 'sonra' : 'once';
+          const kayitAsama = ['sahada', 'kontrol', 'mudur_onayi'].includes(ff.status) ? 'sonra' : 'once';
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
           return {
             yeni, mevcut: !yeni, formGoster: !(yeni && ff.tesisSec),
@@ -176,7 +176,7 @@
               cizgi: i < 3, cizgiW: n > i ? '100%' : '0%', esnek: i < 3 ? '1 1 0' : '0 0 auto'
             })),
             // Var olan işte durumuna göre tek ana düğme
-            vardimVar: !yeni && !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi,
+            vardimVar: !yeni && !kapali && !['sahada', 'kontrol', 'mudur_onayi'].includes(ff.status) && kendiIsi,
             vardim: () => {
               const f0 = (this.state.faults || []).find(x => x.id === ff.id) || ff;
               this.sahaDurum({ ...f0, note: this.state.faultForm.note ?? f0.note }, 'sahada');
@@ -186,7 +186,7 @@
             tamamlaVar: !yeni && (ff.status === 'sahada') && kendiIsi,
             // Kapanış adımı saha akışında: sonrası fotoğrafı + zimmetten malzeme
             tamamla: () => this.setState({ panel: 'yok', faultForm: null, tab: 'gunluk', sahaAktifId: ff.id, sahaKapanis: { id: ff.id, mz: {}, not: '' } }),
-            onayda: !yeni && ff.status === 'kontrol',
+            onayda: !yeni && (ff.status === 'kontrol' || ff.status === 'mudur_onayi'),
             kapali: !yeni && kapali,
             yolTarifi: () => { if (ffAsset && this.yolTarifiVer(ffAsset)) this.say(`${ffAsset.code} için güzergâh hesaplanıyor…`); },
             fotoCek: () => this.setState({ faultForm: { ...this.state.faultForm, fotoAsama: kayitAsama } }, () => this.arizaFotoSec(true)),
@@ -319,13 +319,13 @@
           if (!ff || !ff.id) return { var: false };
           const kapali = KAPALI_DURUM.includes(ff.status);
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
-          const vardimVar = !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi;
+          const vardimVar = !kapali && !['sahada', 'kontrol', 'mudur_onayi'].includes(ff.status) && kendiIsi;
           const tamamlaVar = !kapali && ff.status === 'sahada' && kendiIsi;
-          const hedef = onayOn && !canClose ? 'kontrol' : 'cozuldu';
+          const hedef = canClose ? 'cozuldu' : 'kontrol';   // saha ve operatör işi ön onaya bırakır; yalnız son onay yetkilisi kapatır
           return {
             var: vardimVar || tamamlaVar, vardimVar, tamamlaVar,
             not: vardimVar ? 'Sahadayım: ekip yerine vardı, iş “Sahada” olur ve başlama zamanı kaydolur.'
-              : 'İşi tamamla: aşağıdaki fotoğraf, malzeme ve süre ile ' + (hedef === 'kontrol' ? 'işi merkez onayına gönderir.' : 'kaydı kapatır; kanıt fotoğrafı zorunluysa eksikse uyarır.'),
+              : 'İşi tamamla: aşağıdaki fotoğraf, malzeme ve süre ile ' + (hedef === 'kontrol' ? 'işi operatörün ön onayına gönderir.' : 'kaydı kapatır; kanıt fotoğrafı zorunluysa eksikse uyarır.'),
             vardim: () => {
               const f0 = (this.state.faults || []).find(x => x.id === ff.id) || ff;
               this.sahaDurum({ ...f0, note: this.state.faultForm.note ?? f0.note }, 'sahada');
@@ -338,41 +338,50 @@
         // Durum seçici sade: “Bilgi bekliyor” ve “Başka birime” artık “Beklemede” + neden olarak girilir;
         // eski kayıt bu iki durumdaysa kendi adımı görünmeye devam eder (veri değişmez)
         workflow: wfSteps.filter(([id]) => !['bilgi', 'yonlendirildi'].includes(id) || (ff && ff.status === id)).map(([id, label]) => {
-          // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
-          // saha ekibi işi Kontrolde durumuna bırakır.
-          const kilit = onayOn && (id === 'cozuldu' || id === 'iptal') && !canClose;
+          // Onay zinciri: saha → Kontrol (operatör ön onayı) → Müdür onayı → Çözüldü. Kapatma/iptal yalnız son onay yetkisinde;
+          // müdür onayına yalnız ön onay yetkisi gönderir; incelemedeki işi yalnız ilgili onaycı değiştirir.
+          const incelemeKilit = !!ff && ((ff.status === 'kontrol' && !(canOnOnay || canClose)) || (ff.status === 'mudur_onayi' && !canClose));
+          const kilit = (id === 'cozuldu' || id === 'iptal') ? !canClose : id === 'mudur_onayi' ? !(canOnOnay || canClose) : (incelemeKilit && !(ff && ff.status === id));
           return {
             label, border: ff && ff.status === id ? 'var(--color-accent)' : ui.rule,
             bg: ff && ff.status === id ? ui.pend : 'transparent',
             fg: kilit ? ui.mut : (ff && ff.status === id ? ui.acc : ui.mut),
             op: kilit ? '.45' : '1',
             go: () => {
-              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın (iptal gerekçesini nota yazın); kapatmayı ve iptali müdür onaylar.');
+              if (kilit) return this.say(id === 'mudur_onayi' ? 'Müdür onayına yalnızca operatör (ön onay yetkisi) gönderir.' : (id === 'cozuldu' || id === 'iptal') ? 'İşi bitirmeyi ve iptali yalnızca müdür onaylar: işi “Kontrol” adımında bırakın (iptal gerekçesini nota yazın).' : 'Bu iş inceleme aşamasında; yalnız ilgili onaycı durumunu değiştirir.');
               this.setState({ faultForm: { ...this.state.faultForm, status: id } });
             }
           };
         }),
         // Merkez denetimi: kanıtı görüp onaylar ya da nedenini yazıp iade eder
-        onay: {
-          on: !!(onayOn && ff && ff.id && ff.status === 'kontrol' && canClose),
-          not: 'Saha işi bitirdi. Fotoğrafları ve notu inceleyin: yeterliyse kapatın, eksikse nedenini yazıp sahaya iade edin.',
-          kapat: () => {
-            this.setState({ faultForm: { ...this.state.faultForm, status: 'cozuldu' } });
-            this.say('Kayıt kapanışa alındı — kaydetmeyi tamamlayın.');
-          },
-          iade: () => {
-            const neden = (window.prompt('İade nedeni — sahada ne eksik kaldı?') || '').trim();
+        onay: (() => {
+          const kontrol = !!ff && ff.status === 'kontrol', mudurOnayinda = !!ff && ff.status === 'mudur_onayi';
+          // son onay yetkilisi (müdür) kontrol aşamasındaki işi de ön onay beklemeden onaylayıp kapatabilir; aynı kişi iki kez onaylamaz
+          const muduronay = mudurOnayinda || (kontrol && canClose);
+          const iadeEt = (hedefDurum, etiket, soru) => () => {
+            const neden = (window.prompt(soru) || '').trim();
             if (!neden) return;
             const f = this.state.faultForm;
-            this.setState({
-              faultForm: {
-                ...f, status: 'sahada',
-                note: ((f.note || '') + (f.note ? '\n' : '') + 'MERKEZ İADESİ · ' + this.damga() + ' · ' + neden)
-              }
-            });
-            this.say('Sahaya iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
-          }
-        },
+            this.setState({ faultForm: { ...f, status: hedefDurum, note: ((f.note || '') + (f.note ? '\n' : '') + etiket + ' · ' + this.damga() + ' · ' + (s.session ? s.session.name + ' · ' : '') + neden) } });
+            this.say((hedefDurum === 'sahada' ? 'Sahaya' : 'Operatöre') + ' iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
+          };
+          return {
+            on: !!(ff && ff.id && ((kontrol && (canOnOnay || canClose)) || (mudurOnayinda && canClose))),
+            baslik: muduronay ? 'Son onay (müdür)' : 'Ön onay (operatör)',
+            not: muduronay
+              ? 'Operatör ön onay verdi. Fotoğraf, malzeme ve notu inceleyin: uygunsa onaylayıp kapatın; eksikse nedenini yazıp operatöre ya da doğrudan sahaya iade edin.'
+              : 'Saha işi bitirdi. Fotoğraf, malzeme ve notu inceleyin: uygunsa müdür onayına gönderin; eksikse nedenini yazıp sahaya iade edin.',
+            tamEtiket: muduronay ? 'Onayla ve kapat' : 'Ön onay ver — müdür onayına gönder',
+            kapat: () => {
+              this.setState({ faultForm: { ...this.state.faultForm, status: muduronay ? 'cozuldu' : 'mudur_onayi' } });
+              this.say(muduronay ? 'Kayıt kapanışa alındı — kaydetmeyi tamamlayın.' : 'Müdür onayına gönderildi — kaydetmeyi tamamlayın.');
+            },
+            iadeEtiket: mudurOnayinda ? 'Operatöre iade et' : 'Sahaya iade et',
+            iade: mudurOnayinda ? iadeEt('kontrol', 'MÜDÜR İADESİ (OPERATÖRE)', 'İade nedeni — operatör neyi yeniden incelemeli?') : iadeEt('sahada', muduronay ? 'MÜDÜR İADESİ (SAHAYA)' : 'ÖN ONAY İADESİ (SAHAYA)', 'İade nedeni — sahada ne eksik kaldı?'),
+            iade2Var: mudurOnayinda, iade2Etiket: 'Sahaya iade et',
+            iade2: iadeEt('sahada', 'MÜDÜR İADESİ (SAHAYA)', 'İade nedeni — sahada ne eksik kaldı?')
+          };
+        })(),
         // Ekip önerisi: tesisin ilçesine bakan ekipler + bugünün nöbetçisi
         ekipOneri: (() => {
           if (!ffAsset) return [];
@@ -462,7 +471,7 @@
         })(),
         // Kapanmış kayıt yeniden açılır: geçmiş, fotoğraf ve maliyet korunur
         yenidenAc: {
-          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && (canAssign || canClose)),
+          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canClose),   // onaylanmış işi yalnız onaylayan (müdür) yeniden açar; operatör bozamaz
           not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
           go: () => {
             const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();

@@ -6,7 +6,7 @@
     const sureOn = arizaOn && s.modul.sure === true;
     // Kanıt ve merkez onayı da arıza modülünün içinde yaşar
     const kanitOn = arizaOn && s.modul.kanit !== false;
-    const onayOn = arizaOn && s.modul.onay === true;
+    const onayOn = arizaOn;   // onay zinciri (ön onay → son onay) her zaman açık: ayarlardan kapatılamaz
     const ambarOn = s.modul.ambar !== false;
     const aracOn = s.modul.arac !== false;
     const talepOn = s.modul.talep !== false;
@@ -59,7 +59,8 @@
     const sayfaTam = (aktif ? suzgecYetki(aktif.sayfa, aktif.suzgec) : yetki(tabId)) === 'tam';
     const canWrite = can('write') && sayfaTam;
     const canAssign = can('assign');
-    const canClose = can('close');   // son onay ve kapatma (Mühendis, Müdür, Yönetici); atayan (operatör) ve yapan (saha şefi) kapatamaz
+    const canClose = can('close');   // son onay ve kapatma (Müdür); açan/atayan operatör kendi işini onaylayamaz
+    const canOnOnay = can('onOnay'); // ön onay (Operatör): sahadan gelen işi müdür onayına gönderir ya da sahaya iade eder
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';

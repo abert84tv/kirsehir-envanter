@@ -61,14 +61,8 @@
             kapa: seg(!modAyar('kanit'), () => { if (modAyar('kanit')) this.modulAnahtar('kanit', false); }),
             sayi: arizaOn ? 'en az bir fotoğraf' : 'arıza modülü kapalı — açarsanız arıza da açılır',
             aciklama: 'Bir arıza “Çözüldü” işaretlenirken kayıtta fotoğraf yoksa kapanış kabul edilmez. Yapılan işin kanıtı kalır, sonradan “yapıldı mı” tartışması olmaz. Kapalıyken fotoğraf yine eklenebilir, ama kapanış şartı değildir.'
-          },
-          {
-            ad: 'Merkez onayı',
-            ac: seg(modAyar('onay'), () => { if (!modAyar('onay') || !arizaOn) this.modulAnahtar('onay', true); }),
-            kapa: seg(!modAyar('onay'), () => { if (modAyar('onay')) this.modulAnahtar('onay', false); }),
-            sayi: arizaOn ? 'Kontrolde adımı eklenir' : 'arıza modülü kapalı — açarsanız arıza da açılır',
-            aciklama: 'Açıkken saha kaydı doğrudan kapatamaz: işi “Kontrolde” bırakır, merkez fotoğrafı görüp onaylar ya da nedenini yazıp sahaya iade eder. İade nedeni kaydın notuna işlenir. Merkezde denetimi yapacak personel yoksa kapalı tutun — akış bugünkü gibi kalır.'
           }
+
         ]
         };
       })(),

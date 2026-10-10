@@ -25,8 +25,9 @@
         const katalog = this.katalog();
         const stokta = katalog.filter(k => !k.pasif && stoktaMi(k));
         const sip = s.siparis || [];
-        const sipSet = new Set(sip.map(x => x.malzeme));
-        const sipMap = new Map(sip.map(x => [x.malzeme, x]));
+        const sipAlim = sip.filter(x => x.tur !== 'zimmet');   // alım istekleri (ekibe çıkış istekleri ayrı gösterilir)
+        const sipSet = new Set(sipAlim.map(x => x.malzeme));
+        const sipMap = new Map(sipAlim.map(x => [x.malzeme, x]));
         // alım isteği durumu: onay bekliyor / onaylı
         const sipDurum = ad => { const x = sipMap.get(ad); return !x ? '' : (x.durum === 'onayli' ? '✓ Onaylı' : '⏳ Onay bekliyor'); };
         const tum = stokta.map(k => ({ k, d: this.ambarDurum(k.ad), dag: AMBARLAR.map(A => this.ambarMevcut(k.ad, A)) }));
@@ -271,9 +272,12 @@
             const k = this.katalogBul(x.malzeme) || {};
             const d = this.ambarDurum(x.malzeme);
             return {
-              ad: x.malzeme, kod: k.kod || '—', birim: x.birim,
+              ad: x.malzeme, kod: k.kod || '—', birim: x.birim, turEtiket: x.tur === 'zimmet' ? 'Ekibe çıkış → ' + (x.ekip || '') : 'Alım',
+              teslimVar: x.tur === 'zimmet' && x.durum === 'onayli' && izin.zimmet,
+              teslim: () => this.ambarHareket({ tur: 'zimmet', malzeme: x.malzeme, ambar: x.ambar, ekip: x.ekip, adet: String(x.adet), not: x.not || '', istekId: x.id }),
               adet: String(x.adet), onAdet: e => this.siparisAdet(x.id, e.target.value),
-              durum: d.toplam <= 0 ? 'ambarda kalmadı'
+              durum: x.tur === 'zimmet' ? (x.ambar || '') + ' ambarından · ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim)
+                : d.toplam <= 0 ? 'ambarda kalmadı'
                 : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
               tutar: izin.fiyat ? this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)) : '',
               ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
@@ -293,7 +297,7 @@
             const yeni = kritikler.filter(x => !sipSet.has(x.k.ad));
             if (!yeni.length) return this.duyur('Kritik kalemlerin hepsi zaten listede.', 4000);
             this.siparisYaz([...sip, ...yeni.map((x, i) => ({
-              id: 's' + Date.now() + i, malzeme: x.k.ad, adet: this.siparisOneri(x.k.ad), birim: x.k.birim,
+              id: 's' + Date.now() + i, tur: 'alim', malzeme: x.k.ad, adet: this.siparisOneri(x.k.ad), birim: x.k.birim,
               ekleyen: (me || {}).name || '', damga: this.damga(),
               durum: izin.siparisOnay ? 'onayli' : 'istek', ...(izin.siparisOnay ? { onaylayan: (me || {}).name || '', onayDamga: this.damga() } : {})
             }))], yeni.length + (izin.siparisOnay ? ' kritik kalem listeye eklendi (onaylı).' : ' kritik kalem için alım isteği açıldı — müdür onayı bekliyor.'));
@@ -344,6 +348,7 @@
           hareketBos: 'Henüz hareket yok. İlk adım: kullandığınız malzemelerin ambar mevcudunu “Giriş” ile girin.',
           form: {
             on: !!af,
+            istekModu: !!af && af.tur === 'zimmet', kaydetEtiket: af && af.tur === 'zimmet' ? 'İstek aç — müdür onayı' : 'Hareketi işle',
             baslik: af ? HAREKET_AD[af.tur] : '',
             // İki düğme (Giriş / Çıkış) + “neden/nereden”: seçilen neden altı kayıt türünden birine karşılık gelir (veri değişmez)
             yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].filter(([y]) => NEDEN[y].some(n => izinTur[n.tur])).map(([y, l]) => ({

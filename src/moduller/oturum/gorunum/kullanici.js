@@ -50,10 +50,15 @@
               && !(u.role === 'yonetici' && list.filter(x => x.role === 'yonetici' && x.aktif !== false).length <= 1),
             kapatLabel: u.aktif === false ? 'Aktif et' : 'Dondur',
             yetkiAcik: s.yetkiForm === u.id,
+            // Müdür vekâleti: rolünde son onay yetkisi olmayan kişiye tek düğmeyle verilir / geri alınır
+            vekaletVar: !((CAN.close || []).includes(u.role) && (CAN.stokSiparisOnay || []).includes(u.role)),
+            vekaletAcik: this.yetkiVar(u, 'close') && this.yetkiVar(u, 'stokSiparisOnay'),
+            vekaletEtiket: (this.yetkiVar(u, 'close') && this.yetkiVar(u, 'stokSiparisOnay')) ? 'Müdür vekâletini kaldır' : 'Müdür vekâleti ver',
+            vekalet: () => this.vekaletYaz(u.id, !(this.yetkiVar(u, 'close') && this.yetkiVar(u, 'stokSiparisOnay'))),
             istisnalar: PERMS.map(([k, ad]) => {
               const rolVar = (CAN[k] || []).includes(u.role);
               const acik = this.yetkiVar(u, k);
-              const kilitli = ISTISNA_DISI.includes(k) || u.role === 'yonetici';
+              const kilitli = ISTISNA_DISI.includes(k) || (u.role === 'yonetici' && rolVar);
               return {
                 ad, acik, kilitli,
                 durum: kilitli ? (rolVar ? 'Rolden geliyor' : 'Rolde yok')
@@ -66,12 +71,12 @@
                 tik: () => kilitli
                   ? this.duyur(ISTISNA_DISI.includes(k)
                     ? ad + ' role bağlı kalır — kişiye özel istisna verilmez. Rolü değiştirerek yönetin.'
-                    : 'Yönetici rolünün yetkileri kısıtlanamaz.', 6000, 'kotu')
+                    : 'Yönetici rolünün bu yetkisi kısıtlanamaz.', 6000, 'kotu')
                   : this.istisnaYaz(u.id, k, !acik)
               };
             }),
             istisnaSayi: (() => {
-              const n = PERMS.filter(([k]) => !ISTISNA_DISI.includes(k) && u.role !== 'yonetici'
+              const n = PERMS.filter(([k]) => !ISTISNA_DISI.includes(k)
                 && this.yetkiVar(u, k) !== (CAN[k] || []).includes(u.role)).length;
               return n ? n + ' istisna' : 'rol paketi aynen';
             })(),

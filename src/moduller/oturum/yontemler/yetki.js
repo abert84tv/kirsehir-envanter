@@ -37,20 +37,39 @@
   yetkiVar(u, k) {
     if (!u) return false;
     const rolVar = (CAN[k] || []).includes(u.role);
-    if (ISTISNA_DISI.includes(k) || u.role === 'yonetici') return rolVar;
+    if (ISTISNA_DISI.includes(k)) return rolVar;
     const ist = (u.istisna || {})[k];
+    // Yönetici rolünün yetkisi kısıtlanamaz; günlük iş açma/atama rolünde yoktur, gerekirse kendine (ya da bir vekile) Yetkiler'den verilir
+    if (u.role === 'yonetici') return rolVar || ist === true;
     return ist === undefined || ist === null ? rolVar : !!ist;
   }
   istisnaYaz(uid, k, deger) {
     if (ISTISNA_DISI.includes(k)) return;
     const hedef = this.state.users.find(x => x.id === uid);
     if (!hedef) return;
-    if (hedef.role === 'yonetici') {
-      return this.duyur('Yönetici rolünün yetkileri kısıtlanamaz — sistem yönetimsiz kalmasın diye bu rol istisna kabul etmiyor.', 6000, 'kotu');
-    }
     const rolVar = (CAN[k] || []).includes(hedef.role);
+    if (hedef.role === 'yonetici' && rolVar && !deger) {
+      return this.duyur('Yönetici rolünün bu yetkisi kısıtlanamaz — sistem yönetimsiz kalmasın diye. Rolünde olmayan yetkiyi ise verebilirsiniz.', 6000, 'kotu');
+    }
     const ist = { ...(hedef.istisna || {}) };
     if (deger === rolVar) delete ist[k]; else ist[k] = deger;
+    const ad = (PERMS.find(p => p[0] === k) || [, k])[1];
+    this.istisnaUygula(hedef, ist, hedef.name + ' · ' + ad + ' → ' + (deger ? 'verildi' : 'kaldırıldı')
+      + (deger === rolVar ? ' (rol paketiyle aynı, istisna silindi)' : ' (rolden farklı, istisna olarak işlendi)'));
+  }
+  // Müdür vekâleti: müdür izindeyken onay yetkileri (son onay + malzeme isteği onayı) tek hamlede başka kişiye verilir / geri alınır
+  vekaletYaz(uid, ver) {
+    const hedef = this.state.users.find(x => x.id === uid);
+    if (!hedef) return;
+    const ist = { ...(hedef.istisna || {}) };
+    for (const k of ['close', 'stokSiparisOnay']) {
+      const rolVar = (CAN[k] || []).includes(hedef.role);
+      if (ver === rolVar) delete ist[k]; else ist[k] = ver;
+    }
+    this.istisnaUygula(hedef, ist, hedef.name + (ver ? ' · müdür vekâleti verildi: arıza/iş emri son onayı ve malzeme isteği onayı. İş dönünce Yetkiler’den geri alın.' : ' · müdür vekâleti kaldırıldı.'));
+  }
+  istisnaUygula(hedef, ist, mesaj) {
+    const uid = hedef.id;
     const tablo = { ...this.istisnaTablo() };
     tablo[hedef.user] = ist;
     this._istisna = tablo;
@@ -59,10 +78,9 @@
     this.usersKaydet(list);
     const me = this.state.session;
     if (me && me.id === uid) this.setState({ session: { ...me, istisna: ist } });
-    const ad = (PERMS.find(p => p[0] === k) || [, k])[1];
     this.yetkiGonder(hedef, hedef.sayfalar || {}, ist);
-    this.duyur(hedef.name + ' · ' + ad + ' → ' + (deger ? 'verildi' : 'kaldırıldı')
-      + (deger === rolVar ? ' (rol paketiyle aynı, istisna silindi)' : ' (rolden farklı, istisna olarak işlendi)'), 6000, 'iyi');
+    this.denetimYaz('yetki', 'Yetki istisnası', mesaj, hedef.user || '');
+    this.duyur(mesaj, 7000, 'iyi');
   }
   istisnaTablo() {
     if (this._istisna) return this._istisna;

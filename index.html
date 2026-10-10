@@ -1601,7 +1601,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 </label>
 <button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"></path><path d="M6 6 5 3H2"></path><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg>
-Sipariş listesi
+Malzeme istekleri
 <sc-if value="{{ ambarEkran.sipVar }}" hint-placeholder-val="{{ false }}"><span class="ks-nabiz" style="display:inline-block;min-width:20px;height:20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 11px/20px var(--font-body);text-align:center;padding:0 5px;box-sizing:border-box">{{ ambarEkran.sipN }}</span></sc-if>
 </button>
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
@@ -1858,9 +1858,10 @@ Sipariş listesi
 <input value="{{ ambarEkran.form.not }}" onChange="{{ ambarEkran.form.onNot }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
 <div style="font:600 12px/1.45 var(--font-body);color:{{ ui.mut }};background:{{ ui.surf2 }};border-radius:9px;padding:9px 11px">Kontrol — {{ ambarEkran.form.durum }}</div>
+<sc-if value="{{ ambarEkran.form.istekModu }}" hint-placeholder-val="{{ false }}"><div style="font:600 12px/1.45 var(--font-body);color:#d97706;border-radius:9px;border:1px solid #d97706;padding:9px 11px">Ekibe verme müdür onayı ister: istek açılır, müdür onaylayınca sipariş listesindeki “Ekibe teslim et” düğmesiyle verilir.</div></sc-if>
 <div style="display:flex;gap:9px;justify-content:flex-end">
 <button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:12px 16px">Vazgeç</button>
-<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">Hareketi işle</button>
+<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">{{ ambarEkran.form.kaydetEtiket }}</button>
 </div>
 </div>
 </div>
@@ -1979,13 +1980,13 @@ Sipariş listesi
 <!-- ambar: sipariş listesi -->
 <sc-if value="{{ ambarEkran.siparisPanel.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
-<div class="ks-gir" role="dialog" aria-label="Sipariş listesi" style="width:680px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
-<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Sipariş listesi</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
+<div class="ks-gir" role="dialog" aria-label="Malzeme istekleri" style="width:680px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Malzeme istekleri</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
 <div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Liste herkes için ortaktır. Önerilen miktar 30 günlük tüketimi karşılayacak kadardır; ambara giriş yapılınca kalem listeden kendiliğinden düşer.</div>
 <sc-for list="{{ ambarEkran.siparisPanel.kalemler }}" as="x" hint-placeholder-count="3">
 <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid {{ ui.rule }}">
 <div style="flex:1;min-width:0">
-<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }}</div>
+<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }} <span style="font:600 11px/1 var(--font-body);color:{{ ui.acc }}">· {{ x.turEtiket }}</span></div>
 <div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ x.kod }} · {{ x.durum }} · {{ x.ekleyen }}</div>
 <div style="font:700 11.5px/1.35 var(--font-body);color:{{ x.onayRenk }}">{{ x.onayMetin }}</div>
 </div>
@@ -1994,12 +1995,13 @@ Sipariş listesi
 {{ x.birim }}
 </label>
 <span style="width:84px;text-align:right;font:600 12px/1 var(--font-body)">{{ x.tutar }}</span>
+<sc-if value="{{ x.teslimVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.teslim }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;background:var(--color-accent);color:#fff;font:700 12px/36px var(--font-body)">Ekibe teslim et</button></sc-if>
 <sc-if value="{{ x.onayVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.onayla }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;background:#1b9a4a;color:#fff;font:700 12px/36px var(--font-body)">Onayla</button></sc-if>
 <sc-if value="{{ x.cikarVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ x.cikar }}" aria-label="Listeden çıkar" style="all:unset;cursor:pointer;font:600 13px/1 var(--font-body);color:{{ ui.mut }};padding:8px 8px">{{ x.cikarEtiket }}</button></sc-if>
 </div>
 </sc-for>
 <sc-if value="{{ ambarEkran.siparisPanel.bos }}" hint-placeholder-val="{{ false }}">
-<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Siparişe ekle” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
+<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Alım isteği aç” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
 </sc-if>
 <div style="display:flex;gap:9px;flex-wrap:wrap;border-top:1px solid {{ ui.rule }};padding-top:12px">
 <sc-if value="{{ ambarEkran.siparisPanel.yazabilir }}" hint-placeholder-val="{{ true }}">
@@ -3553,6 +3555,7 @@ Sipariş listesi
 <div style="display:flex;gap:6px;flex:none;margin-left:auto">
 <button onClick="{{ u.edit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Düzenle</button>
 <button onClick="{{ u.yetkiAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ u.yetkiLabel }}</button>
+<sc-if value="{{ u.vekaletVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.vekalet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px">{{ u.vekaletEtiket }}</button></sc-if>
 <button onClick="{{ u.sifre }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:9px 11px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Şifre sıfırla</button>
 <sc-if value="{{ u.kendisi }}" hint-placeholder-val="{{ false }}">
 <span style="font:400 11.5px/1 var(--font-body);color:{{ ui.mut }};align-self:center;padding:0 4px">kendi hesabınız</span>
@@ -3624,6 +3627,17 @@ Sipariş listesi
 <sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.muhtarDefteri }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};font:600 13px/42px var(--font-body)">Muhtar defteri</button></sc-if>
 <sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.yeniTalep }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;background:var(--color-accent);color:#fff;font:700 13.5px/44px var(--font-body)">+ Yeni talep (telefon)</button></sc-if>
 </div>
+<sc-if value="{{ isPanosuEkran.redVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+<span style="font:700 13.5px/1.2 var(--font-heading)">{{ isPanosuEkran.redBaslik }}</span>
+<sc-for list="{{ isPanosuEkran.redListe }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:600 12.5px/1.3 var(--font-body)">{{ r.no }} · {{ r.ne }}</div><div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">Neden: {{ r.neden }} · {{ r.zaman }}</div></div>
+<button onClick="{{ r.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/38px var(--font-body)">Yeniden aç</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
 <sc-if value="{{ isPanosuEkran.panoGorunumu }}" hint-placeholder-val="{{ true }}">
 <div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.yardim }}</div>
 <div style="flex:1;display:grid;grid-template-columns:repeat(4,minmax(200px,1fr));gap:12px;align-items:start;min-height:0">
@@ -3866,11 +3880,12 @@ Sipariş listesi
 </sc-if>
 <sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border-radius:10px;border:1px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Merkez denetimi</span>
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ faultForm.onay.baslik }}</span>
 <span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.onay.not }}</span>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
-<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">Onayla ve kapat</button>
-<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Sahaya iade et</button>
+<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">{{ faultForm.onay.tamEtiket }}</button>
+<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iadeEtiket }}</button>
+<sc-if value="{{ faultForm.onay.iade2Var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ faultForm.onay.iade2 }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iade2Etiket }}</button></sc-if>
 </div>
 </div>
 </sc-if>
@@ -5227,11 +5242,12 @@ Sipariş listesi
 </sc-if>
 <sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border-radius:10px;border:1px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Merkez denetimi</span>
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ faultForm.onay.baslik }}</span>
 <span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.onay.not }}</span>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
-<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">Onayla ve kapat</button>
-<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Sahaya iade et</button>
+<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">{{ faultForm.onay.tamEtiket }}</button>
+<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iadeEtiket }}</button>
+<sc-if value="{{ faultForm.onay.iade2Var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ faultForm.onay.iade2 }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iade2Etiket }}</button></sc-if>
 </div>
 </div>
 </sc-if>
@@ -6465,7 +6481,7 @@ Sipariş listesi
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-if value="{{ ambarEkran.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:#1b9a4a;color:#fff;font:600 14px/46px var(--font-body);text-align:center">↓ Giriş</button></sc-if>
 <sc-if value="{{ ambarEkran.cikisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/46px var(--font-body);text-align:center">↑ Çıkış</button></sc-if>
-<button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:46px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};font:600 14px/46px var(--font-body);text-align:center">Sipariş listesi · {{ ambarEkran.sipN }}</button>
+<button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:46px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};font:600 14px/46px var(--font-body);text-align:center">Malzeme istekleri · {{ ambarEkran.sipN }}</button>
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ ambarEkran.malzemeYeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;min-height:42px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};font:600 13px/42px var(--font-body);text-align:center">Malzeme tanımla</button>
 </sc-if>
@@ -6660,9 +6676,10 @@ Sipariş listesi
 <input value="{{ ambarEkran.form.not }}" onChange="{{ ambarEkran.form.onNot }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
 <div style="font:600 12px/1.45 var(--font-body);color:{{ ui.mut }};background:{{ ui.surf2 }};border-radius:9px;padding:9px 11px">Kontrol — {{ ambarEkran.form.durum }}</div>
+<sc-if value="{{ ambarEkran.form.istekModu }}" hint-placeholder-val="{{ false }}"><div style="font:600 12px/1.45 var(--font-body);color:#d97706;border-radius:9px;border:1px solid #d97706;padding:9px 11px">Ekibe verme müdür onayı ister: istek açılır, müdür onaylayınca sipariş listesindeki “Ekibe teslim et” düğmesiyle verilir.</div></sc-if>
 <div style="display:flex;gap:9px;justify-content:flex-end">
 <button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:12px 16px">Vazgeç</button>
-<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">Hareketi işle</button>
+<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">{{ ambarEkran.form.kaydetEtiket }}</button>
 </div>
 </div>
 </div>
@@ -6781,13 +6798,13 @@ Sipariş listesi
 <!-- telefon ambar: sipariş listesi -->
 <sc-if value="{{ ambarEkran.siparisPanel.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;padding:0">
-<div class="ks-gir" role="dialog" aria-label="Sipariş listesi" style="width:100%;max-width:100%;max-height:94%;overflow:auto;border-radius:18px 18px 0 0;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
-<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Sipariş listesi</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
+<div class="ks-gir" role="dialog" aria-label="Malzeme istekleri" style="width:100%;max-width:100%;max-height:94%;overflow:auto;border-radius:18px 18px 0 0;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Malzeme istekleri</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
 <div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Liste herkes için ortaktır. Önerilen miktar 30 günlük tüketimi karşılayacak kadardır; ambara giriş yapılınca kalem listeden kendiliğinden düşer.</div>
 <sc-for list="{{ ambarEkran.siparisPanel.kalemler }}" as="x" hint-placeholder-count="3">
 <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid {{ ui.rule }}">
 <div style="flex:1;min-width:0">
-<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }}</div>
+<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }} <span style="font:600 11px/1 var(--font-body);color:{{ ui.acc }}">· {{ x.turEtiket }}</span></div>
 <div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ x.kod }} · {{ x.durum }} · {{ x.ekleyen }}</div>
 <div style="font:700 11.5px/1.35 var(--font-body);color:{{ x.onayRenk }}">{{ x.onayMetin }}</div>
 </div>
@@ -6796,12 +6813,13 @@ Sipariş listesi
 {{ x.birim }}
 </label>
 <span style="width:84px;text-align:right;font:600 12px/1 var(--font-body)">{{ x.tutar }}</span>
+<sc-if value="{{ x.teslimVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.teslim }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;background:var(--color-accent);color:#fff;font:700 12px/36px var(--font-body)">Ekibe teslim et</button></sc-if>
 <sc-if value="{{ x.onayVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.onayla }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;background:#1b9a4a;color:#fff;font:700 12px/36px var(--font-body)">Onayla</button></sc-if>
 <sc-if value="{{ x.cikarVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ x.cikar }}" aria-label="Listeden çıkar" style="all:unset;cursor:pointer;font:600 13px/1 var(--font-body);color:{{ ui.mut }};padding:8px 8px">{{ x.cikarEtiket }}</button></sc-if>
 </div>
 </sc-for>
 <sc-if value="{{ ambarEkran.siparisPanel.bos }}" hint-placeholder-val="{{ false }}">
-<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Siparişe ekle” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
+<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Alım isteği aç” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
 </sc-if>
 <div style="display:flex;gap:9px;flex-wrap:wrap;border-top:1px solid {{ ui.rule }};padding-top:12px">
 <sc-if value="{{ ambarEkran.siparisPanel.yazabilir }}" hint-placeholder-val="{{ true }}">
@@ -7752,6 +7770,7 @@ Sipariş listesi
 <button onClick="{{ u.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ ikonlar.copKucuk }} Sil</button>
 </sc-if>
 <button onClick="{{ u.yetkiAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ u.yetkiLabel }}</button>
+<sc-if value="{{ u.vekaletVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.vekalet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ u.vekaletEtiket }}</button></sc-if>
 </div>
 <sc-if value="{{ u.yetkiAcik }}" hint-placeholder-val="{{ false }}">
 <div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;display:flex;flex-direction:column;gap:9px">
@@ -8442,6 +8461,17 @@ Sipariş listesi
 </sc-if>
 </div>
 </sc-for>
+<sc-if value="{{ isPanosuEkran.redVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+<span style="font:700 13.5px/1.2 var(--font-heading)">{{ isPanosuEkran.redBaslik }}</span>
+<sc-for list="{{ isPanosuEkran.redListe }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:600 12.5px/1.3 var(--font-body)">{{ r.no }} · {{ r.ne }}</div><div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">Neden: {{ r.neden }} · {{ r.zaman }}</div></div>
+<button onClick="{{ r.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/38px var(--font-body)">Yeniden aç</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
 <sc-if value="{{ isPanosuEkran.telBosVar }}" hint-placeholder-val="{{ false }}"><div style="padding:28px 8px;text-align:center;font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.telBos }}</div></sc-if>
 </div>
 <sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><div style="padding:0 12px 10px"><button onClick="{{ isPanosuEkran.muhtarDefteri }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:46px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 13.5px/44px var(--font-body);text-align:center">Muhtar defteri</button></div></sc-if>
@@ -9488,11 +9518,12 @@ Sipariş listesi
 </sc-if>
 <sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border-radius:10px;border:1px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Merkez denetimi</span>
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ faultForm.onay.baslik }}</span>
 <span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.onay.not }}</span>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
-<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">Onayla ve kapat</button>
-<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Sahaya iade et</button>
+<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">{{ faultForm.onay.tamEtiket }}</button>
+<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iadeEtiket }}</button>
+<sc-if value="{{ faultForm.onay.iade2Var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ faultForm.onay.iade2 }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iade2Etiket }}</button></sc-if>
 </div>
 </div>
 </sc-if>
@@ -10390,10 +10421,10 @@ const YETKINLIK_ESLEME = [
   [/pompa|kolon|kaçak|çatlak|debi|vana|kapak/i, 'Mekanik']
 ];
 const ROLE_ORDER = [
-  ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'Arıza, iş emri ve malzeme alım isteklerinin son onayı; hurda ve ambar düzeltmesi, katalog, rapor, silme; kullanıcı yönetimi hariç'],
+  ['yonetici', 'Yönetici', 'Sistem sahibi: kullanıcı, rol ve ayar yönetimi; rapor, silme ve son onay. Günlük iş açma/atama yapmaz (gerekirse kendine vekâlet verir)'],
+  ['mudur', 'Müdür', 'Son onay: arıza, iş emri ve malzeme isteklerini onaylar ya da iade eder; hurda/ambar düzeltmesi, katalog, rapor, silme'],
   ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler, rapor alır; arıza, iş emri ve stok işleri yoktur — gerekirse Ayarlar › Yetkiler’den verilir'],
-  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir, malzeme alım isteği açar; kendi açtığı işi onaylayamaz'],
+  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, malzeme isteği açar, ambardan ekibe verir; sahadan gelen işe ön onay verir ya da sahaya iade eder'],
   ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi tamamlayıp onaya gönderir, kullanılan malzemeyi düşer'],
   ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
 ];
@@ -10407,18 +10438,20 @@ const PERMS = [
   ['arizaAc', 'Arıza kaydı açma', ALL_ROLES],
   ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'operator', 'sef', 'personel']],
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
-  ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
-  ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
-  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir; açan ve atayan kişi onaylayamaz)', ['yonetici', 'mudur']],
+  // İş açan/atayan ≠ ön onaylayan ≠ son onaylayan (görevler ayrılığı): yönetici ve müdür bu işleri açmaz, onaylar
+  ['assign', 'Ekip atama ve iş emri açma', ['operator']],
+  ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['operator']],
+  ['onOnay', 'Ön onay: sahadan gelen işi inceleyip müdür onayına gönderme ya da sahaya iade etme', ['operator']],
+  ['close', 'Son onay: arıza ve iş emrini kapatma, iptal, yeniden açma; müdür onayındaki işi iade etme', ['yonetici', 'mudur']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
-  // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
-  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],
-  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'operator']],
+  // Stok / ambar
+  ['stokGiris', 'Stok: ambara mal alımı girme', ['operator']],
+  ['stokZimmet', 'Stok: müdürün onayladığı isteğe göre ekibe malzeme verme, zimmet iadesi alma', ['operator']],
   ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'operator', 'sef', 'personel']],
   ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
   ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur']],
-  ['stokSiparis', 'Stok: malzeme alım isteği açma (sipariş listesi)', ['yonetici', 'mudur', 'operator']],
-  ['stokSiparisOnay', 'Stok: malzeme alım isteğini onaylama', ['yonetici', 'mudur']],
+  ['stokSiparis', 'Stok: malzeme isteği açma (alım ve ekibe çıkış)', ['operator']],
+  ['stokSiparisOnay', 'Stok: malzeme isteğini (alım ve ekibe çıkış) onaylama', ['yonetici', 'mudur']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];
@@ -10618,14 +10651,14 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-187';
+const SURUM = '2026.10.10-188';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
 const VKEY = 'ks-envanter-koy-konum';
 const STATUS_LABEL = {
   acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada', bilgi: 'Bilgi bekliyor',
-  bekleme: 'Beklemede', yonlendirildi: 'Yönlendirildi', kontrol: 'Kontrolde',
+  bekleme: 'Beklemede', yonlendirildi: 'Yönlendirildi', kontrol: 'Ön onay bekliyor', mudur_onayi: 'Müdür onayında',
   yeniden: 'Yeniden açıldı', cozuldu: 'Çözüldü', iptal: 'İptal'
 };
 // Kapanmış sayılan durumlar — açık iş sayımları ve süre hesabı bunları atlar
@@ -11792,7 +11825,7 @@ class Component extends DCLogic {
   }
   siparisEkle(ad) {
     const liste = this.state.siparis || [];
-    const var_ = liste.find(x => x.malzeme === ad);
+    const var_ = liste.find(x => x.malzeme === ad && x.tur !== 'zimmet');
     if (var_) return this.siparisYaz(liste.filter(x => x.id !== var_.id), ad + ' sipariş listesinden çıkarıldı.');
     const k = this.katalogBul(ad);
     // Malzeme alım isteğini operatör açar, müdür onaylar; onay yetkisi olan açarsa kendiliğinden onaylı olur
@@ -11802,7 +11835,7 @@ class Component extends DCLogic {
       id: 's' + Date.now() + Math.random().toString(36).slice(2, 5), malzeme: ad,
       adet: this.siparisOneri(ad), birim: k ? k.birim : 'adet',
       ekleyen: ben, damga: this.damga(),
-      durum: onayli ? 'onayli' : 'istek', ...(onayli ? { onaylayan: ben, onayDamga: this.damga() } : {})
+      tur: 'alim', durum: onayli ? 'onayli' : 'istek', ...(onayli ? { onaylayan: ben, onayDamga: this.damga() } : {})
     }], onayli ? ad + ' sipariş listesine eklendi (onaylı).' : ad + ' için alım isteği açıldı — müdür onayı bekliyor.');
   }
   // Miktar kutusu her tuşta sunucuya yazmasın: ekran hemen güncellenir,
@@ -11822,17 +11855,31 @@ class Component extends DCLogic {
       this.siparisYaz(temiz);
     }, 900);
   }
+  // Ekibe malzeme verme isteği: operatör açar, müdür onaylar, onaylanınca operatör teslim eder
+  cikisIstegiAc(g) {
+    if (!this.yetkiVar(this.state.session, 'stokSiparis')) return this.duyur('Ekibe malzeme verme isteğini operatör açar.', 5000, 'kotu');
+    const ben = (this.state.session && this.state.session.name) || '';
+    const onayli = this.yetkiVar(this.state.session, 'stokSiparisOnay');
+    const liste = this.state.siparis || [];
+    this.siparisYaz([...liste, {
+      id: 's' + Date.now() + Math.random().toString(36).slice(2, 5), tur: 'zimmet', malzeme: g.malzeme,
+      adet: g.adet, birim: g.birim, ekip: g.ekip, ambar: g.ambar, not: (g.not || '').trim(),
+      ekleyen: ben, damga: this.damga(),
+      durum: onayli ? 'onayli' : 'istek', ...(onayli ? { onaylayan: ben, onayDamga: this.damga() } : {})
+    }], g.malzeme + ' × ' + g.adet + ' ' + g.birim + ' → ' + g.ekip + (onayli ? ' çıkış isteği açıldı (onaylı).' : ' için çıkış isteği açıldı — müdür onayı bekliyor.'));
+    this.setState({ ambarForm: null, siparisPanel: true });
+  }
   // Müdür (ya da onay yetkisi olan) alım isteğini onaylar
   siparisOnayla(id) {
     if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('Malzeme alım isteğini yalnızca müdür onaylar.', 5000, 'kotu');
     const ben = (this.state.session && this.state.session.name) || '';
     const x = (this.state.siparis || []).find(y => y.id === id);
     if (!x) return;
-    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'onayli', onaylayan: ben, onayDamga: this.damga() } : y), x.malzeme + ' alım isteği onaylandı.');
+    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'onayli', onaylayan: ben, onayDamga: this.damga() } : y), x.malzeme + (x.tur === 'zimmet' ? ' çıkış isteği onaylandı.' : ' alım isteği onaylandı.'));
   }
   siparisMetin() {
     // yalnız onaylı kalemler siparişe çıkar
-    const liste = (this.state.siparis || []).filter(x => x.durum === 'onayli');
+    const liste = (this.state.siparis || []).filter(x => x.durum === 'onayli' && x.tur !== 'zimmet');
     return 'Malzeme sipariş listesi — ' + this.damga() + '\n'
       + liste.map((x, i) => {
         const k = this.katalogBul(x.malzeme);
@@ -11840,7 +11887,7 @@ class Component extends DCLogic {
       }).join('\n');
   }
   siparisKopyala() {
-    if (!(this.state.siparis || []).some(x => x.durum === 'onayli')) return this.duyur('Onaylı kalem yok — önce müdürün alım isteklerini onaylaması gerekir.', 6000, 'kotu');
+    if (!(this.state.siparis || []).some(x => x.durum === 'onayli' && x.tur !== 'zimmet')) return this.duyur('Onaylı kalem yok — önce müdürün alım isteklerini onaylaması gerekir.', 6000, 'kotu');
     const t = this.siparisMetin();
     const bitti = () => this.duyur('Sipariş listesi panoya kopyalandı — e-posta ya da yazışmaya yapıştırabilirsiniz.', 5000, 'iyi');
     try {
@@ -11862,6 +11909,14 @@ class Component extends DCLogic {
     if (!this.stokIzin(g.tur, g.ekip)) return this.duyur('“' + (HAREKET_AD[g.tur] || g.tur) + '” işlemi için yetkiniz yok' + (g.tur === 'sarf' ? ' (saha personeli yalnız kendi ekibi için düşebilir)' : '') + '. Yetkiyi yöneticiniz Ayarlar › Yetkiler’den verebilir.', 7000, 'kotu');
     if (g.tur !== 'sarf' && g.tur !== 'hurda' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
     if (['zimmet', 'iade', 'sarf', 'hurda'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
+    // Ekibe verme müdür onayı ister: istek açılır; müdür onaylayınca “Ekibe teslim et” ile (istekId) verilir
+    if (g.tur === 'zimmet' && !g.istekId) {
+      if (n > this.ambarMevcut(g.malzeme, g.ambar)) return this.duyur(g.ambar + ' mevcudu ' + this.ambarMevcut(g.malzeme, g.ambar) + ' ' + birim + ' — bu kadar istenemez.', 6000, 'kotu');
+      return this.cikisIstegiAc({ ...g, adet: n, birim });
+    }
+    if (g.tur === 'zimmet' && !(this.state.siparis || []).some(x => x.id === g.istekId && x.tur === 'zimmet' && x.durum === 'onayli')) {
+      return this.duyur('Müdür onaylı çıkış isteği bulunamadı — önce isteği açıp müdürün onaylaması gerekir.', 6000, 'kotu');
+    }
     const a = this.state.ambar || {};
     const stok = JSON.parse(JSON.stringify(a.stok || {}));
     const zim = JSON.parse(JSON.stringify(a.zimmet || {}));
@@ -11898,7 +11953,7 @@ class Component extends DCLogic {
     // "Tesis belirtilmemiş" yerine gerçek köy · ilçesinde görünür (madde 18)
     const tesisVar = ['sarf', 'hurda'].includes(g.tur) && g.assetId;
     // mal alımı onaylı alım isteği olmadan girilirse hareket notuna işlenir (müdür incelemesinde görünür)
-    const siparissiz = g.tur === 'giris' && !(this.state.siparis || []).some(x => x.malzeme === g.malzeme && x.durum === 'onayli');
+    const siparissiz = g.tur === 'giris' && !(this.state.siparis || []).some(x => x.malzeme === g.malzeme && x.tur !== 'zimmet' && x.durum === 'onayli');
     const notum = [(g.not || '').trim(), siparissiz ? 'onaylı alım isteği yok' : ''].filter(Boolean).join(' · ');
     const kayit = {
       id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6), damga: this.damga(),
@@ -11928,9 +11983,11 @@ class Component extends DCLogic {
       + (g.ekip ? ' · ' + g.ekip : '') + (g.ambar ? ' · ' + g.ambar : ''),
       { stok, zimmet: zim, gun, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) });
     this.setState({ ambarForm: null });
+    // Teslim edilen çıkış isteği listeden düşer (sunucu da düşürür)
+    if (g.tur === 'zimmet' && g.istekId) this.setState(st => ({ siparis: (st.siparis || []).filter(x => x.id !== g.istekId) }));
     // Siparişteki kalem ambara girince listeden düşer
     if (g.tur === 'giris') {
-      const sp = (this.state.siparis || []).find(x => x.malzeme === g.malzeme);
+      const sp = (this.state.siparis || []).find(x => x.malzeme === g.malzeme && x.tur !== 'zimmet');
       if (sp) setTimeout(() => this.siparisYaz((this.state.siparis || []).filter(x => x.id !== sp.id),
         g.malzeme + ' ambara girdi, sipariş listesinden düşüldü.'), 1800);
     }
@@ -15357,20 +15414,39 @@ class Component extends DCLogic {
   yetkiVar(u, k) {
     if (!u) return false;
     const rolVar = (CAN[k] || []).includes(u.role);
-    if (ISTISNA_DISI.includes(k) || u.role === 'yonetici') return rolVar;
+    if (ISTISNA_DISI.includes(k)) return rolVar;
     const ist = (u.istisna || {})[k];
+    // Yönetici rolünün yetkisi kısıtlanamaz; günlük iş açma/atama rolünde yoktur, gerekirse kendine (ya da bir vekile) Yetkiler'den verilir
+    if (u.role === 'yonetici') return rolVar || ist === true;
     return ist === undefined || ist === null ? rolVar : !!ist;
   }
   istisnaYaz(uid, k, deger) {
     if (ISTISNA_DISI.includes(k)) return;
     const hedef = this.state.users.find(x => x.id === uid);
     if (!hedef) return;
-    if (hedef.role === 'yonetici') {
-      return this.duyur('Yönetici rolünün yetkileri kısıtlanamaz — sistem yönetimsiz kalmasın diye bu rol istisna kabul etmiyor.', 6000, 'kotu');
-    }
     const rolVar = (CAN[k] || []).includes(hedef.role);
+    if (hedef.role === 'yonetici' && rolVar && !deger) {
+      return this.duyur('Yönetici rolünün bu yetkisi kısıtlanamaz — sistem yönetimsiz kalmasın diye. Rolünde olmayan yetkiyi ise verebilirsiniz.', 6000, 'kotu');
+    }
     const ist = { ...(hedef.istisna || {}) };
     if (deger === rolVar) delete ist[k]; else ist[k] = deger;
+    const ad = (PERMS.find(p => p[0] === k) || [, k])[1];
+    this.istisnaUygula(hedef, ist, hedef.name + ' · ' + ad + ' → ' + (deger ? 'verildi' : 'kaldırıldı')
+      + (deger === rolVar ? ' (rol paketiyle aynı, istisna silindi)' : ' (rolden farklı, istisna olarak işlendi)'));
+  }
+  // Müdür vekâleti: müdür izindeyken onay yetkileri (son onay + malzeme isteği onayı) tek hamlede başka kişiye verilir / geri alınır
+  vekaletYaz(uid, ver) {
+    const hedef = this.state.users.find(x => x.id === uid);
+    if (!hedef) return;
+    const ist = { ...(hedef.istisna || {}) };
+    for (const k of ['close', 'stokSiparisOnay']) {
+      const rolVar = (CAN[k] || []).includes(hedef.role);
+      if (ver === rolVar) delete ist[k]; else ist[k] = ver;
+    }
+    this.istisnaUygula(hedef, ist, hedef.name + (ver ? ' · müdür vekâleti verildi: arıza/iş emri son onayı ve malzeme isteği onayı. İş dönünce Yetkiler’den geri alın.' : ' · müdür vekâleti kaldırıldı.'));
+  }
+  istisnaUygula(hedef, ist, mesaj) {
+    const uid = hedef.id;
     const tablo = { ...this.istisnaTablo() };
     tablo[hedef.user] = ist;
     this._istisna = tablo;
@@ -15379,10 +15455,9 @@ class Component extends DCLogic {
     this.usersKaydet(list);
     const me = this.state.session;
     if (me && me.id === uid) this.setState({ session: { ...me, istisna: ist } });
-    const ad = (PERMS.find(p => p[0] === k) || [, k])[1];
     this.yetkiGonder(hedef, hedef.sayfalar || {}, ist);
-    this.duyur(hedef.name + ' · ' + ad + ' → ' + (deger ? 'verildi' : 'kaldırıldı')
-      + (deger === rolVar ? ' (rol paketiyle aynı, istisna silindi)' : ' (rolden farklı, istisna olarak işlendi)'), 6000, 'iyi');
+    this.denetimYaz('yetki', 'Yetki istisnası', mesaj, hedef.user || '');
+    this.duyur(mesaj, 7000, 'iyi');
   }
   istisnaTablo() {
     if (this._istisna) return this._istisna;
@@ -16933,7 +17008,7 @@ class Component extends DCLogic {
     const sureOn = arizaOn && s.modul.sure === true;
     // Kanıt ve merkez onayı da arıza modülünün içinde yaşar
     const kanitOn = arizaOn && s.modul.kanit !== false;
-    const onayOn = arizaOn && s.modul.onay === true;
+    const onayOn = arizaOn;   // onay zinciri (ön onay → son onay) her zaman açık: ayarlardan kapatılamaz
     const ambarOn = s.modul.ambar !== false;
     const aracOn = s.modul.arac !== false;
     const talepOn = s.modul.talep !== false;
@@ -16986,7 +17061,8 @@ class Component extends DCLogic {
     const sayfaTam = (aktif ? suzgecYetki(aktif.sayfa, aktif.suzgec) : yetki(tabId)) === 'tam';
     const canWrite = can('write') && sayfaTam;
     const canAssign = can('assign');
-    const canClose = can('close');   // son onay ve kapatma (Mühendis, Müdür, Yönetici); atayan (operatör) ve yapan (saha şefi) kapatamaz
+    const canClose = can('close');   // son onay ve kapatma (Müdür); açan/atayan operatör kendi işini onaylayamaz
+    const canOnOnay = can('onOnay'); // ön onay (Operatör): sahadan gelen işi müdür onayına gönderir ya da sahaya iade eder
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';
@@ -17368,7 +17444,7 @@ class Component extends DCLogic {
     // açıkken kapanış Kontrolde adımından geçer.
     const wfSteps = [['acik', 'Açık'], ['atandi', 'Atandı'], ['sahada', 'Sahada'],
       ['bilgi', 'Bilgi bekliyor'], ['bekleme', 'Beklemede'], ['yonlendirildi', 'Başka birime'],
-      ...(onayOn ? [['kontrol', 'Kontrolde']] : []),
+      ['kontrol', 'Ön onay bekliyor'], ['mudur_onayi', 'Müdür onayında'],
       ['cozuldu', 'Çözüldü'], ['iptal', 'İptal']];
 
     // İşler: talep, arıza, bugün ve bakım tek sayfada dört süzgeç. Program
@@ -18158,8 +18234,9 @@ class Component extends DCLogic {
         const katalog = this.katalog();
         const stokta = katalog.filter(k => !k.pasif && stoktaMi(k));
         const sip = s.siparis || [];
-        const sipSet = new Set(sip.map(x => x.malzeme));
-        const sipMap = new Map(sip.map(x => [x.malzeme, x]));
+        const sipAlim = sip.filter(x => x.tur !== 'zimmet');   // alım istekleri (ekibe çıkış istekleri ayrı gösterilir)
+        const sipSet = new Set(sipAlim.map(x => x.malzeme));
+        const sipMap = new Map(sipAlim.map(x => [x.malzeme, x]));
         // alım isteği durumu: onay bekliyor / onaylı
         const sipDurum = ad => { const x = sipMap.get(ad); return !x ? '' : (x.durum === 'onayli' ? '✓ Onaylı' : '⏳ Onay bekliyor'); };
         const tum = stokta.map(k => ({ k, d: this.ambarDurum(k.ad), dag: AMBARLAR.map(A => this.ambarMevcut(k.ad, A)) }));
@@ -18404,9 +18481,12 @@ class Component extends DCLogic {
             const k = this.katalogBul(x.malzeme) || {};
             const d = this.ambarDurum(x.malzeme);
             return {
-              ad: x.malzeme, kod: k.kod || '—', birim: x.birim,
+              ad: x.malzeme, kod: k.kod || '—', birim: x.birim, turEtiket: x.tur === 'zimmet' ? 'Ekibe çıkış → ' + (x.ekip || '') : 'Alım',
+              teslimVar: x.tur === 'zimmet' && x.durum === 'onayli' && izin.zimmet,
+              teslim: () => this.ambarHareket({ tur: 'zimmet', malzeme: x.malzeme, ambar: x.ambar, ekip: x.ekip, adet: String(x.adet), not: x.not || '', istekId: x.id }),
               adet: String(x.adet), onAdet: e => this.siparisAdet(x.id, e.target.value),
-              durum: d.toplam <= 0 ? 'ambarda kalmadı'
+              durum: x.tur === 'zimmet' ? (x.ambar || '') + ' ambarından · ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim)
+                : d.toplam <= 0 ? 'ambarda kalmadı'
                 : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
               tutar: izin.fiyat ? this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)) : '',
               ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
@@ -18426,7 +18506,7 @@ class Component extends DCLogic {
             const yeni = kritikler.filter(x => !sipSet.has(x.k.ad));
             if (!yeni.length) return this.duyur('Kritik kalemlerin hepsi zaten listede.', 4000);
             this.siparisYaz([...sip, ...yeni.map((x, i) => ({
-              id: 's' + Date.now() + i, malzeme: x.k.ad, adet: this.siparisOneri(x.k.ad), birim: x.k.birim,
+              id: 's' + Date.now() + i, tur: 'alim', malzeme: x.k.ad, adet: this.siparisOneri(x.k.ad), birim: x.k.birim,
               ekleyen: (me || {}).name || '', damga: this.damga(),
               durum: izin.siparisOnay ? 'onayli' : 'istek', ...(izin.siparisOnay ? { onaylayan: (me || {}).name || '', onayDamga: this.damga() } : {})
             }))], yeni.length + (izin.siparisOnay ? ' kritik kalem listeye eklendi (onaylı).' : ' kritik kalem için alım isteği açıldı — müdür onayı bekliyor.'));
@@ -18477,6 +18557,7 @@ class Component extends DCLogic {
           hareketBos: 'Henüz hareket yok. İlk adım: kullandığınız malzemelerin ambar mevcudunu “Giriş” ile girin.',
           form: {
             on: !!af,
+            istekModu: !!af && af.tur === 'zimmet', kaydetEtiket: af && af.tur === 'zimmet' ? 'İstek aç — müdür onayı' : 'Hareketi işle',
             baslik: af ? HAREKET_AD[af.tur] : '',
             // İki düğme (Giriş / Çıkış) + “neden/nereden”: seçilen neden altı kayıt türünden birine karşılık gelir (veri değişmez)
             yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].filter(([y]) => NEDEN[y].some(n => izinTur[n.tur])).map(([y, l]) => ({
@@ -18745,10 +18826,10 @@ class Component extends DCLogic {
           const kapali = KAPALI_DURUM.includes(ff.status);
           const yaz = y => this.setState({ faultForm: { ...this.state.faultForm, ...y } });
           const ADIM = [['acik', 'Açık'], ['atandi', 'Atandı'], ['sahada', 'Sahada'], ['cozuldu', 'Kapandı']];
-          const sira = { acik: 0, yeniden: 0, bilgi: 0, yonlendirildi: 0, atandi: 1, bekleme: 1, sahada: 2, kontrol: 2, cozuldu: 3, iptal: 3 };
+          const sira = { acik: 0, yeniden: 0, bilgi: 0, yonlendirildi: 0, atandi: 1, bekleme: 1, sahada: 2, kontrol: 2, mudur_onayi: 2, cozuldu: 3, iptal: 3 };
           const n = sira[ff.status] ?? 0;
           const PRC = { 'Acil': 'var(--color-uyari)', 'Yüksek': '#ff9f0a', 'Normal': 'var(--color-accent)', 'Düşük': '#8e8e93' };
-          const kayitAsama = ff.status === 'sahada' || ff.status === 'kontrol' ? 'sonra' : 'once';
+          const kayitAsama = ['sahada', 'kontrol', 'mudur_onayi'].includes(ff.status) ? 'sonra' : 'once';
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
           return {
             yeni, mevcut: !yeni, formGoster: !(yeni && ff.tesisSec),
@@ -18910,7 +18991,7 @@ class Component extends DCLogic {
               cizgi: i < 3, cizgiW: n > i ? '100%' : '0%', esnek: i < 3 ? '1 1 0' : '0 0 auto'
             })),
             // Var olan işte durumuna göre tek ana düğme
-            vardimVar: !yeni && !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi,
+            vardimVar: !yeni && !kapali && !['sahada', 'kontrol', 'mudur_onayi'].includes(ff.status) && kendiIsi,
             vardim: () => {
               const f0 = (this.state.faults || []).find(x => x.id === ff.id) || ff;
               this.sahaDurum({ ...f0, note: this.state.faultForm.note ?? f0.note }, 'sahada');
@@ -18920,7 +19001,7 @@ class Component extends DCLogic {
             tamamlaVar: !yeni && (ff.status === 'sahada') && kendiIsi,
             // Kapanış adımı saha akışında: sonrası fotoğrafı + zimmetten malzeme
             tamamla: () => this.setState({ panel: 'yok', faultForm: null, tab: 'gunluk', sahaAktifId: ff.id, sahaKapanis: { id: ff.id, mz: {}, not: '' } }),
-            onayda: !yeni && ff.status === 'kontrol',
+            onayda: !yeni && (ff.status === 'kontrol' || ff.status === 'mudur_onayi'),
             kapali: !yeni && kapali,
             yolTarifi: () => { if (ffAsset && this.yolTarifiVer(ffAsset)) this.say(`${ffAsset.code} için güzergâh hesaplanıyor…`); },
             fotoCek: () => this.setState({ faultForm: { ...this.state.faultForm, fotoAsama: kayitAsama } }, () => this.arizaFotoSec(true)),
@@ -19053,13 +19134,13 @@ class Component extends DCLogic {
           if (!ff || !ff.id) return { var: false };
           const kapali = KAPALI_DURUM.includes(ff.status);
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
-          const vardimVar = !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi;
+          const vardimVar = !kapali && !['sahada', 'kontrol', 'mudur_onayi'].includes(ff.status) && kendiIsi;
           const tamamlaVar = !kapali && ff.status === 'sahada' && kendiIsi;
-          const hedef = onayOn && !canClose ? 'kontrol' : 'cozuldu';
+          const hedef = canClose ? 'cozuldu' : 'kontrol';   // saha ve operatör işi ön onaya bırakır; yalnız son onay yetkilisi kapatır
           return {
             var: vardimVar || tamamlaVar, vardimVar, tamamlaVar,
             not: vardimVar ? 'Sahadayım: ekip yerine vardı, iş “Sahada” olur ve başlama zamanı kaydolur.'
-              : 'İşi tamamla: aşağıdaki fotoğraf, malzeme ve süre ile ' + (hedef === 'kontrol' ? 'işi merkez onayına gönderir.' : 'kaydı kapatır; kanıt fotoğrafı zorunluysa eksikse uyarır.'),
+              : 'İşi tamamla: aşağıdaki fotoğraf, malzeme ve süre ile ' + (hedef === 'kontrol' ? 'işi operatörün ön onayına gönderir.' : 'kaydı kapatır; kanıt fotoğrafı zorunluysa eksikse uyarır.'),
             vardim: () => {
               const f0 = (this.state.faults || []).find(x => x.id === ff.id) || ff;
               this.sahaDurum({ ...f0, note: this.state.faultForm.note ?? f0.note }, 'sahada');
@@ -19072,41 +19153,50 @@ class Component extends DCLogic {
         // Durum seçici sade: “Bilgi bekliyor” ve “Başka birime” artık “Beklemede” + neden olarak girilir;
         // eski kayıt bu iki durumdaysa kendi adımı görünmeye devam eder (veri değişmez)
         workflow: wfSteps.filter(([id]) => !['bilgi', 'yonlendirildi'].includes(id) || (ff && ff.status === id)).map(([id, label]) => {
-          // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
-          // saha ekibi işi Kontrolde durumuna bırakır.
-          const kilit = onayOn && (id === 'cozuldu' || id === 'iptal') && !canClose;
+          // Onay zinciri: saha → Kontrol (operatör ön onayı) → Müdür onayı → Çözüldü. Kapatma/iptal yalnız son onay yetkisinde;
+          // müdür onayına yalnız ön onay yetkisi gönderir; incelemedeki işi yalnız ilgili onaycı değiştirir.
+          const incelemeKilit = !!ff && ((ff.status === 'kontrol' && !(canOnOnay || canClose)) || (ff.status === 'mudur_onayi' && !canClose));
+          const kilit = (id === 'cozuldu' || id === 'iptal') ? !canClose : id === 'mudur_onayi' ? !(canOnOnay || canClose) : (incelemeKilit && !(ff && ff.status === id));
           return {
             label, border: ff && ff.status === id ? 'var(--color-accent)' : ui.rule,
             bg: ff && ff.status === id ? ui.pend : 'transparent',
             fg: kilit ? ui.mut : (ff && ff.status === id ? ui.acc : ui.mut),
             op: kilit ? '.45' : '1',
             go: () => {
-              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın (iptal gerekçesini nota yazın); kapatmayı ve iptali müdür onaylar.');
+              if (kilit) return this.say(id === 'mudur_onayi' ? 'Müdür onayına yalnızca operatör (ön onay yetkisi) gönderir.' : (id === 'cozuldu' || id === 'iptal') ? 'İşi bitirmeyi ve iptali yalnızca müdür onaylar: işi “Kontrol” adımında bırakın (iptal gerekçesini nota yazın).' : 'Bu iş inceleme aşamasında; yalnız ilgili onaycı durumunu değiştirir.');
               this.setState({ faultForm: { ...this.state.faultForm, status: id } });
             }
           };
         }),
         // Merkez denetimi: kanıtı görüp onaylar ya da nedenini yazıp iade eder
-        onay: {
-          on: !!(onayOn && ff && ff.id && ff.status === 'kontrol' && canClose),
-          not: 'Saha işi bitirdi. Fotoğrafları ve notu inceleyin: yeterliyse kapatın, eksikse nedenini yazıp sahaya iade edin.',
-          kapat: () => {
-            this.setState({ faultForm: { ...this.state.faultForm, status: 'cozuldu' } });
-            this.say('Kayıt kapanışa alındı — kaydetmeyi tamamlayın.');
-          },
-          iade: () => {
-            const neden = (window.prompt('İade nedeni — sahada ne eksik kaldı?') || '').trim();
+        onay: (() => {
+          const kontrol = !!ff && ff.status === 'kontrol', mudurOnayinda = !!ff && ff.status === 'mudur_onayi';
+          // son onay yetkilisi (müdür) kontrol aşamasındaki işi de ön onay beklemeden onaylayıp kapatabilir; aynı kişi iki kez onaylamaz
+          const muduronay = mudurOnayinda || (kontrol && canClose);
+          const iadeEt = (hedefDurum, etiket, soru) => () => {
+            const neden = (window.prompt(soru) || '').trim();
             if (!neden) return;
             const f = this.state.faultForm;
-            this.setState({
-              faultForm: {
-                ...f, status: 'sahada',
-                note: ((f.note || '') + (f.note ? '\n' : '') + 'MERKEZ İADESİ · ' + this.damga() + ' · ' + neden)
-              }
-            });
-            this.say('Sahaya iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
-          }
-        },
+            this.setState({ faultForm: { ...f, status: hedefDurum, note: ((f.note || '') + (f.note ? '\n' : '') + etiket + ' · ' + this.damga() + ' · ' + (s.session ? s.session.name + ' · ' : '') + neden) } });
+            this.say((hedefDurum === 'sahada' ? 'Sahaya' : 'Operatöre') + ' iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
+          };
+          return {
+            on: !!(ff && ff.id && ((kontrol && (canOnOnay || canClose)) || (mudurOnayinda && canClose))),
+            baslik: muduronay ? 'Son onay (müdür)' : 'Ön onay (operatör)',
+            not: muduronay
+              ? 'Operatör ön onay verdi. Fotoğraf, malzeme ve notu inceleyin: uygunsa onaylayıp kapatın; eksikse nedenini yazıp operatöre ya da doğrudan sahaya iade edin.'
+              : 'Saha işi bitirdi. Fotoğraf, malzeme ve notu inceleyin: uygunsa müdür onayına gönderin; eksikse nedenini yazıp sahaya iade edin.',
+            tamEtiket: muduronay ? 'Onayla ve kapat' : 'Ön onay ver — müdür onayına gönder',
+            kapat: () => {
+              this.setState({ faultForm: { ...this.state.faultForm, status: muduronay ? 'cozuldu' : 'mudur_onayi' } });
+              this.say(muduronay ? 'Kayıt kapanışa alındı — kaydetmeyi tamamlayın.' : 'Müdür onayına gönderildi — kaydetmeyi tamamlayın.');
+            },
+            iadeEtiket: mudurOnayinda ? 'Operatöre iade et' : 'Sahaya iade et',
+            iade: mudurOnayinda ? iadeEt('kontrol', 'MÜDÜR İADESİ (OPERATÖRE)', 'İade nedeni — operatör neyi yeniden incelemeli?') : iadeEt('sahada', muduronay ? 'MÜDÜR İADESİ (SAHAYA)' : 'ÖN ONAY İADESİ (SAHAYA)', 'İade nedeni — sahada ne eksik kaldı?'),
+            iade2Var: mudurOnayinda, iade2Etiket: 'Sahaya iade et',
+            iade2: iadeEt('sahada', 'MÜDÜR İADESİ (SAHAYA)', 'İade nedeni — sahada ne eksik kaldı?')
+          };
+        })(),
         // Ekip önerisi: tesisin ilçesine bakan ekipler + bugünün nöbetçisi
         ekipOneri: (() => {
           if (!ffAsset) return [];
@@ -19196,7 +19286,7 @@ class Component extends DCLogic {
         })(),
         // Kapanmış kayıt yeniden açılır: geçmiş, fotoğraf ve maliyet korunur
         yenidenAc: {
-          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && (canAssign || canClose)),
+          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canClose),   // onaylanmış işi yalnız onaylayan (müdür) yeniden açar; operatör bozamaz
           not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
           go: () => {
             const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();
@@ -19470,12 +19560,12 @@ class Component extends DCLogic {
         // Arıza noktası varsa mesafe ona, yoksa tesise
         const yerOf = f => f.nokta || assetOf(f);
         // Sıra: sahada olan önce, sonra öncelik, sonra (konum varsa) yakınlık, sonra açılış
-        const sirali = acik.filter(f => f.status !== 'kontrol').map(f => ({ f, a: assetOf(f) }))
+        const sirali = acik.filter(f => f.status !== 'kontrol' && f.status !== 'mudur_onayi').map(f => ({ f, a: assetOf(f) }))
           .sort((x, y) => (y.f.status === 'sahada') - (x.f.status === 'sahada')
             || (PR[x.f.priority] ?? 9) - (PR[y.f.priority] ?? 9)
             || ((km(yerOf(x.f)) ?? 1e9) - (km(yerOf(y.f)) ?? 1e9))
             || this.damgaMs(x.f.opened) - this.damgaMs(y.f.opened));
-        const onayBekleyen = acik.filter(f => f.status === 'kontrol').length;
+        const onayBekleyen = acik.filter(f => f.status === 'kontrol' || f.status === 'mudur_onayi').length;
         const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
         const bitti = tum.filter(f => ekibin(f) && KAPALI_DURUM.includes(f.status) && this.damgaMs(f.closed) >= bugun.getTime()).length
           + onayBekleyen;
@@ -19523,7 +19613,7 @@ class Component extends DCLogic {
               const k = this.katalogBul(ad) || {};
               return { ad, adet: secim[ad], birim: k.birim || 'adet', tutar: Number(k.fiyat) || 0 };
             });
-            this.sahaDurum(f, onayOn ? 'kontrol' : 'cozuldu', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
+            this.sahaDurum(f, canClose ? 'cozuldu' : 'kontrol', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
             this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + ' zimmetten düşüldü. ' : '')
               + (onayOn ? 'Kayıt merkez onayına gönderildi.' : 'Öncesi/sonrası kanıt tesisin arıza geçmişine yazıldı.') } });
             clearTimeout(this._sahaZ);
@@ -19763,14 +19853,8 @@ class Component extends DCLogic {
             kapa: seg(!modAyar('kanit'), () => { if (modAyar('kanit')) this.modulAnahtar('kanit', false); }),
             sayi: arizaOn ? 'en az bir fotoğraf' : 'arıza modülü kapalı — açarsanız arıza da açılır',
             aciklama: 'Bir arıza “Çözüldü” işaretlenirken kayıtta fotoğraf yoksa kapanış kabul edilmez. Yapılan işin kanıtı kalır, sonradan “yapıldı mı” tartışması olmaz. Kapalıyken fotoğraf yine eklenebilir, ama kapanış şartı değildir.'
-          },
-          {
-            ad: 'Merkez onayı',
-            ac: seg(modAyar('onay'), () => { if (!modAyar('onay') || !arizaOn) this.modulAnahtar('onay', true); }),
-            kapa: seg(!modAyar('onay'), () => { if (modAyar('onay')) this.modulAnahtar('onay', false); }),
-            sayi: arizaOn ? 'Kontrolde adımı eklenir' : 'arıza modülü kapalı — açarsanız arıza da açılır',
-            aciklama: 'Açıkken saha kaydı doğrudan kapatamaz: işi “Kontrolde” bırakır, merkez fotoğrafı görüp onaylar ya da nedenini yazıp sahaya iade eder. İade nedeni kaydın notuna işlenir. Merkezde denetimi yapacak personel yoksa kapalı tutun — akış bugünkü gibi kalır.'
           }
+
         ]
         };
       })(),
@@ -21865,10 +21949,15 @@ class Component extends DCLogic {
               && !(u.role === 'yonetici' && list.filter(x => x.role === 'yonetici' && x.aktif !== false).length <= 1),
             kapatLabel: u.aktif === false ? 'Aktif et' : 'Dondur',
             yetkiAcik: s.yetkiForm === u.id,
+            // Müdür vekâleti: rolünde son onay yetkisi olmayan kişiye tek düğmeyle verilir / geri alınır
+            vekaletVar: !((CAN.close || []).includes(u.role) && (CAN.stokSiparisOnay || []).includes(u.role)),
+            vekaletAcik: this.yetkiVar(u, 'close') && this.yetkiVar(u, 'stokSiparisOnay'),
+            vekaletEtiket: (this.yetkiVar(u, 'close') && this.yetkiVar(u, 'stokSiparisOnay')) ? 'Müdür vekâletini kaldır' : 'Müdür vekâleti ver',
+            vekalet: () => this.vekaletYaz(u.id, !(this.yetkiVar(u, 'close') && this.yetkiVar(u, 'stokSiparisOnay'))),
             istisnalar: PERMS.map(([k, ad]) => {
               const rolVar = (CAN[k] || []).includes(u.role);
               const acik = this.yetkiVar(u, k);
-              const kilitli = ISTISNA_DISI.includes(k) || u.role === 'yonetici';
+              const kilitli = ISTISNA_DISI.includes(k) || (u.role === 'yonetici' && rolVar);
               return {
                 ad, acik, kilitli,
                 durum: kilitli ? (rolVar ? 'Rolden geliyor' : 'Rolde yok')
@@ -21881,12 +21970,12 @@ class Component extends DCLogic {
                 tik: () => kilitli
                   ? this.duyur(ISTISNA_DISI.includes(k)
                     ? ad + ' role bağlı kalır — kişiye özel istisna verilmez. Rolü değiştirerek yönetin.'
-                    : 'Yönetici rolünün yetkileri kısıtlanamaz.', 6000, 'kotu')
+                    : 'Yönetici rolünün bu yetkisi kısıtlanamaz.', 6000, 'kotu')
                   : this.istisnaYaz(u.id, k, !acik)
               };
             }),
             istisnaSayi: (() => {
-              const n = PERMS.filter(([k]) => !ISTISNA_DISI.includes(k) && u.role !== 'yonetici'
+              const n = PERMS.filter(([k]) => !ISTISNA_DISI.includes(k)
                 && this.yetkiVar(u, k) !== (CAN[k] || []).includes(u.role)).length;
               return n ? n + ' istisna' : 'rol paketi aynen';
             })(),
@@ -22039,7 +22128,7 @@ class Component extends DCLogic {
           ['acik', 'Açık arıza', '#5e5ce6', durumSay(['acik', 'yeniden']), () => this.panoGit({ durum: 'yeni' }), arizaOn],
           ['atandi', 'Atandı', '#0071e3', durumSay(['atandi']), () => this.panoGit({ durum: 'atandi' }), arizaOn],
           ['sahada', 'Sahada', '#ff9f0a', durumSay(['sahada']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
-          ['bekle', 'Beklemede', '#af52de', durumSay(['bilgi', 'bekleme', 'yonlendirildi', 'kontrol']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
+          ['bekle', 'Beklemede', '#af52de', durumSay(['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
           ['kapanis', 'Bugün kapandı', '#34c759', kapanan, () => this.panoGit({ durum: 'bitti' }), arizaOn]
         ].filter(r => r[5]);
         const hedef = Math.max(gelenF.length, 1);
@@ -23026,7 +23115,7 @@ class Component extends DCLogic {
           ['bitti', 'Bitti', '#30d158', 'Son 7 günde kapanan yok']
         ];
         const KOLON_AD = Object.fromEntries(KOLON.map(k => [k[0], k[1]]));
-        const SAHA_DURUMLARI = ['sahada', 'bilgi', 'bekleme', 'yonlendirildi', 'kontrol'];
+        const SAHA_DURUMLARI = ['sahada', 'bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi'];
         const yeniKolonu = st => st === 'acik' || st === 'yeniden';
         const yazabilir = !!me && me.role !== 'izleyici';
         const talepGor = talepOn && yetki('talep') !== 'yok';
@@ -23082,8 +23171,8 @@ class Component extends DCLogic {
           let dugme = '', dugmeRenk = '', git = () => {};
           if (kolon === 'yeni') { dugme = can('assign') ? 'Ekip ata' : 'Aç'; dugmeRenk = '#5e5ce6'; git = can('assign') ? () => this.setState({ panoEkip: secilenEkip === f.id ? null : f.id }) : () => this.panoAc(f); }
           else if (kolon === 'atandi') { dugme = yazabilir ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazabilir ? () => this.panoSahada(f) : () => this.panoAc(f); }
-          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && can('assign') ? 'Onayla ve kapat' : (yazabilir ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
-          const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
+          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && (can('onOnay') || can('close')) ? 'Ön onay' : f.status === 'mudur_onayi' && can('close') ? 'Son onay' : (f.status === 'kontrol' || f.status === 'mudur_onayi') ? 'Aç' : (yazabilir ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
+          const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
           kartlar.push({
             anahtar: 'f' + f.id, kolon, tur: f.no, onc: f.priority || 'Normal', ms,
             baslik: f.type || 'Arıza', yer: (a ? a.code + ' · ' + this.yerGoster(a) : [f.koy, f.ilce || f.district].filter(Boolean).join(' · ')),
@@ -23172,6 +23261,13 @@ class Component extends DCLogic {
           temizleVar: !!(sz.q || sz.durum || sz.ekip), temizle: () => this.setState({ panoSuz: {} })
         };
         return {
+          // Müdür incelemesi: operatörün “karşılanamaz” (arıza değil) dediği talepler — tek başına kapatılan talep denetimsiz kalmasın
+          redVar: talepOn && can('close') && (s.talepler || []).some(x => x.durum === 'red'),
+          redBaslik: 'Reddedilen talepler · müdür incelemesi (' + (s.talepler || []).filter(x => x.durum === 'red').length + ')',
+          redListe: (s.talepler || []).filter(x => x.durum === 'red').slice(0, 15).map(x => ({
+            no: x.no, ne: [x.ad, x.konu, x.koy].filter(Boolean).join(' · '), neden: x.sonuc || 'neden yazılmamış', zaman: x.guncelleme || '',
+            ac: () => this.talepDurum(x.id, 'incelemede', 'Müdür yeniden açtı')
+          })),
           acik: true, kolonlar, tablo, panoGorunumu: gor === 'pano',
           gorunumSec: [['pano', 'Pano'], ['tablo', 'Tablo']].map(([k, ad]) => ({
             ad, ...seg(gor === k, () => { try { localStorage.setItem('ks-pano-gorunum', k); } catch (e) { /* depolama kapalı */ } this.setState({ panoGorunum: k }); })

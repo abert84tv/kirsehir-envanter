@@ -38,7 +38,7 @@
           ['acik', 'Açık arıza', '#5e5ce6', durumSay(['acik', 'yeniden']), () => this.panoGit({ durum: 'yeni' }), arizaOn],
           ['atandi', 'Atandı', '#0071e3', durumSay(['atandi']), () => this.panoGit({ durum: 'atandi' }), arizaOn],
           ['sahada', 'Sahada', '#ff9f0a', durumSay(['sahada']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
-          ['bekle', 'Beklemede', '#af52de', durumSay(['bilgi', 'bekleme', 'yonlendirildi', 'kontrol']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
+          ['bekle', 'Beklemede', '#af52de', durumSay(['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi']), () => this.panoGit({ durum: 'sahada' }), arizaOn],
           ['kapanis', 'Bugün kapandı', '#34c759', kapanan, () => this.panoGit({ durum: 'bitti' }), arizaOn]
         ].filter(r => r[5]);
         const hedef = Math.max(gelenF.length, 1);

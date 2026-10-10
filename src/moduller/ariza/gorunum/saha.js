@@ -18,12 +18,12 @@
         // Arıza noktası varsa mesafe ona, yoksa tesise
         const yerOf = f => f.nokta || assetOf(f);
         // Sıra: sahada olan önce, sonra öncelik, sonra (konum varsa) yakınlık, sonra açılış
-        const sirali = acik.filter(f => f.status !== 'kontrol').map(f => ({ f, a: assetOf(f) }))
+        const sirali = acik.filter(f => f.status !== 'kontrol' && f.status !== 'mudur_onayi').map(f => ({ f, a: assetOf(f) }))
           .sort((x, y) => (y.f.status === 'sahada') - (x.f.status === 'sahada')
             || (PR[x.f.priority] ?? 9) - (PR[y.f.priority] ?? 9)
             || ((km(yerOf(x.f)) ?? 1e9) - (km(yerOf(y.f)) ?? 1e9))
             || this.damgaMs(x.f.opened) - this.damgaMs(y.f.opened));
-        const onayBekleyen = acik.filter(f => f.status === 'kontrol').length;
+        const onayBekleyen = acik.filter(f => f.status === 'kontrol' || f.status === 'mudur_onayi').length;
         const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
         const bitti = tum.filter(f => ekibin(f) && KAPALI_DURUM.includes(f.status) && this.damgaMs(f.closed) >= bugun.getTime()).length
           + onayBekleyen;
@@ -71,7 +71,7 @@
               const k = this.katalogBul(ad) || {};
               return { ad, adet: secim[ad], birim: k.birim || 'adet', tutar: Number(k.fiyat) || 0 };
             });
-            this.sahaDurum(f, onayOn ? 'kontrol' : 'cozuldu', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
+            this.sahaDurum(f, canClose ? 'cozuldu' : 'kontrol', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
             this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + ' zimmetten düşüldü. ' : '')
               + (onayOn ? 'Kayıt merkez onayına gönderildi.' : 'Öncesi/sonrası kanıt tesisin arıza geçmişine yazıldı.') } });
             clearTimeout(this._sahaZ);

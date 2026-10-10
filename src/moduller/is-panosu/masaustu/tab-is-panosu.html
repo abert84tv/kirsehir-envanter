@@ -17,6 +17,17 @@
 <sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.muhtarDefteri }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};font:600 13px/42px var(--font-body)">Muhtar defteri</button></sc-if>
 <sc-if value="{{ isPanosuEkran.yeniTalepVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isPanosuEkran.yeniTalep }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 16px;border-radius:11px;background:var(--color-accent);color:#fff;font:700 13.5px/44px var(--font-body)">+ Yeni talep (telefon)</button></sc-if>
 </div>
+<sc-if value="{{ isPanosuEkran.redVar }}" hint-placeholder-val="{{ false }}">
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+<span style="font:700 13.5px/1.2 var(--font-heading)">{{ isPanosuEkran.redBaslik }}</span>
+<sc-for list="{{ isPanosuEkran.redListe }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid {{ ui.rule }}">
+<div style="flex:1;min-width:0"><div style="font:600 12.5px/1.3 var(--font-body)">{{ r.no }} · {{ r.ne }}</div><div style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">Neden: {{ r.neden }} · {{ r.zaman }}</div></div>
+<button onClick="{{ r.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/38px var(--font-body)">Yeniden aç</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
 <sc-if value="{{ isPanosuEkran.panoGorunumu }}" hint-placeholder-val="{{ true }}">
 <div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.yardim }}</div>
 <div style="flex:1;display:grid;grid-template-columns:repeat(4,minmax(200px,1fr));gap:12px;align-items:start;min-height:0">

@@ -6,5 +6,5 @@
     // açıkken kapanış Kontrolde adımından geçer.
     const wfSteps = [['acik', 'Açık'], ['atandi', 'Atandı'], ['sahada', 'Sahada'],
       ['bilgi', 'Bilgi bekliyor'], ['bekleme', 'Beklemede'], ['yonlendirildi', 'Başka birime'],
-      ...(onayOn ? [['kontrol', 'Kontrolde']] : []),
+      ['kontrol', 'Ön onay bekliyor'], ['mudur_onayi', 'Müdür onayında'],
       ['cozuldu', 'Çözüldü'], ['iptal', 'İptal']];

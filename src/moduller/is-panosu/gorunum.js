@@ -17,7 +17,7 @@
           ['bitti', 'Bitti', '#30d158', 'Son 7 günde kapanan yok']
         ];
         const KOLON_AD = Object.fromEntries(KOLON.map(k => [k[0], k[1]]));
-        const SAHA_DURUMLARI = ['sahada', 'bilgi', 'bekleme', 'yonlendirildi', 'kontrol'];
+        const SAHA_DURUMLARI = ['sahada', 'bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi'];
         const yeniKolonu = st => st === 'acik' || st === 'yeniden';
         const yazabilir = !!me && me.role !== 'izleyici';
         const talepGor = talepOn && yetki('talep') !== 'yok';
@@ -73,8 +73,8 @@
           let dugme = '', dugmeRenk = '', git = () => {};
           if (kolon === 'yeni') { dugme = can('assign') ? 'Ekip ata' : 'Aç'; dugmeRenk = '#5e5ce6'; git = can('assign') ? () => this.setState({ panoEkip: secilenEkip === f.id ? null : f.id }) : () => this.panoAc(f); }
           else if (kolon === 'atandi') { dugme = yazabilir ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazabilir ? () => this.panoSahada(f) : () => this.panoAc(f); }
-          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && can('assign') ? 'Onayla ve kapat' : (yazabilir ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
-          const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
+          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && (can('onOnay') || can('close')) ? 'Ön onay' : f.status === 'mudur_onayi' && can('close') ? 'Son onay' : (f.status === 'kontrol' || f.status === 'mudur_onayi') ? 'Aç' : (yazabilir ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
+          const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
           kartlar.push({
             anahtar: 'f' + f.id, kolon, tur: f.no, onc: f.priority || 'Normal', ms,
             baslik: f.type || 'Arıza', yer: (a ? a.code + ' · ' + this.yerGoster(a) : [f.koy, f.ilce || f.district].filter(Boolean).join(' · ')),
@@ -163,6 +163,13 @@
           temizleVar: !!(sz.q || sz.durum || sz.ekip), temizle: () => this.setState({ panoSuz: {} })
         };
         return {
+          // Müdür incelemesi: operatörün “karşılanamaz” (arıza değil) dediği talepler — tek başına kapatılan talep denetimsiz kalmasın
+          redVar: talepOn && can('close') && (s.talepler || []).some(x => x.durum === 'red'),
+          redBaslik: 'Reddedilen talepler · müdür incelemesi (' + (s.talepler || []).filter(x => x.durum === 'red').length + ')',
+          redListe: (s.talepler || []).filter(x => x.durum === 'red').slice(0, 15).map(x => ({
+            no: x.no, ne: [x.ad, x.konu, x.koy].filter(Boolean).join(' · '), neden: x.sonuc || 'neden yazılmamış', zaman: x.guncelleme || '',
+            ac: () => this.talepDurum(x.id, 'incelemede', 'Müdür yeniden açtı')
+          })),
           acik: true, kolonlar, tablo, panoGorunumu: gor === 'pano',
           gorunumSec: [['pano', 'Pano'], ['tablo', 'Tablo']].map(([k, ad]) => ({
             ad, ...seg(gor === k, () => { try { localStorage.setItem('ks-pano-gorunum', k); } catch (e) { /* depolama kapalı */ } this.setState({ panoGorunum: k }); })

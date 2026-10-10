@@ -1,11 +1,11 @@
-const SURUM = '2026.10.10-187';
+const SURUM = '2026.10.10-188';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
 const VKEY = 'ks-envanter-koy-konum';
 const STATUS_LABEL = {
   acik: 'Açık', atandi: 'Atandı', sahada: 'Sahada', bilgi: 'Bilgi bekliyor',
-  bekleme: 'Beklemede', yonlendirildi: 'Yönlendirildi', kontrol: 'Kontrolde',
+  bekleme: 'Beklemede', yonlendirildi: 'Yönlendirildi', kontrol: 'Ön onay bekliyor', mudur_onayi: 'Müdür onayında',
   yeniden: 'Yeniden açıldı', cozuldu: 'Çözüldü', iptal: 'İptal'
 };
 // Kapanmış sayılan durumlar — açık iş sayımları ve süre hesabı bunları atlar

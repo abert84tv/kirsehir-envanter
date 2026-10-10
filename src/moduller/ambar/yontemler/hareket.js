@@ -12,6 +12,14 @@
     if (!this.stokIzin(g.tur, g.ekip)) return this.duyur('“' + (HAREKET_AD[g.tur] || g.tur) + '” işlemi için yetkiniz yok' + (g.tur === 'sarf' ? ' (saha personeli yalnız kendi ekibi için düşebilir)' : '') + '. Yetkiyi yöneticiniz Ayarlar › Yetkiler’den verebilir.', 7000, 'kotu');
     if (g.tur !== 'sarf' && g.tur !== 'hurda' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
     if (['zimmet', 'iade', 'sarf', 'hurda'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
+    // Ekibe verme müdür onayı ister: istek açılır; müdür onaylayınca “Ekibe teslim et” ile (istekId) verilir
+    if (g.tur === 'zimmet' && !g.istekId) {
+      if (n > this.ambarMevcut(g.malzeme, g.ambar)) return this.duyur(g.ambar + ' mevcudu ' + this.ambarMevcut(g.malzeme, g.ambar) + ' ' + birim + ' — bu kadar istenemez.', 6000, 'kotu');
+      return this.cikisIstegiAc({ ...g, adet: n, birim });
+    }
+    if (g.tur === 'zimmet' && !(this.state.siparis || []).some(x => x.id === g.istekId && x.tur === 'zimmet' && x.durum === 'onayli')) {
+      return this.duyur('Müdür onaylı çıkış isteği bulunamadı — önce isteği açıp müdürün onaylaması gerekir.', 6000, 'kotu');
+    }
     const a = this.state.ambar || {};
     const stok = JSON.parse(JSON.stringify(a.stok || {}));
     const zim = JSON.parse(JSON.stringify(a.zimmet || {}));
@@ -48,7 +56,7 @@
     // "Tesis belirtilmemiş" yerine gerçek köy · ilçesinde görünür (madde 18)
     const tesisVar = ['sarf', 'hurda'].includes(g.tur) && g.assetId;
     // mal alımı onaylı alım isteği olmadan girilirse hareket notuna işlenir (müdür incelemesinde görünür)
-    const siparissiz = g.tur === 'giris' && !(this.state.siparis || []).some(x => x.malzeme === g.malzeme && x.durum === 'onayli');
+    const siparissiz = g.tur === 'giris' && !(this.state.siparis || []).some(x => x.malzeme === g.malzeme && x.tur !== 'zimmet' && x.durum === 'onayli');
     const notum = [(g.not || '').trim(), siparissiz ? 'onaylı alım isteği yok' : ''].filter(Boolean).join(' · ');
     const kayit = {
       id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6), damga: this.damga(),
@@ -78,9 +86,11 @@
       + (g.ekip ? ' · ' + g.ekip : '') + (g.ambar ? ' · ' + g.ambar : ''),
       { stok, zimmet: zim, gun, hareket: [kayit, ...(a.hareket || [])].slice(0, 400) });
     this.setState({ ambarForm: null });
+    // Teslim edilen çıkış isteği listeden düşer (sunucu da düşürür)
+    if (g.tur === 'zimmet' && g.istekId) this.setState(st => ({ siparis: (st.siparis || []).filter(x => x.id !== g.istekId) }));
     // Siparişteki kalem ambara girince listeden düşer
     if (g.tur === 'giris') {
-      const sp = (this.state.siparis || []).find(x => x.malzeme === g.malzeme);
+      const sp = (this.state.siparis || []).find(x => x.malzeme === g.malzeme && x.tur !== 'zimmet');
       if (sp) setTimeout(() => this.siparisYaz((this.state.siparis || []).filter(x => x.id !== sp.id),
         g.malzeme + ' ambara girdi, sipariş listesinden düşüldü.'), 1800);
     }

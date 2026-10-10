@@ -94,3 +94,11 @@ $do$;
 --    rol_yetkisi: close → müdür · stokSiparisOnay (yeni) → müdür.
 --    ariza_kaydet: Merkez onayı açıkken (kurum_veri modul.onay) kapanış (çözüldü / iptal) yalnız close yetkisi olandan; durumu zaten o olan kaydın başka alanı kaydedilebilir.
 --    veri_yaz / veri_yaz_surumlu: 'siparis' listesinde durum='onayli' kalemi yalnız stokSiparisOnay yetkisi olan işaretleyebilir (önceden onaylı olup id/malzeme/adet değişmeyenler hariç).
+
+-- 7) Onay zinciri ve görevler ayrılığı (uygulandı 2026-10-10: ariza_durum_mudur_onayi, onay_zinciri_on_onay_zimmet_istegi)
+--    ariza_durum'a 'mudur_onayi' eklendi. Zincir: sahada → kontrol (saha bitirdi) → mudur_onayi (operatör ön onayı) → cozuldu (müdür son onayı).
+--    ariza_kaydet: kapanış/iptal yalnız 'close'; mudur_onayi'ne yalnız 'onOnay' (ya da 'close'); kontroldeki işi 'onOnay'/'close', müdür onayındakini 'close' değiştirir;
+--    kapalı işi yalnız 'close' yeniden açar. Merkez onayı ayarına bağlı değildir (her zaman açık).
+--    rol_yetkisi: assign/talepYonet/onOnay/stokSiparis → operatör; close/stokSiparisOnay/stokKatalog → müdür, yönetici; yönetici operasyon yetkilerini kendine istisna olarak verebilir (kısıtlanamaz).
+--    stok_izin: giris/iade/zimmet → operatör; sarf → yönetici, müdür, operatör, şef, personel(kendi ekibi); hurda/cikis → yönetici, müdür.
+--    ambar_hareket: 'zimmet' (ekibe verme) için kurum_veri 'siparis' listesinde müdür onaylı (durum=onayli, tur=zimmet, aynı malzeme/ekip, adet ≥ istenen) çıkış isteği şarttır; teslimde istek listeden düşer.

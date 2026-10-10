@@ -512,11 +512,12 @@
 </sc-if>
 <sc-if value="{{ faultForm.onay.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border-radius:10px;border:1px solid var(--color-accent);padding:12px 13px;display:flex;flex-direction:column;gap:10px">
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Merkez denetimi</span>
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">{{ faultForm.onay.baslik }}</span>
 <span style="font:400 12px/1.5 var(--font-body);color:{{ ui.mut }}">{{ faultForm.onay.not }}</span>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
-<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">Onayla ve kapat</button>
-<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">Sahaya iade et</button>
+<button onClick="{{ faultForm.onay.kapat }}" class="btn btn-primary" style="border:none;cursor:pointer;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px">{{ faultForm.onay.tamEtiket }}</button>
+<button onClick="{{ faultForm.onay.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iadeEtiket }}</button>
+<sc-if value="{{ faultForm.onay.iade2Var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ faultForm.onay.iade2 }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:11px 14px" style-hover="border-color:var(--color-accent);color:var(--color-accent)">{{ faultForm.onay.iade2Etiket }}</button></sc-if>
 </div>
 </div>
 </sc-if>

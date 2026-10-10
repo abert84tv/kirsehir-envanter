@@ -85,6 +85,7 @@
 <button onClick="{{ u.sil }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ ikonlar.copKucuk }} Sil</button>
 </sc-if>
 <button onClick="{{ u.yetkiAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ u.yetkiLabel }}</button>
+<sc-if value="{{ u.vekaletVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.vekalet }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 8px;min-height:46px">{{ u.vekaletEtiket }}</button></sc-if>
 </div>
 <sc-if value="{{ u.yetkiAcik }}" hint-placeholder-val="{{ false }}">
 <div style="border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;display:flex;flex-direction:column;gap:9px">

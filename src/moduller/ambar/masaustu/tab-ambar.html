@@ -10,7 +10,7 @@
 </label>
 <button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/1 var(--font-body)">
 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h15l-1.5 9h-12z"></path><path d="M6 6 5 3H2"></path><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle></svg>
-Sipariş listesi
+Malzeme istekleri
 <sc-if value="{{ ambarEkran.sipVar }}" hint-placeholder-val="{{ false }}"><span class="ks-nabiz" style="display:inline-block;min-width:20px;height:20px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 11px/20px var(--font-body);text-align:center;padding:0 5px;box-sizing:border-box">{{ ambarEkran.sipN }}</span></sc-if>
 </button>
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
@@ -267,9 +267,10 @@ Sipariş listesi
 <input value="{{ ambarEkran.form.not }}" onChange="{{ ambarEkran.form.onNot }}" style="all:unset;box-sizing:border-box;border-radius:10px;border:1px solid {{ ui.rule }};padding:11px;font:400 13px/1 var(--font-body);color:{{ ui.fg }};background:{{ ui.bg }}">
 </label>
 <div style="font:600 12px/1.45 var(--font-body);color:{{ ui.mut }};background:{{ ui.surf2 }};border-radius:9px;padding:9px 11px">Kontrol — {{ ambarEkran.form.durum }}</div>
+<sc-if value="{{ ambarEkran.form.istekModu }}" hint-placeholder-val="{{ false }}"><div style="font:600 12px/1.45 var(--font-body);color:#d97706;border-radius:9px;border:1px solid #d97706;padding:9px 11px">Ekibe verme müdür onayı ister: istek açılır, müdür onaylayınca sipariş listesindeki “Ekibe teslim et” düğmesiyle verilir.</div></sc-if>
 <div style="display:flex;gap:9px;justify-content:flex-end">
 <button onClick="{{ ambarEkran.form.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:12px 16px">Vazgeç</button>
-<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">Hareketi işle</button>
+<button onClick="{{ ambarEkran.form.kaydet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:12px 18px">{{ ambarEkran.form.kaydetEtiket }}</button>
 </div>
 </div>
 </div>
@@ -388,13 +389,13 @@ Sipariş listesi
 <!-- ambar: sipariş listesi -->
 <sc-if value="{{ ambarEkran.siparisPanel.on }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px">
-<div class="ks-gir" role="dialog" aria-label="Sipariş listesi" style="width:680px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
-<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Sipariş listesi</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
+<div class="ks-gir" role="dialog" aria-label="Malzeme istekleri" style="width:680px;max-width:100%;max-height:100%;overflow:auto;border-radius:18px;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">Malzeme istekleri</span><span style="font:400 12px/1 var(--font-body);color:{{ ui.mut }}">tahmini {{ ambarEkran.siparisPanel.toplam }}</span><button onClick="{{ ambarEkran.siparisPanel.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
 <div class="ks-bilgi" style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Liste herkes için ortaktır. Önerilen miktar 30 günlük tüketimi karşılayacak kadardır; ambara giriş yapılınca kalem listeden kendiliğinden düşer.</div>
 <sc-for list="{{ ambarEkran.siparisPanel.kalemler }}" as="x" hint-placeholder-count="3">
 <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid {{ ui.rule }}">
 <div style="flex:1;min-width:0">
-<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }}</div>
+<div style="font:600 13px/1.3 var(--font-body)">{{ x.ad }} <span style="font:600 11px/1 var(--font-body);color:{{ ui.acc }}">· {{ x.turEtiket }}</span></div>
 <div style="font:400 11.5px/1.35 var(--font-body);color:{{ ui.mut }}">{{ x.kod }} · {{ x.durum }} · {{ x.ekleyen }}</div>
 <div style="font:700 11.5px/1.35 var(--font-body);color:{{ x.onayRenk }}">{{ x.onayMetin }}</div>
 </div>
@@ -403,12 +404,13 @@ Sipariş listesi
 {{ x.birim }}
 </label>
 <span style="width:84px;text-align:right;font:600 12px/1 var(--font-body)">{{ x.tutar }}</span>
+<sc-if value="{{ x.teslimVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.teslim }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;background:var(--color-accent);color:#fff;font:700 12px/36px var(--font-body)">Ekibe teslim et</button></sc-if>
 <sc-if value="{{ x.onayVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ x.onayla }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;border-radius:9px;background:#1b9a4a;color:#fff;font:700 12px/36px var(--font-body)">Onayla</button></sc-if>
 <sc-if value="{{ x.cikarVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ x.cikar }}" aria-label="Listeden çıkar" style="all:unset;cursor:pointer;font:600 13px/1 var(--font-body);color:{{ ui.mut }};padding:8px 8px">{{ x.cikarEtiket }}</button></sc-if>
 </div>
 </sc-for>
 <sc-if value="{{ ambarEkran.siparisPanel.bos }}" hint-placeholder-val="{{ false }}">
-<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Siparişe ekle” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
+<div style="padding:22px 0;border-top:1px solid {{ ui.rule }};text-align:center;font:400 13px/1.5 var(--font-body);color:{{ ui.mut }}">Liste boş. “Tükenmek üzere” listesindeki “Alım isteği aç” ile ya da aşağıdaki düğmeyle kritik kalemleri ekleyebilirsiniz.</div>
 </sc-if>
 <div style="display:flex;gap:9px;flex-wrap:wrap;border-top:1px solid {{ ui.rule }};padding-top:12px">
 <sc-if value="{{ ambarEkran.siparisPanel.yazabilir }}" hint-placeholder-val="{{ true }}">

@@ -84,6 +84,7 @@
     liste[i] = { ...liste[i], durum: 'cozuldu', sonuc: liste[i].sonuc || 'Arıza giderildi.', guncelleme: this.damga() };
     this.talepYaz(liste, f.no + ' çözüldü — ' + (liste[i].no || 'bağlı talep') + ' de çözüldü olarak işaretlendi.');
     setTimeout(() => this.basvuruEsitle(), 800);
+    this.talepSahibiMesaj(liste[i]);
   }
   async isEmriKapatVer(baglIsEmri, f, sessiz) {
     const M = this._sb;

@@ -62,8 +62,10 @@
     const canClose = can('close');   // son onay ve kapatma (Müdür); açan/atayan operatör kendi işini onaylayamaz
     const canOnOnay = can('onOnay'); // ön onay (Operatör): sahadan gelen işi müdür onayına gönderir ya da sahaya iade eder
     const canCreateFault = canWrite && arizaOn;
-    if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
-    if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';
+    // Tesis ekleme/silme önerileri İş panosunda durur: arıza ve talep modülü kapalı olsa da önerisi/onayı olan kullanıcıya pano açık kalır
+    const oneriOn = (s.tesisOneriler || []).length > 0 || can('tesisOner');
+    if (tabId === 'isPano' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
+    if (tabId === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';

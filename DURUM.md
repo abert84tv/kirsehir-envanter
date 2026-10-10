@@ -2261,3 +2261,8 @@ Sürüm 2026.10.05-114.
 - **Otomatik stok düşümü:** iş son onayla kapanırken kullanılan malzeme ekip zimmetinden kendiliğinden düşer (soru sorulmaz, aynı işin malzemesi ikinci kez düşmez); şef onaya gönderirken “onaydan sonra düşer” mesajı alır. Talep çözülünce başvurunun durumu güncellenir (Telegram'dan geldiyse başvurana bot mesajı gider).
 - **Deneme araçları:** her deneme ekibine uygun bir araç (+1 müsait seyyar pompa); deneme verisini temizleme betiği bunları da siler.
 - Senaryo taraması: 98/98 (öneri zinciri, ekip süzgeci, çöp/okuma, araç ve konum) + önceki 177+32 kontrolün yeniden koşusu; tarayıcıda talep → arıza → iş emri → şef → ön onay → müdür onayı → stok/talep kapanışı uçtan uca denendi.
+
+## 2026.10.10-191 — Eksikler kapatıldı
+- **Talep sahibine SMS:** iş bitip talep çözülünce, telefon numarası ve KVKK onayı olan Telegram dışı talep sahibine kısa mesaj gider (Ayarlar › Ekip mesajları açık ve sunucu adresi girilmişse); gönderilemezse kuyruğa yazılır. Telegram'dan gelene bot mesajı zaten gidiyordu. Gerçek gönderim için `mesaj-gonder` işlevi ve SMS sağlayıcı anahtarları (Netgsm secret'ları) Supabase'de tanımlanmalı.
+- **Şef başka ekibin işini kaydedemez:** arıza formu kaydetmeyi ekranda da reddeder (sunucu zaten reddediyordu); Araç sayfası da şef için yalnız kendi ekibinin araçları ve görev dökümü.
+- **Tesis önerisi kartları modül kapalıyken de görünür:** Arıza/Talep modülü kapalı olsa bile önerisi ya da onayı olan kullanıcıya İş panosu açık kalır.

@@ -80,6 +80,24 @@
     this.duyur(kapsam + ' bildirimi gönderilemedi: ' + r.hata + ' Mesaj kuyrukta bekliyor.', 8000, 'kotu',
       () => this.setState({ tab: 'ayarlar', ayarBolum: 'bildirim' }));
   }
+  // İş bitince talep sahibine bildirim: telefon numarası ve KVKK onayı olan, Telegram dışından (telefon/web/yüz yüze) gelen talepte kısa mesaj gider.
+  // Telegram'dan gelen başvurana bot mesajı zaten sunucudan gider (basvuru_telegram_durum). Gönderilemezse kuyruğa yazılır.
+  async talepSahibiMesaj(t) {
+    const ayar = this.state.smsAyar || {};
+    if (!t || !ayar.acik || t.kanal === 'telegram' || !(t.tel || '').trim() || !t.kvkkOnay) return;
+    const kanal = this.state.bildirimKanal || 'SMS';
+    const metin = t.no + ' numaralı talebiniz için ' + (t.koy || 'bölgenizdeki') + ' arıza giderildi. Bilgilendirme mesajıdır. ' + this.damga();
+    const numaralar = [t.tel.trim()];
+    const r = await this.smsGonder({ kanal, metin, numaralar, kapsam: t.no });
+    if (r.ok) {
+      this.denetimYaz('bildirim', 'Talep sahibine mesaj gönderildi', kanal + ' · ' + (r.referans || ''), t.no);
+      return;
+    }
+    this.smsKuyrukYaz([{ id: 'sm' + Date.now(), damga: this.damga(), kanal, metin, numaralar, kapsam: t.no, hata: r.hata }, ...(this.state.smsKuyruk || [])]);
+    this.denetimYaz('bildirim', 'Talep sahibine mesaj kuyruğa alındı', kanal + ' · ' + r.hata, t.no);
+    this.duyur(t.no + ' talep sahibine mesaj gönderilemedi: ' + r.hata + ' Mesaj kuyrukta bekliyor.', 8000, 'kotu',
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'bildirim' }));
+  }
   async smsKuyrukGonder() {
     const kuyruk = [...(this.state.smsKuyruk || [])];
     if (!kuyruk.length) return this.duyur('Kuyrukta bekleyen mesaj yok.', 4000);

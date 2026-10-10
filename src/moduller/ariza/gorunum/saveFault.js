@@ -1,5 +1,10 @@
       saveFault: () => {
         const f = this.state.faultForm;
+        // Saha şefi yalnız kendi ekibinin işini kaydeder (sunucu da böyle denetler)
+        const oturumK = this.state.session;
+        if (f && f.id && oturumK && oturumK.role === 'sef' && oturumK.crew && f.crew && f.crew !== ATANMADI && f.crew !== oturumK.crew) {
+          return this.say('Bu iş ' + f.crew + ' ekibinin — yalnız kendi ekibinizin işini değiştirebilirsiniz.', true);
+        }
         // Mükerrer kayıt denetimi — yalnızca yeni kayıt açılırken
         if (f && !f.id && f.assetId) {
           const ben = this.mukerrerBul(f);

@@ -10,7 +10,7 @@
     const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn, telemetri: telemetriOn, ekipPano: arizaOn || aracOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
-      gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };
+      gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn || oneriOn, isPanosu: arizaOn || talepOn || oneriOn };
     const suzgecSayi = { isPanosu: this.panoYeniSayi(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {

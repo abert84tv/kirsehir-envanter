@@ -10700,7 +10700,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-190';
+const SURUM = '2026.10.10-191';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -13180,6 +13180,24 @@ class Component extends DCLogic {
     this.duyur(kapsam + ' bildirimi gönderilemedi: ' + r.hata + ' Mesaj kuyrukta bekliyor.', 8000, 'kotu',
       () => this.setState({ tab: 'ayarlar', ayarBolum: 'bildirim' }));
   }
+  // İş bitince talep sahibine bildirim: telefon numarası ve KVKK onayı olan, Telegram dışından (telefon/web/yüz yüze) gelen talepte kısa mesaj gider.
+  // Telegram'dan gelen başvurana bot mesajı zaten sunucudan gider (basvuru_telegram_durum). Gönderilemezse kuyruğa yazılır.
+  async talepSahibiMesaj(t) {
+    const ayar = this.state.smsAyar || {};
+    if (!t || !ayar.acik || t.kanal === 'telegram' || !(t.tel || '').trim() || !t.kvkkOnay) return;
+    const kanal = this.state.bildirimKanal || 'SMS';
+    const metin = t.no + ' numaralı talebiniz için ' + (t.koy || 'bölgenizdeki') + ' arıza giderildi. Bilgilendirme mesajıdır. ' + this.damga();
+    const numaralar = [t.tel.trim()];
+    const r = await this.smsGonder({ kanal, metin, numaralar, kapsam: t.no });
+    if (r.ok) {
+      this.denetimYaz('bildirim', 'Talep sahibine mesaj gönderildi', kanal + ' · ' + (r.referans || ''), t.no);
+      return;
+    }
+    this.smsKuyrukYaz([{ id: 'sm' + Date.now(), damga: this.damga(), kanal, metin, numaralar, kapsam: t.no, hata: r.hata }, ...(this.state.smsKuyruk || [])]);
+    this.denetimYaz('bildirim', 'Talep sahibine mesaj kuyruğa alındı', kanal + ' · ' + r.hata, t.no);
+    this.duyur(t.no + ' talep sahibine mesaj gönderilemedi: ' + r.hata + ' Mesaj kuyrukta bekliyor.', 8000, 'kotu',
+      () => this.setState({ tab: 'ayarlar', ayarBolum: 'bildirim' }));
+  }
   async smsKuyrukGonder() {
     const kuyruk = [...(this.state.smsKuyruk || [])];
     if (!kuyruk.length) return this.duyur('Kuyrukta bekleyen mesaj yok.', 4000);
@@ -15220,6 +15238,7 @@ class Component extends DCLogic {
     liste[i] = { ...liste[i], durum: 'cozuldu', sonuc: liste[i].sonuc || 'Arıza giderildi.', guncelleme: this.damga() };
     this.talepYaz(liste, f.no + ' çözüldü — ' + (liste[i].no || 'bağlı talep') + ' de çözüldü olarak işaretlendi.');
     setTimeout(() => this.basvuruEsitle(), 800);
+    this.talepSahibiMesaj(liste[i]);
   }
   async isEmriKapatVer(baglIsEmri, f, sessiz) {
     const M = this._sb;
@@ -17213,8 +17232,10 @@ class Component extends DCLogic {
     const canClose = can('close');   // son onay ve kapatma (Müdür); açan/atayan operatör kendi işini onaylayamaz
     const canOnOnay = can('onOnay'); // ön onay (Operatör): sahadan gelen işi müdür onayına gönderir ya da sahaya iade eder
     const canCreateFault = canWrite && arizaOn;
-    if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
-    if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';
+    // Tesis ekleme/silme önerileri İş panosunda durur: arıza ve talep modülü kapalı olsa da önerisi/onayı olan kullanıcıya pano açık kalır
+    const oneriOn = (s.tesisOneriler || []).length > 0 || can('tesisOner');
+    if (tabId === 'isPano' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
+    if (tabId === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';
@@ -17608,7 +17629,7 @@ class Component extends DCLogic {
     const modulKapi = { ariza: arizaOn, bakim: bakimOn, talep: talepOn, ambar: ambarOn, arac: aracOn, yerlesim: yerlesimOn, telemetri: telemetriOn, ekipPano: arizaOn || aracOn,
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
-      gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn, isPanosu: arizaOn || talepOn };
+      gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn || oneriOn, isPanosu: arizaOn || talepOn || oneriOn };
     const suzgecSayi = { isPanosu: this.panoYeniSayi(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
@@ -18769,7 +18790,14 @@ class Component extends DCLogic {
         };
       })(),
       aracEkran: (() => {
-        const A = s.arac || { list: [], hareket: [] };
+        // Saha şefi yalnız kendi ekibinin araçlarını ve onların görev dökümünü görür
+        const A0 = s.arac || { list: [], hareket: [] };
+        const sefEkipA = me && me.role === 'sef' && me.crew ? me.crew : '';
+        const A = !sefEkipA ? A0 : (() => {
+          const liste = (A0.list || []).filter(v => v.ekip === sefEkipA);
+          const idler = new Set(liste.map(v => v.id));
+          return { ...A0, list: liste, hareket: (A0.hareket || []).filter(h => idler.has(h.aracId)) };
+        })();
         const af = s.aracForm, ag = s.aracGorev;
         const bugun = new Date();
         const gunFark = iso => {
@@ -19561,6 +19589,11 @@ class Component extends DCLogic {
       isaretle: i => () => this.setState({ faultForm: { ...this.state.faultForm, isaret: i } }),
       saveFault: () => {
         const f = this.state.faultForm;
+        // Saha şefi yalnız kendi ekibinin işini kaydeder (sunucu da böyle denetler)
+        const oturumK = this.state.session;
+        if (f && f.id && oturumK && oturumK.role === 'sef' && oturumK.crew && f.crew && f.crew !== ATANMADI && f.crew !== oturumK.crew) {
+          return this.say('Bu iş ' + f.crew + ' ekibinin — yalnız kendi ekibinizin işini değiştirebilirsiniz.', true);
+        }
         // Mükerrer kayıt denetimi — yalnızca yeni kayıt açılırken
         if (f && !f.id && f.assetId) {
           const ben = this.mukerrerBul(f);

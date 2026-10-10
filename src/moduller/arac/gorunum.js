@@ -1,5 +1,12 @@
       aracEkran: (() => {
-        const A = s.arac || { list: [], hareket: [] };
+        // Saha şefi yalnız kendi ekibinin araçlarını ve onların görev dökümünü görür
+        const A0 = s.arac || { list: [], hareket: [] };
+        const sefEkipA = me && me.role === 'sef' && me.crew ? me.crew : '';
+        const A = !sefEkipA ? A0 : (() => {
+          const liste = (A0.list || []).filter(v => v.ekip === sefEkipA);
+          const idler = new Set(liste.map(v => v.id));
+          return { ...A0, list: liste, hareket: (A0.hareket || []).filter(h => idler.has(h.aracId)) };
+        })();
         const af = s.aracForm, ag = s.aracGorev;
         const bugun = new Date();
         const gunFark = iso => {

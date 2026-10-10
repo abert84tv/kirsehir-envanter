@@ -1,3 +1,9 @@
+  // Rolün açılış sayfası (ROL_MENU.ac): şef Bana atanan, operatör ve müdür İş panosu, öteki roller harita.
+  // Sayfa o an kapalı modül ya da yetki yüzünden açılamıyorsa program kendiliğinden haritaya düşer.
+  acilisSekmesi(u) {
+    const m = ROL_MENU[u && u.role];
+    return (m && m.ac) || 'harita';
+  }
   forget(quiet) {
     try { localStorage.removeItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
     // Sunucu oturumu da düşer: aksi halde anahtar cihazda kalır ve
@@ -61,7 +67,7 @@
     this.setState({
       session: u, role: ROLE_LABEL[u.role] || u.role, autoLogin: !!sunucudan,
       loginUser: u.user, loginErr: '', pwForm: null,
-      sunucu: !!sunucudan, tab: 'harita', ...(yerel ? { offline: true } : {}), ...this.prefOku(u)
+      sunucu: !!sunucudan, tab: this.acilisSekmesi(u), ...(yerel ? { offline: true } : {}), ...this.prefOku(u)
     }, () => {
       this.denetimYaz('oturum', 'Giriş yapıldı',
         (ROLE_LABEL[u.role] || u.role) + ' · ' + (sunucudan ? 'ortak veritabanı' : 'cihaz kopyası'), u.user);
@@ -157,7 +163,7 @@
     const u = list.find(x => x.user === f.user);
     this.girisKaydet(u.user, f.yeni);
     this._prefYuklendi = true;
-    this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginUser: u.user, ...this.prefOku(u) },
+    this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: this.acilisSekmesi(u), loginPw: '', loginUser: u.user, ...this.prefOku(u) },
       () => { this.prefUygula(); this.say('Şifreniz değiştirildi.'); });
   }
   // Kayıtlı giriş tek yerden yazılır: sunucudan da, cihazdan da giriliyor olsa
@@ -205,5 +211,5 @@
     if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
     this.girisKaydet(u.user, pw);
     this._prefYuklendi = true;
-    this.setState({ session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
+    this.setState({ session: u, role: u.roleLabel, tab: this.acilisSekmesi(u), loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
   }

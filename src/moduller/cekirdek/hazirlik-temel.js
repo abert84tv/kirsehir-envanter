@@ -49,6 +49,18 @@
     // anahtarı olmayan bir sekme (ör. isPano) bilinmeyen anahtar → "tam"
     // varsayılanına düşüp herkese açılmasın.
     const sekmeYetki = id => { const g = SUZGEC_ESKI[id]; return g ? suzgecYetki(g.sayfa, g.suzgec) : yetki(id); };
+    // Ayarlar'da bir bölümü bu kullanıcı görür mü: rol sınırı + modül + sayfa yetkisi
+    const ayarGoster = id => (id !== 'modul' || can('admin')) && (id !== 'vekalet' || !!(me && ['mudur', 'yonetici'].includes(me.role)))
+      && ayarGorunur(id, s.modul) && ayarRolGorur(me && me.role, id) && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok');
+    // Ayarlar bölümüne git: ayrı sayfası olanlar o sayfaya, ötekiler Ayarlar içinde açılır; “aktarım” masaüstüne özgüdür
+    const ayarGit = id => id === 'aktarim'
+      ? () => (!can('create')
+          ? this.say('Toplu aktarımı Mühendis ve üstü yapar.')
+          : (s.device === 'phone'
+              ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
+              : this.setState({ tab: 'aktarim', imp: null })))
+      : AYAR_TAB[id] ? () => this.setState({ tab: AYAR_TAB[id] })
+      : () => this.setState({ ayarBolum: id });
     let tabId = s.tab;
     // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
     if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';
@@ -67,6 +79,7 @@
     if (tabId === 'isPano' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
+    if (tabId === 'gunluk' && !(arizaOn || bakimOn)) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';
     if (tabId === 'arac' && !aracOn) tabId = 'harita';

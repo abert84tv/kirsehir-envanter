@@ -17,6 +17,13 @@
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:14px 20px 4px;background:{{ ui.bg }}">
 <span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ayar.bolumAd }}</span>
 </div>
+<sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap;padding:6px 20px 8px">
+<sc-for list="{{ ayar.altSekmeler }}" as="t" hint-placeholder-count="3">
+<button onClick="{{ t.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:999px;border:1px solid {{ t.kenar }};background:{{ t.bg }};color:{{ t.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 14px">{{ t.ad }}</button>
+</sc-for>
+</div>
+</sc-if>
 </sc-if>
 
 <!--@dahil moduller/ayarlar/masaustu/ayar-gorunum.html-->

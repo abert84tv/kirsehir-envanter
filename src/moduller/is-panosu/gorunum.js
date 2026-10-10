@@ -10,7 +10,10 @@
         };
         const ONC = { 'Acil': 0, 'Yüksek': 1, 'Normal': 2, 'Düşük': 3 };
         const oncRenk = p => p === 'Acil' ? 'var(--color-uyari)' : p === 'Yüksek' ? '#ff9f0a' : p === 'Düşük' ? '#8e8e93' : 'var(--color-accent)';
+        // Onay yetkisi olan (operatör ön onayı, müdür son onayı ve malzeme isteği, mühendis tesis ön onayı) için ilk sütun: sırası kendinde olan her şey tek yerde
+        const onayYetkili = can('onOnay') || can('close') || can('stokSiparisOnay') || (!!me && me.role === 'muhendis');
         const KOLON = [
+          ...(onayYetkili ? [['onay', 'Onayım bekliyor', '#d97706', 'Onay bekleyen yok']] : []),
           ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
           ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
           ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok'],
@@ -76,6 +79,7 @@
           if (kolon === 'yeni') { dugme = can('assign') ? 'Ekip ata' : 'Aç'; dugmeRenk = '#5e5ce6'; git = can('assign') ? () => this.setState({ panoEkip: secilenEkip === f.id ? null : f.id }) : () => this.panoAc(f); }
           else if (kolon === 'atandi') { dugme = yazF ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazF ? () => this.panoSahada(f) : () => this.panoAc(f); }
           else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && (can('onOnay') || can('close')) ? 'Ön onay' : f.status === 'mudur_onayi' && can('close') ? 'Son onay' : (f.status === 'kontrol' || f.status === 'mudur_onayi') ? 'Aç' : (yazF ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
+          if (onayYetkili && (dugme === 'Ön onay' || dugme === 'Son onay')) kolon = 'onay';
           const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
           kartlar.push({
             anahtar: 'f' + f.id, kolon, tur: f.no, onc: f.priority || 'Normal', ms,
@@ -92,19 +96,40 @@
           });
         }
 
+        // ── malzeme istekleri (alım ve ekibe verme): müdür onaylar
+        if (can('stokSiparisOnay') && ambarOn) for (const x of (s.siparis || []).filter(y => y.durum === 'istek')) {
+          kartlar.push({
+            anahtar: 's' + x.id, kolon: 'onay', tur: 'Malzeme isteği', onc: 'Normal', ms: this.damgaMs(x.damga) || 0,
+            baslik: (x.tur === 'zimmet' ? 'Ekibe ver: ' : 'Alım: ') + x.malzeme + ' × ' + x.adet + ' ' + (x.birim || ''),
+            yer: x.tur === 'zimmet' ? (x.ekip || '') : (x.ambar || 'Ambar'), kim: 'İsteyen: ' + (x.ekleyen || '—'), kimBos: false, kanal: '',
+            aciklama: String(x.not || x.geriNot || '').slice(0, 110), uyari: x.geriNot ? 'Geri gönderilmişti' : '',
+            dugme: 'Onayla', dugmeRenk: '#34c759', git: () => this.siparisOnayla(x.id), ikinci: 'Reddet', ikinciGit: () => this.siparisIptal(x.id),
+            ac: () => this.setState({ tab: 'ambar' }), surukle: null
+          });
+        }
+        // ── müdür incelemesi: operatörün “karşılanamaz” dediği talepler
+        if (can('close') && talepOn) for (const x of (s.talepler || []).filter(y => y.durum === 'red').slice(0, 15)) {
+          kartlar.push({
+            anahtar: 'r' + x.id, kolon: 'onay', tur: 'Talep', onc: 'Normal', ms: this.damgaMs(x.guncelleme) || 0,
+            baslik: 'Karşılanamaz denildi: ' + (x.konu || 'talep'), yer: [x.koy, x.ilce].filter(Boolean).join(' · '),
+            kim: 'Bildiren: ' + (x.ad || '—'), kimBos: false, kanal: '', aciklama: String(x.sonuc || 'neden yazılmamış').slice(0, 110), uyari: 'Müdür incelemesi',
+            dugme: 'Yeniden aç', dugmeRenk: '#5e5ce6', git: () => this.talepDurum(x.id, 'incelemede', 'Müdür yeniden açtı'), ikinci: '', ikinciGit: () => {},
+            ac: () => this.say(x.no + ' · ' + (x.sonuc || 'neden yazılmamış'), true), surukle: null
+          });
+        }
         // ── tesis ekleme/silme önerileri: saha şefi önerir → ilçe (ya da bütün ilçelere bakan) mühendis ön onayı → müdür son onayı
         for (const o of (s.tesisOneriler || [])) {
           const bekliyor = o.durum === 'muhendis' || o.durum === 'mudur';
           const ms = Date.parse(o.acildi) || 0;
           if (!bekliyor && simdi - (Date.parse(o.mudur_zaman || o.muhendis_zaman || o.acildi) || 0) > 7 * 86400000) continue;
-          const kolon = !bekliyor ? 'bitti' : (o.benim_sira ? 'yeni' : 'atandi');
+          const kolon = !bekliyor ? 'bitti' : (o.benim_sira ? (onayYetkili ? 'onay' : 'yeni') : 'atandi');
           const turAd = TYPES[o.tesis_tur] ? TYPES[o.tesis_tur].kind : 'Tesis';
           const durumNot = { muhendis: 'Mühendis onayında', mudur: 'Müdür onayında', onaylandi: 'Onaylandı' + (o.sonuc_kod ? ' · ' + o.sonuc_kod : ''),
             reddedildi: 'Reddedildi' + (o.red_neden ? ': ' + o.red_neden : ''), iptal: 'Geri çekildi' }[o.durum] || '';
           const benimMi = !!me && String(o.acan_id) === String(me.dbId);
           let dugme = 'Aç', dugmeRenk = '#8e8e93', git = () => this.say(durumNot + ' — ' + (o.aciklama || 'açıklama yok'), true), ikinci = '', ikinciGit = () => {};
           if (o.benim_sira) {
-            dugme = o.durum === 'mudur' ? 'Son onay' : (can('close') ? 'Onayla ve uygula' : 'Ön onay'); dugmeRenk = '#34c759';
+            dugme = o.durum === 'mudur' ? 'Son onay' : (can('close') ? 'Onayla' : 'Ön onay'); dugmeRenk = '#34c759';
             git = () => this.tesisOneriKarar(o, 'onay'); ikinci = 'Reddet'; ikinciGit = () => this.tesisOneriKarar(o, 'red');
           } else if (bekliyor && benimMi) {
             dugme = 'Geri çek'; dugmeRenk = '#d97706'; git = () => this.tesisOneriKarar(o, 'iptal');
@@ -162,7 +187,7 @@
         });
         const acil = kartlar.filter(k => k.kolon !== 'bitti' && k.onc === 'Acil').length;
         const geciken = kartlar.filter(k => k.uyariKirmizi).length;
-        const secKol = KOLON.some(k => k[0] === s.panoKolon) ? s.panoKolon : 'yeni';
+        const secKol = KOLON.some(k => k[0] === s.panoKolon) ? s.panoKolon : (onayYetkili ? 'onay' : 'yeni');
         const secK = kolonlar.find(k => k.id === secKol);
         // ── Tablo görünümü (Excel benzeri): aynı kartlar satır olur; başlığa basınca sıralanır, üstten süzülür
         const gor = s.panoGorunum === 'tablo' ? 'tablo' : 'pano';
@@ -192,7 +217,7 @@
         };
         return {
           // Müdür incelemesi: operatörün “karşılanamaz” (arıza değil) dediği talepler — tek başına kapatılan talep denetimsiz kalmasın
-          redVar: talepOn && can('close') && (s.talepler || []).some(x => x.durum === 'red'),
+          redVar: false,   // reddedilen talepler artık “Onayım bekliyor” sütununda kart olarak çıkar
           redBaslik: 'Reddedilen talepler · müdür incelemesi (' + (s.talepler || []).filter(x => x.durum === 'red').length + ')',
           redListe: (s.talepler || []).filter(x => x.durum === 'red').slice(0, 15).map(x => ({
             no: x.no, ne: [x.ad, x.konu, x.koy].filter(Boolean).join(' · '), neden: x.sonuc || 'neden yazılmamış', zaman: x.guncelleme || '',
@@ -203,6 +228,7 @@
             ad, ...seg(gor === k, () => { try { localStorage.setItem('ks-pano-gorunum', k); } catch (e) { /* depolama kapalı */ } this.setState({ panoGorunum: k }); })
           })),
           ozet: [
+            ...(onayYetkili ? [{ n: kartlar.filter(k => k.kolon === 'onay').length, ad: 'onayınız bekliyor', renk: '#d97706' }] : []),
             { n: kartlar.filter(k => k.kolon === 'yeni').length, ad: 'bekleyen', renk: '#5e5ce6' },
             { n: acil, ad: 'acil', renk: 'var(--color-uyari)', alarm: acil > 0 },
             { n: geciken, ad: 'geciken', renk: '#d97706', alarm: false },

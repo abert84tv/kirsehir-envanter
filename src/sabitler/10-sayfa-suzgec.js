@@ -28,12 +28,24 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 // Rolün sayfa varsayılanı (kişiye özel seçim yoksa): Saha Şefi ambarla/taleple ilgisizdir, Mühendis envanter odaklıdır, İzleyici yalnız görür.
 // Yetkiler sayfasından kişiye verilen “Tam / Görür / Yok” seçimi her zaman bunun üstündedir.
 const ROL_SAYFA = {
-  sef: { ambar: 'yok', talep: 'yok', arac: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok' },
-  muhendis: { ambar: 'yok', talep: 'yok', gunluk: 'yok', ariza: 'gor', arac: 'gor' },
+  sef: { ambar: 'yok', talep: 'yok', arac: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', ozet: 'yok' },
+  muhendis: { ambar: 'yok', talep: 'yok', gunluk: 'yok', ariza: 'gor', arac: 'yok' },
   operator: { aktarim: 'yok', yerlesim: 'yok' },
-  izleyici: { ambar: 'yok', talep: 'yok', gunluk: 'yok', bakim: 'gor', ariza: 'gor', arac: 'gor', ozet: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', kuyruk: 'yok' }
+  izleyici: { ambar: 'yok', talep: 'yok', gunluk: 'yok', bakim: 'yok', ariza: 'yok', arac: 'gor', ozet: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', kuyruk: 'yok' }
 };
 const rolSayfaVarsayilan = (rol, sid) => (ROL_SAYFA[rol] || {})[sid] || 'tam';
+// Rol menüsü (2026.10.10-192): açılış sayfası, telefon alt çubuğu sırası, masaüstü menü başlıklarının sırası,
+// sayfa adı ve süzgeç sırası. Yetkisi olmayan sayfa zaten menüde çıkmaz; bu tablo yalnız SIRAYI ve AÇILIŞI belirler.
+//  ac: açılış sekmesi (modül kapalıysa ya da yetki yoksa harita)  telefon: alt çubuk sayfaları  grup: masaüstü başlık sırası
+//  ad: sayfa adı değişimi  suz: sayfa içindeki süzgeç sırası  gizle: menüden çıkarılan sayfalar
+const ROL_MENU = {
+  sef: { ac: 'gunluk', gizle: ['ozet'], telefon: ['isler', 'envanter', 'kaynaklar'], grup: ['Saha işleri', 'Envanter'], ad: { kaynaklar: 'Ekibim' }, suz: { isler: ['bugun', 'kanban', 'planli'] } },
+  operator: { ac: 'isPanosu', telefon: ['isler', 'kaynaklar', 'envanter', 'ozet'], grup: ['Saha işleri', 'Envanter', 'Çözümleme', 'Sistem'] },
+  mudur: { ac: 'isPanosu', telefon: ['isler', 'envanter', 'kaynaklar', 'ozet'], grup: ['Saha işleri', 'Envanter', 'Çözümleme', 'Sistem'] },
+  yonetici: { ac: 'harita', telefon: ['envanter', 'isler', 'kaynaklar', 'ozet'] },
+  muhendis: { ac: 'harita', telefon: ['envanter', 'isler', 'ozet'], grup: ['Envanter', 'Saha işleri', 'Çözümleme', 'Sistem'] },
+  izleyici: { ac: 'harita', telefon: ['envanter', 'kaynaklar', 'ozet'], grup: ['Envanter', 'Saha işleri', 'Çözümleme', 'Sistem'] }
+};
 // ── Süzgeç haritası ──────────────────────────────────────────────
 // Menü birleşmesinden sonraki altı sayfa ve içindeki süzgeçler. Her süzgeç
 // bugünkü sayfa yetkisini MİRAS ALIR: yetki tablosu ve kullanıcı kayıtları

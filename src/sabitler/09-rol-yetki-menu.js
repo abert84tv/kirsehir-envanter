@@ -119,7 +119,27 @@ const AYAR_MODUL = {
 const ayarGorunur = (id, modul) => !AYAR_MODUL[id] || AYAR_MODUL[id].some(k => (modul || {})[k] !== false);
 // Masaüstünde Ayarlar iki sütundur (solda bölüm listesi, sağda içerik): hiçbir bölüm seçili değilse ilki açılır.
 // Telefonda liste tek başına açılır, bölüm seçilince tam ekran olur.
-const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : (ayarGorunur('ekip', s.modul) ? 'ekip' : 'yetki'));
+// Ayarlar listesi beş başlıkta (2026.10.10-192): her başlığın altında eski bölümler üst sekmeler olarak durur, içerikleri değişmedi.
+const AYAR_GRUP = [
+  ['g-kullanici', 'Kullanıcılar ve yetki', 'Kim neyi görebilir, müdür vekâleti', ['yetki', 'vekalet']],
+  ['g-ekip', 'Ekipler', 'Ekip, personel ve ekip konumu', ['ekip', 'personel', 'konum']],
+  ['g-bildirim', 'Bildirim ve entegrasyon', 'Başvuru uyarısı, ekip mesajları, yapay zekâ', ['uyari', 'bildirim', 'yapayzeka']],
+  ['g-veri', 'Veri ve gizlilik', 'Senkron, köy listesi, aktarım, çöp kutusu, KVKK, denetim', ['veri', 'yerlesim', 'koyeslestir', 'aktarim', 'cop', 'kvkk', 'denetim']],
+  ['g-gorunum', 'Görünüm ve modüller', 'Harita, tema, menü; kullanılmayan bölümleri kapatma', ['gorunum', 'modul']]
+];
+// Rolün Ayarlar'da görebileceği bölümler (listede olmayan rol: hepsi, yetkisine göre). Operatör yalnız ekip işleriyle, mühendis yalnız envanter araçlarıyla ilgilenir.
+const ROL_AYAR = {
+  operator: ['ekip', 'personel', 'konum'],
+  muhendis: ['gorunum', 'veri', 'yerlesim', 'koyeslestir', 'aktarim']
+};
+const ayarRolGorur = (rol, id) => !ROL_AYAR[rol] || ROL_AYAR[rol].includes(id);
+const ayarAcik = s => {
+  const rol = s.session && s.session.role;
+  const sec = ayarBolumu(s.ayarBolum);
+  if (sec && ayarRolGorur(rol, sec)) return sec;
+  if (s.device === 'phone') return null;
+  return ['ekip', 'yetki', 'gorunum'].find(id => ayarGorunur(id, s.modul) && ayarRolGorur(rol, id)) || null;
+};
 const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'])[1];
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {

@@ -2644,6 +2644,13 @@ Malzeme istekleri
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:14px 20px 4px;background:{{ ui.bg }}">
 <span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ayar.bolumAd }}</span>
 </div>
+<sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap;padding:6px 20px 8px">
+<sc-for list="{{ ayar.altSekmeler }}" as="t" hint-placeholder-count="3">
+<button onClick="{{ t.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:999px;border:1px solid {{ t.kenar }};background:{{ t.bg }};color:{{ t.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:10px 14px">{{ t.ad }}</button>
+</sc-for>
+</div>
+</sc-if>
 </sc-if>
 
 <sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
@@ -3658,7 +3665,7 @@ Malzeme istekleri
 </sc-if>
 <sc-if value="{{ isPanosuEkran.panoGorunumu }}" hint-placeholder-val="{{ true }}">
 <div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.yardim }}</div>
-<div style="flex:1;display:grid;grid-template-columns:repeat(4,minmax(200px,1fr));gap:12px;align-items:start;min-height:0">
+<div style="flex:1;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);overflow-x:auto;padding-bottom:6px;gap:12px;align-items:start;min-height:0">
 <sc-for list="{{ isPanosuEkran.kolonlar }}" as="k" hint-placeholder-count="4">
 <div onDragOver="{{ k.ustunde }}" onDragEnter="{{ k.girdi }}" onDrop="{{ k.birak }}" style="border-radius:16px;border:2px dashed {{ k.kenar }};background:{{ k.zemin }};padding:10px;display:flex;flex-direction:column;gap:10px;min-height:260px;transition:background .15s">
 <div style="display:flex;align-items:center;gap:8px;padding:2px 4px 4px">
@@ -7496,6 +7503,13 @@ Malzeme istekleri
 <button onClick="{{ ayar.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:4px;padding:8px 10px 8px 6px;border-radius:9px;color:{{ ui.acc }};font:500 15px/1 var(--font-body);letter-spacing:-.015em"><span style="font-size:20px;line-height:1">‹</span> Ayarlar</button>
 <span style="flex:1;min-width:0;font:600 16px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ayar.bolumAd }}</span>
 </div>
+<sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px 6px;background:{{ ui.surf }}">
+<sc-for list="{{ ayar.altSekmeler }}" as="t" hint-placeholder-count="3">
+<button onClick="{{ t.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:999px;border:1px solid {{ t.kenar }};background:{{ t.bg }};color:{{ t.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px;min-height:44px;display:flex;align-items:center">{{ t.ad }}</button>
+</sc-for>
+</div>
+</sc-if>
 </sc-if>
 <sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">
@@ -10577,7 +10591,27 @@ const AYAR_MODUL = {
 const ayarGorunur = (id, modul) => !AYAR_MODUL[id] || AYAR_MODUL[id].some(k => (modul || {})[k] !== false);
 // Masaüstünde Ayarlar iki sütundur (solda bölüm listesi, sağda içerik): hiçbir bölüm seçili değilse ilki açılır.
 // Telefonda liste tek başına açılır, bölüm seçilince tam ekran olur.
-const ayarAcik = s => ayarBolumu(s.ayarBolum) || (s.device === 'phone' ? null : (ayarGorunur('ekip', s.modul) ? 'ekip' : 'yetki'));
+// Ayarlar listesi beş başlıkta (2026.10.10-192): her başlığın altında eski bölümler üst sekmeler olarak durur, içerikleri değişmedi.
+const AYAR_GRUP = [
+  ['g-kullanici', 'Kullanıcılar ve yetki', 'Kim neyi görebilir, müdür vekâleti', ['yetki', 'vekalet']],
+  ['g-ekip', 'Ekipler', 'Ekip, personel ve ekip konumu', ['ekip', 'personel', 'konum']],
+  ['g-bildirim', 'Bildirim ve entegrasyon', 'Başvuru uyarısı, ekip mesajları, yapay zekâ', ['uyari', 'bildirim', 'yapayzeka']],
+  ['g-veri', 'Veri ve gizlilik', 'Senkron, köy listesi, aktarım, çöp kutusu, KVKK, denetim', ['veri', 'yerlesim', 'koyeslestir', 'aktarim', 'cop', 'kvkk', 'denetim']],
+  ['g-gorunum', 'Görünüm ve modüller', 'Harita, tema, menü; kullanılmayan bölümleri kapatma', ['gorunum', 'modul']]
+];
+// Rolün Ayarlar'da görebileceği bölümler (listede olmayan rol: hepsi, yetkisine göre). Operatör yalnız ekip işleriyle, mühendis yalnız envanter araçlarıyla ilgilenir.
+const ROL_AYAR = {
+  operator: ['ekip', 'personel', 'konum'],
+  muhendis: ['gorunum', 'veri', 'yerlesim', 'koyeslestir', 'aktarim']
+};
+const ayarRolGorur = (rol, id) => !ROL_AYAR[rol] || ROL_AYAR[rol].includes(id);
+const ayarAcik = s => {
+  const rol = s.session && s.session.role;
+  const sec = ayarBolumu(s.ayarBolum);
+  if (sec && ayarRolGorur(rol, sec)) return sec;
+  if (s.device === 'phone') return null;
+  return ['ekip', 'yetki', 'gorunum'].find(id => ayarGorunur(id, s.modul) && ayarRolGorur(rol, id)) || null;
+};
 const ayarAdi = id => (AYAR_BOLUMLER.find(([bid]) => bid === id) || [, 'Ayarlar'])[1];
 // Eşitleme mesajlarında geçen modül adları
 const MODUL_ADI = {
@@ -10625,12 +10659,24 @@ const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
 // Rolün sayfa varsayılanı (kişiye özel seçim yoksa): Saha Şefi ambarla/taleple ilgisizdir, Mühendis envanter odaklıdır, İzleyici yalnız görür.
 // Yetkiler sayfasından kişiye verilen “Tam / Görür / Yok” seçimi her zaman bunun üstündedir.
 const ROL_SAYFA = {
-  sef: { ambar: 'yok', talep: 'yok', arac: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok' },
-  muhendis: { ambar: 'yok', talep: 'yok', gunluk: 'yok', ariza: 'gor', arac: 'gor' },
+  sef: { ambar: 'yok', talep: 'yok', arac: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', ozet: 'yok' },
+  muhendis: { ambar: 'yok', talep: 'yok', gunluk: 'yok', ariza: 'gor', arac: 'yok' },
   operator: { aktarim: 'yok', yerlesim: 'yok' },
-  izleyici: { ambar: 'yok', talep: 'yok', gunluk: 'yok', bakim: 'gor', ariza: 'gor', arac: 'gor', ozet: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', kuyruk: 'yok' }
+  izleyici: { ambar: 'yok', talep: 'yok', gunluk: 'yok', bakim: 'yok', ariza: 'yok', arac: 'gor', ozet: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', kuyruk: 'yok' }
 };
 const rolSayfaVarsayilan = (rol, sid) => (ROL_SAYFA[rol] || {})[sid] || 'tam';
+// Rol menüsü (2026.10.10-192): açılış sayfası, telefon alt çubuğu sırası, masaüstü menü başlıklarının sırası,
+// sayfa adı ve süzgeç sırası. Yetkisi olmayan sayfa zaten menüde çıkmaz; bu tablo yalnız SIRAYI ve AÇILIŞI belirler.
+//  ac: açılış sekmesi (modül kapalıysa ya da yetki yoksa harita)  telefon: alt çubuk sayfaları  grup: masaüstü başlık sırası
+//  ad: sayfa adı değişimi  suz: sayfa içindeki süzgeç sırası  gizle: menüden çıkarılan sayfalar
+const ROL_MENU = {
+  sef: { ac: 'gunluk', gizle: ['ozet'], telefon: ['isler', 'envanter', 'kaynaklar'], grup: ['Saha işleri', 'Envanter'], ad: { kaynaklar: 'Ekibim' }, suz: { isler: ['bugun', 'kanban', 'planli'] } },
+  operator: { ac: 'isPanosu', telefon: ['isler', 'kaynaklar', 'envanter', 'ozet'], grup: ['Saha işleri', 'Envanter', 'Çözümleme', 'Sistem'] },
+  mudur: { ac: 'isPanosu', telefon: ['isler', 'envanter', 'kaynaklar', 'ozet'], grup: ['Saha işleri', 'Envanter', 'Çözümleme', 'Sistem'] },
+  yonetici: { ac: 'harita', telefon: ['envanter', 'isler', 'kaynaklar', 'ozet'] },
+  muhendis: { ac: 'harita', telefon: ['envanter', 'isler', 'ozet'], grup: ['Envanter', 'Saha işleri', 'Çözümleme', 'Sistem'] },
+  izleyici: { ac: 'harita', telefon: ['envanter', 'kaynaklar', 'ozet'], grup: ['Envanter', 'Saha işleri', 'Çözümleme', 'Sistem'] }
+};
 // ── Süzgeç haritası ──────────────────────────────────────────────
 // Menü birleşmesinden sonraki altı sayfa ve içindeki süzgeçler. Her süzgeç
 // bugünkü sayfa yetkisini MİRAS ALIR: yetki tablosu ve kullanıcı kayıtları
@@ -10700,7 +10746,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-191';
+const SURUM = '2026.10.10-192';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10853,7 +10899,7 @@ class Component extends DCLogic {
       saat: 24, seri: [], form: null, kuralForm: null, anahtar: null, bilgi: false, hata: '' },
     // Panoda “yeni geldi” uyarısı vermeyi bırakılan işler (kart açılınca eklenir); cihazda kalır
     panoGoruldu: (() => { try { const p = JSON.parse(localStorage.getItem('ks-pano-goruldu') || '[]'); return Array.isArray(p) ? p : []; } catch (e) { return []; } })(),
-    basvuruUyari: null, panoGorunum: (() => { try { return localStorage.getItem('ks-pano-gorunum') === 'tablo' ? 'tablo' : 'pano'; } catch (e) { return 'pano'; } })(), panoSira: { k: 'onc', dir: 1 }, panoSuz: {}, isKarti: null, ekipKonum: {}, konumForm: null, konumCihazlar: [], konumHata: '', konumSon: 0, konumPaylasim: (() => { try { return localStorage.getItem('ks-konum-paylas') === '1'; } catch (e) { return false; } })(), panoKolon: 'yeni', panoEkip: null, panoHedef: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
+    basvuruUyari: null, panoGorunum: (() => { try { return localStorage.getItem('ks-pano-gorunum') === 'tablo' ? 'tablo' : 'pano'; } catch (e) { return 'pano'; } })(), panoSira: { k: 'onc', dir: 1 }, panoSuz: {}, isKarti: null, ekipKonum: {}, konumForm: null, konumCihazlar: [], konumHata: '', konumSon: 0, konumPaylasim: (() => { try { return localStorage.getItem('ks-konum-paylas') === '1'; } catch (e) { return false; } })(), panoKolon: null, panoEkip: null, panoHedef: null, sesAcik: false, uyariTik: 0, telMenuAcik: false, telSuzAcik: false, telListeSuzAcik: false, telArzSuzAcik: false, telAracAcik: false, telTam: false, basvurular: [], bekleSheet: null, olaySheet: null, isEmriEk: {},
     entegrasyon: { yuk: false, liste: [], giris: '', sonuc: '', hata: '' },
     ambarQ: '', ambarKat: '', ambarSira: 'gun', ambarSuz: '', ambarHepsi: false,
     ambarKart: null, malzemeForm: null, siparisPanel: false,
@@ -15321,6 +15367,12 @@ class Component extends DCLogic {
       (ekip || 'ekip yok') + (araclarObj.length ? ' · ' + araclarObj.length + ' araç' : ''));
     this.duyur(`${secili.no} ${ekip ? ekip + ' ekibine atandı.' : 'güncellendi.'}`, 6000, 'iyi');
   }
+  // Rolün açılış sayfası (ROL_MENU.ac): şef Bana atanan, operatör ve müdür İş panosu, öteki roller harita.
+  // Sayfa o an kapalı modül ya da yetki yüzünden açılamıyorsa program kendiliğinden haritaya düşer.
+  acilisSekmesi(u) {
+    const m = ROL_MENU[u && u.role];
+    return (m && m.ac) || 'harita';
+  }
   forget(quiet) {
     try { localStorage.removeItem(SES_KEY); } catch (e) { /* depolama kapalı */ }
     // Sunucu oturumu da düşer: aksi halde anahtar cihazda kalır ve
@@ -15384,7 +15436,7 @@ class Component extends DCLogic {
     this.setState({
       session: u, role: ROLE_LABEL[u.role] || u.role, autoLogin: !!sunucudan,
       loginUser: u.user, loginErr: '', pwForm: null,
-      sunucu: !!sunucudan, tab: 'harita', ...(yerel ? { offline: true } : {}), ...this.prefOku(u)
+      sunucu: !!sunucudan, tab: this.acilisSekmesi(u), ...(yerel ? { offline: true } : {}), ...this.prefOku(u)
     }, () => {
       this.denetimYaz('oturum', 'Giriş yapıldı',
         (ROLE_LABEL[u.role] || u.role) + ' · ' + (sunucudan ? 'ortak veritabanı' : 'cihaz kopyası'), u.user);
@@ -15480,7 +15532,7 @@ class Component extends DCLogic {
     const u = list.find(x => x.user === f.user);
     this.girisKaydet(u.user, f.yeni);
     this._prefYuklendi = true;
-    this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginUser: u.user, ...this.prefOku(u) },
+    this.setState({ pwForm: null, session: u, role: u.roleLabel, tab: this.acilisSekmesi(u), loginPw: '', loginUser: u.user, ...this.prefOku(u) },
       () => { this.prefUygula(); this.say('Şifreniz değiştirildi.'); });
   }
   // Kayıtlı giriş tek yerden yazılır: sunucudan da, cihazdan da giriliyor olsa
@@ -15528,7 +15580,7 @@ class Component extends DCLogic {
     if (u.mustChange) return this.setState({ pwForm: { user: u.user, yeni: '', tekrar: '', err: '' }, loginPw: '', loginErr: '' });
     this.girisKaydet(u.user, pw);
     this._prefYuklendi = true;
-    this.setState({ session: u, role: u.roleLabel, tab: 'harita', loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
+    this.setState({ session: u, role: u.roleLabel, tab: this.acilisSekmesi(u), loginPw: '', loginErr: '', ...this.prefOku(u) }, () => this.prefUygula());
   }
   // ── kullanıcı listesi bu cihazda saklanır; Supabase bağlanınca kullanicilar tablosuna gider
   // Sayfa yetkileri kullanıcı adına göre ayrı anahtarda durur: sunucu listesi yenilenince silinmesin
@@ -16894,6 +16946,23 @@ class Component extends DCLogic {
     this.setState({ panoGoruldu: yeni });
   }
   // Menüdeki sayı: bakılmamış yeni işler
+  // Sırası bende olan onaylar: ön/son onay, tesis önerisi, malzeme isteği, reddedilen talep incelemesi (menü rozeti ve “Onayım bekliyor” sütunu)
+  onayBekleyenSay() {
+    const s = this.state, me = s.session;
+    if (!me) return 0;
+    const can = k => this.yetkiVar(me, k);
+    let n = 0;
+    if (s.modul.ariza !== false) {
+      for (const f of (s.faults || [])) {
+        if (f.status === 'kontrol' && (can('onOnay') || can('close'))) n++;
+        else if (f.status === 'mudur_onayi' && can('close')) n++;
+      }
+    }
+    n += (s.tesisOneriler || []).filter(o => o.benim_sira).length;
+    if (can('stokSiparisOnay') && s.modul.ambar !== false) n += (s.siparis || []).filter(x => x.durum === 'istek').length;
+    if (can('close') && s.modul.talep !== false) n += (s.talepler || []).filter(x => x.durum === 'red').length;
+    return n;
+  }
   panoYeniSayi() {
     const s = this.state;
     let n = 0;
@@ -17219,6 +17288,18 @@ class Component extends DCLogic {
     // anahtarı olmayan bir sekme (ör. isPano) bilinmeyen anahtar → "tam"
     // varsayılanına düşüp herkese açılmasın.
     const sekmeYetki = id => { const g = SUZGEC_ESKI[id]; return g ? suzgecYetki(g.sayfa, g.suzgec) : yetki(id); };
+    // Ayarlar'da bir bölümü bu kullanıcı görür mü: rol sınırı + modül + sayfa yetkisi
+    const ayarGoster = id => (id !== 'modul' || can('admin')) && (id !== 'vekalet' || !!(me && ['mudur', 'yonetici'].includes(me.role)))
+      && ayarGorunur(id, s.modul) && ayarRolGorur(me && me.role, id) && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok');
+    // Ayarlar bölümüne git: ayrı sayfası olanlar o sayfaya, ötekiler Ayarlar içinde açılır; “aktarım” masaüstüne özgüdür
+    const ayarGit = id => id === 'aktarim'
+      ? () => (!can('create')
+          ? this.say('Toplu aktarımı Mühendis ve üstü yapar.')
+          : (s.device === 'phone'
+              ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
+              : this.setState({ tab: 'aktarim', imp: null })))
+      : AYAR_TAB[id] ? () => this.setState({ tab: AYAR_TAB[id] })
+      : () => this.setState({ ayarBolum: id });
     let tabId = s.tab;
     // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
     if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';
@@ -17237,6 +17318,7 @@ class Component extends DCLogic {
     if (tabId === 'isPano' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
+    if (tabId === 'gunluk' && !(arizaOn || bakimOn)) tabId = 'harita';
     if (tabId === 'bakim' && !bakimOn) tabId = 'harita';
     if (tabId === 'ambar' && !ambarOn) tabId = 'harita';
     if (tabId === 'arac' && !aracOn) tabId = 'harita';
@@ -17630,18 +17712,24 @@ class Component extends DCLogic {
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn || oneriOn, isPanosu: arizaOn || talepOn || oneriOn };
-    const suzgecSayi = { isPanosu: this.panoYeniSayi(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
+    // Rol menüsü: başlık sırası, telefon çubuğu, sayfa adı, süzgeç sırası (ROL_MENU)
+    const RM = ROL_MENU[me && me.role] || {};
+    const menuGrup = RM.grup ? [...MENU_GRUP].sort((a, b) => { const i = RM.grup.indexOf(a[0]), j = RM.grup.indexOf(b[0]); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); }) : MENU_GRUP;
+    const telSira = RM.telefon || TELEFON_SIRA;
+    const suzgecSayi = { isPanosu: this.panoYeniSayi() + this.onayBekleyenSay(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
-      const zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      const sira = (RM.suz || {})[sayfa];
+      let zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      if (sira) zs = [...zs].sort((a, b) => { const i = sira.indexOf(a.id), j = sira.indexOf(b.id); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
       gruplar[sayfa] = {
-        id: sayfa, ad: zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa), suz: zs,
+        id: sayfa, ad: (RM.ad || {})[sayfa] || (zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa)), suz: zs,
         acik: zs.some(z => z.hedef === tabId),
         badge: zs.reduce((t, z) => t + (suzgecSayi[z.hedef] || 0), 0)
       };
     }
     // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
-    const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length);
+    const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length && !(RM.gizle || []).includes(g.id));
     const navItem = g => ({
       label: g.ad, go: () => { this.geziMenu(); this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }); },
       // Etkin sayfa dolu mavi hap; ötekiler zeminsiz
@@ -17916,20 +18004,20 @@ class Component extends DCLogic {
         isPano: tabId === 'isPano', isPanosu: tabId === 'isPanosu', isKarti: tabId === 'isKarti', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
       },
       // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez
-      navGruplu: MENU_GRUP.map(([baslik, idler]) => ({
+      navGruplu: menuGrup.map(([baslik, idler]) => ({
         baslik,
         ogeler: idler.map(id => navVisible.find(g => g.id === id)).filter(Boolean).map(navItem)
       })).filter(g => g.ogeler.length),
       // Telefon alt çubuğu: en çok dört sayfa, kalanı "Tümü"
       navPhone: (() => {
-        const secili = TELEFON_SIRA
+        const secili = telSira
           .map(id => navVisible.find(g => g.id === id))
           .filter(Boolean).slice(0, 4);
         const acikBadge = navVisible
           .filter(g => !secili.includes(g))
           .reduce((t, g) => t + (g.badge || 0), 0);
         // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
-        const KISA = { kaynaklar: 'Kaynaklar' };
+        const KISA = (RM.ad || {}).kaynaklar ? {} : { kaynaklar: 'Kaynaklar' };
         return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
           label: 'Tümü', go: () => this.setState({ menuAcik: true }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
@@ -17941,7 +18029,7 @@ class Component extends DCLogic {
       menuSayfa: {
         acik: !!s.menuAcik,
         kapat: () => this.setState({ menuAcik: false }),
-        gruplar: MENU_GRUP.map(([baslik, idler]) => ({
+        gruplar: menuGrup.map(([baslik, idler]) => ({
           baslik,
           ogeler: idler.map(id => navVisible.find(g => g.id === id)).filter(Boolean).map(g => {
             const n = navItem(g);
@@ -17951,7 +18039,7 @@ class Component extends DCLogic {
       },
       // Yalnız Ayarlar > Görünüm'de gösterilir; o an açık olan grup
       // (Ayarlar'ın kendisi) kendine giden anlamsız bir düğme olmasın diye düşer
-      otherScreens: navVisible.filter(g => !TELEFON_SIRA.includes(g.id) && !g.acik).map(navItem),
+      otherScreens: navVisible.filter(g => !telSira.includes(g.id) && !g.acik).map(navItem),
 
       province: m ? {
         line: `${fmt(m.PROVINCE.population2025)} nüfus · ${m.PROVINCE.districts} ilçe · ${m.PROVINCE.municipalities} belediye · ${m.PROVINCE.mahalle} mahalle · ${m.PROVINCE.villages} köy · ${fmt(m.PROVINCE.areaKm2)} km²`,
@@ -19966,6 +20054,17 @@ class Component extends DCLogic {
           listeAcik: a && !sec,
           detay: a && !!sec,
           bolumAd: ayarAdi(sec),
+          // Aynı başlığın öteki bölümleri üst sekmeler olarak (tek bölümlü başlıkta sekme çıkmaz)
+          altSekmeler: (() => {
+            const g = AYAR_GRUP.find(x => x[3].includes(sec));
+            const uyeler = g ? g[3].filter(ayarGoster) : [];
+            return uyeler.length < 2 ? [] : uyeler.map(id => ({
+              ad: (AYAR_BOLUMLER.find(b => b[0] === id) || [, id])[1], aktif: id === sec,
+              bg: id === sec ? 'var(--color-accent)' : 'transparent', fg: id === sec ? '#fff' : ui.fg, kenar: id === sec ? 'var(--color-accent)' : ui.rule,
+              git: ayarGit(id)
+            }));
+          })(),
+          altVar: a && !!sec && (() => { const g = AYAR_GRUP.find(x => x[3].includes(sec)); return !!g && g[3].filter(ayarGoster).length > 1; })(),
           geri: () => this.setState({ ayarBolum: null }),
           gorunum: v('gorunum'), veri: v('veri'), yetki: v('yetki'), vekalet: v('vekalet'),
           ekip: v('ekip'), personel: v('personel'), kvkk: v('kvkk'), modul: v('modul'),
@@ -20044,35 +20143,28 @@ class Component extends DCLogic {
         ]
         };
       })(),
-      // Ayarlar listesi — iOS Ayarlar gibi kümelenmiş satırlar
-      ayarListe: AYAR_LISTE.map(([baslik, satirlar]) => ({
-        baslik,
-        satirlar: satirlar
-          // Modüller yalnız yöneticide; ayrı sekmesi olanlar SUZGEC_TANIM'daki
-          // kendi yetkisinden okur (AYAR_TAB_YETKI), ötekiler ayarlar yetkisinden
-          .filter(([id]) => (id !== 'modul' || can('admin')) && (id !== 'vekalet' || !!(me && ['mudur', 'yonetici'].includes(me.role))) && ayarGorunur(id, s.modul)
-            && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok'))
-          .map(([id, ad, alt]) => ({
-            ad,
-            aktif: ayarAcik(s) === id,
-            zemin: ayarAcik(s) === id && tabId === 'ayarlar' ? ui.sel : 'transparent',
-            renk: ayarAcik(s) === id && tabId === 'ayarlar' ? ui.acc : ui.fg,
-            rozet: id === 'cop' && (s.trash.length + (s.cop || []).length) ? String(s.trash.length + (s.cop || []).length) : '',
-            alt: id === 'cop' && (s.trash.length + (s.cop || []).length)
-              ? (s.trash.length + (s.cop || []).length) + ' kayıt bekliyor'
-              : alt,
-            // "aktarim" masaüstüne özgü — telefonda arayışı bilgisayara yönlendirir,
-            // izinsiz kullanıcıyı uyarır (goImport ile birebir aynı davranış)
-            git: id === 'aktarim'
-              ? () => (!can('create')
-                  ? this.say('Toplu aktarımı Mühendis ve üstü yapar.')
-                  : (s.device === 'phone'
-                      ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
-                      : this.setState({ tab: 'aktarim', imp: null })))
-              : AYAR_TAB[id] ? () => this.setState({ tab: AYAR_TAB[id] })
-              : () => this.setState({ ayarBolum: id })
-          }))
-      })).filter(g => g.satirlar.length),
+      // Ayarlar listesi — beş başlık (AYAR_GRUP). Her başlığın altındaki eski bölümler, açılan sayfanın üstünde sekme olur.
+      // Rol, modül ve sayfa yetkisi (ayarGoster) görünmeyen bölümü listeden de sekmeden de çıkarır.
+      ayarListe: (() => {
+        const sec = ayarAcik(s);
+        const aktifUye = AYAR_TAB[tabId] ? tabId : (tabId === 'ayarlar' ? sec : null);
+        const copSay = s.trash.length + (s.cop || []).length;
+        const satirlar = AYAR_GRUP.map(([gid, ad, alt, uyeler]) => {
+          const gorunen = uyeler.filter(ayarGoster);
+          if (!gorunen.length) return null;
+          const aktif = gorunen.includes(aktifUye);
+          return {
+            ad, alt,
+            aktif,
+            zemin: aktif && tabId === 'ayarlar' ? ui.sel : 'transparent',
+            renk: aktif && tabId === 'ayarlar' ? ui.acc : ui.fg,
+            rozet: gorunen.includes('cop') && copSay ? String(copSay) : '',
+            git: () => ayarGit(gorunen[0])
+          };
+        }).filter(Boolean);
+        return satirlar.length ? [{ baslik: '', satirlar }] : [];
+      })(),
+
       prefNote: (() => {
         const u = s.session;
         if (!u) return '';
@@ -23320,7 +23412,10 @@ class Component extends DCLogic {
         };
         const ONC = { 'Acil': 0, 'Yüksek': 1, 'Normal': 2, 'Düşük': 3 };
         const oncRenk = p => p === 'Acil' ? 'var(--color-uyari)' : p === 'Yüksek' ? '#ff9f0a' : p === 'Düşük' ? '#8e8e93' : 'var(--color-accent)';
+        // Onay yetkisi olan (operatör ön onayı, müdür son onayı ve malzeme isteği, mühendis tesis ön onayı) için ilk sütun: sırası kendinde olan her şey tek yerde
+        const onayYetkili = can('onOnay') || can('close') || can('stokSiparisOnay') || (!!me && me.role === 'muhendis');
         const KOLON = [
+          ...(onayYetkili ? [['onay', 'Onayım bekliyor', '#d97706', 'Onay bekleyen yok']] : []),
           ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
           ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
           ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok'],
@@ -23386,6 +23481,7 @@ class Component extends DCLogic {
           if (kolon === 'yeni') { dugme = can('assign') ? 'Ekip ata' : 'Aç'; dugmeRenk = '#5e5ce6'; git = can('assign') ? () => this.setState({ panoEkip: secilenEkip === f.id ? null : f.id }) : () => this.panoAc(f); }
           else if (kolon === 'atandi') { dugme = yazF ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazF ? () => this.panoSahada(f) : () => this.panoAc(f); }
           else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && (can('onOnay') || can('close')) ? 'Ön onay' : f.status === 'mudur_onayi' && can('close') ? 'Son onay' : (f.status === 'kontrol' || f.status === 'mudur_onayi') ? 'Aç' : (yazF ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
+          if (onayYetkili && (dugme === 'Ön onay' || dugme === 'Son onay')) kolon = 'onay';
           const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
           kartlar.push({
             anahtar: 'f' + f.id, kolon, tur: f.no, onc: f.priority || 'Normal', ms,
@@ -23402,19 +23498,40 @@ class Component extends DCLogic {
           });
         }
 
+        // ── malzeme istekleri (alım ve ekibe verme): müdür onaylar
+        if (can('stokSiparisOnay') && ambarOn) for (const x of (s.siparis || []).filter(y => y.durum === 'istek')) {
+          kartlar.push({
+            anahtar: 's' + x.id, kolon: 'onay', tur: 'Malzeme isteği', onc: 'Normal', ms: this.damgaMs(x.damga) || 0,
+            baslik: (x.tur === 'zimmet' ? 'Ekibe ver: ' : 'Alım: ') + x.malzeme + ' × ' + x.adet + ' ' + (x.birim || ''),
+            yer: x.tur === 'zimmet' ? (x.ekip || '') : (x.ambar || 'Ambar'), kim: 'İsteyen: ' + (x.ekleyen || '—'), kimBos: false, kanal: '',
+            aciklama: String(x.not || x.geriNot || '').slice(0, 110), uyari: x.geriNot ? 'Geri gönderilmişti' : '',
+            dugme: 'Onayla', dugmeRenk: '#34c759', git: () => this.siparisOnayla(x.id), ikinci: 'Reddet', ikinciGit: () => this.siparisIptal(x.id),
+            ac: () => this.setState({ tab: 'ambar' }), surukle: null
+          });
+        }
+        // ── müdür incelemesi: operatörün “karşılanamaz” dediği talepler
+        if (can('close') && talepOn) for (const x of (s.talepler || []).filter(y => y.durum === 'red').slice(0, 15)) {
+          kartlar.push({
+            anahtar: 'r' + x.id, kolon: 'onay', tur: 'Talep', onc: 'Normal', ms: this.damgaMs(x.guncelleme) || 0,
+            baslik: 'Karşılanamaz denildi: ' + (x.konu || 'talep'), yer: [x.koy, x.ilce].filter(Boolean).join(' · '),
+            kim: 'Bildiren: ' + (x.ad || '—'), kimBos: false, kanal: '', aciklama: String(x.sonuc || 'neden yazılmamış').slice(0, 110), uyari: 'Müdür incelemesi',
+            dugme: 'Yeniden aç', dugmeRenk: '#5e5ce6', git: () => this.talepDurum(x.id, 'incelemede', 'Müdür yeniden açtı'), ikinci: '', ikinciGit: () => {},
+            ac: () => this.say(x.no + ' · ' + (x.sonuc || 'neden yazılmamış'), true), surukle: null
+          });
+        }
         // ── tesis ekleme/silme önerileri: saha şefi önerir → ilçe (ya da bütün ilçelere bakan) mühendis ön onayı → müdür son onayı
         for (const o of (s.tesisOneriler || [])) {
           const bekliyor = o.durum === 'muhendis' || o.durum === 'mudur';
           const ms = Date.parse(o.acildi) || 0;
           if (!bekliyor && simdi - (Date.parse(o.mudur_zaman || o.muhendis_zaman || o.acildi) || 0) > 7 * 86400000) continue;
-          const kolon = !bekliyor ? 'bitti' : (o.benim_sira ? 'yeni' : 'atandi');
+          const kolon = !bekliyor ? 'bitti' : (o.benim_sira ? (onayYetkili ? 'onay' : 'yeni') : 'atandi');
           const turAd = TYPES[o.tesis_tur] ? TYPES[o.tesis_tur].kind : 'Tesis';
           const durumNot = { muhendis: 'Mühendis onayında', mudur: 'Müdür onayında', onaylandi: 'Onaylandı' + (o.sonuc_kod ? ' · ' + o.sonuc_kod : ''),
             reddedildi: 'Reddedildi' + (o.red_neden ? ': ' + o.red_neden : ''), iptal: 'Geri çekildi' }[o.durum] || '';
           const benimMi = !!me && String(o.acan_id) === String(me.dbId);
           let dugme = 'Aç', dugmeRenk = '#8e8e93', git = () => this.say(durumNot + ' — ' + (o.aciklama || 'açıklama yok'), true), ikinci = '', ikinciGit = () => {};
           if (o.benim_sira) {
-            dugme = o.durum === 'mudur' ? 'Son onay' : (can('close') ? 'Onayla ve uygula' : 'Ön onay'); dugmeRenk = '#34c759';
+            dugme = o.durum === 'mudur' ? 'Son onay' : (can('close') ? 'Onayla' : 'Ön onay'); dugmeRenk = '#34c759';
             git = () => this.tesisOneriKarar(o, 'onay'); ikinci = 'Reddet'; ikinciGit = () => this.tesisOneriKarar(o, 'red');
           } else if (bekliyor && benimMi) {
             dugme = 'Geri çek'; dugmeRenk = '#d97706'; git = () => this.tesisOneriKarar(o, 'iptal');
@@ -23472,7 +23589,7 @@ class Component extends DCLogic {
         });
         const acil = kartlar.filter(k => k.kolon !== 'bitti' && k.onc === 'Acil').length;
         const geciken = kartlar.filter(k => k.uyariKirmizi).length;
-        const secKol = KOLON.some(k => k[0] === s.panoKolon) ? s.panoKolon : 'yeni';
+        const secKol = KOLON.some(k => k[0] === s.panoKolon) ? s.panoKolon : (onayYetkili ? 'onay' : 'yeni');
         const secK = kolonlar.find(k => k.id === secKol);
         // ── Tablo görünümü (Excel benzeri): aynı kartlar satır olur; başlığa basınca sıralanır, üstten süzülür
         const gor = s.panoGorunum === 'tablo' ? 'tablo' : 'pano';
@@ -23502,7 +23619,7 @@ class Component extends DCLogic {
         };
         return {
           // Müdür incelemesi: operatörün “karşılanamaz” (arıza değil) dediği talepler — tek başına kapatılan talep denetimsiz kalmasın
-          redVar: talepOn && can('close') && (s.talepler || []).some(x => x.durum === 'red'),
+          redVar: false,   // reddedilen talepler artık “Onayım bekliyor” sütununda kart olarak çıkar
           redBaslik: 'Reddedilen talepler · müdür incelemesi (' + (s.talepler || []).filter(x => x.durum === 'red').length + ')',
           redListe: (s.talepler || []).filter(x => x.durum === 'red').slice(0, 15).map(x => ({
             no: x.no, ne: [x.ad, x.konu, x.koy].filter(Boolean).join(' · '), neden: x.sonuc || 'neden yazılmamış', zaman: x.guncelleme || '',
@@ -23513,6 +23630,7 @@ class Component extends DCLogic {
             ad, ...seg(gor === k, () => { try { localStorage.setItem('ks-pano-gorunum', k); } catch (e) { /* depolama kapalı */ } this.setState({ panoGorunum: k }); })
           })),
           ozet: [
+            ...(onayYetkili ? [{ n: kartlar.filter(k => k.kolon === 'onay').length, ad: 'onayınız bekliyor', renk: '#d97706' }] : []),
             { n: kartlar.filter(k => k.kolon === 'yeni').length, ad: 'bekleyen', renk: '#5e5ce6' },
             { n: acil, ad: 'acil', renk: 'var(--color-uyari)', alarm: acil > 0 },
             { n: geciken, ad: 'geciken', renk: '#d97706', alarm: false },

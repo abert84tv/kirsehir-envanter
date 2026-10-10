@@ -11,6 +11,23 @@
     this.setState({ panoGoruldu: yeni });
   }
   // Menüdeki sayı: bakılmamış yeni işler
+  // Sırası bende olan onaylar: ön/son onay, tesis önerisi, malzeme isteği, reddedilen talep incelemesi (menü rozeti ve “Onayım bekliyor” sütunu)
+  onayBekleyenSay() {
+    const s = this.state, me = s.session;
+    if (!me) return 0;
+    const can = k => this.yetkiVar(me, k);
+    let n = 0;
+    if (s.modul.ariza !== false) {
+      for (const f of (s.faults || [])) {
+        if (f.status === 'kontrol' && (can('onOnay') || can('close'))) n++;
+        else if (f.status === 'mudur_onayi' && can('close')) n++;
+      }
+    }
+    n += (s.tesisOneriler || []).filter(o => o.benim_sira).length;
+    if (can('stokSiparisOnay') && s.modul.ambar !== false) n += (s.siparis || []).filter(x => x.durum === 'istek').length;
+    if (can('close') && s.modul.talep !== false) n += (s.talepler || []).filter(x => x.durum === 'red').length;
+    return n;
+  }
   panoYeniSayi() {
     const s = this.state;
     let n = 0;

@@ -30,7 +30,7 @@
 </sc-if>
 <sc-if value="{{ isPanosuEkran.panoGorunumu }}" hint-placeholder-val="{{ true }}">
 <div class="ks-bilgi" style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ isPanosuEkran.yardim }}</div>
-<div style="flex:1;display:grid;grid-template-columns:repeat(4,minmax(200px,1fr));gap:12px;align-items:start;min-height:0">
+<div style="flex:1;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);overflow-x:auto;padding-bottom:6px;gap:12px;align-items:start;min-height:0">
 <sc-for list="{{ isPanosuEkran.kolonlar }}" as="k" hint-placeholder-count="4">
 <div onDragOver="{{ k.ustunde }}" onDragEnter="{{ k.girdi }}" onDrop="{{ k.birak }}" style="border-radius:16px;border:2px dashed {{ k.kenar }};background:{{ k.zemin }};padding:10px;display:flex;flex-direction:column;gap:10px;min-height:260px;transition:background .15s">
 <div style="display:flex;align-items:center;gap:8px;padding:2px 4px 4px">

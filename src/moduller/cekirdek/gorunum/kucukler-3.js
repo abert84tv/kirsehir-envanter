@@ -29,20 +29,20 @@
         isPano: tabId === 'isPano', isPanosu: tabId === 'isPanosu', isKarti: tabId === 'isKarti', ekipPano: tabId === 'ekipPano', telemetri: tabId === 'telemetri'
       },
       // Masaüstü menüsü başlıklara ayrılır; içi boşalan başlık görünmez
-      navGruplu: MENU_GRUP.map(([baslik, idler]) => ({
+      navGruplu: menuGrup.map(([baslik, idler]) => ({
         baslik,
         ogeler: idler.map(id => navVisible.find(g => g.id === id)).filter(Boolean).map(navItem)
       })).filter(g => g.ogeler.length),
       // Telefon alt çubuğu: en çok dört sayfa, kalanı "Tümü"
       navPhone: (() => {
-        const secili = TELEFON_SIRA
+        const secili = telSira
           .map(id => navVisible.find(g => g.id === id))
           .filter(Boolean).slice(0, 4);
         const acikBadge = navVisible
           .filter(g => !secili.includes(g))
           .reduce((t, g) => t + (g.badge || 0), 0);
         // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
-        const KISA = { kaynaklar: 'Kaynaklar' };
+        const KISA = (RM.ad || {}).kaynaklar ? {} : { kaynaklar: 'Kaynaklar' };
         return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
           label: 'Tümü', go: () => this.setState({ menuAcik: true }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
@@ -54,7 +54,7 @@
       menuSayfa: {
         acik: !!s.menuAcik,
         kapat: () => this.setState({ menuAcik: false }),
-        gruplar: MENU_GRUP.map(([baslik, idler]) => ({
+        gruplar: menuGrup.map(([baslik, idler]) => ({
           baslik,
           ogeler: idler.map(id => navVisible.find(g => g.id === id)).filter(Boolean).map(g => {
             const n = navItem(g);
@@ -64,7 +64,7 @@
       },
       // Yalnız Ayarlar > Görünüm'de gösterilir; o an açık olan grup
       // (Ayarlar'ın kendisi) kendine giden anlamsız bir düğme olmasın diye düşer
-      otherScreens: navVisible.filter(g => !TELEFON_SIRA.includes(g.id) && !g.acik).map(navItem),
+      otherScreens: navVisible.filter(g => !telSira.includes(g.id) && !g.acik).map(navItem),
 
       province: m ? {
         line: `${fmt(m.PROVINCE.population2025)} nüfus · ${m.PROVINCE.districts} ilçe · ${m.PROVINCE.municipalities} belediye · ${m.PROVINCE.mahalle} mahalle · ${m.PROVINCE.villages} köy · ${fmt(m.PROVINCE.areaKm2)} km²`,

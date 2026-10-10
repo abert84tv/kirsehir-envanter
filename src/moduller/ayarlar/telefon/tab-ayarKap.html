@@ -23,6 +23,13 @@
 <button onClick="{{ ayar.geri }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:4px;padding:8px 10px 8px 6px;border-radius:9px;color:{{ ui.acc }};font:500 15px/1 var(--font-body);letter-spacing:-.015em"><span style="font-size:20px;line-height:1">‹</span> Ayarlar</button>
 <span style="flex:1;min-width:0;font:600 16px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ayar.bolumAd }}</span>
 </div>
+<sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px 6px;background:{{ ui.surf }}">
+<sc-for list="{{ ayar.altSekmeler }}" as="t" hint-placeholder-count="3">
+<button onClick="{{ t.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:999px;border:1px solid {{ t.kenar }};background:{{ t.bg }};color:{{ t.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:12px 15px;min-height:44px;display:flex;align-items:center">{{ t.ad }}</button>
+</sc-for>
+</div>
+</sc-if>
 </sc-if>
 <sc-if value="{{ ayar.gorunum }}" hint-placeholder-val="{{ true }}">
 <div style="padding:13px 14px;border-bottom:1px solid {{ ui.rule }}">

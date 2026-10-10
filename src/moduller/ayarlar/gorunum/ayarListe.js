@@ -1,29 +1,21 @@
-      // Ayarlar listesi — iOS Ayarlar gibi kümelenmiş satırlar
-      ayarListe: AYAR_LISTE.map(([baslik, satirlar]) => ({
-        baslik,
-        satirlar: satirlar
-          // Modüller yalnız yöneticide; ayrı sekmesi olanlar SUZGEC_TANIM'daki
-          // kendi yetkisinden okur (AYAR_TAB_YETKI), ötekiler ayarlar yetkisinden
-          .filter(([id]) => (id !== 'modul' || can('admin')) && (id !== 'vekalet' || !!(me && ['mudur', 'yonetici'].includes(me.role))) && ayarGorunur(id, s.modul)
-            && (!AYAR_TAB_YETKI[id] || yetki(AYAR_TAB_YETKI[id]) !== 'yok'))
-          .map(([id, ad, alt]) => ({
-            ad,
-            aktif: ayarAcik(s) === id,
-            zemin: ayarAcik(s) === id && tabId === 'ayarlar' ? ui.sel : 'transparent',
-            renk: ayarAcik(s) === id && tabId === 'ayarlar' ? ui.acc : ui.fg,
-            rozet: id === 'cop' && (s.trash.length + (s.cop || []).length) ? String(s.trash.length + (s.cop || []).length) : '',
-            alt: id === 'cop' && (s.trash.length + (s.cop || []).length)
-              ? (s.trash.length + (s.cop || []).length) + ' kayıt bekliyor'
-              : alt,
-            // "aktarim" masaüstüne özgü — telefonda arayışı bilgisayara yönlendirir,
-            // izinsiz kullanıcıyı uyarır (goImport ile birebir aynı davranış)
-            git: id === 'aktarim'
-              ? () => (!can('create')
-                  ? this.say('Toplu aktarımı Mühendis ve üstü yapar.')
-                  : (s.device === 'phone'
-                      ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
-                      : this.setState({ tab: 'aktarim', imp: null })))
-              : AYAR_TAB[id] ? () => this.setState({ tab: AYAR_TAB[id] })
-              : () => this.setState({ ayarBolum: id })
-          }))
-      })).filter(g => g.satirlar.length),
+      // Ayarlar listesi — beş başlık (AYAR_GRUP). Her başlığın altındaki eski bölümler, açılan sayfanın üstünde sekme olur.
+      // Rol, modül ve sayfa yetkisi (ayarGoster) görünmeyen bölümü listeden de sekmeden de çıkarır.
+      ayarListe: (() => {
+        const sec = ayarAcik(s);
+        const aktifUye = AYAR_TAB[tabId] ? tabId : (tabId === 'ayarlar' ? sec : null);
+        const copSay = s.trash.length + (s.cop || []).length;
+        const satirlar = AYAR_GRUP.map(([gid, ad, alt, uyeler]) => {
+          const gorunen = uyeler.filter(ayarGoster);
+          if (!gorunen.length) return null;
+          const aktif = gorunen.includes(aktifUye);
+          return {
+            ad, alt,
+            aktif,
+            zemin: aktif && tabId === 'ayarlar' ? ui.sel : 'transparent',
+            renk: aktif && tabId === 'ayarlar' ? ui.acc : ui.fg,
+            rozet: gorunen.includes('cop') && copSay ? String(copSay) : '',
+            git: () => ayarGit(gorunen[0])
+          };
+        }).filter(Boolean);
+        return satirlar.length ? [{ baslik: '', satirlar }] : [];
+      })(),

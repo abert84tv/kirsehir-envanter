@@ -11,18 +11,24 @@
       // "Bana atanan" arıza ve bakım işlerini listeler; ikisi de kapalıysa boş kalır
       // Genel bakış ve Ekipler telefonda da var (2026.10.01, 6. aşama)
       gunluk: arizaOn || bakimOn, isPano: arizaOn || talepOn || oneriOn, isPanosu: arizaOn || talepOn || oneriOn };
-    const suzgecSayi = { isPanosu: this.panoYeniSayi(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
+    // Rol menüsü: başlık sırası, telefon çubuğu, sayfa adı, süzgeç sırası (ROL_MENU)
+    const RM = ROL_MENU[me && me.role] || {};
+    const menuGrup = RM.grup ? [...MENU_GRUP].sort((a, b) => { const i = RM.grup.indexOf(a[0]), j = RM.grup.indexOf(b[0]); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); }) : MENU_GRUP;
+    const telSira = RM.telefon || TELEFON_SIRA;
+    const suzgecSayi = { isPanosu: this.panoYeniSayi() + this.onayBekleyenSay(), ariza: acikAriza, talep: acikTalep + (talepOn ? (s.basvurular || []).filter(b => b.durum === 'yeni').length : 0) };
     const gruplar = {};
     for (const sayfa in SUZGEC_TANIM) {
-      const zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      const sira = (RM.suz || {})[sayfa];
+      let zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      if (sira) zs = [...zs].sort((a, b) => { const i = sira.indexOf(a.id), j = sira.indexOf(b.id); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
       gruplar[sayfa] = {
-        id: sayfa, ad: zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa), suz: zs,
+        id: sayfa, ad: (RM.ad || {})[sayfa] || (zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa)), suz: zs,
         acik: zs.some(z => z.hedef === tabId),
         badge: zs.reduce((t, z) => t + (suzgecSayi[z.hedef] || 0), 0)
       };
     }
     // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
-    const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length);
+    const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length && !(RM.gizle || []).includes(g.id));
     const navItem = g => ({
       label: g.ad, go: () => { this.geziMenu(); this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }); },
       // Etkin sayfa dolu mavi hap; ötekiler zeminsiz

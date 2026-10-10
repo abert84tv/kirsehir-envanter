@@ -72,7 +72,7 @@
               return { ad, adet: secim[ad], birim: k.birim || 'adet', tutar: Number(k.fiyat) || 0 };
             });
             this.sahaDurum(f, canClose ? 'cozuldu' : 'kontrol', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
-            this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + ' zimmetten düşüldü. ' : '')
+            this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + (canClose ? ' zimmetten düşüldü. ' : ' malzeme kaydedildi (onaydan sonra zimmetten düşer). ') : '')
               + (onayOn ? 'Kayıt merkez onayına gönderildi.' : 'Öncesi/sonrası kanıt tesisin arıza geçmişine yazıldı.') } });
             clearTimeout(this._sahaZ);
             this._sahaZ = setTimeout(() => this.setState({ sahaBasari: null, sahaAktifId: null }), 2200);

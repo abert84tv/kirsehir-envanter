@@ -63,6 +63,18 @@ export async function tesisKaydet(a) {
     p_surum: a.surum || null
   });
 }
+// Tesis ekleme/silme önerisi (saha şefi → mühendis → müdür)
+export async function tesisDegisiklikListesi() { return cagir('tesis_degisiklik_listesi', { p_token: tokenOku() }); }
+export async function tesisDegisiklikAc(o) {
+  return cagir('tesis_degisiklik_ac', {
+    p_token: tokenOku(), p_tur: o.tur, p_tesis_id: o.tesisId || null, p_ilce: o.ilce || null, p_koy: o.koy || null,
+    p_tesis_tur: o.tesisTur || null, p_lat: o.lat ?? null, p_lon: o.lon ?? null, p_yapim_yili: o.yil || null,
+    p_veri: o.veri || {}, p_aciklama: o.aciklama || null
+  });
+}
+export async function tesisDegisiklikKarar(id, karar, neden) {
+  return cagir('tesis_degisiklik_karar', { p_token: tokenOku(), p_id: id, p_karar: karar, p_neden: neden || null });
+}
 export async function tesisSil(dbId)    { return cagir('tesis_sil', { p_token: tokenOku(), p_id: dbId }); }
 export async function tesisGeriAl(dbId) { return cagir('tesis_geri_al', { p_token: tokenOku(), p_id: dbId }); }
 export async function tesisKaliciSil(dbId) { return cagir('tesis_kalici_sil', { p_token: tokenOku(), p_id: dbId }); }

@@ -105,9 +105,13 @@
     let n = 0;
     const eksik = [];
     const islemler = [];
+    // Bu işin malzemesi daha önce düşüldüyse (yeniden açılıp tekrar kapanma) ikinci kez düşmez
+    const notu = (f.no || 'arıza') + ' kapanışı';
+    const dustu = new Set(hareket.filter(h => h.tur === 'sarf' && h.not === notu && h.ekip === f.crew).map(h => h.malzeme));
     for (const mz of (f.malzeme || [])) {
       const kalem = this.katalogBul(mz.ad);
       if (!kalem || !stoktaMi(kalem)) continue;
+      if (dustu.has(mz.ad)) continue;
       const adet = Math.abs(Number(mz.adet) || 1);
       const elde = Number((zim[f.crew] || {})[mz.ad]) || 0;
       if (elde < adet) { eksik.push(mz.ad); continue; }

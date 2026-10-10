@@ -215,6 +215,7 @@
     this.copYenile().then(() => this.kodDenetle());
     this.isEmriYenile();
     this.basvuruYenile();
+    this.tesisOneriYenile();
     if (bekleyenF.length) setTimeout(() => this.arizaKuyrukGonder(), 300);
     if (assets.some(x => x.sync === 'pending')) setTimeout(() => this.kuyrukGonder(true), 600);
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider

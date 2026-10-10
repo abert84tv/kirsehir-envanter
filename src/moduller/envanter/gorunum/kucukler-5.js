@@ -1,5 +1,6 @@
       silLabel: !can('sil') ? 'Silme yetkiniz yok' : (sel && !this.yazabilir(sel) ? 'Bu ilçede yetkiniz yok' : 'Kaydı sil'),
-      canSil: can('sil'),
+      canSil: can('sil') || can('tesisOner'),
+      silEtiket: can('sil') ? (s.device === 'phone' ? 'Kaydı sil' : 'Sil') : 'Silmeyi öner',
       // ilçe yetkisi: kayıt başka ilçedeyse ekranda kilit görünür
       kilit: (() => {
         const me2 = s.session;

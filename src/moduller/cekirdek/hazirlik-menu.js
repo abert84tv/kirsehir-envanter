@@ -44,7 +44,7 @@
     });
     const aktifGrup = navVisible.find(g => g.acik) || null;
     const seg = (on, act) => ({ bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.mut, pick: act });
-    const canCreateAsset = can('create') && sayfaTam;
+    const canCreateAsset = (can('create') || can('tesisOner')) && sayfaTam;   // tesisOner: kayıt açmaz, mühendis/müdür onayına öneri gönderir
     const na = s.newAsset;
 
     // Kırmızı yalnız aciliyet ve hata için; gerisi nötr

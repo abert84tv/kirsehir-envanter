@@ -367,7 +367,7 @@
 <button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1 1 100%;justify-content:flex-start;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:16px 14px;min-height:52px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
 <button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">Tesis kartı</button>
 <sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">{{ ikonlar.cop }} Kaydı sil</button>
+<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">{{ ikonlar.cop }} {{ silEtiket }}</button>
 </sc-if>
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">Kapat</button>
 </div>

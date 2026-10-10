@@ -6,6 +6,8 @@
         const yilHam = String(n.year || '').trim();
         const yil = parseInt(yilHam, 10);
         if (yilHam && !(yil >= 1900 && yil <= new Date().getFullYear() + 1)) return this.say('Yapım yılı geçersiz — bilinmiyorsa boş bırakın.');
+        // Ekleme yetkisi yok ama “tesis önerme” yetkisi var: kayıt açılmaz, mühendis ve müdür onayına öneri gider
+        if (!can('create') && can('tesisOner')) return this.tesisEkleOner(n);
         const dosyalar = this._naFiles || [];
         this._naFiles = [];
         const sunucuVar = !!(this._sb && this._sb.tokenOku() && !s.offline);

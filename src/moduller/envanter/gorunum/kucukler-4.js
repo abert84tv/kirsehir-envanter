@@ -1,3 +1,3 @@
-      yeniTesisAc: () => can('create')
+      yeniTesisAc: () => (can('create') || can('tesisOner'))
         ? (s.device !== 'phone' ? this.naAc() : (this._naTemizle(), this.setState({ tab: 'islem', scenario: 'yeni', newAsset: { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '', note: '', lat: null, lon: null, photos: 0, fotoUrl: [] } })))
         : this.say('Yeni tesis kayd\u0131n\u0131 M\u00fchendis ve \u00fcst\u00fc a\u00e7ar.'),

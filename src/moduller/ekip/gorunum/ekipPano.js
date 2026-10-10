@@ -8,7 +8,9 @@
         const assetOf = id => s.assets.find(a => a.id === id) || null;
         const ekipIsler = ad => acikF.filter(f => f.crew === ad);
         const sahadaEkip = new Set(acikF.filter(f => f.status === 'sahada' && f.crew && f.crew !== ATANMADI).map(f => f.crew));
-        const ekipListe = s.ekipler || [];
+        // Saha şefi yalnız kendi ekibini, kendi personelini ve aracını görür (diğer ekiplerin işi sunucudan da gelmez)
+        const sefEkip = me && me.role === 'sef' && me.crew ? me.crew : '';
+        const ekipListe = (s.ekipler || []).filter(e => !sefEkip || e.ad === sefEkip);
         const uyeEkip = {};
         for (const e of ekipListe) for (const id of [e.sefId, ...(e.uyeIdler || [])].filter(Boolean)) if (!uyeEkip[id]) uyeEkip[id] = e.ad;
 
@@ -24,7 +26,7 @@
           if (['izin', 'rapor', 'gorevli'].includes(p.durum) && !(p.donus && p.donus < bugunIso)) return p.durum;
           return sahadaEkip.has(uyeEkip[p.id]) ? 'sahada' : 'musait';
         };
-        const personel = (s.personel || []).filter(p => p.durum !== 'ayrildi');
+        const personel = (s.personel || []).filter(p => p.durum !== 'ayrildi' && (!sefEkip || uyeEkip[p.id] === sefEkip));
         const perD = Object.fromEntries(personel.map(p => [p.id, perDurum(p)]));
         const pf = s.ekipPf || '';
         const seg = (TANIM, sayac, toplam, secili, sec) => Object.keys(TANIM).filter(k => sayac[k]).map(k => ({
@@ -46,7 +48,7 @@
           arizali: ['Arızalı', kirmizi, 'rgba(215,0,21,.1)', kirmizi],
           disi: ['Hizmet dışı', gri, ui.surf2, ui.mut]
         };
-        const araclar = (s.arac && s.arac.list) || [];
+        const araclar = ((s.arac && s.arac.list) || []).filter(v => !sefEkip || v.ekip === sefEkip);
         const aracSay = {};
         araclar.forEach(v => { const d = AS[v.durum] ? v.durum : 'musait'; aracSay[d] = (aracSay[d] || 0) + 1; });
         const vf = s.ekipVf || '';

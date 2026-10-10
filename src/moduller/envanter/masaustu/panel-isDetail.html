@@ -387,7 +387,7 @@
 <button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1;justify-content:flex-start;border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:13px 14px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
 <button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Tesis kartı</button>
 <sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Sil</button>
+<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">{{ silEtiket }}</button>
 </sc-if>
 <button onClick="{{ closeDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Kapat</button>
 </div>

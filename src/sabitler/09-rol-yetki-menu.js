@@ -17,6 +17,8 @@ const PERMS = [
   ['arizaAc', 'Arıza kaydı açma', ISLEM_ROLLERI],
   ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'operator', 'sef', 'personel']],
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
+  // Doğrudan ekleyip silemeyen saha ekibi (örn. elektrik şefi) tesis ÖNERİR: ilçe/bölge mühendisi ön onay verir, müdür son onayla uygular. Yetki kişiye Ayarlar › Yetkiler'den verilir.
+  ['tesisOner', 'Tesis ekleme/silme önerme (mühendis ön onayı + müdür son onayı ile uygulanır)', []],
   // İş açan/atayan ≠ ön onaylayan ≠ son onaylayan (görevler ayrılığı): yönetici ve müdür bu işleri açmaz, onaylar
   ['assign', 'Ekip atama ve iş emri açma', ['operator']],
   ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['operator']],

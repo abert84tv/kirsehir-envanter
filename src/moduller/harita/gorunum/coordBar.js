@@ -19,7 +19,7 @@
             try { navigator.clipboard.writeText(t); } catch (e) { /* izin yok */ }
             this.say(`Koordinat kopyalandı: ${t}`);
           },
-          yeniTesis: can('create') ? () => {
+          yeniTesis: (can('create') || can('tesisOner')) ? () => {
             this._naTemizle();
             const ilce = this.enYakinIlce(p.lat, p.lon) || ((m && m.DISTRICTS[0].name) || '');
             const yeni = { type: 'kuyu', district: ilce, village: '', year: '', note: '', lat: p.lat, lon: p.lon, photos: 0, fotoUrl: [] };
@@ -28,7 +28,7 @@
             this.toMap({ ks: 'coordMode', on: false });
             this.say(`Yeni tesis kaydı bu koordinatla açıldı: ${p.lat.toFixed(6)}, ${p.lon.toFixed(6)}`);
           } : null,
-          canCreate: can('create'),
+          canCreate: can('create') || can('tesisOner'),
           kapat: () => { this.setState({ picked: null }); this.toMap({ ks: 'coordMode', on: false }); },
           donustur: () => this.setState({
             picked: null, panel: 'donusum',

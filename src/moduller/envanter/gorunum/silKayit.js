@@ -1,7 +1,8 @@
-      silKayit: !can('sil') ? null : () => {
+      silKayit: !(can('sil') || can('tesisOner')) ? null : () => {
         const a = sel;
         if (!a) return;
         if (!this.yazabilir(a)) return this.kilitUyar(a);
+        if (!can('sil')) return this.tesisSilOner(a);   // silme yetkisi yok: mühendis ve müdür onayına öneri gider
         this.denetimYaz('veri', 'Kayıt çöp kutusuna taşındı',
           TYPES[a.type].kind + ' · ' + this.yer(a), a.code);
         const me2 = s.session;

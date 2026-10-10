@@ -4989,7 +4989,7 @@ Malzeme istekleri
 <button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1;justify-content:flex-start;border:none;cursor:pointer;font:600 13px/1 var(--font-body);padding:13px 14px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
 <button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Tesis kartı</button>
 <sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Sil</button>
+<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">{{ silEtiket }}</button>
 </sc-if>
 <button onClick="{{ closeDetail }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:13px 14px">Kapat</button>
 </div>
@@ -9028,7 +9028,7 @@ Malzeme istekleri
 <button onClick="{{ editDetail }}" class="btn btn-primary" style="flex:1 1 100%;justify-content:flex-start;border:none;cursor:pointer;font:600 13.5px/1 var(--font-body);padding:16px 14px;min-height:52px;opacity:{{ detail.canEdit }}">{{ detail.editLabel }}</button>
 <button onClick="{{ kartAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">Tesis kartı</button>
 <sc-if value="{{ canSil }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">{{ ikonlar.cop }} Kaydı sil</button>
+<button onClick="{{ silKayit }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">{{ ikonlar.cop }} {{ silEtiket }}</button>
 </sc-if>
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 46%;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12.5px/1 var(--font-body);letter-spacing:-.01em;padding:15px 10px;min-height:52px">Kapat</button>
 </div>
@@ -10475,6 +10475,8 @@ const PERMS = [
   ['arizaAc', 'Arıza kaydı açma', ISLEM_ROLLERI],
   ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'operator', 'sef', 'personel']],
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
+  // Doğrudan ekleyip silemeyen saha ekibi (örn. elektrik şefi) tesis ÖNERİR: ilçe/bölge mühendisi ön onay verir, müdür son onayla uygular. Yetki kişiye Ayarlar › Yetkiler'den verilir.
+  ['tesisOner', 'Tesis ekleme/silme önerme (mühendis ön onayı + müdür son onayı ile uygulanır)', []],
   // İş açan/atayan ≠ ön onaylayan ≠ son onaylayan (görevler ayrılığı): yönetici ve müdür bu işleri açmaz, onaylar
   ['assign', 'Ekip atama ve iş emri açma', ['operator']],
   ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['operator']],
@@ -10698,7 +10700,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-189';
+const SURUM = '2026.10.10-190';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -12072,9 +12074,13 @@ class Component extends DCLogic {
     let n = 0;
     const eksik = [];
     const islemler = [];
+    // Bu işin malzemesi daha önce düşüldüyse (yeniden açılıp tekrar kapanma) ikinci kez düşmez
+    const notu = (f.no || 'arıza') + ' kapanışı';
+    const dustu = new Set(hareket.filter(h => h.tur === 'sarf' && h.not === notu && h.ekip === f.crew).map(h => h.malzeme));
     for (const mz of (f.malzeme || [])) {
       const kalem = this.katalogBul(mz.ad);
       if (!kalem || !stoktaMi(kalem)) continue;
+      if (dustu.has(mz.ad)) continue;
       const adet = Math.abs(Number(mz.adet) || 1);
       const elde = Number((zim[f.crew] || {})[mz.ad]) || 0;
       if (elde < adet) { eksik.push(mz.ad); continue; }
@@ -13356,7 +13362,7 @@ class Component extends DCLogic {
     const M = this._sb;
     if (!M || !M.tokenOku()) return;
     try {
-      if (M.copTemizle) {
+      if (M.copTemizle && this.yetkiVar(this.state.session, 'sil')) {
         const t = await M.copTemizle();
         if (t && t.ok && t.data && (t.data.tesis || t.data.foto)) {
           this.duyur(`Çöp kutusunda 30 günü dolan ${t.data.tesis} kayıt ve ${t.data.foto} fotoğraf kalıcı silindi.`, 6000, 'bilgi',
@@ -14128,6 +14134,65 @@ class Component extends DCLogic {
     return true;
   }
 
+  // ── Tesis ekleme / silme önerisi: saha şefi önerir → ilçe (ya da bütün ilçelere bakan) mühendis ön onayı → müdür son onayı.
+  // Sunucu (tesis_degisiklik_*) her adımı yetkiye göre denetler; operatör bu zincirde yoktur.
+  async tesisOneriYenile() {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || !M.tesisDegisiklikListesi) return;
+    const r = await M.tesisDegisiklikListesi();
+    if (r && r.ok) this.setState({ tesisOneriler: r.data || [] });
+  }
+  async tesisEkleOner(n) {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || this.state.offline) return this.say('Öneri göndermek için bağlantı gerekir — çevrimiçi olunca yeniden deneyin.', true);
+    const eskiForm = { newAsset: n, naSz: this.state.naSz, scenario: this.state.scenario, tab: this.state.tab };
+    const dosya = (this._naFiles || []).length;
+    const r = await M.tesisDegisiklikAc({
+      tur: 'ekle', tesisTur: n.type, ilce: n.district, koy: n.village, lat: n.lat, lon: n.lon,
+      yil: parseInt(n.year, 10) || null, veri: { d: {}, photos: 0 }, aciklama: (n.note || '').trim()
+    });
+    if (!r.ok) { this.say(r.err + ' Form açık kaldı.', true); return; }
+    this._naTemizle();
+    this.setState({ scenario: null, newAsset: null, naSz: null, tab: 'harita' });
+    this.denetimYaz('kayit', 'Yeni tesis önerildi', (TYPES[n.type] ? TYPES[n.type].kind : n.type) + ' · ' + n.village + ' · ' + n.district, '');
+    this.tesisOneriYenile();
+    this.say('Öneri gönderildi — ' + n.district + ' mühendisinin onayına gitti; sonra müdür onaylayınca kayıt açılır.'
+      + (dosya ? ' Fotoğraflar öneriye eklenmez; kayıt açılınca kartından yükleyin.' : ''), true);
+    setTimeout(() => this.setState({ toast: null }), 9000);
+  }
+  async tesisSilOner(a) {
+    const M = this._sb;
+    if (!M || !M.tokenOku() || !a.dbId || this.state.offline) return this.say('Silme önerisi için bağlantı gerekir.', true);
+    const neden = window.prompt(a.code + ' için silme önerisi — nedenini kısaca yazın:', '');
+    if (neden === null) return;
+    if (!neden.trim()) return this.say('Silme nedenini yazın — onaylayanlar görecek.', true);
+    const r = await M.tesisDegisiklikAc({ tur: 'sil', tesisId: a.dbId, aciklama: neden.trim() });
+    if (!r.ok) return this.say(r.err, true);
+    this.denetimYaz('kayit', 'Tesis silme önerildi', TYPES[a.type].kind + ' · ' + this.yer(a), a.code);
+    this.setState({ selected: null, panel: 'yok' });
+    this.tesisOneriYenile();
+    this.say(a.code + ' için silme önerisi mühendis onayına gönderildi. Onaylanmadan kayıt silinmez.', true);
+    setTimeout(() => this.setState({ toast: null }), 8000);
+  }
+  async tesisOneriKarar(o, karar) {
+    const M = this._sb;
+    if (!M || !M.tokenOku()) return;
+    let neden = '';
+    if (karar === 'red') {
+      neden = window.prompt('Reddetme nedeni (öneren görecek):', '');
+      if (neden === null) return;
+    }
+    const r = await M.tesisDegisiklikKarar(o.id, karar, neden);
+    if (!r.ok) { this.say(r.err, true); return; }
+    const ad = (o.tur === 'sil' ? 'Silme' : 'Ekleme') + ' önerisi';
+    const ne = { mudur: 'ön onaylandı, müdür onayına gitti', onaylandi: 'onaylandı ve uygulandı', reddedildi: 'reddedildi', iptal: 'geri çekildi', iade: 'mühendise iade edildi' }[r.data] || String(r.data);
+    this.denetimYaz('veri', ad + ' ' + ne, (o.tesis_kod || '') + ' · ' + (o.koy || '') + ' · ' + o.ilce, '');
+    this.say(ad + ' ' + ne + '.', true);
+    setTimeout(() => this.setState({ toast: null }), 6000);
+    this.tesisOneriYenile();
+    if (r.data === 'onaylandi') this.veriYenile(true);
+  }
+
 
   // periyodik bakım: kuyu 6 ay, depo 12 ay, elektrik tesisi 12 ay
   // Modül anahtarı kurum ayarıdır: sunucuya yazılır, bütün cihazlarda aynı
@@ -14605,6 +14670,7 @@ class Component extends DCLogic {
     this.copYenile().then(() => this.kodDenetle());
     this.isEmriYenile();
     this.basvuruYenile();
+    this.tesisOneriYenile();
     if (bekleyenF.length) setTimeout(() => this.arizaKuyrukGonder(), 300);
     if (assets.some(x => x.sync === 'pending')) setTimeout(() => this.kuyrukGonder(true), 600);
     // Haritanın işaretleri de yenilenir: kimlikler uyuşmazsa tıklama boşa gider
@@ -17576,7 +17642,7 @@ class Component extends DCLogic {
     });
     const aktifGrup = navVisible.find(g => g.acik) || null;
     const seg = (on, act) => ({ bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.mut, pick: act });
-    const canCreateAsset = can('create') && sayfaTam;
+    const canCreateAsset = (can('create') || can('tesisOner')) && sayfaTam;   // tesisOner: kayıt açmaz, mühendis/müdür onayına öneri gönderir
     const na = s.newAsset;
 
     // Kırmızı yalnız aciliyet ve hata için; gerisi nötr
@@ -19552,11 +19618,12 @@ class Component extends DCLogic {
         }
         if (f.status === 'cozuldu') setTimeout(() => this.anaCozum({ ...f, no: arizaNo }), 400);
         // Kapanan kayıtta kullanılan malzeme ekip zimmetinden düşülebilir
-        if (ambarOn && f.status === 'cozuldu' && (f.malzeme || []).length
-          && f.crew && f.crew !== 'Atanmadı') {
-          const dus = window.confirm('Kullanılan malzeme ' + f.crew + ' zimmetinden düşülsün mü?\n\n'
-            + (f.malzeme || []).map(mz => '• ' + mz.ad + ' × ' + (mz.adet || 1) + ' ' + mz.birim).join('\n'));
-          if (dus) setTimeout(() => this.arizaStokDus({ ...f, no: arizaNo }), 0);
+        // İş son onayla ilk kez kapanırken: kullanılan malzeme ekip zimmetinden KENDİLİĞİNDEN düşer (soru sorulmaz;
+        // aynı işin malzemesi ikinci kez düşmez). Bağlı talebin çözülmesi sunucu kaydı gelince esitleme.js'te yapılır.
+        const onceki = f.id ? ((s.faults || []).find(x => x.id === f.id) || {}).status : null;
+        const yeniKapandi = f.status === 'cozuldu' && onceki !== 'cozuldu';
+        if (ambarOn && yeniKapandi && (f.malzeme || []).length && f.crew && f.crew !== 'Atanmadı') {
+          setTimeout(() => this.arizaStokDus({ ...f, no: arizaNo }), 0);
         }
         // Arızaya bağlı açık bir iş emri varsa arıza kapanınca o da kapanır —
         // kullanılan malzeme + toplam saat + not tesis geçmişine ayrıntılı yazılır.
@@ -19700,7 +19767,7 @@ class Component extends DCLogic {
               return { ad, adet: secim[ad], birim: k.birim || 'adet', tutar: Number(k.fiyat) || 0 };
             });
             this.sahaDurum(f, canClose ? 'cozuldu' : 'kontrol', { malzeme: [...(f.malzeme || []), ...malzeme], notEk: ((kp && kp.not) || '').trim() });
-            this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + ' zimmetten düşüldü. ' : '')
+            this.setState({ sahaBasari: { id: f.id, onay: onayOn, metin: (malzeme.length ? malzeme.map(m => m.adet + ' × ' + m.ad).join(', ') + (canClose ? ' zimmetten düşüldü. ' : ' malzeme kaydedildi (onaydan sonra zimmetten düşer). ') : '')
               + (onayOn ? 'Kayıt merkez onayına gönderildi.' : 'Öncesi/sonrası kanıt tesisin arıza geçmişine yazıldı.') } });
             clearTimeout(this._sahaZ);
             this._sahaZ = setTimeout(() => this.setState({ sahaBasari: null, sahaAktifId: null }), 2200);
@@ -20652,7 +20719,9 @@ class Component extends DCLogic {
         const assetOf = id => s.assets.find(a => a.id === id) || null;
         const ekipIsler = ad => acikF.filter(f => f.crew === ad);
         const sahadaEkip = new Set(acikF.filter(f => f.status === 'sahada' && f.crew && f.crew !== ATANMADI).map(f => f.crew));
-        const ekipListe = s.ekipler || [];
+        // Saha şefi yalnız kendi ekibini, kendi personelini ve aracını görür (diğer ekiplerin işi sunucudan da gelmez)
+        const sefEkip = me && me.role === 'sef' && me.crew ? me.crew : '';
+        const ekipListe = (s.ekipler || []).filter(e => !sefEkip || e.ad === sefEkip);
         const uyeEkip = {};
         for (const e of ekipListe) for (const id of [e.sefId, ...(e.uyeIdler || [])].filter(Boolean)) if (!uyeEkip[id]) uyeEkip[id] = e.ad;
 
@@ -20668,7 +20737,7 @@ class Component extends DCLogic {
           if (['izin', 'rapor', 'gorevli'].includes(p.durum) && !(p.donus && p.donus < bugunIso)) return p.durum;
           return sahadaEkip.has(uyeEkip[p.id]) ? 'sahada' : 'musait';
         };
-        const personel = (s.personel || []).filter(p => p.durum !== 'ayrildi');
+        const personel = (s.personel || []).filter(p => p.durum !== 'ayrildi' && (!sefEkip || uyeEkip[p.id] === sefEkip));
         const perD = Object.fromEntries(personel.map(p => [p.id, perDurum(p)]));
         const pf = s.ekipPf || '';
         const seg = (TANIM, sayac, toplam, secili, sec) => Object.keys(TANIM).filter(k => sayac[k]).map(k => ({
@@ -20690,7 +20759,7 @@ class Component extends DCLogic {
           arizali: ['Arızalı', kirmizi, 'rgba(215,0,21,.1)', kirmizi],
           disi: ['Hizmet dışı', gri, ui.surf2, ui.mut]
         };
-        const araclar = (s.arac && s.arac.list) || [];
+        const araclar = ((s.arac && s.arac.list) || []).filter(v => !sefEkip || v.ekip === sefEkip);
         const aracSay = {};
         araclar.forEach(v => { const d = AS[v.durum] ? v.durum : 'musait'; aracSay[d] = (aracSay[d] || 0) + 1; });
         const vf = s.ekipVf || '';
@@ -21108,6 +21177,8 @@ class Component extends DCLogic {
         const yilHam = String(n.year || '').trim();
         const yil = parseInt(yilHam, 10);
         if (yilHam && !(yil >= 1900 && yil <= new Date().getFullYear() + 1)) return this.say('Yapım yılı geçersiz — bilinmiyorsa boş bırakın.');
+        // Ekleme yetkisi yok ama “tesis önerme” yetkisi var: kayıt açılmaz, mühendis ve müdür onayına öneri gider
+        if (!can('create') && can('tesisOner')) return this.tesisEkleOner(n);
         const dosyalar = this._naFiles || [];
         this._naFiles = [];
         const sunucuVar = !!(this._sb && this._sb.tokenOku() && !s.offline);
@@ -21210,13 +21281,14 @@ class Component extends DCLogic {
           kapat: () => this.setState({ buyut: null })
         };
       })(),
-      yeniTesisAc: () => can('create')
+      yeniTesisAc: () => (can('create') || can('tesisOner'))
         ? (s.device !== 'phone' ? this.naAc() : (this._naTemizle(), this.setState({ tab: 'islem', scenario: 'yeni', newAsset: { type: 'kuyu', district: (m && m.DISTRICTS[0].name) || '', village: '', year: '', note: '', lat: null, lon: null, photos: 0, fotoUrl: [] } })))
         : this.say('Yeni tesis kayd\u0131n\u0131 M\u00fchendis ve \u00fcst\u00fc a\u00e7ar.'),
-      silKayit: !can('sil') ? null : () => {
+      silKayit: !(can('sil') || can('tesisOner')) ? null : () => {
         const a = sel;
         if (!a) return;
         if (!this.yazabilir(a)) return this.kilitUyar(a);
+        if (!can('sil')) return this.tesisSilOner(a);   // silme yetkisi yok: mühendis ve müdür onayına öneri gider
         this.denetimYaz('veri', 'Kayıt çöp kutusuna taşındı',
           TYPES[a.type].kind + ' · ' + this.yer(a), a.code);
         const me2 = s.session;
@@ -21239,7 +21311,8 @@ class Component extends DCLogic {
         setTimeout(() => this.setState({ toast: null }), 6000);
       },
       silLabel: !can('sil') ? 'Silme yetkiniz yok' : (sel && !this.yazabilir(sel) ? 'Bu ilçede yetkiniz yok' : 'Kaydı sil'),
-      canSil: can('sil'),
+      canSil: can('sil') || can('tesisOner'),
+      silEtiket: can('sil') ? (s.device === 'phone' ? 'Kaydı sil' : 'Sil') : 'Silmeyi öner',
       // ilçe yetkisi: kayıt başka ilçedeyse ekranda kilit görünür
       kilit: (() => {
         const me2 = s.session;
@@ -21666,7 +21739,7 @@ class Component extends DCLogic {
             try { navigator.clipboard.writeText(t); } catch (e) { /* izin yok */ }
             this.say(`Koordinat kopyalandı: ${t}`);
           },
-          yeniTesis: can('create') ? () => {
+          yeniTesis: (can('create') || can('tesisOner')) ? () => {
             this._naTemizle();
             const ilce = this.enYakinIlce(p.lat, p.lon) || ((m && m.DISTRICTS[0].name) || '');
             const yeni = { type: 'kuyu', district: ilce, village: '', year: '', note: '', lat: p.lat, lon: p.lon, photos: 0, fotoUrl: [] };
@@ -21675,7 +21748,7 @@ class Component extends DCLogic {
             this.toMap({ ks: 'coordMode', on: false });
             this.say(`Yeni tesis kaydı bu koordinatla açıldı: ${p.lat.toFixed(6)}, ${p.lon.toFixed(6)}`);
           } : null,
-          canCreate: can('create'),
+          canCreate: can('create') || can('tesisOner'),
           kapat: () => { this.setState({ picked: null }); this.toMap({ ks: 'coordMode', on: false }); },
           donustur: () => this.setState({
             picked: null, panel: 'donusum',
@@ -23293,6 +23366,32 @@ class Component extends DCLogic {
             surukle: kolon !== 'bitti' && yazF ? { tur: 'ariza', id: f.id } : null,
             ekipDegisir: kolon !== 'bitti' && can('assign'), ekipDeger: ekipVar ? f.crew : '',
             ekipDegis: e => { const v = e.target.value; if (v && v !== (ekipVar ? f.crew : '')) this.panoEkipAta(f, v); }
+          });
+        }
+
+        // ── tesis ekleme/silme önerileri: saha şefi önerir → ilçe (ya da bütün ilçelere bakan) mühendis ön onayı → müdür son onayı
+        for (const o of (s.tesisOneriler || [])) {
+          const bekliyor = o.durum === 'muhendis' || o.durum === 'mudur';
+          const ms = Date.parse(o.acildi) || 0;
+          if (!bekliyor && simdi - (Date.parse(o.mudur_zaman || o.muhendis_zaman || o.acildi) || 0) > 7 * 86400000) continue;
+          const kolon = !bekliyor ? 'bitti' : (o.benim_sira ? 'yeni' : 'atandi');
+          const turAd = TYPES[o.tesis_tur] ? TYPES[o.tesis_tur].kind : 'Tesis';
+          const durumNot = { muhendis: 'Mühendis onayında', mudur: 'Müdür onayında', onaylandi: 'Onaylandı' + (o.sonuc_kod ? ' · ' + o.sonuc_kod : ''),
+            reddedildi: 'Reddedildi' + (o.red_neden ? ': ' + o.red_neden : ''), iptal: 'Geri çekildi' }[o.durum] || '';
+          const benimMi = !!me && String(o.acan_id) === String(me.dbId);
+          let dugme = 'Aç', dugmeRenk = '#8e8e93', git = () => this.say(durumNot + ' — ' + (o.aciklama || 'açıklama yok'), true), ikinci = '', ikinciGit = () => {};
+          if (o.benim_sira) {
+            dugme = o.durum === 'mudur' ? 'Son onay' : (can('close') ? 'Onayla ve uygula' : 'Ön onay'); dugmeRenk = '#34c759';
+            git = () => this.tesisOneriKarar(o, 'onay'); ikinci = 'Reddet'; ikinciGit = () => this.tesisOneriKarar(o, 'red');
+          } else if (bekliyor && benimMi) {
+            dugme = 'Geri çek'; dugmeRenk = '#d97706'; git = () => this.tesisOneriKarar(o, 'iptal');
+          }
+          kartlar.push({
+            anahtar: 'o' + o.id, kolon, tur: 'Tesis önerisi', onc: 'Normal', ms,
+            baslik: o.tur === 'sil' ? 'Silme önerisi: ' + (o.tesis_kod || turAd) : 'Ekleme önerisi: ' + turAd,
+            yer: [o.koy, o.ilce].filter(Boolean).join(' · '), kim: 'Öneren: ' + o.acan, kimBos: false, kanal: '',
+            aciklama: String(o.aciklama || '').slice(0, 110), uyari: durumNot, uyariKirmizi: o.durum === 'reddedildi',
+            dugme, dugmeRenk, git, ikinci, ikinciGit, ac: () => this.say(durumNot + ' — ' + (o.aciklama || 'açıklama yok'), true), surukle: null
           });
         }
 

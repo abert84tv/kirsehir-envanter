@@ -16,6 +16,10 @@ delete from foto where tesis_id in (select id from _dtesis) or id > 43;
 delete from hat where tesis_id in (select id from _dtesis) or olusturan_k in (select id from kullanicilar where kullanici_ad like 'deneme.%');
 delete from telemetri_cihaz where tesis_id in (select id from _dtesis);
 delete from gecmis where tesis_id in (select id from _dtesis) or id > 552734;
+delete from tesis_degisiklik where acan_k in (select id from kullanicilar where kullanici_ad like 'deneme.%');
+delete from konum_son where cihaz_id in (select id from konum_cihaz where ekip like 'Deneme%' or ad like 'DENEME%');
+delete from konum_cihaz where ekip like 'Deneme%' or ad like 'DENEME%';
+delete from vatandas_basvuru where takip like 'DNTEST-%';
 
 -- 2) Senaryoların açtığı arıza / iş emri / talep izleri (tabandan sonra gelenler)
 delete from is_emri_ek where exists (select 1 from is_emirleri e where e.id = is_emri_ek.id and e.id > 1);
@@ -30,9 +34,11 @@ update numara_sayaci set deger = 4 where tur = 'talep' and yil = 2026;
 
 -- 3) Ortak veri satırları
 update kurum_veri set veri = '[]'::jsonb, surum = surum + 1, guncelleme = now() where anahtar in ('ekip', 'personel', 'siparis');
+-- deneme araçları (dn-ar1…dn-ar6) ve örnek araç listesi: deneme öncesi bu kayıt boştu ({}); program başlangıç listesini kendisi gösterir
+update kurum_veri set veri = '{}'::jsonb, surum = surum + 1, guncelleme = now() where anahtar = 'arac';
 update kurum_veri set veri = '{"gun": {}, "stok": {}, "zimmet": {}, "hareket": []}'::jsonb, surum = surum + 1, guncelleme = now() where anahtar = 'ambar';
 update kurum_veri
-   set veri = (select coalesce(jsonb_agg(x), '[]'::jsonb) from jsonb_array_elements(veri) x where coalesce(x->>'ad', '') not like '%(deneme)%'),
+   set veri = (select coalesce(jsonb_agg(x), '[]'::jsonb) from jsonb_array_elements(veri) x where coalesce(x->>'ad', '') not ilike '%deneme%'),
        surum = surum + 1, guncelleme = now()
  where anahtar = 'talep' and jsonb_typeof(veri) = 'array';
 

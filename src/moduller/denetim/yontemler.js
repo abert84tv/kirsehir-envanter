@@ -163,7 +163,7 @@
     const M = this._sb;
     if (!M || !M.tokenOku()) return;
     try {
-      if (M.copTemizle) {
+      if (M.copTemizle && this.yetkiVar(this.state.session, 'sil')) {
         const t = await M.copTemizle();
         if (t && t.ok && t.data && (t.data.tesis || t.data.foto)) {
           this.duyur(`Çöp kutusunda 30 günü dolan ${t.data.tesis} kayıt ve ${t.data.foto} fotoğraf kalıcı silindi.`, 6000, 'bilgi',

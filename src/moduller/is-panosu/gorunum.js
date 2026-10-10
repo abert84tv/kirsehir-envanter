@@ -92,6 +92,32 @@
           });
         }
 
+        // ── tesis ekleme/silme önerileri: saha şefi önerir → ilçe (ya da bütün ilçelere bakan) mühendis ön onayı → müdür son onayı
+        for (const o of (s.tesisOneriler || [])) {
+          const bekliyor = o.durum === 'muhendis' || o.durum === 'mudur';
+          const ms = Date.parse(o.acildi) || 0;
+          if (!bekliyor && simdi - (Date.parse(o.mudur_zaman || o.muhendis_zaman || o.acildi) || 0) > 7 * 86400000) continue;
+          const kolon = !bekliyor ? 'bitti' : (o.benim_sira ? 'yeni' : 'atandi');
+          const turAd = TYPES[o.tesis_tur] ? TYPES[o.tesis_tur].kind : 'Tesis';
+          const durumNot = { muhendis: 'Mühendis onayında', mudur: 'Müdür onayında', onaylandi: 'Onaylandı' + (o.sonuc_kod ? ' · ' + o.sonuc_kod : ''),
+            reddedildi: 'Reddedildi' + (o.red_neden ? ': ' + o.red_neden : ''), iptal: 'Geri çekildi' }[o.durum] || '';
+          const benimMi = !!me && String(o.acan_id) === String(me.dbId);
+          let dugme = 'Aç', dugmeRenk = '#8e8e93', git = () => this.say(durumNot + ' — ' + (o.aciklama || 'açıklama yok'), true), ikinci = '', ikinciGit = () => {};
+          if (o.benim_sira) {
+            dugme = o.durum === 'mudur' ? 'Son onay' : (can('close') ? 'Onayla ve uygula' : 'Ön onay'); dugmeRenk = '#34c759';
+            git = () => this.tesisOneriKarar(o, 'onay'); ikinci = 'Reddet'; ikinciGit = () => this.tesisOneriKarar(o, 'red');
+          } else if (bekliyor && benimMi) {
+            dugme = 'Geri çek'; dugmeRenk = '#d97706'; git = () => this.tesisOneriKarar(o, 'iptal');
+          }
+          kartlar.push({
+            anahtar: 'o' + o.id, kolon, tur: 'Tesis önerisi', onc: 'Normal', ms,
+            baslik: o.tur === 'sil' ? 'Silme önerisi: ' + (o.tesis_kod || turAd) : 'Ekleme önerisi: ' + turAd,
+            yer: [o.koy, o.ilce].filter(Boolean).join(' · '), kim: 'Öneren: ' + o.acan, kimBos: false, kanal: '',
+            aciklama: String(o.aciklama || '').slice(0, 110), uyari: durumNot, uyariKirmizi: o.durum === 'reddedildi',
+            dugme, dugmeRenk, git, ikinci, ikinciGit, ac: () => this.say(durumNot + ' — ' + (o.aciklama || 'açıklama yok'), true), surukle: null
+          });
+        }
+
         const tamam = k => {
           const surukle = k.surukle;
           // Yeni gelen, henüz açılıp bakılmamış iş: kutunun/satırın kendisi yanıp söner (üst şerit yerine)

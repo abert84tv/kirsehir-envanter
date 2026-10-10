@@ -83,6 +83,11 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
   .ks-olcnokta{background:var(--color-accent);color:#fff;border:2px solid #fff;border-radius:50%;width:20px!important;height:20px!important;margin:-10px 0 0 -10px!important;display:flex;align-items:center;justify-content:center;font:700 11px/1 var(--font-body);box-shadow:0 1px 4px rgba(0,0,0,.35)}
   #route{right:12px;bottom:12px;max-width:280px;padding:0;display:none}
   #route.show{display:block}
+  /* Telefonda sağ alttaki "konumuma git" düğmesi (kabukta) iframe'in üstüne biner: paneller onun soluna kadar uzanır */
+  @media (max-width:640px){
+    #olc{width:calc(100% - 132px)}
+    #route{right:62px;max-width:calc(100% - 132px)}
+  }
   #route .rt-head{background:var(--color-text);color:#fff;padding:7px 10px;
     font:600 11px/1 var(--font-body);letter-spacing:-.01em}
   #route .rt-body{padding:10px}

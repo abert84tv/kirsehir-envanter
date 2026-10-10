@@ -2167,3 +2167,7 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-176 — Fazla satır ve gereksiz geri düğmesi kalktı
 - Envanter > Hat kesiti sayfasında sekmelerin altındaki “Hat Kesiti” başlık satırı kaldırıldı (sekme zaten işaretli). Aynı sayfanın sekmeleri arasında (Harita · Hat kesiti · Liste) geçince üstte **‹ geri** düğmesi artık çıkmaz; geri düğmesi yalnız bir sayfadan başka sayfaya inildiğinde (Özet > ilçe > liste, listeden kayda, Ayarlar alt sayfaları) çıkar.
+
+## 2026.10.10-177 — Telefonda harita panelleri konumum düğmesine binmez
+- Telefonda Envanter haritasındaki **Mesafe ölç** ve **Yol tarifi** panelleri sağ alttaki “konumuma git” düğmesinin soluna kadar daralır (üst üste binme giderildi).
+- Telefon görünümünde elle denendi: Mesafe ölç, Yol tarifi, Hat kesiti > Nokta ekle (kapalıyken dokunuş nokta koymaz, açıkken koyar), barkod penceresi (kamera yokken elle yazma) ve kod girince kartın açılması.

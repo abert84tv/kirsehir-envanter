@@ -10391,10 +10391,11 @@ const YETKINLIK_ESLEME = [
 ];
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'Onay, silme, rapor; kullanıcı yönetimi hariç'],
-  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler, iş atar'],
-  ['sef', 'Arıza Şefi', 'Arızayı yönetir, ekip atar, kapatır'],
-  ['personel', 'Arıza Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı']
+  ['mudur', 'Müdür', 'Onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
+  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler; malzeme kataloğunu ve siparişi yönetir'],
+  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir'],
+  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi kapatır, kullanılan malzemeyi düşer'],
+  ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
 // Hesaplar yalnızca veritabanında; programın içinde gömülü kullanıcı ve şifre
@@ -10404,18 +10405,19 @@ const PERMS = [
   ['gor', 'Envanteri ve haritayı görüntüleme', ALL_ROLES],
   ['foto', 'Fotoğraf ekleme', ALL_ROLES],
   ['arizaAc', 'Arıza kaydı açma', ALL_ROLES],
-  ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'sef', 'personel']],
+  ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'operator', 'sef', 'personel']],
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
-  ['assign', 'Ekip atama', ['yonetici', 'mudur', 'muhendis', 'sef']],
+  ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
+  ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
   ['close', 'Arıza kapatma / onay', ['yonetici', 'mudur', 'sef']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
   // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
-  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'muhendis', 'sef']],
-  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'muhendis', 'sef']],
-  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'muhendis', 'sef', 'personel']],
+  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],
+  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'operator']],
+  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'operator', 'sef', 'personel']],
   ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
   ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur', 'muhendis']],
-  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'sef']],
+  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'operator']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];
@@ -10615,7 +10617,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-182';
+const SURUM = '2026.10.10-183';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -12139,7 +12141,7 @@ class Component extends DCLogic {
   // Muayene ve sigortası yaklaşan / geçen araçlar için günde bir kez uyarı
   aracBelgeUyari() {
     const me = this.state.session;
-    if (!me || !['yonetici', 'mudur', 'muhendis', 'sef'].includes(me.role)) return;
+    if (!me || !['yonetici', 'mudur', 'muhendis', 'operator', 'sef'].includes(me.role)) return;
     const liste = ((this.state.arac || {}).list || []);
     if (!liste.length) return;
     const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
@@ -12303,7 +12305,7 @@ class Component extends DCLogic {
     let goruldu;
     try { goruldu = JSON.parse(localStorage.getItem('ks-planli-uyari') || '[]'); } catch (e) { goruldu = []; }
     const simdi = Date.now();
-    const yonetim = ['yonetici', 'mudur', 'muhendis', 'sef'].includes(me.role);
+    const yonetim = ['yonetici', 'mudur', 'muhendis', 'operator', 'sef'].includes(me.role);
     for (const f of (this.state.faults || [])) {
       const pz = f.ek && f.ek.planli ? Date.parse(f.ek.planli) : 0;
       if (!pz || pz > simdi || KAPALI_DURUM.includes(f.status)) continue;
@@ -16675,7 +16677,7 @@ class Component extends DCLogic {
   // Ekip atar; sunucuya bağlıysa iş emri de açılır (arıza formundaki "iş emri oluştur ve ekibe ata" ile aynı iş)
   async panoEkipAta(f, crew) {
     this.setState({ panoEkip: null });
-    if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını yönetici, müdür, mühendis ya da şef yapar.', true);
+    if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
     const M = this._sb;
     const ie = f.dbId ? this.isEmriBul(f.dbId) : null;
     const baglanti = !!(M && M.tokenOku() && this.state.sunucu && !this.state.offline);
@@ -16697,7 +16699,7 @@ class Component extends DCLogic {
     const ekipVar = !!f.crew && f.crew !== ATANMADI;
     if (kolon === 'atandi') {
       if (f.status === 'atandi') return;
-      if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını yönetici, müdür, mühendis ya da şef yapar.', true);
+      if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
       if (ekipVar && ['acik', 'yeniden'].includes(f.status)) return this.panoEkipAta(f, f.crew);
       return this.setState({ panoEkip: f.id, panoKolon: 'yeni' }, () => this.duyur('Önce hangi ekibin gideceğini seçin.', 4500, 'bilgi'));
     }
@@ -16713,6 +16715,7 @@ class Component extends DCLogic {
   }
   // ── İş kartı (tek sayfa): başvuru / talep → arıza + ekip, eski Talep ekranına gitmeden
   isKartiAc(tur, id) {
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
     this.panoGoruldu((tur === 'b' ? 'b' : 't') + id);
     const kay = tur === 'b' ? (this.state.basvurular || []).find(x => x.id === id) : (this.state.talepler || []).find(x => x.id === id);
     if (!kay) return;
@@ -16734,6 +16737,7 @@ class Component extends DCLogic {
   }
   // Yeni talep (telefonla gelen): bildiren elle girilir, aynı kartla arızaya çevrilip atanır
   isKartiYeni() {
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
     this.konumYenile();
     this.setState({
       tab: 'isKarti',
@@ -21681,7 +21685,7 @@ class Component extends DCLogic {
             kapatan: secili.kapatan || '—', kapandi: (secili.kapandi || '').slice(0, 16).replace('T', ' '),
             kullanilanMalzeme: (secili.kullanilanMalzeme || []).map(m => m.malzeme + ' × ' + m.adet).join(', ') || '—',
             toplamSaat: secili.toplamSaat != null ? secili.toplamSaat + ' saat' : '—',
-            kapatVar: CAN.assign.includes(s.session.role) && secili.status !== 'kapatildi' && !s.offline,
+            kapatVar: (CAN.assign.includes(s.session.role) || CAN.close.includes(s.session.role)) && secili.status !== 'kapatildi' && !s.offline,
             kapatGo: () => this.isEmriElleKapat(secili),
             ataFormVar: CAN.assign.includes(s.session.role) && secili.status !== 'kapatildi',
             ataForm: {
@@ -23146,7 +23150,7 @@ class Component extends DCLogic {
             { n: geciken, ad: 'geciken', renk: '#d97706', alarm: false },
             { n: kartlar.filter(k => k.kolon === 'bitti').length, ad: 'son 7 gün biten', renk: '#30d158' }
           ].map(x => ({ ...x, alarm: !!x.alarm && x.n > 0 })),
-          yeniTalepVar: yazabilir && talepGor,
+          yeniTalepVar: yazabilir && talepGor && can('talepYonet'),
           yeniTalep: () => this.isKartiYeni(),
           muhtarDefteri: () => this.setState({ muhtarPanel: { q: '' } }),
           yardim: 'Kutuyu sütunlar arasında sürükleyin ya da altındaki büyük düğmeye basın. Renkli nokta öncelik: kırmızı acil, turuncu yüksek, mavi normal.',

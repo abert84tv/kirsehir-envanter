@@ -106,7 +106,7 @@
     let goruldu;
     try { goruldu = JSON.parse(localStorage.getItem('ks-planli-uyari') || '[]'); } catch (e) { goruldu = []; }
     const simdi = Date.now();
-    const yonetim = ['yonetici', 'mudur', 'muhendis', 'sef'].includes(me.role);
+    const yonetim = ['yonetici', 'mudur', 'muhendis', 'operator', 'sef'].includes(me.role);
     for (const f of (this.state.faults || [])) {
       const pz = f.ek && f.ek.planli ? Date.parse(f.ek.planli) : 0;
       if (!pz || pz > simdi || KAPALI_DURUM.includes(f.status)) continue;

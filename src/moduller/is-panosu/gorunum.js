@@ -173,7 +173,7 @@
             { n: geciken, ad: 'geciken', renk: '#d97706', alarm: false },
             { n: kartlar.filter(k => k.kolon === 'bitti').length, ad: 'son 7 gün biten', renk: '#30d158' }
           ].map(x => ({ ...x, alarm: !!x.alarm && x.n > 0 })),
-          yeniTalepVar: yazabilir && talepGor,
+          yeniTalepVar: yazabilir && talepGor && can('talepYonet'),
           yeniTalep: () => this.isKartiYeni(),
           muhtarDefteri: () => this.setState({ muhtarPanel: { q: '' } }),
           yardim: 'Kutuyu sütunlar arasında sürükleyin ya da altındaki büyük düğmeye basın. Renkli nokta öncelik: kırmızı acil, turuncu yüksek, mavi normal.',

@@ -1,9 +1,10 @@
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'Onay, silme, rapor; kullanıcı yönetimi hariç'],
-  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler, iş atar'],
-  ['sef', 'Arıza Şefi', 'Arızayı yönetir, ekip atar, kapatır'],
-  ['personel', 'Arıza Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı']
+  ['mudur', 'Müdür', 'Onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
+  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler; malzeme kataloğunu ve siparişi yönetir'],
+  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir'],
+  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi kapatır, kullanılan malzemeyi düşer'],
+  ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
 // Hesaplar yalnızca veritabanında; programın içinde gömülü kullanıcı ve şifre
@@ -13,18 +14,19 @@ const PERMS = [
   ['gor', 'Envanteri ve haritayı görüntüleme', ALL_ROLES],
   ['foto', 'Fotoğraf ekleme', ALL_ROLES],
   ['arizaAc', 'Arıza kaydı açma', ALL_ROLES],
-  ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'sef', 'personel']],
+  ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'operator', 'sef', 'personel']],
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
-  ['assign', 'Ekip atama', ['yonetici', 'mudur', 'muhendis', 'sef']],
+  ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
+  ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
   ['close', 'Arıza kapatma / onay', ['yonetici', 'mudur', 'sef']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
   // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
-  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'muhendis', 'sef']],
-  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'muhendis', 'sef']],
-  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'muhendis', 'sef', 'personel']],
+  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],
+  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'operator']],
+  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'operator', 'sef', 'personel']],
   ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
   ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur', 'muhendis']],
-  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'sef']],
+  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'operator']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];

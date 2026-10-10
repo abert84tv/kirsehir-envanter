@@ -1,5 +1,6 @@
   // ── İş kartı (tek sayfa): başvuru / talep → arıza + ekip, eski Talep ekranına gitmeden
   isKartiAc(tur, id) {
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
     this.panoGoruldu((tur === 'b' ? 'b' : 't') + id);
     const kay = tur === 'b' ? (this.state.basvurular || []).find(x => x.id === id) : (this.state.talepler || []).find(x => x.id === id);
     if (!kay) return;
@@ -21,6 +22,7 @@
   }
   // Yeni talep (telefonla gelen): bildiren elle girilir, aynı kartla arızaya çevrilip atanır
   isKartiYeni() {
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
     this.konumYenile();
     this.setState({
       tab: 'isKarti',

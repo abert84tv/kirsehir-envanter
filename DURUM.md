@@ -2207,3 +2207,14 @@ Sürüm 2026.10.05-114.
   Stoğu görme: Stok sayfa yetkisi (Ayarlar › Yetkiler › sayfa yetkisi: Tam / Görür / Yok). “Görür” işlem yaptırmaz, “Yok” sayfayı kapatır.
 - Ekran: Giriş/Çıkış düğmeleri ve neden seçenekleri kişinin yetkisine göre çıkar; saha personelinin ekip listesi yalnız kendi ekibidir; fiyat/tutar/stok değeri yalnız “Rapor” yetkisi olanlara görünür. İşlem anında da denetlenir (`stokIzin`).
 - Sunucu: `stok_izin()` + `ambar_hareket()` her kalemden önce aynı kuralı uygular; yetkisiz kalem “red” listesine yazılır, kalanlar işlenir (SQL-ambar-yetki.sql, uygulandı). Arıza kapanışındaki otomatik sarf, Müdür/Şef/Personel için çalışmaya devam eder.
+
+## 2026.10.10-183 — Altı rol: Operatör ayrı rol (sunucu + ekran)
+- **Roller:** Yönetici · Müdür · Mühendis · **Operatör (yeni)** · Saha Şefi (eski “Arıza Şefi”) · Saha Personeli (eski “Arıza Personeli”). Sunucuda `rol` türüne `operator` eklendi.
+- **Operatör:** talepleri/başvuruları yönetir (yeni talep, sınıflandırma, arızaya çevirme, başvuru engelleme), ekip atar ve iş emri açar, SLA/araç belge uyarılarını görür, ambardan ekibe malzeme verir/mal alımı girer/iade alır, sipariş listesini yönetir. Arıza kapatamaz, tesis oluşturamaz, rapor almaz, fiyat görmez.
+- **Saha Şefi:** sahadaki ekibi yönetir, arızayı ve iş emrini kapatır, kullanılan malzemeyi düşer. **Ekip atama artık onda değil** (operatörde); talep yönetimi yok.
+- **Mühendis:** envanter, malzeme kataloğu, sipariş, rapor; ekip atama, talep yönetimi ve ambar günlük işlemleri **yok**.
+- **Müdür:** hurda ve ambar düzeltmesi (onay), rapor, silme, katalog, sipariş; ekip atama ve talep yönetimi de yapabilir.
+- **Saha Personeli:** sahada kayıt/fotoğraf/arıza; malzemeyi yalnız kendi ekibi için düşer.
+- Yeni yetki: `talepYonet` (Talep ve başvuru yönetimi) — Yönetici, Müdür, Operatör. `assign` (ekip atama ve iş emri açma) — Yönetici, Müdür, Operatör. İş emri kapatma: Yönetici, Müdür, Saha Şefi, Operatör. Stok yetkileri bu rollere göre yeniden dağıtıldı (stokGiris/stokZimmet: Yönetici, Operatör; stokSarf: Yönetici, Müdür, Operatör, Saha Şefi, Saha Personeli; stokDuzelt: Yönetici, Müdür; stokKatalog: Yönetici, Müdür, Mühendis; stokSiparis: Yönetici, Müdür, Mühendis, Operatör).
+- Kişiye özel istisna Ayarlar › Yetkiler'den verilir. Sunucu: `veri_yaz`/`veri_yaz_surumlu` malzeme kataloğunu (Yönetici, Müdür, Mühendis) ve sipariş listesini (Yönetici, Müdür, Mühendis, Operatör) kısıtlar.
+- Bilinen sınır: talep/muhtar/araç listeleri sunucuda hâlâ yalnız “izleyici”ye kapalı; talep yönetimi kısıtı şimdilik ekranda ve başvuru engelleme işlevinde uygulanıyor.

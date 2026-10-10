@@ -1,6 +1,6 @@
   // ── İş kartı (tek sayfa): başvuru / talep → arıza + ekip, eski Talep ekranına gitmeden
   isKartiAc(tur, id) {
-    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
+    // Kartı herkes açıp okuyabilir; karara bağlama (ata, arıza değil) yalnız talep yönetimi yetkisi olanda (operatör) çalışır
     this.panoGoruldu((tur === 'b' ? 'b' : 't') + id);
     const kay = tur === 'b' ? (this.state.basvurular || []).find(x => x.id === id) : (this.state.talepler || []).find(x => x.id === id);
     if (!kay) return;
@@ -22,7 +22,7 @@
   }
   // Yeni talep (telefonla gelen): bildiren elle girilir, aynı kartla arızaya çevrilip atanır
   isKartiYeni() {
-    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Yeni talebi operatör açar.', true);
     this.konumYenile();
     this.setState({
       tab: 'isKarti',
@@ -48,6 +48,7 @@
   async isKartiAta() {
     const k = this.state.isKarti;
     if (!k || k.bekle) return;
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talebi operatör değerlendirir; siz kartı görüntüleyebilirsiniz.', true);
     const G = ARIZA_GRUP[k.grup] || ARIZA_GRUP.su;
     const sebeke = !!G.sebeke;
     if (sebeke && !(k.koy || '').trim()) return this.duyur('Arızanın köyünü yazın.', 4500, 'kotu');
@@ -100,6 +101,7 @@
   }
   // Arıza değil: talebi nedenle kapatır
   isKartiKapat(t) {
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talebi operatör değerlendirir; siz kartı görüntüleyebilirsiniz.', true);
     const neden = (window.prompt('Neden arıza değil? (örn. bilgi verildi, başka kurumun görevi)') || '').trim();
     if (!neden) return;
     this.talepDurum(t.id, 'red', neden);

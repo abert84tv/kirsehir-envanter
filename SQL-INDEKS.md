@@ -37,3 +37,5 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 | bildirim | `src/moduller/bildirim/islev/mesaj-gonder.ts` | `mesaj-gonder` (varsa) |
 
 | konum | `src/moduller/konum/sql/SQL-konum.sql` | ekip konumu: konum_cihaz/konum_son, konum_yaz (Arvento), konum_gonder (zimmetli cihaz) — ayrıntı KONUM-ALTYAPI.md |
+| oturum | `src/moduller/oturum/sql/SQL-yetki-tarama.sql` | yeni işlev eklenince çalıştırılan yetki taraması (oturum denetimi olmayan, anonimin çağırabildiği işlevleri listeler) |
+| ariza | `src/moduller/ariza/sql/SQL-ariza-kapanis-sunucuda.sql` | arıza son onayla kapanınca zimmet düşümü ve talep/başvuru kapanışı sunucuda (`ariza_kapanis_isle`, dışarıya kapalı) — uygulandı 2026-10-10 |

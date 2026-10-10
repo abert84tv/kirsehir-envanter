@@ -68,6 +68,8 @@
     })();
     // Çevrimdışıyken çözülen arızanın bağlı iş emri şimdi kapanır
     if (yeni.status === 'cozuldu') {
+      // zimmet düşümü ve talep/başvuru kapanışı sunucuda yapıldı: ambar ve talep listesi sunucudan yenilenir
+      setTimeout(() => this.modulleriYukle(true), 900);
       this.talepArizaKapandi(yeni);
       const ie = this.isEmriBul(dbId);
       if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, yeni), 500);

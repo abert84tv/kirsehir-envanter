@@ -40,7 +40,7 @@
             yer: (b.koy && b.koy !== 'Belirtilmedi' ? b.koy + (b.ilce ? ' · ' + b.ilce : '') : 'Köy yazılmamış'),
             kim: 'Bildiren: ' + b.ad, kimBos: false, kanal: telg ? 'Telegram' : 'Web formu',
             aciklama: telg ? '' : String(b.aciklama || '').slice(0, 110), uyari: '',
-            dugme: yazabilir ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
+            dugme: yazabilir && can('talepYonet') ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
             git: () => this.isKartiAc('b', b.id),
             ikinci: can('assign') ? 'Spam' : '', ikinciGit: () => this.basvuruEngelle(b),
             ac: () => this.isKartiAc('b', b.id), surukle: null
@@ -52,7 +52,7 @@
             anahtar: 't' + t.id, kolon: 'yeni', tur: 'Talep', onc: t.oncelik || 'Normal', ms: this.damgaMs(t.acilis),
             baslik: t.konu, yer: t.koy + (t.ilce ? ' · ' + t.ilce : ''),
             kim: 'Bildiren: ' + t.ad, kimBos: false, kanal: TALEP_KANAL[t.kanal] || '', aciklama: String(t.aciklama || '').slice(0, 110), uyari: '',
-            dugme: yazabilir ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
+            dugme: yazabilir && can('talepYonet') ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
             git: () => this.isKartiAc('t', t.id),
             ikinci: '', ikinciGit: () => {}, ac: () => this.isKartiAc('t', t.id), surukle: null
           });

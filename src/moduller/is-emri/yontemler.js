@@ -50,7 +50,7 @@
   async isEmriAcSade(f, o) {
     o = o || {};
     const M = this._sb;
-    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('İş emrini operatör, müdür ya da yönetici açar (yetki Ayarlar › Yetkiler’den verilebilir).', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('İş emrini operatör açar (yetki Ayarlar › Yetkiler’den verilebilir).', true);
     if (!M || !M.tokenOku()) return this.say('İş emri için ortak veritabanına bağlı olmanız gerekir.', true);
     if (!f || !f.dbId) return this.say('Arıza henüz sunucuya yazılmadı — birkaç saniye sonra yeniden deneyin.', true);
     if (this.isEmriBul(f.dbId)) return this.say('Bu arıza için zaten bir iş emri var.', true);

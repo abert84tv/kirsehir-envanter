@@ -160,10 +160,10 @@
                   ['Açan', [ff.reporter, ff.opened].filter(Boolean).join(' · ') || '—'],
                   ['Öncelik', ff.priority || 'Normal'],
                   ...(d ? [['Hedef süre', d.gecikti ? d.etiket : 'hedef ' + d.hedef]] : []),
-                  ['İş emri', ie ? ie.no + ' · ' + (IS_EMRI_DURUM[ie.status] || ie.status) : 'yok'],
+                  ['İş emri', ie ? ie.no + ' · ' + (IS_EMRI_DURUM[ie.status] || ie.status) + ' ›' : 'yok', ie ? () => this.setState({ panel: 'yok', faultForm: null, isEmriPanel: { id: ie.dbId } }) : null],
                   ...(ff.closed ? [['Kapanış', [ff.closer, ff.closed].filter(Boolean).join(' · ')]] : []),
                   ...(ff.noktaKim ? [['Noktayı alan', ff.noktaKim + (ff.noktaZaman ? ' · ' + this.damgaCevir(ff.noktaZaman) : '')]] : [])
-                ].map(([l, v]) => ({ l, v })),
+                ].map(([l, v, git]) => ({ l, v, git: git || (() => {}), gitVar: !!git, duzVar: !git })),
                 hareket: ilgili.map(r => ({ ne: r.ne, detay: r.detay || '', alt: [r.kim, r.t].filter(Boolean).join(' · ') })),
                 hareketVar: ilgili.length > 0, hareketYok: !ilgili.length
               };
@@ -218,9 +218,10 @@
         })(),
         isEmri: () => {
           if (!ff) return;
-          if (!this.yetkiVar(s.session, 'assign')) return this.say('İş emri oluşturma yetkiniz yok.');
+          // Var olan iş emrini herkes açıp görebilir; yeni iş emri açmak yalnız ekip atama yetkisi olanın (operatör) işidir
           const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
           if (ie) return this.setState({ isEmriPanel: { id: ie.dbId } });
+          if (!this.yetkiVar(s.session, 'assign')) return this.say('Yeni iş emrini operatör açar.');
           this.isEmriAcSade(ff, { crew: ff.crew, araclar: ff.aracSec || [] });
         },
         assetId: ff ? ff.assetId : '', type: ff ? ff.type : '',

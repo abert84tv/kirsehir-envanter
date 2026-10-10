@@ -62,13 +62,8 @@
         }
         if (f.status === 'cozuldu') setTimeout(() => this.anaCozum({ ...f, no: arizaNo }), 400);
         // Kapanan kayıtta kullanılan malzeme ekip zimmetinden düşülebilir
-        // İş son onayla ilk kez kapanırken: kullanılan malzeme ekip zimmetinden KENDİLİĞİNDEN düşer (soru sorulmaz;
-        // aynı işin malzemesi ikinci kez düşmez). Bağlı talebin çözülmesi sunucu kaydı gelince esitleme.js'te yapılır.
-        const onceki = f.id ? ((s.faults || []).find(x => x.id === f.id) || {}).status : null;
-        const yeniKapandi = f.status === 'cozuldu' && onceki !== 'cozuldu';
-        if (ambarOn && yeniKapandi && (f.malzeme || []).length && f.crew && f.crew !== 'Atanmadı') {
-          setTimeout(() => this.arizaStokDus({ ...f, no: arizaNo }), 0);
-        }
+        // İş son onayla ilk kez kapanırken kullanılan malzemenin ekip zimmetinden düşümü ve bağlı talep/başvurunun çözülmesi
+        // SUNUCUDA yapılır (ariza_kapanis_isle); ekran kayıt gelince esitleme.js'te sunucudan yenilenir.
         // Arızaya bağlı açık bir iş emri varsa arıza kapanınca o da kapanır —
         // kullanılan malzeme + toplam saat + not tesis geçmişine ayrıntılı yazılır.
         if (f.status === 'cozuldu' && f.dbId) {

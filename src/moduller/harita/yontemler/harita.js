@@ -74,9 +74,10 @@
   }
   yolTarifiVer(a) {
     if (!a) return false;
+    // Yol tarifi düğmesine basan kişi güzergâh ister: mod kapalıysa kendiliğinden açılır (önceden yalnız uyarı çıkıp hiçbir şey olmuyordu)
     if (!this.state.navMode) {
-      this.duyur('Yol tarifi modu kapalı — Ayarlar > Harita ve görünüm bölümünden açtığınızda güzergâh çizilir.', 7000);
-      return false;
+      this.setState({ navMode: true });
+      this.toMap({ ks: 'navMode', on: true });
     }
     this.toMap({ ks: 'routeTo', id: a.id, code: a.code, village: a.village, lat: a.lat, lon: a.lon });
     // telefonda kayıt sayfası haritanın üstünde duruyor; güzergâh görünsün diye kapatılır

@@ -90,7 +90,12 @@
 </sc-if>
 <div style="margin-top:10px">
 <sc-for list="{{ faultForm.sade.bilgi.satirlar }}" as="b" hint-placeholder-count="4">
+<sc-if value="{{ b.duzVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:10px;padding:7px 0;border-top:1px solid {{ ui.rule }};font:400 13px/1.35 var(--font-body)"><span style="flex:none;width:96px;color:{{ ui.mut }}">{{ b.l }}</span><span style="flex:1;min-width:0;font-weight:600">{{ b.v }}</span></div>
+</sc-if>
+<sc-if value="{{ b.gitVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ b.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;gap:10px;align-items:center;min-height:48px;padding:7px 0;border-top:1px solid {{ ui.rule }};font:400 13px/1.35 var(--font-body)"><span style="flex:none;width:96px;color:{{ ui.mut }}">{{ b.l }}</span><span style="flex:1;min-width:0;font-weight:700;color:{{ ui.acc }}">{{ b.v }}</span></button>
+</sc-if>
 </sc-for>
 </div>
 <div style="font:700 13.5px/1 var(--font-heading);margin:12px 0 4px">Bu arızanın hareketleri</div>

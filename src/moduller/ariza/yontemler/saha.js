@@ -18,10 +18,7 @@
     setTimeout(() => this.arizaKuyrukGonder(), 0);
     if (yeni === 'cozuldu') setTimeout(() => this.anaCozum(g), 400);
     if (yeni === 'cozuldu') {
-      // Seçilen malzeme ekip zimmetinden düşülür (kullanıcı adet seçerek onayladı)
-      if (this.state.modul.ambar !== false && (g.malzeme || []).length && g.crew && g.crew !== ATANMADI) {
-        setTimeout(() => this.arizaStokDus(g), 0);
-      }
+      // Malzemenin zimmetten düşümü sunucuda yapılır (ariza_kapanis_isle); kayıt gelince esitleme.js ambarı yeniler
       if (g.dbId) {
         const ie = this.isEmriBul(g.dbId);
         if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, g), 300);

@@ -9140,7 +9140,12 @@ Malzeme istekleri
 </sc-if>
 <div style="margin-top:10px">
 <sc-for list="{{ faultForm.sade.bilgi.satirlar }}" as="b" hint-placeholder-count="4">
+<sc-if value="{{ b.duzVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:10px;padding:7px 0;border-top:1px solid {{ ui.rule }};font:400 13px/1.35 var(--font-body)"><span style="flex:none;width:96px;color:{{ ui.mut }}">{{ b.l }}</span><span style="flex:1;min-width:0;font-weight:600">{{ b.v }}</span></div>
+</sc-if>
+<sc-if value="{{ b.gitVar }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ b.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;gap:10px;align-items:center;min-height:48px;padding:7px 0;border-top:1px solid {{ ui.rule }};font:400 13px/1.35 var(--font-body)"><span style="flex:none;width:96px;color:{{ ui.mut }}">{{ b.l }}</span><span style="flex:1;min-width:0;font-weight:700;color:{{ ui.acc }}">{{ b.v }}</span></button>
+</sc-if>
 </sc-for>
 </div>
 <div style="font:700 13.5px/1 var(--font-heading);margin:12px 0 4px">Bu arızanın hareketleri</div>
@@ -10746,7 +10751,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-192';
+const SURUM = '2026.10.10-193';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -12814,6 +12819,8 @@ class Component extends DCLogic {
     })();
     // Çevrimdışıyken çözülen arızanın bağlı iş emri şimdi kapanır
     if (yeni.status === 'cozuldu') {
+      // zimmet düşümü ve talep/başvuru kapanışı sunucuda yapıldı: ambar ve talep listesi sunucudan yenilenir
+      setTimeout(() => this.modulleriYukle(true), 900);
       this.talepArizaKapandi(yeni);
       const ie = this.isEmriBul(dbId);
       if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, yeni), 500);
@@ -12885,10 +12892,7 @@ class Component extends DCLogic {
     setTimeout(() => this.arizaKuyrukGonder(), 0);
     if (yeni === 'cozuldu') setTimeout(() => this.anaCozum(g), 400);
     if (yeni === 'cozuldu') {
-      // Seçilen malzeme ekip zimmetinden düşülür (kullanıcı adet seçerek onayladı)
-      if (this.state.modul.ambar !== false && (g.malzeme || []).length && g.crew && g.crew !== ATANMADI) {
-        setTimeout(() => this.arizaStokDus(g), 0);
-      }
+      // Malzemenin zimmetten düşümü sunucuda yapılır (ariza_kapanis_isle); kayıt gelince esitleme.js ambarı yeniler
       if (g.dbId) {
         const ie = this.isEmriBul(g.dbId);
         if (ie && ie.status !== 'kapatildi') setTimeout(() => this.isEmriKapatVer(ie, g), 300);
@@ -14907,9 +14911,10 @@ class Component extends DCLogic {
   }
   yolTarifiVer(a) {
     if (!a) return false;
+    // Yol tarifi düğmesine basan kişi güzergâh ister: mod kapalıysa kendiliğinden açılır (önceden yalnız uyarı çıkıp hiçbir şey olmuyordu)
     if (!this.state.navMode) {
-      this.duyur('Yol tarifi modu kapalı — Ayarlar > Harita ve görünüm bölümünden açtığınızda güzergâh çizilir.', 7000);
-      return false;
+      this.setState({ navMode: true });
+      this.toMap({ ks: 'navMode', on: true });
     }
     this.toMap({ ks: 'routeTo', id: a.id, code: a.code, village: a.village, lat: a.lat, lon: a.lon });
     // telefonda kayıt sayfası haritanın üstünde duruyor; güzergâh görünsün diye kapatılır
@@ -15250,7 +15255,7 @@ class Component extends DCLogic {
   async isEmriAcSade(f, o) {
     o = o || {};
     const M = this._sb;
-    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('İş emrini operatör, müdür ya da yönetici açar (yetki Ayarlar › Yetkiler’den verilebilir).', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('İş emrini operatör açar (yetki Ayarlar › Yetkiler’den verilebilir).', true);
     if (!M || !M.tokenOku()) return this.say('İş emri için ortak veritabanına bağlı olmanız gerekir.', true);
     if (!f || !f.dbId) return this.say('Arıza henüz sunucuya yazılmadı — birkaç saniye sonra yeniden deneyin.', true);
     if (this.isEmriBul(f.dbId)) return this.say('Bu arıza için zaten bir iş emri var.', true);
@@ -17009,7 +17014,7 @@ class Component extends DCLogic {
   // Ekip atar; sunucuya bağlıysa iş emri de açılır (arıza formundaki "iş emri oluştur ve ekibe ata" ile aynı iş)
   async panoEkipAta(f, crew) {
     this.setState({ panoEkip: null });
-    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör yapar.', true);
     const M = this._sb;
     const ie = f.dbId ? this.isEmriBul(f.dbId) : null;
     const baglanti = !!(M && M.tokenOku() && this.state.sunucu && !this.state.offline);
@@ -17031,7 +17036,7 @@ class Component extends DCLogic {
     const ekipVar = !!f.crew && f.crew !== ATANMADI;
     if (kolon === 'atandi') {
       if (f.status === 'atandi') return;
-      if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
+      if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör yapar.', true);
       if (ekipVar && ['acik', 'yeniden'].includes(f.status)) return this.panoEkipAta(f, f.crew);
       return this.setState({ panoEkip: f.id, panoKolon: 'yeni' }, () => this.duyur('Önce hangi ekibin gideceğini seçin.', 4500, 'bilgi'));
     }
@@ -17047,7 +17052,7 @@ class Component extends DCLogic {
   }
   // ── İş kartı (tek sayfa): başvuru / talep → arıza + ekip, eski Talep ekranına gitmeden
   isKartiAc(tur, id) {
-    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
+    // Kartı herkes açıp okuyabilir; karara bağlama (ata, arıza değil) yalnız talep yönetimi yetkisi olanda (operatör) çalışır
     this.panoGoruldu((tur === 'b' ? 'b' : 't') + id);
     const kay = tur === 'b' ? (this.state.basvurular || []).find(x => x.id === id) : (this.state.talepler || []).find(x => x.id === id);
     if (!kay) return;
@@ -17069,7 +17074,7 @@ class Component extends DCLogic {
   }
   // Yeni talep (telefonla gelen): bildiren elle girilir, aynı kartla arızaya çevrilip atanır
   isKartiYeni() {
-    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talep ve başvuruları operatör yönetir (müdür ve yönetici de yapabilir).', true);
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Yeni talebi operatör açar.', true);
     this.konumYenile();
     this.setState({
       tab: 'isKarti',
@@ -17095,6 +17100,7 @@ class Component extends DCLogic {
   async isKartiAta() {
     const k = this.state.isKarti;
     if (!k || k.bekle) return;
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talebi operatör değerlendirir; siz kartı görüntüleyebilirsiniz.', true);
     const G = ARIZA_GRUP[k.grup] || ARIZA_GRUP.su;
     const sebeke = !!G.sebeke;
     if (sebeke && !(k.koy || '').trim()) return this.duyur('Arızanın köyünü yazın.', 4500, 'kotu');
@@ -17147,6 +17153,7 @@ class Component extends DCLogic {
   }
   // Arıza değil: talebi nedenle kapatır
   isKartiKapat(t) {
+    if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talebi operatör değerlendirir; siz kartı görüntüleyebilirsiniz.', true);
     const neden = (window.prompt('Neden arıza değil? (örn. bilgi verildi, başka kurumun görevi)') || '').trim();
     if (!neden) return;
     this.talepDurum(t.id, 'red', neden);
@@ -19243,10 +19250,10 @@ class Component extends DCLogic {
                   ['Açan', [ff.reporter, ff.opened].filter(Boolean).join(' · ') || '—'],
                   ['Öncelik', ff.priority || 'Normal'],
                   ...(d ? [['Hedef süre', d.gecikti ? d.etiket : 'hedef ' + d.hedef]] : []),
-                  ['İş emri', ie ? ie.no + ' · ' + (IS_EMRI_DURUM[ie.status] || ie.status) : 'yok'],
+                  ['İş emri', ie ? ie.no + ' · ' + (IS_EMRI_DURUM[ie.status] || ie.status) + ' ›' : 'yok', ie ? () => this.setState({ panel: 'yok', faultForm: null, isEmriPanel: { id: ie.dbId } }) : null],
                   ...(ff.closed ? [['Kapanış', [ff.closer, ff.closed].filter(Boolean).join(' · ')]] : []),
                   ...(ff.noktaKim ? [['Noktayı alan', ff.noktaKim + (ff.noktaZaman ? ' · ' + this.damgaCevir(ff.noktaZaman) : '')]] : [])
-                ].map(([l, v]) => ({ l, v })),
+                ].map(([l, v, git]) => ({ l, v, git: git || (() => {}), gitVar: !!git, duzVar: !git })),
                 hareket: ilgili.map(r => ({ ne: r.ne, detay: r.detay || '', alt: [r.kim, r.t].filter(Boolean).join(' · ') })),
                 hareketVar: ilgili.length > 0, hareketYok: !ilgili.length
               };
@@ -19301,9 +19308,10 @@ class Component extends DCLogic {
         })(),
         isEmri: () => {
           if (!ff) return;
-          if (!this.yetkiVar(s.session, 'assign')) return this.say('İş emri oluşturma yetkiniz yok.');
+          // Var olan iş emrini herkes açıp görebilir; yeni iş emri açmak yalnız ekip atama yetkisi olanın (operatör) işidir
           const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
           if (ie) return this.setState({ isEmriPanel: { id: ie.dbId } });
+          if (!this.yetkiVar(s.session, 'assign')) return this.say('Yeni iş emrini operatör açar.');
           this.isEmriAcSade(ff, { crew: ff.crew, araclar: ff.aracSec || [] });
         },
         assetId: ff ? ff.assetId : '', type: ff ? ff.type : '',
@@ -19739,13 +19747,8 @@ class Component extends DCLogic {
         }
         if (f.status === 'cozuldu') setTimeout(() => this.anaCozum({ ...f, no: arizaNo }), 400);
         // Kapanan kayıtta kullanılan malzeme ekip zimmetinden düşülebilir
-        // İş son onayla ilk kez kapanırken: kullanılan malzeme ekip zimmetinden KENDİLİĞİNDEN düşer (soru sorulmaz;
-        // aynı işin malzemesi ikinci kez düşmez). Bağlı talebin çözülmesi sunucu kaydı gelince esitleme.js'te yapılır.
-        const onceki = f.id ? ((s.faults || []).find(x => x.id === f.id) || {}).status : null;
-        const yeniKapandi = f.status === 'cozuldu' && onceki !== 'cozuldu';
-        if (ambarOn && yeniKapandi && (f.malzeme || []).length && f.crew && f.crew !== 'Atanmadı') {
-          setTimeout(() => this.arizaStokDus({ ...f, no: arizaNo }), 0);
-        }
+        // İş son onayla ilk kez kapanırken kullanılan malzemenin ekip zimmetinden düşümü ve bağlı talep/başvurunun çözülmesi
+        // SUNUCUDA yapılır (ariza_kapanis_isle); ekran kayıt gelince esitleme.js'te sunucudan yenilenir.
         // Arızaya bağlı açık bir iş emri varsa arıza kapanınca o da kapanır —
         // kullanılan malzeme + toplam saat + not tesis geçmişine ayrıntılı yazılır.
         if (f.status === 'cozuldu' && f.dbId) {
@@ -20159,7 +20162,7 @@ class Component extends DCLogic {
             zemin: aktif && tabId === 'ayarlar' ? ui.sel : 'transparent',
             renk: aktif && tabId === 'ayarlar' ? ui.acc : ui.fg,
             rozet: gorunen.includes('cop') && copSay ? String(copSay) : '',
-            git: () => ayarGit(gorunen[0])
+            git: ayarGit(gorunen[0])
           };
         }).filter(Boolean);
         return satirlar.length ? [{ baslik: '', satirlar }] : [];
@@ -23442,7 +23445,7 @@ class Component extends DCLogic {
             yer: (b.koy && b.koy !== 'Belirtilmedi' ? b.koy + (b.ilce ? ' · ' + b.ilce : '') : 'Köy yazılmamış'),
             kim: 'Bildiren: ' + b.ad, kimBos: false, kanal: telg ? 'Telegram' : 'Web formu',
             aciklama: telg ? '' : String(b.aciklama || '').slice(0, 110), uyari: '',
-            dugme: yazabilir ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
+            dugme: yazabilir && can('talepYonet') ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
             git: () => this.isKartiAc('b', b.id),
             ikinci: can('assign') ? 'Spam' : '', ikinciGit: () => this.basvuruEngelle(b),
             ac: () => this.isKartiAc('b', b.id), surukle: null
@@ -23454,7 +23457,7 @@ class Component extends DCLogic {
             anahtar: 't' + t.id, kolon: 'yeni', tur: 'Talep', onc: t.oncelik || 'Normal', ms: this.damgaMs(t.acilis),
             baslik: t.konu, yer: t.koy + (t.ilce ? ' · ' + t.ilce : ''),
             kim: 'Bildiren: ' + t.ad, kimBos: false, kanal: TALEP_KANAL[t.kanal] || '', aciklama: String(t.aciklama || '').slice(0, 110), uyari: '',
-            dugme: yazabilir ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
+            dugme: yazabilir && can('talepYonet') ? 'Değerlendir' : 'Aç', dugmeRenk: '#5e5ce6',
             git: () => this.isKartiAc('t', t.id),
             ikinci: '', ikinciGit: () => {}, ac: () => this.isKartiAc('t', t.id), surukle: null
           });

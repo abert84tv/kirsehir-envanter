@@ -8,7 +8,7 @@
           detay: a && !!sec,
           bolumAd: ayarAdi(sec),
           geri: () => this.setState({ ayarBolum: null }),
-          gorunum: v('gorunum'), veri: v('veri'), yetki: v('yetki'),
+          gorunum: v('gorunum'), veri: v('veri'), yetki: v('yetki'), vekalet: v('vekalet'),
           ekip: v('ekip'), personel: v('personel'), kvkk: v('kvkk'), modul: v('modul'),
           uyari: v('uyari'), yapayzeka: v('yapayzeka'), konum: v('konum'),
           // uyarı / yapay zekâ / konum bölümleri aynı kart şablonunu paylaşır (entegrasyon.kartlar bölüme göre süzülür)

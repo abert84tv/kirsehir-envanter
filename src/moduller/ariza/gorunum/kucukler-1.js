@@ -1,4 +1,4 @@
-      newFaultVar: arizaOn,
+      newFaultVar: arizaOn && !!me && me.role !== 'izleyici',
       newFault: () => {
         if (!canCreateFault) return this.say(arizaOn ? 'Bu rol arıza kaydı açamaz.' : 'Arıza modülü pasif.');
         // Telefonda seçili tesis yoksa tesis boş başlar: listenin ilk kaydı
@@ -6,7 +6,7 @@
         // arıza açılabilirdi
         const a = sel || (s.device === 'phone' ? null : s.assets[0]);
         // Masaüstünde yeni arıza da tek sayfa İş kartında açılır; telefonda sade arıza ekranı
-        this.setState({ panel: s.device === 'phone' ? 'ariza' : 'yok', tab: s.device === 'phone' ? s.tab : 'isKarti', isKarti: s.device === 'phone' ? null : { tur: 'a', id: null }, faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: a ? a.id : null, type: FAULT_TYPES[a ? a.type : 'kuyu'][0], priority: 'Yüksek', status: 'acik', crew: canAssign ? CREWS[0] : (me && me.crew) || CREWS[0], note: '', hours: '', photos: [], iseEmri: s.device === 'phone' && canAssign ? true : undefined } });
+        this.setState({ panel: s.device === 'phone' ? 'ariza' : 'yok', tab: s.device === 'phone' ? s.tab : 'isKarti', isKarti: s.device === 'phone' ? null : { tur: 'a', id: null }, faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: a ? a.id : null, type: FAULT_TYPES[a ? a.type : 'kuyu'][0], priority: 'Yüksek', status: 'acik', crew: canAssign ? CREWS[0] : (me && me.crew) || ATANMADI, note: '', hours: '', photos: [], iseEmri: s.device === 'phone' && canAssign ? true : undefined } });
       },
       // Açık arıza varken doğrudan yeni kayıt açılmaz: mükerrer kaydı önlemek
       // için önce var olan sorulur.
@@ -20,7 +20,7 @@
             + '\n\nTAMAM: bu kaydı açar. İPTAL: ayrı bir arıza kaydı açar.');
           if (devam) return this.setState({ panel: 'ariza', faultForm: { malzeme: [], sesler: [], iscilik: '', isaret: null, ...f } });
         }
-        this.setState({ panel: 'ariza', faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: sel.id, type: FAULT_TYPES[sel.type][0], priority: 'Normal', status: 'acik', crew: CREWS[0], note: '', photos: [] } });
+        this.setState({ panel: 'ariza', faultForm: { id: null, malzeme: [], sesler: [], iscilik: '', isaret: null, assetId: sel.id, type: FAULT_TYPES[sel.type][0], priority: 'Normal', status: 'acik', crew: canAssign ? CREWS[0] : ((me && me.crew) || ATANMADI), note: '', photos: [] } });
       },
       assetOptions: (() => {
         // 264 kaydın tamamını <select>'e basmak telefonu kilitliyordu — en yakın 40 kayıt

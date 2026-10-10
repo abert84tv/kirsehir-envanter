@@ -25,6 +25,15 @@ const SAYFALAR = [['harita', 'Harita'], ['envanter', 'Envanter'], ['ariza', 'Ar�
   ['gunluk', 'Bugün'], ['talep', 'Talep'], ['bakim', 'Bakım'], ['ambar', 'Ambar'], ['arac', 'Araç'], ['ozet', 'Özet'], ['profil', 'Hat Kesiti'],
   ['yerlesim', 'Yerleşim'], ['kuyruk', 'Kuyruk'], ['aktarim', 'Aktarım'], ['ayarlar', 'Ayarlar']];
 const YETKI_SEC = [['tam', 'Tam'], ['gor', 'Görür'], ['yok', 'Yok']];
+// Rolün sayfa varsayılanı (kişiye özel seçim yoksa): Saha Şefi ambarla/taleple ilgisizdir, Mühendis envanter odaklıdır, İzleyici yalnız görür.
+// Yetkiler sayfasından kişiye verilen “Tam / Görür / Yok” seçimi her zaman bunun üstündedir.
+const ROL_SAYFA = {
+  sef: { ambar: 'yok', talep: 'yok', arac: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok' },
+  muhendis: { ambar: 'yok', talep: 'yok', gunluk: 'yok', ariza: 'gor', arac: 'gor' },
+  operator: { aktarim: 'yok', yerlesim: 'yok' },
+  izleyici: { ambar: 'yok', talep: 'yok', gunluk: 'yok', bakim: 'gor', ariza: 'gor', arac: 'gor', ozet: 'gor', ayarlar: 'yok', aktarim: 'yok', yerlesim: 'yok', kuyruk: 'yok' }
+};
+const rolSayfaVarsayilan = (rol, sid) => (ROL_SAYFA[rol] || {})[sid] || 'tam';
 // ── Süzgeç haritası ──────────────────────────────────────────────
 // Menü birleşmesinden sonraki altı sayfa ve içindeki süzgeçler. Her süzgeç
 // bugünkü sayfa yetkisini MİRAS ALIR: yetki tablosu ve kullanıcı kayıtları

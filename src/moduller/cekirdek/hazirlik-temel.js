@@ -30,7 +30,7 @@
       if (!me) return 'yok';
       if (me.role === 'yonetici') return 'tam';
       const v = (me.sayfalar || {})[id];
-      return v === 'yok' || v === 'gor' ? v : 'tam';
+      return v === 'yok' || v === 'gor' || v === 'tam' ? v : rolSayfaVarsayilan(me.role, id);
     };
     // Süzgeç yetkisi: birleşmeden sonra yetki sayfa değil süzgeç düzeyinde
     // ölçülür. Bugün her eski sayfa tek süzgece karşılık geldiği için sonuç

@@ -32,11 +32,12 @@
   siparisAdet(id, deger) {
     const ham = String(deger).replace(',', '.');
     const n = parseFloat(ham);
-    // onay yetkisi olmayan miktarı değiştirirse onay düşer (yeniden onaya gider)
+    // onaylı isteğin miktarını yalnız onay yetkilisi (müdür) değiştirir
     const onayYetkili = this.yetkiVar(this.state.session, 'stokSiparisOnay');
+    const hedef = (this.state.siparis || []).find(x => x.id === id);
+    if (hedef && hedef.durum === 'onayli' && !onayYetkili) return this.duyur('Onaylı isteğin miktarını yalnızca müdür değiştirir; geri gönderilmesini isteyin.', 5000, 'kotu');
     const liste = (this.state.siparis || []).map(x => x.id === id
-      ? { ...x, adet: ham === '' ? '' : (isFinite(n) && n > 0 ? n : x.adet),
-          ...(x.durum === 'onayli' && !onayYetkili ? { durum: 'istek', onaylayan: '', onayDamga: '' } : {}) } : x);
+      ? { ...x, adet: ham === '' ? '' : (isFinite(n) && n > 0 ? n : x.adet) } : x);
     this.setState({ siparis: liste });
     clearTimeout(this._sipZaman);
     this._sipZaman = setTimeout(() => {
@@ -58,13 +59,35 @@
     }], g.malzeme + ' × ' + g.adet + ' ' + g.birim + ' → ' + g.ekip + (onayli ? ' çıkış isteği açıldı (onaylı).' : ' için çıkış isteği açıldı — müdür onayı bekliyor.'));
     this.setState({ ambarForm: null, siparisPanel: true });
   }
+  // Onaylayan müdür (onay yetkisi olan) isteği operatöre GERİ GÖNDERİR: onay düşer, neden istek satırında görünür
+  siparisGeriGonder(id) {
+    if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('Onaylı isteği yalnızca onay yetkilisi (müdür) geri gönderir.', 5000, 'kotu');
+    const x = (this.state.siparis || []).find(y => y.id === id);
+    if (!x) return;
+    const neden = (window.prompt('Geri gönderme nedeni — operatör neyi düzeltmeli?') || '').trim();
+    if (!neden) return;
+    const ben = (this.state.session && this.state.session.name) || '';
+    this.denetimYaz('ambar', 'Malzeme isteği geri gönderildi', x.malzeme + ' × ' + x.adet + ' · ' + neden, ben);
+    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'istek', onaylayan: '', onayDamga: '', geriNot: neden + ' · ' + ben + ' · ' + this.damga() } : y), x.malzeme + ' isteği operatöre geri gönderildi.');
+  }
+  // Onayla ya da reddet: isteği iptal eder (neden denetim izine yazılır)
+  siparisIptal(id) {
+    if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('İsteği yalnızca onay yetkilisi (müdür) iptal eder.', 5000, 'kotu');
+    const x = (this.state.siparis || []).find(y => y.id === id);
+    if (!x) return;
+    const neden = (window.prompt('İptal / ret nedeni') || '').trim();
+    if (!neden) return;
+    const ben = (this.state.session && this.state.session.name) || '';
+    this.denetimYaz('ambar', x.durum === 'onayli' ? 'Onaylı malzeme isteği iptal edildi' : 'Malzeme isteği reddedildi', x.malzeme + ' × ' + x.adet + (x.ekip ? ' → ' + x.ekip : '') + ' · ' + neden, ben);
+    this.siparisYaz((this.state.siparis || []).filter(y => y.id !== id), x.malzeme + (x.durum === 'onayli' ? ' isteği iptal edildi.' : ' isteği reddedildi.'));
+  }
   // Müdür (ya da onay yetkisi olan) alım isteğini onaylar
   siparisOnayla(id) {
     if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('Malzeme alım isteğini yalnızca müdür onaylar.', 5000, 'kotu');
     const ben = (this.state.session && this.state.session.name) || '';
     const x = (this.state.siparis || []).find(y => y.id === id);
     if (!x) return;
-    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'onayli', onaylayan: ben, onayDamga: this.damga() } : y), x.malzeme + (x.tur === 'zimmet' ? ' çıkış isteği onaylandı.' : ' alım isteği onaylandı.'));
+    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'onayli', onaylayan: ben, onayDamga: this.damga(), geriNot: '' } : y), x.malzeme + (x.tur === 'zimmet' ? ' çıkış isteği onaylandı.' : ' alım isteği onaylandı.'));
   }
   siparisMetin() {
     // yalnız onaylı kalemler siparişe çıkar

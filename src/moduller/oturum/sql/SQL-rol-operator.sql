@@ -102,3 +102,8 @@ $do$;
 --    rol_yetkisi: assign/talepYonet/onOnay/stokSiparis → operatör; close/stokSiparisOnay/stokKatalog → müdür, yönetici; yönetici operasyon yetkilerini kendine istisna olarak verebilir (kısıtlanamaz).
 --    stok_izin: giris/iade/zimmet → operatör; sarf → yönetici, müdür, operatör, şef, personel(kendi ekibi); hurda/cikis → yönetici, müdür.
 --    ambar_hareket: 'zimmet' (ekibe verme) için kurum_veri 'siparis' listesinde müdür onaylı (durum=onayli, tur=zimmet, aynı malzeme/ekip, adet ≥ istenen) çıkış isteği şarttır; teslimde istek listeden düşer.
+
+-- 8) Tarama sonrası kapatılan açıklar (uygulandı 2026-10-10: silme_geri_alma_yerlesim_foto_denetim_korumalari)
+--    rol_yetkisi 'sil' → yalnız yönetici, müdür. tesis_sil / tesis_geri_al bu yetkiyi ister.
+--    foto_sil: yükleyen kişi ya da 'sil' yetkilisi. yerlesim_ek_ekle / yerlesim_ek_sil: 'create' yetkilisi (mühendis, müdür, yönetici).
+--    denetim_ekle: izleyici rolü kayıt yazamaz.

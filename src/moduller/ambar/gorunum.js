@@ -281,12 +281,15 @@
                 : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
               tutar: izin.fiyat ? this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)) : '',
               ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
-              onayMetin: x.durum === 'onayli' ? '✓ Onaylı' + (x.onaylayan ? ' · ' + x.onaylayan : '') : '⏳ Müdür onayı bekliyor',
-              onayRenk: x.durum === 'onayli' ? '#1b9a4a' : '#d97706',
+              onayMetin: x.durum === 'onayli' ? '✓ Onaylı' + (x.onaylayan ? ' · ' + x.onaylayan : '') : (x.geriNot ? '↩ Müdür geri gönderdi: ' + x.geriNot : '⏳ Müdür onayı bekliyor'),
+              onayRenk: x.durum === 'onayli' ? '#1b9a4a' : (x.geriNot ? '#d92d20' : '#d97706'),
               onayVar: izin.siparisOnay && x.durum !== 'onayli', onayla: () => this.siparisOnayla(x.id),
-              // alım isteğini açan kendi onaysız isteğini geri çekebilir; onaylı kalemi yalnız onay yetkilisi çıkarır
-              cikarVar: izin.siparis && (x.durum !== 'onayli' || izin.siparisOnay), cikarEtiket: izin.siparisOnay && x.durum !== 'onayli' ? 'Reddet' : '×',
-              cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + (izin.siparisOnay && x.durum !== 'onayli' ? ' alım isteği reddedildi.' : ' listeden çıkarıldı.'))
+              // açan operatör kendi ONAYSIZ isteğini geri çekebilir; onaylıyı (ve reddi) yalnız onay yetkilisi yapar
+              miktarKilit: !izin.siparis || (x.durum === 'onayli' && !izin.siparisOnay),
+              cikarVar: izin.siparis && !izin.siparisOnay && x.durum !== 'onayli', cikarEtiket: '×',
+              cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + ' isteği geri çekildi.'),
+              geriVar: izin.siparisOnay && x.durum === 'onayli', geri: () => this.siparisGeriGonder(x.id),
+              iptalVar: izin.siparisOnay, iptalEtiket: x.durum === 'onayli' ? 'İptal' : 'Reddet', iptal: () => this.siparisIptal(x.id)
             };
           }),
           kopyala: () => this.siparisKopyala(),

@@ -70,10 +70,12 @@
           const ms = this.damgaMs(f.opened) || (f.openedIso ? Date.parse(f.openedIso) : 0);
           const sd = sureOn && kolon !== 'bitti' ? this.sureDurum(f) : null;
           const ge = kolon !== 'bitti' && ((sd && sd.gecikti) || (kolon === 'yeni' && ms && simdi - ms > 12 * 3600000));
+          // Saha Şefi yalnız kendi ekibinin işinde işlem yapar (sunucu da böyle denetler); başka ekibinkinde yalnız “Aç”
+          const yazF = yazabilir && !(me.role === 'sef' && me.crew && f.crew !== me.crew);
           let dugme = '', dugmeRenk = '', git = () => {};
           if (kolon === 'yeni') { dugme = can('assign') ? 'Ekip ata' : 'Aç'; dugmeRenk = '#5e5ce6'; git = can('assign') ? () => this.setState({ panoEkip: secilenEkip === f.id ? null : f.id }) : () => this.panoAc(f); }
-          else if (kolon === 'atandi') { dugme = yazabilir ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazabilir ? () => this.panoSahada(f) : () => this.panoAc(f); }
-          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && (can('onOnay') || can('close')) ? 'Ön onay' : f.status === 'mudur_onayi' && can('close') ? 'Son onay' : (f.status === 'kontrol' || f.status === 'mudur_onayi') ? 'Aç' : (yazabilir ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
+          else if (kolon === 'atandi') { dugme = yazF ? 'Sahada' : 'Aç'; dugmeRenk = '#0a84ff'; git = yazF ? () => this.panoSahada(f) : () => this.panoAc(f); }
+          else if (kolon === 'sahada') { dugme = f.status === 'kontrol' && (can('onOnay') || can('close')) ? 'Ön onay' : f.status === 'mudur_onayi' && can('close') ? 'Son onay' : (f.status === 'kontrol' || f.status === 'mudur_onayi') ? 'Aç' : (yazF ? 'İşi bitir' : 'Aç'); dugmeRenk = '#ff9f0a'; git = () => this.panoAc(f); }
           const durumNot = ['bilgi', 'bekleme', 'yonlendirildi', 'kontrol', 'mudur_onayi', 'yeniden'].includes(f.status) ? (STATUS_LABEL[f.status] || '') : '';
           kartlar.push({
             anahtar: 'f' + f.id, kolon, tur: f.no, onc: f.priority || 'Normal', ms,
@@ -84,7 +86,7 @@
             dugme, dugmeRenk, git, ikinci: '', ikinciGit: () => {},
             ac: () => this.panoAc(f),
             ekipSec: kolon === 'yeni' && secilenEkip === f.id, ekipSecenek: kolon === 'yeni' && secilenEkip === f.id ? ekipSecenek(f) : [],
-            surukle: kolon !== 'bitti' && yazabilir ? { tur: 'ariza', id: f.id } : null,
+            surukle: kolon !== 'bitti' && yazF ? { tur: 'ariza', id: f.id } : null,
             ekipDegisir: kolon !== 'bitti' && can('assign'), ekipDeger: ekipVar ? f.crew : '',
             ekipDegis: e => { const v = e.target.value; if (v && v !== (ekipVar ? f.crew : '')) this.panoEkipAta(f, v); }
           });

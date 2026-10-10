@@ -1,0 +1,15 @@
+<sc-if value="{{ ayar.vekalet }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;max-width:760px">
+<div style="display:flex;flex-direction:column;gap:5px">
+<span style="font:700 15px/1.2 var(--font-heading)">Müdür vekâleti</span>
+<span style="font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">İzne çıkarken onay yetkinizi (arıza ve iş emrinin son onayı, malzeme isteği onayı) bir mühendise ya da başka bir müdüre devredin. Döndüğünüzde buradan geri alın. Vekil olan kişi bu onayları verebilir; her değişiklik denetim izine yazılır.</span>
+</div>
+<sc-for list="{{ vekaletEkran.satirlar }}" as="u" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }}">
+<div style="flex:1 1 200px;min-width:0"><div style="font:600 14px/1.25 var(--font-body)">{{ u.ad }}</div><div style="font:400 12px/1.4 var(--font-body);color:{{ u.durumRenk }}">{{ u.rol }}{{ u.bolge }} · {{ u.durum }}</div></div>
+<button onClick="{{ u.tikla }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 18px;border-radius:11px;background:{{ u.bg }};color:{{ u.fg }};border:1px solid {{ u.kenar }};font:700 13px/42px var(--font-body)">{{ u.etiket }}</button>
+</div>
+</sc-for>
+<sc-if value="{{ vekaletEkran.bosVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 13px/1.5 var(--font-body);color:{{ ui.mut }}">Vekil olabilecek mühendis ya da müdür hesabı yok. Önce Ayarlar › Yetkiler'den hesap açılmalı.</div></sc-if>
+</div>
+</sc-if>

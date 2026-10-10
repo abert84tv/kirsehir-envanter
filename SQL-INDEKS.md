@@ -6,8 +6,8 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 | Modül | Dosya | Not |
 |---|---|---|
 | ambar | `src/moduller/ambar/sql/SQL-ambar-hurda.sql` | hurda hareket türü |
-| ambar | `src/moduller/ambar/sql/SQL-ambar-yetki.sql` | stok yetkileri (görevler ayrılığı): `stok_izin` + `ambar_hareket` yetki denetimi — uygulandı 2026-10-10 |
-| oturum | `src/moduller/oturum/sql/SQL-rol-operator.sql` | altı rol: rol türüne `operator` eklendi; rol listeli işlevler (ariza_ek_kaydet, basvuru_engelle, is_emri_kapat, is_emri_yetkili, veri_yaz/_surumlu, yetkim_var) ve `stok_izin` güncellendi — uygulandı 2026-10-10 |
+| ambar | `src/moduller/ambar/sql/SQL-ambar-yetki.sql` | stok yetkileri (görevler ayrılığı): `stok_izin` + `ambar_hareket` yetki denetimi — uygulandı 2026-10-10; 8) sil rolü, foto/yerleşim/denetim korumaları |
+| oturum | `src/moduller/oturum/sql/SQL-rol-operator.sql` | altı rol: rol türüne `operator` eklendi; rol listeli işlevler (ariza_ek_kaydet, basvuru_engelle, is_emri_kapat, is_emri_yetkili, veri_yaz/_surumlu, yetkim_var) ve `stok_izin` güncellendi — uygulandı 2026-10-10; 8) sil rolü, foto/yerleşim/denetim korumaları |
 | ambar | `src/moduller/ambar/sql/SQL-ambar-katalog-siparis.sql` | katalog ve sipariş |
 | ambar | `src/moduller/ambar/sql/SQL-ambar-koy-raporu.sql` | tesis/köy bazlı rapor |
 | ariza | `src/moduller/ariza/sql/SQL-ariza-nokta-koy.sql` | arıza noktası ve köy |

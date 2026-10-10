@@ -177,7 +177,7 @@
             });
           })(),
           zimmetVar: !!crew && Object.values(((s.ambar || {}).zimmet || {})[crew] || {}).some(v => Number(v) > 0),
-          ambarOn,
+          ambarOn: ambarOn && yetki('ambar') !== 'yok',   // ambar yetkisi olmayan (saha şefi) için zimmet/stok bölümü hiç çıkmaz
           olaySheet: (() => {
             const olf = s.olaySheet ? (s.faults || []).find(x => x.id === s.olaySheet.id) : null;
             return { var: !!olf, kapat: () => this.setState({ olaySheet: null }),

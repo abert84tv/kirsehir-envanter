@@ -2245,3 +2245,11 @@ Sürüm 2026.10.05-114.
 - **Malzeme istekleri:** alım isteğini Operatör açar, Müdür onaylar; **ekibe malzeme verme de istekle**: Operatör “Ekibe ver” ile istek açar → Müdür onaylar → Operatör sipariş listesindeki “Ekibe teslim et” ile verir (sunucu `ambar_hareket` onaylı istek olmadan zimmeti reddeder, teslimde isteği düşürür). Sipariş listesi “Malzeme istekleri” oldu.
 - **Reddedilen talepler:** Operatörün “karşılanamaz” dediği talepler İş panosunda Müdür/Yönetici için “müdür incelemesi” listesinde; “Yeniden aç” ile incelemeye döner.
 - **Müdür vekâleti:** Ayarlar › Yetkiler'de kişi satırında tek düğme (“Müdür vekâleti ver / kaldır”): son onay + malzeme isteği onayı yetkilerini verir, iş dönünce geri alınır (sunucuda da geçerli; denetim izine yazılır).
+
+## 2026.10.10-189 — Saha Şefi tek saha rolü, müdür kendi vekâletini atar, ambardan geri gönderme/iptal, deneme ekipleri ve senaryo taraması
+- **Saha Şefi:** sistemde saha ekibi için yalnız şef kullanıcıdır (Personel rolü listeden kalktı; kişiler Ekip/personel kayıtlarında durur). Şefin menüsünde **Stok/Talep/Ayarlar yok**; kendi ekibinin işini tamamlayıp ön onaya gönderir, içerik düzenler, fotoğraf/not/ses ekler. İş panosunda başka ekibin işinde yalnız “Aç” görünür (sunucu zaten başka ekibin işine yazmayı reddeder).
+- **İzleyici rolü (yeni):** yalnız görür — harita/envanter listesi, Özet, ekiplerin iş yerleri; “Yeni arıza bildir” dahil hiçbir yazma düğmesi yok, sunucuda hiçbir yazma işlevi çalışmaz.
+- **Müdür vekâleti:** Müdür kendi vekilini Ayarlar › “Müdür vekâleti” sayfasından kendisi atar/kaldırır (`vekalet_ata`).
+- **Onaylı isteği geri gönderme/iptal:** onaylanmış malzeme isteğini en son onaylayan Müdür operatöre geri gönderir ya da iptal eder.
+- **Sunucu açıkları kapatıldı (senaryo taramasında bulundu):** tesis silme/arşiv ve geri alma yalnız Yönetici/Müdür (`rol_yetkisi 'sil'`); fotoğraf silme yalnız yükleyen veya Müdür/Yönetici; köy ekleme/silme yalnız `create` yetkililer; İzleyici denetim izine yazamaz. Önceki turda: ekip atama, talep, araç, tesis oluşturma, kullanıcı listesi hassas alanları.
+- **Deneme verisi:** 17 `deneme.*` hesap, 5 ekip (Su×2, Elektrik, Kanal, Vidanjör; her birinde şoför+personel+şef), 7 ilçe mühendisi + 2 bölge mühendisi, operatör, müdür, izleyici. Silme: `src/moduller/oturum/sql/SQL-deneme-temizle.sql` (okuyup çalıştırın).

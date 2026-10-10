@@ -93,7 +93,7 @@
             sayfalar: SAYFA_GRUPLARI.map(g => ({
               ad: g.ad,
               suzgecler: g.uyeler.map(([sid]) => {
-                const mevcut = u.role === 'yonetici' ? 'tam' : (((u.sayfalar || {})[sid]) || 'tam');
+                const mevcut = u.role === 'yonetici' ? 'tam' : (((u.sayfalar || {})[sid]) || rolSayfaVarsayilan(u.role, sid));
                 return {
                   label: SUZGEC_ESKI_AD[sid] || sid,
                   secenekler: YETKI_SEC.map(([v, l]) => ({

@@ -91,8 +91,8 @@
     // Siparişteki kalem ambara girince listeden düşer
     if (g.tur === 'giris') {
       const sp = (this.state.siparis || []).find(x => x.malzeme === g.malzeme && x.tur !== 'zimmet');
-      if (sp) setTimeout(() => this.siparisYaz((this.state.siparis || []).filter(x => x.id !== sp.id),
-        g.malzeme + ' ambara girdi, sipariş listesinden düşüldü.'), 1800);
+      // onaylı alım isteğini sunucu ambar_hareket içinde düşürür; ekranda yalnız yerel liste güncellenir
+      if (sp && sp.durum === 'onayli') { this.setState(st => ({ siparis: (st.siparis || []).filter(x => x.id !== sp.id) })); this.duyur(g.malzeme + ' ambara girdi, onaylı alım isteği listeden düşüldü.', 4500, 'iyi'); }
     }
   }
   // Kapanan arızada kullanılan malzemeyi ekip zimmetinden topluca düşer

@@ -1,19 +1,20 @@
 const ROLE_ORDER = [
-  ['yonetici', 'Yönetici', 'Sistem sahibi: kullanıcı, rol ve ayar yönetimi; rapor, silme ve son onay. Günlük iş açma/atama yapmaz (gerekirse kendine vekâlet verir)'],
-  ['mudur', 'Müdür', 'Son onay: arıza, iş emri ve malzeme isteklerini onaylar ya da iade eder; hurda/ambar düzeltmesi, katalog, rapor, silme'],
-  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler, rapor alır; arıza, iş emri ve stok işleri yoktur — gerekirse Ayarlar › Yetkiler’den verilir'],
+  ['yonetici', 'Yönetici', 'Sistem sahibi: kullanıcı, rol ve ayar yönetimi; rapor, silme ve son onay. Günlük iş açma/atama yapmaz (gerekirse kendine yetki verir)'],
+  ['mudur', 'Müdür', 'Son onay: arıza, iş emri ve malzeme isteklerini onaylar, geri gönderir ya da iptal eder; hurda/ambar düzeltmesi, katalog, rapor, silme; kendi vekâletini atar'],
+  ['muhendis', 'Mühendis', 'Bölgesindeki envanteri kurar ve düzenler, hat çizer, rapor alır; arıza yönetimi ve stok yoktur — gerekirse Ayarlar › Yetkiler’den verilir'],
   ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, malzeme isteği açar, ambardan ekibe verir; sahadan gelen işe ön onay verir ya da sahaya iade eder'],
-  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi tamamlayıp onaya gönderir, kullanılan malzemeyi düşer'],
-  ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
+  ['sef', 'Saha Şefi', 'Ekip şefi: sahadaki işi yürütür, arıza ve iş emri içeriğini düzenler, fotoğraf, bilgi, not ve sesli kayıt ekler, işi tamamlayıp onaya gönderir. Ambar/stok bağlantısı yoktur'],
+  ['izleyici', 'İzleyici', 'Yalnız görür: envanter, harita ve sahadaki ekiplerin çalıştığı yerler. Hiçbir işlem yapamaz']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
 // Hesaplar yalnızca veritabanında; programın içinde gömülü kullanıcı ve şifre
 // yok. Çevrimdışıyken bu cihazda daha önce doğrulanmış hesaplar girebilir.
 const ALL_ROLES = ROLE_ORDER.map(r => r[0]);
+const ISLEM_ROLLERI = ALL_ROLES.filter(r => r !== 'izleyici');   // izleyici yalnız görür
 const PERMS = [
   ['gor', 'Envanteri ve haritayı görüntüleme', ALL_ROLES],
-  ['foto', 'Fotoğraf ekleme', ALL_ROLES],
-  ['arizaAc', 'Arıza kaydı açma', ALL_ROLES],
+  ['foto', 'Fotoğraf, not ve sesli kayıt ekleme', ISLEM_ROLLERI],
+  ['arizaAc', 'Arıza kaydı açma', ISLEM_ROLLERI],
   ['write', 'Kayıt bilgisi güncelleme', ['yonetici', 'mudur', 'muhendis', 'operator', 'sef', 'personel']],
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
   // İş açan/atayan ≠ ön onaylayan ≠ son onaylayan (görevler ayrılığı): yönetici ve müdür bu işleri açmaz, onaylar
@@ -25,7 +26,7 @@ const PERMS = [
   // Stok / ambar
   ['stokGiris', 'Stok: ambara mal alımı girme', ['operator']],
   ['stokZimmet', 'Stok: müdürün onayladığı isteğe göre ekibe malzeme verme, zimmet iadesi alma', ['operator']],
-  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'operator', 'sef', 'personel']],
+  ['stokSarf', 'Stok: sahada kullanılan malzemeyi ambar kaydından düşme (arıza kapanışında müdür/operatör)', ['yonetici', 'mudur', 'operator']],
   ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
   ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur']],
   ['stokSiparis', 'Stok: malzeme isteği açma (alım ve ekibe çıkış)', ['operator']],
@@ -73,6 +74,7 @@ const AYAR_LISTE = [
   ]],
   ['Kullanıcılar ve güvenlik', [
     ['yetki', 'Yetkiler ve kullanıcılar', 'Kim neyi görebilir, kim değiştirebilir'],
+    ['vekalet', 'Müdür vekâleti', 'Müdür izindeyken onay yetkisini bir mühendise devredin'],
     ['kvkk', 'KVKK ve saklama', 'Kişisel veri saklama süreleri'],
     ['denetim', 'Denetim izi', 'Kim neyi ne zaman değiştirdi']
   ]],

@@ -439,6 +439,7 @@ export async function yetkiKaydet(id, sayfaYetki, yetkiIstisna) {
     p_sayfa_yetki: sayfaYetki || {}, p_yetki_istisna: yetkiIstisna || {}
   });
 }
+export async function vekaletAta(hedefId, ver) { return cagir('vekalet_ata', { p_token: tokenOku(), p_hedef: hedefId, p_ver: !!ver }); }
 
 // ── modül verileri (SQL-moduller-sunucu.sql)
 // Yedi modül ortak bir anahtarlı tabloda durur; her biri tek liste olarak

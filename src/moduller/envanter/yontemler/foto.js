@@ -1,6 +1,7 @@
   // ── fotoğraf: dosya seçici gizli bir input; kamera ve galeri aynı düğmeden
-  fotoSec(kamera) {
-    const sel = this.state.assets.find(a => a.id === this.state.selected);
+  // hedef verilirse (liste satırındaki kamera düğmesi) o kayda yüklenir; verilmezse açık kartın kaydına
+  fotoSec(kamera, hedef) {
+    const sel = hedef || this.state.assets.find(a => a.id === this.state.selected);
     if (!sel) return;
     if (!this.yazabilir(sel)) return this.kilitUyar(sel);
     if (!this._sb || !this._sb.tokenOku()) {

@@ -75,6 +75,29 @@
 </div>
 </sc-if>
 
+<!-- Veri tamamlanma -->
+<sc-if value="{{ ozetPano.tamam.var }}" hint-placeholder-val="{{ true }}">
+<div class="ks-modul" style="--m:2;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Veri tamamlanma</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Çubuğa basınca eksik kayıtlar listelenir</span>
+</div>
+<div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+<div class="ks-halka" style="width:96px;height:96px;background:{{ ozetPano.tamam.halka }};--zemin:{{ ozetPano.zemin }}">
+<div class="ks-halka-orta"><span class="ks-say yuzde" style="--hedef:{{ ozetPano.tamam.genel }};font:700 20px/1 var(--font-heading);letter-spacing:-.02em;color:{{ ui.fg }}"></span></div>
+</div>
+<div style="flex:1 1 170px;min-width:0;display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ ozetPano.tamam.satirlar }}" as="t" hint-placeholder-count="3">
+<button onClick="{{ t.git }}" title="{{ t.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:44px;justify-content:center">
+<div style="display:flex;justify-content:space-between;gap:8px;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}"><span>{{ t.ad }}</span><span style="color:{{ ui.mut }};font-weight:500">{{ t.metin }} · %{{ t.y }}</span></div>
+<div style="height:9px;border-radius:5px;background:{{ ui.rule }};overflow:hidden"><div class="ks-cubuk" style="--i:{{ t.i }};height:9px;width:{{ t.w }};background:{{ t.renk }}"></div></div>
+</button>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
 <!-- Teknik özet -->
 <div class="ks-modul" style="--m:3;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
 <div style="display:flex;flex-direction:column;gap:3px">
@@ -82,6 +105,10 @@
 <span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Yalnız bilgisi girilmiş kuyular hesaba katılır</span>
 </div>
 <button onClick="{{ ozetPano.teknikGit }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:fit-content;min-height:36px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/34px var(--font-body);color:{{ ui.acc }}">Bilgisi girilecek kuyuları göster</button>
+<sc-if value="{{ ozetPano.teknikYok }}" hint-placeholder-val="{{ false }}">
+<div style="padding:14px 16px;border-radius:12px;background:{{ ui.surf2 }};font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">Henüz hiçbir kuyuda pompa gücü, derinlik ya da debi girilmemiş. Kuyu kartında “Düzenle” ile girildikçe toplam ve ortalamalar burada belirir.</div>
+</sc-if>
+<sc-if value="{{ ozetPano.teknikVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
 <sc-for list="{{ ozetPano.teknik }}" as="x" hint-placeholder-count="3">
 <div title="{{ x.ipucu }}" style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:12px;background:{{ ui.surf2 }}">
@@ -94,6 +121,7 @@
 </div>
 </sc-for>
 </div>
+</sc-if>
 </div>
 
 <!-- Dağılım grafikleri: yapım yılı / derinlik / debi -->

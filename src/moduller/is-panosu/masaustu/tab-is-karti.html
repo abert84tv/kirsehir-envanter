@@ -61,6 +61,7 @@
 <input value="{{ isKartiEkran.koy }}" onChange="{{ isKartiEkran.onKoy }}" placeholder="Köy adı" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body)"></label>
 </div>
 <div style="font:500 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ isKartiEkran.yerNot }}</div>
+<!--@dahil moduller/is-panosu/ortak/is-harita.html-->
 <sc-if value="{{ isKartiEkran.tesisVar }}" hint-placeholder-val="{{ false }}">
 <input type="search" value="{{ isKartiEkran.tesisQ }}" onChange="{{ isKartiEkran.onTesisQ }}" placeholder="Tesis ara — kod ya da köy adı" style="all:unset;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/44px var(--font-body)">
 <div style="display:flex;flex-direction:column;gap:6px">
@@ -79,7 +80,7 @@
 <button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:12px 14px;border-radius:12px;border:2px solid {{ e.kenar }};background:{{ e.bg }};color:{{ e.fg }};display:flex;flex-direction:column;gap:6px">
 <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font:700 15px/1.2 var(--font-heading)">{{ e.ad }}</span><span style="font:500 12px/1.2 var(--font-body);color:{{ e.mut }}">{{ e.neden }}</span><span style="flex:1"></span><span style="font:700 12px/1.2 var(--font-body);color:{{ e.konumRenk }}">{{ e.konumMetin }}</span></div>
 <div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">{{ e.uyeNot }} — <sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3"><span style="color:{{ u.renk }}">{{ u.ad }} {{ u.durum }} · </span></sc-for></div>
-<div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">Araç: {{ e.aracMetin }}</div>
+<sc-if value="{{ e.aracVar }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">Araç: {{ e.aracMetin }}</div></sc-if>
 <sc-if value="{{ e.uyariVar }}" hint-placeholder-val="{{ false }}"><div style="font:700 12.5px/1.4 var(--font-body);color:#d97706"><sc-for list="{{ e.uyari }}" as="w" hint-placeholder-count="1"><span>⚠ {{ w }}  </span></sc-for></div></sc-if>
 </button>
 </sc-for>

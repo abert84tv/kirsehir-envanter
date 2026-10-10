@@ -2,3 +2,4 @@
 //@dahil moduller/yerlesim/gorunum/yerlesimYukleme.js
 //@dahil moduller/yerlesim/gorunum/koyDuzelt.js
 //@dahil moduller/yerlesim/gorunum/koyKontrol.js
+//@dahil moduller/yerlesim/gorunum/koyAta.js

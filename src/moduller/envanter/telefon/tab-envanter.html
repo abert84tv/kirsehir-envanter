@@ -29,7 +29,8 @@
 <div style="padding:20px 14px;font:400 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ envKontrol.bosNot }}</div>
 </sc-if>
 <sc-for list="{{ list }}" as="a" hint-placeholder-count="7">
-<button onClick="{{ a.tap }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;width:100%;gap:12px;padding:13px 14px;border-bottom:1px solid {{ ui.rule }};align-items:flex-start;background:{{ a.rowBg }}">
+<div style="display:flex;width:100%;align-items:stretch;border-bottom:1px solid {{ ui.rule }};background:{{ a.rowBg }}">
+<button onClick="{{ a.tap }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex:1;min-width:0;gap:12px;padding:13px 14px;align-items:flex-start">
 <span style="flex:none;width:30px;height:30px;background:{{ a.fill }};border-radius:10px;border:1px solid {{ a.stroke }};color:{{ a.ink }};font:600 12.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ a.glyph }}</span>
 <span style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;text-align:left">
 <span style="font:600 14.5px/1.15 var(--font-heading);color:{{ ui.fg }}">{{ a.code }}</span>
@@ -40,6 +41,8 @@
 <sc-if value="{{ a.sVar }}" hint-placeholder-val="{{ false }}"><span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.sBg }};color:{{ a.sFg }};border-radius:10px;border:1px solid {{ a.sBorder }}">{{ a.sLabel }}</span></sc-if>
 </span>
 </button>
+<sc-if value="{{ a.fotoVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.fotoCek }}" aria-label="Fotoğraf ekle" title="Fotoğraf ekle" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:48px;align-self:center;height:44px;margin-right:8px;border-radius:12px;border:1px solid var(--color-accent);color:{{ ui.acc }};display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3l1.6-2.3h6.8L17 8.5h3a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13.5" r="3.4"/></svg></button></sc-if>
+</div>
 </sc-for>
 </div>
 </sc-if>

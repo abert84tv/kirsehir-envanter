@@ -79,7 +79,7 @@
     }
     const ekip = k.ekip || '';
     const ekipAyar = (this.state.ekipler || []).find(e => e.ad === ekip);
-    const araclar = ekip ? ((this.state.arac && this.state.arac.list) || []).filter(v => v.ekip === ekip).map(v => v.id) : [];
+    const araclar = ekip && this.state.modul.arac !== false ? ((this.state.arac && this.state.arac.list) || []).filter(v => v.ekip === ekip).map(v => v.id) : [];
     const ff = {
       assetId: sebeke ? null : k.assetId, type: k.ariza, grup: k.grup, yerModu: sebeke ? 'koy' : 'tesis',
       ilce: sebeke ? k.ilce : '', koy: sebeke ? k.koy : '',
@@ -103,3 +103,30 @@
     this.talepDurum(t.id, 'red', neden);
     this.setState({ tab: 'isPanosu', isKarti: null });
   }
+  // Kartlardaki yer haritası (ozet-harita.html#is): hedef nokta, aday/seçili tesis ve (varsa) ekiplerin son konumu
+  isHaritaGonder() {
+    const f = document.getElementById('ks-is-harita');
+    if (!f || !f.contentWindow) return;
+    const s = this.state, A = s.assets || [], k = s.isKarti, ff = s.faultForm;
+    const kmYaz = m => m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
+    const ogeA = (a, ref) => ({ id: a.id, code: a.code, type: a.type, lat: a.lat, lon: a.lon, yer: this.yerGoster(a), km: ref ? kmYaz(this.mesafeM(ref, a)) : '' });
+    let hedef = null, tesisler = [], secId = null, secilebilir = false;
+    if (s.tab === 'isKarti' && k && k.tur !== 'a') {
+      const ad = this._isAdaylar || { l: [], ref: null }, ref = ad.ref;
+      tesisler = (ad.l || []).map(a => ogeA(a, ref)); secId = k.assetId || null; secilebilir = true;
+      const sec = k.assetId ? A.find(x => x.id === k.assetId) : null;
+      if (sec && !tesisler.some(t => t.id === sec.id)) tesisler.push(ogeA(sec, ref));
+      if (!sec && ref) hedef = { lat: ref.lat, lon: ref.lon, ad: k.koy || 'Bildirilen yer' };
+      else if (sec && ref) hedef = { lat: ref.lat, lon: ref.lon, ad: 'Bildirilen yer' };
+    } else if (ff) {
+      const a = ff.assetId ? A.find(x => x.id === ff.assetId) : null;
+      if (a) { tesisler = [ogeA(a, null)]; secId = a.id; }
+      else { const y = ff.koy ? this.yerBul(ff.koy) : null; if (y) hedef = { lat: y.lat, lon: y.lon, ad: ff.koy + ' · arıza yeri' }; }
+    }
+    const yas = iso => { const dk = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000)); return dk < 2 ? 'şimdi' : dk < 60 ? dk + ' dk önce' : dk < 1440 ? Math.floor(dk / 60) + ' sa önce' : Math.floor(dk / 1440) + ' gün önce'; };
+    const ekipler = Object.entries(s.ekipKonum || {}).filter(([, v]) => v && v.lat != null && v.lon != null).map(([ad, v]) => ({
+      ad, lat: v.lat, lon: v.lon, taze: (Date.now() - Date.parse(v.zaman)) < 30 * 60000, not: (v.kaynak === 'arac' ? 'araç takip · ' : 'zimmetli cihaz · ') + yas(v.zaman)
+    }));
+    try { f.contentWindow.postMessage({ ks: 'isHaritaVeri', hedef, tesisler, secId, secilebilir, ekipler, dark: this.th().dark, zemin: s.ozetZemin || 'hyb', renk: turRenk(this.th().dark) }, '*'); } catch (e) { /* çerçeve yok */ }
+  }
+

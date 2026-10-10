@@ -186,3 +186,4 @@
         };
       })(),
 //@dahil moduller/is-panosu/gorunum/isKarti.js
+//@dahil moduller/is-panosu/gorunum/isHarita.js

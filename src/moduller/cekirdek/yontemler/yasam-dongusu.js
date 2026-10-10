@@ -48,6 +48,17 @@
       const imza = [s.assets, s.ozetGizli, s.ozetZemin, s.theme];
       if (!this._ozetImza || imza.some((x, i) => x !== this._ozetImza[i])) { this._ozetImza = imza; setTimeout(() => this.ozetHaritaGonder(), 30); }
     } else this._ozetImza = null;
+    // İş kartı / arıza kartı yer haritası: yer, tesis seçimi, ekip konumu, zemin ya da tema değişince yeniden gönderilir
+    if ((s.tab === 'isKarti' && (s.isKarti || s.faultForm)) || (s.device === 'phone' && s.panel === 'ariza' && s.faultForm)) {
+      const k = s.isKarti || {}, ff = s.faultForm || {};
+      const imza = [k.assetId, k.koy, k.ilce, k.tesisQ, k.grup, ff.assetId, ff.koy, s.ekipKonum, s.ozetZemin, s.theme, s.assets];
+      if (!this._isImza || imza.some((x, i) => x !== this._isImza[i])) { this._isImza = imza; setTimeout(() => this.isHaritaGonder(), 40); }
+    } else this._isImza = null;
+    // Köy atama penceresi haritası: seçim, aday, kayıt, zemin ya da tema değişince yeniden gönderilir (yazı yazarken değil)
+    if (s.koyAtaDurum) {
+      const imza = [s.koyAtaDurum.sec, s.koyAtaDurum.hedef, s.assets, s.ozetZemin, s.theme];
+      if (!this._ataImza || imza.some((x, i) => x !== this._ataImza[i])) { this._ataImza = imza; setTimeout(() => this.koyAtaHaritaGonder(), 30); }
+    } else this._ataImza = null;
     if (this._slaRef !== s.faults) { this._slaRef = s.faults; this.slaTara(); }
     try { document.documentElement.classList.toggle('ks-koyu', s.theme === 'dark'); } catch (e) { /* belge yok */ }
     // Tam ekran harita yalnız harita ve hat kesiti ekranlarında; başka sayfaya geçince çubuklar geri gelir

@@ -162,13 +162,13 @@
           ozelBit: s.ozetBit, onOzelBit: e => this.setState({ ozetBit: e.target.value }),
           ilceler: [{ ad: 'Tüm ilçeler', deger: '' }, ...Object.keys(byD).sort().map(d => ({ ad: d, deger: d }))],
           ilce: s.ozetIlce || '', onIlce: e => this.setState({ ozetIlce: e.target.value }),
+          // her gösterge kendi modülüne bağlı: Arıza kapalıyken arıza, Ambar kapalıyken stok göstergeleri çıkmaz
           week: [
-            { n: String(faultsF.length), label: 'Açılan arıza', fg: ui.fg },
-            { n: String(cozulenF.length), label: 'Çözülen arıza', fg: ui.fg },
+            ...(arizaOn ? [{ n: String(faultsF.length), label: 'Açılan arıza', fg: ui.fg }, { n: String(cozulenF.length), label: 'Çözülen arıza', fg: ui.fg }] : []),
             { n: String(testSay), label: 'Girilen deneme', fg: ui.fg },
-            { n: String(sarfF.length), label: 'Malzeme hareketi', fg: ui.fg },
-            { n: this.tl(malzemeMaliyet), label: 'Malzeme maliyeti', fg: ui.fg },
-            { n: String(kritikStokSayi), label: 'Kritik stok', fg: kritikStokSayi ? 'var(--color-uyari)' : ui.fg }
+            ...(ambarOn ? [{ n: String(sarfF.length), label: 'Malzeme hareketi', fg: ui.fg }] : []),
+            ...(arizaOn || ambarOn ? [{ n: this.tl(malzemeMaliyet), label: 'Malzeme maliyeti', fg: ui.fg }] : []),
+            ...(ambarOn ? [{ n: String(kritikStokSayi), label: 'Kritik stok', fg: kritikStokSayi ? 'var(--color-uyari)' : ui.fg }] : [])
           ],
           weekBaslik: aralik.ad + (ilceF ? ' · ' + ilceF : '') + ' yapılanlar',
           weekNote: 'Gün/hafta/ay/yıl ya da özel bir aralık ve isterseniz tek bir ilçe seçin — arıza, deneme ve ambar hareketi kayıtlarının gerçek tarih damgasına göre süzülür.',

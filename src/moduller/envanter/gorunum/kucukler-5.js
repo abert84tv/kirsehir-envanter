@@ -50,6 +50,9 @@
           aFg: aktifMi(a) ? ui.fg : '#fff',
           aBorder: aktifMi(a) ? ui.rule : '#3f4a5a',
           solgun: '1',
+          // fotoğrafı olmayan kayıtta satırdan doğrudan kamera (telefonda arka kamera açılır)
+          fotoVar: !(a.photos > 0) && canWrite,
+          fotoCek: e => { if (e && e.stopPropagation) e.stopPropagation(); this.fotoSec(true, a); },
           tap: () => { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi' }); }
         };
       }),

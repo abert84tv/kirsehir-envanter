@@ -29,7 +29,7 @@
 <td style="color:{{ ui.fg }}">{{ a.typeLabel }}</td>
 <td style="color:{{ ui.mut }}">{{ a.place }}</td>
 <td style="color:{{ ui.fg }}">{{ a.year }}</td>
-<td style="color:{{ ui.mut }}">{{ a.photos }}</td>
+<td style="color:{{ ui.mut }}"><span style="display:inline-flex;align-items:center;gap:8px">{{ a.photos }}<sc-if value="{{ a.fotoVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ a.fotoCek }}" aria-label="Fotoğraf ekle" title="Fotoğraf ekle" style="all:unset;box-sizing:border-box;cursor:pointer;width:30px;height:30px;border-radius:9px;border:1px solid var(--color-accent);color:{{ ui.acc }};display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3l1.6-2.3h6.8L17 8.5h3a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13.5" r="3.4"/></svg></button></sc-if></span></td>
 <td><span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.aBg }};color:{{ a.aFg }};border-radius:10px;border:1px solid {{ a.aBorder }}">{{ a.aLabel }}</span></td>
 <td><span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;padding:4px 6px;background:{{ a.sBg }};color:{{ a.sFg }};border-radius:10px;border:1px solid {{ a.sBorder }}">{{ a.sLabel }}</span></td>
 </tr>

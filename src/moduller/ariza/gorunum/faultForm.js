@@ -113,11 +113,11 @@
                 durum: ie ? ie.no + ' · ' + (IS_EMRI_DURUM[ie.status] || ie.status) : (yeni ? '' : 'Bu arıza için iş emri yok'),
                 durumC: ie ? (ieKapali ? '#1b7a36' : ui.acc) : ui.mut,
                 ekipSatir: ie ? 'Ekip: ' + (ie.crew || 'atanmadı') + (ie.atayan ? ' · atayan ' + ie.atayan : '') : '',
-                aracSatir: ie ? 'Araç: ' + ((ie.araclar || []).map(a => a.plaka || a.ad).join(', ') || 'yok') : '',
+                aracSatir: ie && aracOn ? 'Araç: ' + ((ie.araclar || []).map(a => a.plaka || a.ad).join(', ') || 'yok') : '',
                 toggleVar: yeni && canAssign, toggleOn,
                 toggleBg: toggleOn ? 'var(--color-accent)' : 'transparent', toggleFg: toggleOn ? '#fff' : 'transparent',
                 toggle: () => yaz({ iseEmri: !toggleOn }),
-                araclarVar: duzenlenir && havuz.length > 0,
+                araclarVar: aracOn && duzenlenir && havuz.length > 0,
                 araclar: havuz.map(a => {
                   const sec = secili.includes(a.id);
                   const yok = a.durum && a.durum !== 'musait';

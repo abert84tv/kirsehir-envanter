@@ -20,7 +20,7 @@ const basari = msg => console.log('  ✓ ' + msg);
 const basarisiz = msg => { console.log('  ✗ ' + msg); hata++; };
 
 function dosyaVarMi(rel) {
-  return fs.existsSync(path.join(ROOT, rel.replace(/^\//, '')));
+  return fs.existsSync(path.join(ROOT, rel.replace(/[#?].*$/, '').replace(/^\//, '')));
 }
 
 // 0) index.html, src/ klasöründen derlenir; güncel mi?

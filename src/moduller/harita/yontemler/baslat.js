@@ -3,6 +3,13 @@
       const d = e.data || {};
       if (d.ks === 'ready') this.pushMap();
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
+      // Köy atama penceresindeki harita: hazır olunca veri gider; nokta ya da aday köye basılınca seçim güncellenir
+      if (d.ks === 'koyAtaHazir') { this.koyAtaHaritaGonder(); return; }
+      // İş kartı / arıza kartı yer haritası
+      if (d.ks === 'isHaritaHazir') { this.isHaritaGonder(); return; }
+      if (d.ks === 'isTesisSec') { const k = this.state.isKarti; if (k && k.tur !== 'a') this.setState({ isKarti: { ...k, assetId: k.assetId === d.id ? null : d.id } }); return; }
+      if (d.ks === 'koyAtaTik') { this.koyAtaSecTik(d.id, false); return; }
+      if (d.ks === 'koyAtaKoy') { const h = (this.state.koyAtaDurum || {}).hedef; this.koyAtaGuncelle({ hedef: h && h.ad === d.ad && h.ilce === d.ilce ? null : { ad: d.ad, ilce: d.ilce } }); return; }
       if (d.ks === 'ozetZemin' && ['street', 'sat', 'hyb'].includes(d.zemin)) { try { localStorage.setItem('ks-ozet-zemin', d.zemin); } catch (e) { /* depolama kapalı */ } this.setState({ ozetZemin: d.zemin }); return; }
       // Özet haritasında bir noktaya basıldı: kaydın kartı haritada açılır
       if (d.ks === 'ozetSec') {

@@ -92,6 +92,21 @@
           { ad: 'Toplam debi', birim: 'L/sn', n: debiler.length, deger: debiler.length ? Math.round(topla(debiler)) : null, ipucu: 'Debisi girilmiş kuyuların toplamı' }
         ].map(x => ({ ...x, var: x.deger != null, yok: x.deger == null, kayit: x.n ? x.n + ' kuyuda girilmiş' : 'henüz girilmemiş' }));
 
+        // 7b) Veri tamamlanma: köy, fotoğraf ve kuyu teknik bilgisi ne kadar dolu (çubuğa basınca eksikler listelenir)
+        const dBos = v => v === undefined || v === null || v === '' || v === '—' || v === 0 || v === '0';
+        const tekDolu = kuyular.filter(a => a.year || ['derinlik', 'debi', 'motor', 'pompaD', 'statik', 'dinamik'].some(k => !dBos((a.d || {})[k]))).length;
+        const tamamSatir = [
+          { ad: 'Köy adı', dolu: A.filter(a => a.village).length, n: toplam, hazir: 'koybos' },
+          { ad: 'Fotoğraf', dolu: fotolu, n: toplam, hazir: 'fotosuz' },
+          { ad: 'Kuyu teknik bilgisi', dolu: tekDolu, n: kuyular.length, hazir: 'teknikbos' }
+        ].filter(x => x.n > 0).map((x, i) => {
+          const y = yuzde(x.dolu, x.n), eksik = x.n - x.dolu;
+          return { ad: x.ad, metin: x.dolu + ' / ' + x.n, y, i, w: Math.max(x.dolu ? 3 : 0, y) + '%', renk: y >= 90 ? '#1b9a4a' : y >= 50 ? 'var(--color-accent)' : '#d97706',
+            eksikVar: eksik > 0, eksik: eksik + ' eksik', ipucu: eksik > 0 ? 'Eksikleri listele' : 'Tamam', git: git({ hazir: x.hazir }) };
+        });
+        const tamamGenel = tamamSatir.length ? Math.round(tamamSatir.reduce((t, x) => t + x.y, 0) / tamamSatir.length) : 0;
+        const tamam = { satirlar: tamamSatir, var: tamamSatir.length > 0, genel: tamamGenel, halka: `conic-gradient(var(--color-accent) 0deg ${tamamGenel * 3.6}deg, ${ui.rule} 0)` };
+
         // 8) Dağılım grafikleri (yapım yılı / derinlik / debi)
         const sekmeHist = s.ozetHist || 'derinlik';
         const HIST = {
@@ -188,6 +203,6 @@
           fotolu, fotoSayi, fotoYuzde, fotoTur,
           fotoHalka: `conic-gradient(var(--color-accent) 0deg ${fotoYuzde * 3.6}deg, ${ui.rule} 0)`,
           ilceSatir, koySatir, koyVar: koySatir.length > 0, yakin, yakinVar: yakin.length > 0,
-          teknik, hist, su, nufus, nufusVar: nufus.length > 0, kaynak, kaynakVar: kaynak.length > 0, son, sonVar: son.length > 0, harita
+          teknik, teknikVar: teknik.some(x => x.var), teknikYok: !teknik.some(x => x.var), tamam, hist, su, nufus, nufusVar: nufus.length > 0, kaynak, kaynakVar: kaynak.length > 0, son, sonVar: son.length > 0, harita
         };
       })(),

@@ -1,5 +1,6 @@
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <button onClick="{{ barkod.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 13px;border-radius:18px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body)">▮▯▮ Barkod okut</button>
+<sc-if value="{{ envKontrol.koyAtaVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ envKontrol.koyAta }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 13px;border-radius:18px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body)">📍 Köy ata <span style="opacity:.7;font-weight:500">{{ envKontrol.koyAtaSayi }}</span></button></sc-if>
 <sc-if value="{{ envKontrol.hazirlar.length }}" hint-placeholder-val="{{ true }}">
 <span style="font:500 12px/1 var(--font-body);color:{{ ui.mut }};margin:0 2px 0 6px">Hızlı süzgeç:</span>
 <sc-for list="{{ envKontrol.hazirlar }}" as="h" hint-placeholder-count="4">

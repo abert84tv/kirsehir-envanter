@@ -52,10 +52,14 @@
 // Özet > Dağılım haritası: gerçek harita zemini (sokak / uydu / uydu + yer adları) üzerinde kayıtlar tür renginde noktalar.
 // Veri ana pencereden gelir ({ks:'ozetVeri'}); noktaya basınca ana pencereye {ks:'ozetSec'} gider.
 const mobil = L.Browser.mobile;
+// #ata: Envanter > “Köyü boş” kayıtlara köy atama penceresinde kullanılır (kayıtlar seçilir, aday köyler etiketlenir)
+const ATA = location.hash === '#ata';
+// #is: İş kartı / arıza kartındaki küçük yer haritası (hedef nokta, aday tesisler, varsa ekip konumları)
+const IS = location.hash === '#is';
 const map = L.map('map', {
   center: [39.15, 34.16], zoom: 9, zoomSnap: .5, zoomDelta: .5, preferCanvas: true,
-  scrollWheelZoom: !mobil,         // masaüstünde fare haritanın üstündeyken tekerlek yakınlaştırır/uzaklaştırır; telefonda iki parmak
-  dragging: !mobil,                // telefonda tek parmak sayfayı kaydırır, iki parmak haritayı yakınlaştırır
+  scrollWheelZoom: !mobil || ATA || IS,         // masaüstünde fare haritanın üstündeyken tekerlek yakınlaştırır/uzaklaştırır; telefonda iki parmak
+  dragging: !mobil || ATA || IS,         // telefonda tek parmak sayfayı kaydırır, iki parmak haritayı yakınlaştırır (atama penceresi sabit olduğundan tek parmak yeter)
   tap: false
 });
 const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap katkıcıları', maxZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1 });
@@ -109,9 +113,63 @@ function ciz(d) {
   }
 }
 function esc(x) { return String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-addEventListener('message', e => { const d = e.data || {}; if (d.ks === 'ozetVeri') ciz(d); });
+// ── Köy atama modu: seçilecek kayıtlar (turuncu; seçilince mavi) ve aday köyler (koyu nokta + ad etiketi)
+const ataKayit = L.layerGroup().addTo(map), ataKoy = L.layerGroup().addTo(map);
+let ataSigdi = false;
+function ataCiz(d) {
+  document.body.classList.toggle('dark', !!d.dark);
+  zeminSec(d.zemin || 'hyb');
+  ataKayit.clearLayers(); ataKoy.clearLayers();
+  const k = d.kayitlar || [];
+  for (const a of k) {
+    const m = L.circleMarker([a.lat, a.lon], a.sec
+      ? { radius: 9, weight: 3, color: '#fff', fillColor: '#0071e3', fillOpacity: 1 }
+      : { radius: 6.5, weight: 1.6, color: '#fff', fillColor: '#f59e0b', fillOpacity: .95 });
+    m.bindTooltip('<b>' + esc(a.code) + '</b><small>' + esc(a.ilce) + (a.oneri ? ' · en yakın: ' + esc(a.oneri) : '') + '</small>', { direction: 'top', offset: [0, -8], className: 'ks-ot' });
+    m.on('click', ev => { L.DomEvent.stopPropagation(ev); parent.postMessage({ ks: 'koyAtaTik', id: a.id }, '*'); });
+    m.addTo(ataKayit);
+  }
+  for (const v of (d.koyler || [])) {
+    const m = L.circleMarker([v.lat, v.lon], { radius: v.hedef ? 8 : 5, weight: 2, color: '#fff', fillColor: v.hedef ? '#1b9a4a' : '#3a3a3c', fillOpacity: 1 });
+    m.bindTooltip(esc(v.ad) + (v.km != null ? ' · ' + v.km + ' km' : ''), { permanent: true, direction: 'right', offset: [8, 0], className: 'ks-ot' });
+    m.on('click', ev => { L.DomEvent.stopPropagation(ev); parent.postMessage({ ks: 'koyAtaKoy', ad: v.ad, ilce: v.ilce || '' }, '*'); });
+    m.addTo(ataKoy);
+  }
+  if (!ataSigdi && k.length) { ataSigdi = true; map.invalidateSize(); map.fitBounds(L.latLngBounds(k.map(a => [a.lat, a.lon])).pad(0.08)); }
+  if (d.odak) { map.invalidateSize(); map.setView([d.odak.lat, d.odak.lon], Math.max(map.getZoom(), 13)); }
+}
+// ── İş kartı modu
+const isGrup = L.layerGroup().addTo(map);
+let isImza = '';
+function isCiz(d) {
+  document.body.classList.toggle('dark', !!d.dark);
+  zeminSec(d.zemin || 'hyb');
+  isGrup.clearLayers();
+  const nok = [], renk = d.renk || {};
+  for (const a of (d.tesisler || [])) {
+    const sec = a.id === d.secId;
+    const m = L.circleMarker([a.lat, a.lon], { radius: sec ? 9 : 7, weight: sec ? 3 : 1.8, color: '#fff', fillColor: sec ? '#1b9a4a' : (renk[a.type] || '#0071e3'), fillOpacity: 1 });
+    m.bindTooltip('<b>' + esc(a.code) + '</b><small>' + esc(a.yer || '') + (a.km ? ' · ' + esc(a.km) : '') + '</small>', { direction: 'top', offset: [0, -8], className: 'ks-ot', permanent: sec });
+    if (d.secilebilir) m.on('click', ev => { L.DomEvent.stopPropagation(ev); parent.postMessage({ ks: 'isTesisSec', id: a.id }, '*'); });
+    m.addTo(isGrup); nok.push([a.lat, a.lon]);
+  }
+  for (const e of (d.ekipler || [])) {
+    const m = L.circleMarker([e.lat, e.lon], { radius: 8, weight: 3, color: '#fff', fillColor: e.taze ? '#8e44ad' : '#8e8e93', fillOpacity: 1 });
+    m.bindTooltip('<b>' + esc(e.ad) + '</b><small>' + esc(e.not || '') + '</small>', { direction: 'top', offset: [0, -8], className: 'ks-ot', permanent: true });
+    m.addTo(isGrup); nok.push([e.lat, e.lon]);
+  }
+  if (d.hedef) {
+    const m = L.circleMarker([d.hedef.lat, d.hedef.lon], { radius: 9, weight: 3, color: '#fff', fillColor: '#ec3013', fillOpacity: 1 });
+    m.bindTooltip(esc(d.hedef.ad || 'Arıza yeri'), { direction: 'top', offset: [0, -8], className: 'ks-ot', permanent: true });
+    m.addTo(isGrup); nok.push([d.hedef.lat, d.hedef.lon]);
+  }
+  // sığdırma yalnız veri kümesi değişince (kullanıcı kaydırırken zıplamasın)
+  const imza = nok.map(x => x.join(',')).join('|');
+  if (imza !== isImza && nok.length) { isImza = imza; map.invalidateSize(); nok.length === 1 ? map.setView(nok[0], 14) : map.fitBounds(L.latLngBounds(nok).pad(0.25), { maxZoom: 15 }); }
+}
+addEventListener('message', e => { const d = e.data || {}; if (d.ks === 'ozetVeri' && !ATA && !IS) ciz(d); if (d.ks === 'koyAtaVeri' && ATA) ataCiz(d); if (d.ks === 'isHaritaVeri' && IS) isCiz(d); });
 addEventListener('resize', () => map.invalidateSize());
-parent.postMessage({ ks: 'ozetHaritaHazir' }, '*');
+parent.postMessage({ ks: ATA ? 'koyAtaHazir' : IS ? 'isHaritaHazir' : 'ozetHaritaHazir' }, '*');
 </script>
 </body>
 </html>

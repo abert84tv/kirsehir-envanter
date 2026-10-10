@@ -46,6 +46,7 @@
       onSira: e => this.setState({ envSort: { k: e.target.value, dir: 1 } }),
       yon: envSort.dir > 0 ? 'A→Z' : 'Z→A',
       yonTik: () => this.setState(st => ({ envSort: { k: st.envSort.k, dir: -st.envSort.dir } })),
+      koyAtaVar: vis.some(a => !a.village && a.lat != null && a.dbId != null), koyAtaSayi: vis.filter(a => !a.village && a.lat != null && a.dbId != null).length, koyAta: () => this.koyAtaAc(),
       hazirlar: Object.entries(HAZIR).map(([k, [ad, fn]]) => {
         const n = vis.filter(fn).length, on = envF.hazir === k;
         return { ad, n, bg: on ? 'var(--color-accent)' : 'transparent', fg: on ? '#fff' : ui.fg, kenar: on ? 'var(--color-accent)' : ui.rule, pick: () => this.setState(st => ({ envF: { ...st.envF, hazir: on ? '' : k } })) };

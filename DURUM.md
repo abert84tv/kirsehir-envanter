@@ -2171,3 +2171,11 @@ Sürüm 2026.10.05-114.
 ## 2026.10.10-177 — Telefonda harita panelleri konumum düğmesine binmez
 - Telefonda Envanter haritasındaki **Mesafe ölç** ve **Yol tarifi** panelleri sağ alttaki “konumuma git” düğmesinin soluna kadar daralır (üst üste binme giderildi).
 - Telefon görünümünde elle denendi: Mesafe ölç, Yol tarifi, Hat kesiti > Nokta ekle (kapalıyken dokunuş nokta koymaz, açıkken koyar), barkod penceresi (kamera yokken elle yazma) ve kod girince kartın açılması.
+
+## 2026.10.10-178 — Köy ata, Veri tamamlanma, satırdan fotoğraf, İş kartı haritası, modül bağlamaları
+- **Köy ata** (Envanter listesi › “📍 Köy ata”, masaüstü + telefon aynı pencere): köyü boş kayıtlar haritada turuncu nokta; dokunup seçilir (mavi), seçilenlere yakın aday köyler etiketli çıkar, bir köyü seçip “N kayda … ata”ya basılınca hepsine yazılır. “Çevresindekileri de seç (3 km)”, “Hepsini seç”, köy arama ve satırdaki “Bunu yaz” (en yakın köyü tek kayda) var. Yazılan köy `koyElle` ile hafızada tutulur; kaydın ilçesi seçilen köyün ilçesine çekilir (onay penceresi sayıyı söyler). Harita sayfası `ozet-harita.html#ata` modu.
+- **Özet › Veri tamamlanma:** köy adı / fotoğraf / kuyu teknik bilgisi doluluk çubukları + genel yüzde; çubuğa basınca ilgili “eksik” listesi açılır. Kuyu teknik özeti hiç veri yokken üç boş kutu yerine tek açıklama gösterir.
+- **Listeden fotoğraf:** fotoğrafı olmayan her satırda kamera düğmesi (telefonda arka kamera, masaüstünde dosya seçici); kartı açmadan doğrudan o kayda yüklenir.
+- **İş kartı yer haritası:** talep/başvuru kartı (masaüstü + telefon), arıza kartı (masaüstü) ve telefondaki ayrıntılı arıza formunda küçük harita: bildirilen/arıza yeri kırmızı, aday ve seçili tesis (yeşil), varsa ekiplerin son konumu (mor). Talep kartında haritadaki tesise basarak seçilir. (`ozet-harita.html#is`)
+- **Modül bağlamaları:** Özet › Rapor göstergeleri kendi modülüne bağlı (Arıza kapalıyken arıza, Ambar kapalıyken stok/malzeme hareketi/kritik stok görünmez); İş kartı ve arıza formunda Araç modülü kapalıyken araç satırı, araç uyarısı, araç seçimi ve iş emrine araç ekleme çıkmaz; harita ve kart zaten yalnız Arıza/Talep açıkken erişilir.
+- Düzeltmeler: ana CSS dosyasının sonundaki kesik `@media` satırı kapatıldı (eklenen kuralları yutuyordu); duman testi bağlantılardaki `#…` kısmını dosya adından ayırıyor.

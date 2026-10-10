@@ -151,4 +151,10 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 @media (prefers-reduced-motion:reduce){.ks-say,.ks-halka::after,.ks-cubuk,.ks-modul{animation:none}.ks-halka::after{background:transparent}}
 @keyframes ksSutun{from{clip-path:inset(100% 0 0 0 round 5px)}to{clip-path:inset(0 0 0 0 round 5px)}}
 .ks-sutun{animation:ksSutun .9s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*80ms + 150ms);border-radius:5px 5px 0 0}
-@media (prefers-reduced-motion:reduce){.ks-sutun,
+@media (prefers-reduced-motion:reduce){.ks-sutun{animation:none}}
+/* Köy atama penceresi (Envanter > Köy ata): telefonda üstte harita, altta liste; geniş ekranda yan yana */
+.ks-ata{position:fixed;inset:0;z-index:2400;display:flex;flex-direction:column}
+.ks-ata-ic{flex:1;min-height:0;display:flex;flex-direction:column}
+.ks-ata-harita{flex:none;height:40%;position:relative;border-bottom:1px solid rgba(128,128,128,.25)}
+.ks-ata-panel{flex:1;min-height:0;overflow:auto}
+@media (min-width:900px){.ks-ata-ic{flex-direction:row}.ks-ata-harita{flex:1;height:auto;border-bottom:none}.ks-ata-panel{flex:none;width:430px;border-left:1px solid rgba(128,128,128,.25)}}

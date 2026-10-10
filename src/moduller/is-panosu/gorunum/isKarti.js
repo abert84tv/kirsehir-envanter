@@ -57,6 +57,7 @@
 
         // tesis seçimi (tesisli gruplarda)
         let tesisler = [];
+        this._isAdaylar = { l: [], ref };   // yer haritası (isHaritaGonder) için
         if (!sebeke) {
           const q = sadeMetin(k.tesisQ || '');
           const nk = nkey(k.koy);
@@ -65,6 +66,7 @@
           else if (nk) { const ayni = l.filter(a => a.village && nkey(a.village) === nk); if (ayni.length) l = ayni; }
           const uz = a => ref ? this.mesafeM(ref, a) : 0;
           l = l.sort((x, y) => (ref ? uz(x) - uz(y) : 0) || x.code.localeCompare(y.code, 'tr')).slice(0, 6);
+          this._isAdaylar = { l, ref };
           tesisler = l.map(a => ({
             ust: TYPES[a.type].label + ' · ' + this.yerGoster(a), alt: a.code + (ref ? ' · ' + kmYaz(uz(a)) : ''),
             secili: a.id === k.assetId, bg: a.id === k.assetId ? 'var(--color-accent)' : 'transparent', fg: a.id === k.assetId ? '#fff' : ui.fg,
@@ -80,7 +82,8 @@
           const kisiler = (e.uyeIdler || []).map(id => (s.personel || []).find(p => p.id === id)).filter(Boolean);
           const calisan = kisiler.filter(p => !PERSONEL_YOK.includes(p.durum));
           const izinli = kisiler.filter(p => PERSONEL_YOK.includes(p.durum));
-          const araclar = ((s.arac && s.arac.list) || []).filter(v => v.ekip === e.ad);
+          // Araç modülü kapalıysa ekip kartında araç satırı ve araç uyarıları çıkmaz
+          const araclar = aracOn ? ((s.arac && s.arac.list) || []).filter(v => v.ekip === e.ad) : [];
           const musait = araclar.filter(v => v.durum !== 'bakimda' && v.durum !== 'arizali' && v.durum !== 'disi');
           const acik = s.faults.filter(f => f.crew === e.ad && !KAPALI_DURUM.includes(f.status)).length;
           const bolgede = (e.bolgeler || []).includes(k.ilce) || !(e.bolgeler || []).length;
@@ -92,7 +95,7 @@
             !kisiler.length ? 'Ekibe personel girilmemiş' : '',
             izinli.length ? izinli.map(p => p.ad.split(' ')[0] + ' ' + (PERSONEL_DURUM[p.durum] || '').toLocaleLowerCase('tr')).join(', ') : '',
             kisiler.length && !calisan.length ? 'Görevde kimse yok' : '',
-            !araclar.length ? 'Araç bağlı değil' : (!musait.length ? 'Araç müsait değil' : '')
+            !aracOn ? '' : !araclar.length ? 'Araç bağlı değil' : (!musait.length ? 'Araç müsait değil' : '')
           ].filter(Boolean);
           const secili = k.ekip === e.ad;
           ekipListe.push({
@@ -101,7 +104,7 @@
             neden: [nobetci ? 'bugün nöbetçi' : '', bolgede ? (e.bolgeler || []).length ? k.ilce + ' bölgesi' : 'tüm il' : '', acik + ' açık iş'].filter(Boolean).join(' · '),
             uyeler: kisiler.map(p => ({ ad: p.ad, durum: PERSONEL_YOK.includes(p.durum) ? (PERSONEL_DURUM[p.durum] || '') : '', renk: PERSONEL_YOK.includes(p.durum) ? '#d97706' : ui.fg })),
             uyeNot: kisiler.length ? calisan.length + ' / ' + kisiler.length + ' kişi görevde' : 'Personel Ayarlar › Ekipler’den girilir',
-            aracMetin: araclar.length ? araclar.map(v => (v.plaka || v.ad || 'araç') + ' · ' + (ARAC_DURUM[v.durum] || v.durum)).join(', ') : 'Araç bağlı değil',
+            aracVar: aracOn, aracMetin: araclar.length ? araclar.map(v => (v.plaka || v.ad || 'araç') + ' · ' + (ARAC_DURUM[v.durum] || v.durum)).join(', ') : 'Araç bağlı değil',
             uyari, uyariVar: uyari.length > 0,
             konumMetin: konum ? (km != null ? kmYaz(km) + ' uzakta · ' : '') + (konum.kaynak === 'arac' ? 'araç takip' : 'zimmetli cihaz') + ' · ' + yasMetin(konum.zaman) + (taze ? '' : ' (eski)') : 'Konum bilgisi yok',
             konumRenk: taze ? '#1b9a4a' : ui.mut,

@@ -2228,3 +2228,8 @@ Sürüm 2026.10.05-114.
 - Akış: Operatör atar → Saha Şefi yaptırır ve onaya gönderir → **Müdür** son onayı verip kapatır / iade eder → Operatör iade edileni yeniden atar.
 - **Yetki Ayarlar › Yetkiler'den kişiye verilebilir** (ör. bir mühendise “son onay”, “malzeme kataloğu” ya da “sipariş”): artık yalnız ekranda değil sunucuda da geçerli (`rol_yetkisi`, istisna destekli). İş emri açma/kapatma, başvuru engelleme, SLA düzenleme, katalog ve sipariş yazımı bu işlevi kullanır. İstemcide de ekip atama, iş emri, muhtar defteri, belge uyarısı, SLA ve iş emri kendiliğinden kapatma kişiye özel istisnaya uyar.
 - Güncel varsayılanlar: close → Yönetici, Müdür · stokKatalog → Yönetici, Müdür · stokSiparis → Yönetici, Müdür, Operatör.
+
+## 2026.10.10-186 — Son onay ve kapatma Operatör'de
+- Arıza mühendisinin yapacağı onay işlemleri **Operatör**'e verildi: sahadan “Kontrolde” gelen işi inceleyip kapatır ya da nedenini yazıp iade eder; iş emrini kapatır; kapatılmış işi yeniden açar. Müdür ve Yönetici de yapabilir (yetki `close`: Yönetici, Müdür, Operatör). Saha Şefi, Saha Personeli ve Mühendis işi yalnız onaya gönderir.
+- Sunucu: `rol_yetkisi` close → Müdür, Operatör (+ Yönetici); `is_emri_kapat` aynı kuralı kullanır (SQL-rol-operator.sql bölüm 5, uygulandı). Malzeme kataloğu Müdür/Yönetici'de kaldı; sipariş listesi Operatör'de.
+- Ekranda altı rolle denendi: Operatör/Müdür/Yönetici'de onay paneli açık; diğerlerinde işi onaya gönderir.

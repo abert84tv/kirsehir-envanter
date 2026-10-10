@@ -347,7 +347,7 @@
             fg: kilit ? ui.mut : (ff && ff.status === id ? ui.acc : ui.mut),
             op: kilit ? '.45' : '1',
             go: () => {
-              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, son onayı ve kapatmayı mühendis (ya da müdür) verir.');
+              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, son onayı ve kapatmayı operatör (ya da müdür) verir.');
               this.setState({ faultForm: { ...this.state.faultForm, status: id } });
             }
           };

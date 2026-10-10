@@ -218,7 +218,7 @@
         })(),
         isEmri: () => {
           if (!ff) return;
-          if (!CAN.assign.includes(s.session.role)) return this.say('İş emri oluşturma yetkiniz yok.');
+          if (!this.yetkiVar(s.session, 'assign')) return this.say('İş emri oluşturma yetkiniz yok.');
           const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
           if (ie) return this.setState({ isEmriPanel: { id: ie.dbId } });
           this.isEmriAcSade(ff, { crew: ff.crew, araclar: ff.aracSec || [] });
@@ -275,7 +275,7 @@
         sla: (() => {
           if (!ff) return { goster: false };
           const ek = ff.ek || {};
-          const yonetimRol = CAN.assign.includes((me || {}).role);
+          const yonetimRol = this.yetkiVar(me, 'assign');
           const pad = n => String(n).padStart(2, '0');
           const yerelZaman = iso => { if (!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
           const bekDk = (ek.beklemeDk || 0) + (ek.beklemeBas ? Math.max(0, Math.round((Date.now() - Date.parse(ek.beklemeBas)) / 60000)) : 0);

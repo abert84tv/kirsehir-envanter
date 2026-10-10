@@ -6,7 +6,7 @@
         const gorunen = !q ? hepsi : hepsi.filter(m =>
           [m.ad, m.koy, m.ilce, m.tel].join(' ').toLocaleLowerCase('tr').includes(q));
         const mf = mp.form;
-        const yazabilir = CAN.assign.includes(s.session.role);
+        const yazabilir = this.yetkiVar(s.session, 'assign');
         return {
           on: true,
           kapat: () => this.setState({ muhtarPanel: null }),

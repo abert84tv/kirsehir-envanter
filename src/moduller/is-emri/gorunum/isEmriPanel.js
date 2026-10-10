@@ -95,9 +95,9 @@
             kapatan: secili.kapatan || '—', kapandi: (secili.kapandi || '').slice(0, 16).replace('T', ' '),
             kullanilanMalzeme: (secili.kullanilanMalzeme || []).map(m => m.malzeme + ' × ' + m.adet).join(', ') || '—',
             toplamSaat: secili.toplamSaat != null ? secili.toplamSaat + ' saat' : '—',
-            kapatVar: CAN.close.includes(s.session.role) && secili.status !== 'kapatildi' && !s.offline,
+            kapatVar: this.yetkiVar(s.session, 'close') && secili.status !== 'kapatildi' && !s.offline,
             kapatGo: () => this.isEmriElleKapat(secili),
-            ataFormVar: CAN.assign.includes(s.session.role) && secili.status !== 'kapatildi',
+            ataFormVar: this.yetkiVar(s.session, 'assign') && secili.status !== 'kapatildi',
             ataForm: {
               ekip: ekipForm.ekip ?? secili.crew ?? '', ekipler: CREWS,
               onEkip: e => this.setState({ isEmriPanel: { ...ip, ekipForm: { ...ekipForm, ekip: e.target.value } } }),

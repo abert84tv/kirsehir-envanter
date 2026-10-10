@@ -10391,8 +10391,8 @@ const YETKINLIK_ESLEME = [
 ];
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'İstisnada onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
-  ['muhendis', 'Mühendis', 'İşin teknik son onayını verip kapatır; envanteri, malzeme kataloğunu ve siparişi yönetir'],
+  ['mudur', 'Müdür', 'Arıza ve iş emrinin son onayı ile kapatılması, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
+  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler, rapor alır; arıza, iş emri ve stok işleri yoktur — gerekirse Ayarlar › Yetkiler’den verilir'],
   ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir; iade edilen işi yeniden atar'],
   ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi tamamlayıp onaya gönderir, kullanılan malzemeyi düşer'],
   ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
@@ -10409,15 +10409,15 @@ const PERMS = [
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
   ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
   ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
-  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir)', ['yonetici', 'mudur', 'muhendis']],
+  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir)', ['yonetici', 'mudur']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
   // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
   ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],
   ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'operator']],
   ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'operator', 'sef', 'personel']],
   ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
-  ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur', 'muhendis']],
-  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'operator']],
+  ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur']],
+  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'operator']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];
@@ -10617,7 +10617,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-184';
+const SURUM = '2026.10.10-185';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -12141,7 +12141,7 @@ class Component extends DCLogic {
   // Muayene ve sigortası yaklaşan / geçen araçlar için günde bir kez uyarı
   aracBelgeUyari() {
     const me = this.state.session;
-    if (!me || !['yonetici', 'mudur', 'muhendis', 'operator', 'sef'].includes(me.role)) return;
+    if (!me || !(this.yetkiVar(me, 'assign') || this.yetkiVar(me, 'close') || me.role === 'sef')) return;
     const liste = ((this.state.arac || {}).list || []);
     if (!liste.length) return;
     const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
@@ -12305,7 +12305,7 @@ class Component extends DCLogic {
     let goruldu;
     try { goruldu = JSON.parse(localStorage.getItem('ks-planli-uyari') || '[]'); } catch (e) { goruldu = []; }
     const simdi = Date.now();
-    const yonetim = ['yonetici', 'mudur', 'muhendis', 'operator', 'sef'].includes(me.role);
+    const yonetim = this.yetkiVar(me, 'assign') || this.yetkiVar(me, 'close') || me.role === 'sef';
     for (const f of (this.state.faults || [])) {
       const pz = f.ek && f.ek.planli ? Date.parse(f.ek.planli) : 0;
       if (!pz || pz > simdi || KAPALI_DURUM.includes(f.status)) continue;
@@ -14972,8 +14972,7 @@ class Component extends DCLogic {
   async isEmriAcSade(f, o) {
     o = o || {};
     const M = this._sb;
-    const rol = this.state.session && this.state.session.role;
-    if (!CAN.assign.includes(rol)) return this.say('İş emrini yönetici, müdür, mühendis ya da şef açar.', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('İş emrini operatör, müdür ya da yönetici açar (yetki Ayarlar › Yetkiler’den verilebilir).', true);
     if (!M || !M.tokenOku()) return this.say('İş emri için ortak veritabanına bağlı olmanız gerekir.', true);
     if (!f || !f.dbId) return this.say('Arıza henüz sunucuya yazılmadı — birkaç saniye sonra yeniden deneyin.', true);
     if (this.isEmriBul(f.dbId)) return this.say('Bu arıza için zaten bir iş emri var.', true);
@@ -15034,8 +15033,8 @@ class Component extends DCLogic {
   // Arızası çözülmüş ama iş emri açık kalmış kayıtları (eski hata, çevrimdışı kapanış)
   // oturum başına bir kez kendiliğinden kapatır
   isEmriTamamla() {
-    const rol = (this.state.session || {}).role;
-    if (!CAN.assign.includes(rol) || this.state.offline) return;
+    // kendiliğinden kapatma son onay yetkisi ister (sunucu is_emri_kapat aynı kuralı uygular)
+    if (!this.yetkiVar(this.state.session, 'close') || this.state.offline) return;
     this._ieDenendi = this._ieDenendi || new Set();
     for (const ie of (this.state.isEmirleri || [])) {
       if (ie.status === 'kapatildi' || this._ieDenendi.has(ie.dbId)) continue;
@@ -16677,7 +16676,7 @@ class Component extends DCLogic {
   // Ekip atar; sunucuya bağlıysa iş emri de açılır (arıza formundaki "iş emri oluştur ve ekibe ata" ile aynı iş)
   async panoEkipAta(f, crew) {
     this.setState({ panoEkip: null });
-    if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
     const M = this._sb;
     const ie = f.dbId ? this.isEmriBul(f.dbId) : null;
     const baglanti = !!(M && M.tokenOku() && this.state.sunucu && !this.state.offline);
@@ -16699,7 +16698,7 @@ class Component extends DCLogic {
     const ekipVar = !!f.crew && f.crew !== ATANMADI;
     if (kolon === 'atandi') {
       if (f.status === 'atandi') return;
-      if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
+      if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
       if (ekipVar && ['acik', 'yeniden'].includes(f.status)) return this.panoEkipAta(f, f.crew);
       return this.setState({ panoEkip: f.id, panoKolon: 'yeni' }, () => this.duyur('Önce hangi ekibin gideceğini seçin.', 4500, 'bilgi'));
     }
@@ -18921,7 +18920,7 @@ class Component extends DCLogic {
         })(),
         isEmri: () => {
           if (!ff) return;
-          if (!CAN.assign.includes(s.session.role)) return this.say('İş emri oluşturma yetkiniz yok.');
+          if (!this.yetkiVar(s.session, 'assign')) return this.say('İş emri oluşturma yetkiniz yok.');
           const ie = ff.dbId ? this.isEmriBul(ff.dbId) : null;
           if (ie) return this.setState({ isEmriPanel: { id: ie.dbId } });
           this.isEmriAcSade(ff, { crew: ff.crew, araclar: ff.aracSec || [] });
@@ -18978,7 +18977,7 @@ class Component extends DCLogic {
         sla: (() => {
           if (!ff) return { goster: false };
           const ek = ff.ek || {};
-          const yonetimRol = CAN.assign.includes((me || {}).role);
+          const yonetimRol = this.yetkiVar(me, 'assign');
           const pad = n => String(n).padStart(2, '0');
           const yerelZaman = iso => { if (!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()); };
           const bekDk = (ek.beklemeDk || 0) + (ek.beklemeBas ? Math.max(0, Math.round((Date.now() - Date.parse(ek.beklemeBas)) / 60000)) : 0);
@@ -21686,9 +21685,9 @@ class Component extends DCLogic {
             kapatan: secili.kapatan || '—', kapandi: (secili.kapandi || '').slice(0, 16).replace('T', ' '),
             kullanilanMalzeme: (secili.kullanilanMalzeme || []).map(m => m.malzeme + ' × ' + m.adet).join(', ') || '—',
             toplamSaat: secili.toplamSaat != null ? secili.toplamSaat + ' saat' : '—',
-            kapatVar: CAN.close.includes(s.session.role) && secili.status !== 'kapatildi' && !s.offline,
+            kapatVar: this.yetkiVar(s.session, 'close') && secili.status !== 'kapatildi' && !s.offline,
             kapatGo: () => this.isEmriElleKapat(secili),
-            ataFormVar: CAN.assign.includes(s.session.role) && secili.status !== 'kapatildi',
+            ataFormVar: this.yetkiVar(s.session, 'assign') && secili.status !== 'kapatildi',
             ataForm: {
               ekip: ekipForm.ekip ?? secili.crew ?? '', ekipler: CREWS,
               onEkip: e => this.setState({ isEmriPanel: { ...ip, ekipForm: { ...ekipForm, ekip: e.target.value } } }),
@@ -22489,7 +22488,7 @@ class Component extends DCLogic {
         const gorunen = !q ? hepsi : hepsi.filter(m =>
           [m.ad, m.koy, m.ilce, m.tel].join(' ').toLocaleLowerCase('tr').includes(q));
         const mf = mp.form;
-        const yazabilir = CAN.assign.includes(s.session.role);
+        const yazabilir = this.yetkiVar(s.session, 'assign');
         return {
           on: true,
           kapat: () => this.setState({ muhtarPanel: null }),

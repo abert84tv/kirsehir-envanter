@@ -57,7 +57,7 @@
   // Ekip atar; sunucuya bağlıysa iş emri de açılır (arıza formundaki "iş emri oluştur ve ekibe ata" ile aynı iş)
   async panoEkipAta(f, crew) {
     this.setState({ panoEkip: null });
-    if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
     const M = this._sb;
     const ie = f.dbId ? this.isEmriBul(f.dbId) : null;
     const baglanti = !!(M && M.tokenOku() && this.state.sunucu && !this.state.offline);
@@ -79,7 +79,7 @@
     const ekipVar = !!f.crew && f.crew !== ATANMADI;
     if (kolon === 'atandi') {
       if (f.status === 'atandi') return;
-      if (!CAN.assign.includes((this.state.session || {}).role)) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
+      if (!this.yetkiVar(this.state.session, 'assign')) return this.say('Ekip atamasını operatör, müdür ya da yönetici yapar.', true);
       if (ekipVar && ['acik', 'yeniden'].includes(f.status)) return this.panoEkipAta(f, f.crew);
       return this.setState({ panoEkip: f.id, panoKolon: 'yeni' }, () => this.duyur('Önce hangi ekibin gideceğini seçin.', 4500, 'bilgi'));
     }

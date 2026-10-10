@@ -50,8 +50,7 @@
   async isEmriAcSade(f, o) {
     o = o || {};
     const M = this._sb;
-    const rol = this.state.session && this.state.session.role;
-    if (!CAN.assign.includes(rol)) return this.say('İş emrini yönetici, müdür, mühendis ya da şef açar.', true);
+    if (!this.yetkiVar(this.state.session, 'assign')) return this.say('İş emrini operatör, müdür ya da yönetici açar (yetki Ayarlar › Yetkiler’den verilebilir).', true);
     if (!M || !M.tokenOku()) return this.say('İş emri için ortak veritabanına bağlı olmanız gerekir.', true);
     if (!f || !f.dbId) return this.say('Arıza henüz sunucuya yazılmadı — birkaç saniye sonra yeniden deneyin.', true);
     if (this.isEmriBul(f.dbId)) return this.say('Bu arıza için zaten bir iş emri var.', true);
@@ -112,8 +111,8 @@
   // Arızası çözülmüş ama iş emri açık kalmış kayıtları (eski hata, çevrimdışı kapanış)
   // oturum başına bir kez kendiliğinden kapatır
   isEmriTamamla() {
-    const rol = (this.state.session || {}).role;
-    if (!CAN.assign.includes(rol) || this.state.offline) return;
+    // kendiliğinden kapatma son onay yetkisi ister (sunucu is_emri_kapat aynı kuralı uygular)
+    if (!this.yetkiVar(this.state.session, 'close') || this.state.offline) return;
     this._ieDenendi = this._ieDenendi || new Set();
     for (const ie of (this.state.isEmirleri || [])) {
       if (ie.status === 'kapatildi' || this._ieDenendi.has(ie.dbId)) continue;

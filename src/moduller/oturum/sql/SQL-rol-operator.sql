@@ -82,3 +82,8 @@ begin
   end loop;
 end
 $do$;
+
+-- 4) Mühendis arıza/iş emri/stok işlerinden çıkarıldı (iş yerinde arıza mühendisi yok); yetki Ayarlar › Yetkiler'den kişiye verilebilir.
+--    rol_yetkisi(k, perm): rol varsayılanı + kullanicilar.yetki_istisna (istemcideki yetkiVar ile aynı). Uygulandı 2026-10-10 (rol_yetkisi_istisna_destekli).
+--    Kullanan işlevler: is_emri_yetkili (assign), is_emri_kapat (close), basvuru_engelle (talepYonet), ariza_ek_kaydet (assign/close/şef),
+--    veri_yaz / veri_yaz_surumlu (stokKatalog, stokSiparis). Varsayılanlar: assign/talepYonet → müdür, operatör · close/stokKatalog → müdür · stokSiparis → müdür, operatör.

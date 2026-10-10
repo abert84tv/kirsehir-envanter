@@ -127,7 +127,7 @@
   // Muayene ve sigortası yaklaşan / geçen araçlar için günde bir kez uyarı
   aracBelgeUyari() {
     const me = this.state.session;
-    if (!me || !['yonetici', 'mudur', 'muhendis', 'operator', 'sef'].includes(me.role)) return;
+    if (!me || !(this.yetkiVar(me, 'assign') || this.yetkiVar(me, 'close') || me.role === 'sef')) return;
     const liste = ((this.state.arac || {}).list || []);
     if (!liste.length) return;
     const bugun = new Date(); bugun.setHours(0, 0, 0, 0);

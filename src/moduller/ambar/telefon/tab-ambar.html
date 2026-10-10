@@ -4,7 +4,8 @@
 <input type="search" aria-label="Malzeme ara" placeholder="Malzeme adı, kodu ya da kategori…" value="{{ ambarEkran.q }}" onChange="{{ ambarEkran.onQ }}" style="all:unset;box-sizing:border-box;width:100%;min-height:46px;border:1px solid {{ ui.rule }};border-radius:12px;padding:0 13px;font:400 14px/1 var(--font-body);background:{{ ui.surf }};color:{{ ui.fg }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ ambarEkran.yeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/46px var(--font-body);text-align:center">+ Hareket gir</button>
+<button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:#1b9a4a;color:#fff;font:600 14px/46px var(--font-body);text-align:center">↓ Giriş</button>
+<button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/46px var(--font-body);text-align:center">↑ Çıkış</button>
 </sc-if>
 <button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:46px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};font:600 14px/46px var(--font-body);text-align:center">Sipariş listesi · {{ ambarEkran.sipN }}</button>
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
@@ -21,6 +22,25 @@
 </button>
 </sc-for>
 </div>
+
+<sc-if value="{{ ambarEkran.hareketGrafik.var }}" hint-placeholder-val="{{ true }}">
+<section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:12px 12px 8px">
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+<span style="font:700 14px/1 var(--font-heading)">Son 14 gün: giriş ve çıkış</span>
+<span style="flex:1"></span>
+<span style="display:flex;align-items:center;gap:5px;font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}"><span style="width:9px;height:9px;border-radius:2px;background:#1b9a4a"></span>Giriş {{ ambarEkran.hareketGrafik.toplamG }}</span>
+<span style="display:flex;align-items:center;gap:5px;font:500 11.5px/1 var(--font-body);color:{{ ui.mut }}"><span style="width:9px;height:9px;border-radius:2px;background:#ff9f0a"></span>Çıkış {{ ambarEkran.hareketGrafik.toplamC }}</span>
+</div>
+<div style="display:flex;align-items:flex-end;gap:4px;height:84px">
+<sc-for list="{{ ambarEkran.hareketGrafik.gunler }}" as="g" hint-placeholder-count="14">
+<div title="{{ g.ipucu }}" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end">
+<div style="width:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;gap:2px"><div class="ks-sutun" style="--i:{{ g.i }};width:42%;max-width:14px;height:{{ g.gH }};background:#1b9a4a"></div><div class="ks-sutun" style="--i:{{ g.i }};width:42%;max-width:14px;height:{{ g.cH }};background:#ff9f0a"></div></div>
+<span style="font:500 10px/1 var(--font-body);color:{{ ui.mut }}">{{ g.gun }}</span>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-if>
 
 <sc-if value="{{ ambarEkran.tukenenVar }}" hint-placeholder-val="{{ false }}">
 <section style="border-radius:16px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:12px 12px 6px">
@@ -118,10 +138,18 @@
 <div style="position:absolute;inset:0;z-index:60;background:rgba(20,20,24,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;padding:0">
 <div class="ks-gir" role="dialog" aria-label="Ambar hareketi" style="width:100%;max-width:100%;max-height:94%;overflow:auto;border-radius:18px 18px 0 0;background:{{ ui.surf }};color:{{ ui.fg }};box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px 22px 20px;display:flex;flex-direction:column;gap:14px">
 <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font:700 18px/1.2 var(--font-heading);letter-spacing:-.02em">{{ ambarEkran.form.baslik }}</span><button onClick="{{ ambarEkran.form.kapat }}" aria-label="Kapat" style="all:unset;cursor:pointer;font:400 22px/1 var(--font-body);color:{{ ui.mut }};padding:2px 6px">×</button></div>
-<div style="display:flex;flex-wrap:wrap;gap:4px;background:{{ ui.surf2 }};border-radius:10px;padding:3px">
-<sc-for list="{{ ambarEkran.form.turler }}" as="t" hint-placeholder-count="6">
-<button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:8px;background:{{ t.bg }};color:{{ t.fg }};font:600 11.5px/1 var(--font-body)">{{ t.label }}</button>
+<div style="display:flex;gap:6px;background:{{ ui.surf2 }};border-radius:12px;padding:4px">
+<sc-for list="{{ ambarEkran.form.yonler }}" as="y" hint-placeholder-count="2">
+<button onClick="{{ y.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:9px;background:{{ y.bg }};color:{{ y.fg }}"><span style="font:700 15px/1 var(--font-body)">{{ y.label }}</span><span style="font:500 11px/1 var(--font-body);opacity:.8">{{ y.alt }}</span></button>
 </sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">{{ ambarEkran.form.nedenBaslik }}</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px">
+<sc-for list="{{ ambarEkran.form.nedenler }}" as="n" hint-placeholder-count="4">
+<button onClick="{{ n.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:56px;padding:9px 12px;border-radius:11px;border:1px solid {{ ui.rule }};background:{{ n.bg }};color:{{ n.fg }};display:flex;flex-direction:column;justify-content:center;gap:4px"><span style="font:700 13px/1.1 var(--font-body)">{{ n.ad }}</span><span style="font:500 11px/1.2 var(--font-body);color:{{ n.fg2 }}">{{ n.etki }}</span></button>
+</sc-for>
+</div>
 </div>
 <label style="display:flex;flex-direction:column;gap:5px">
 <span style="font:600 11px/1 var(--font-body);color:{{ ui.mut }}">Malzeme — yazmaya başlayın, listeden seçin</span>

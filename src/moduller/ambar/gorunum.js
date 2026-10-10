@@ -28,35 +28,57 @@
           tur, malzeme: malzeme || '', ambar: tur === 'sarf' || tur === 'hurda' ? '' : AMBARLAR[0],
           ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(tur) ? (SAHA_EKIP[0] || '') : '', adet: '', not: '', ...(ek || {}) } });
 
+        // Kayıt türü → yön ve neden listesi (ekran sadeliği için; saklanan tür altı olarak kalır)
+        const yonDe = tur => ['giris', 'iade'].includes(tur) ? 'giris' : 'cikis';
+        const NEDEN = {
+          giris: [{ tur: 'giris', ad: 'Mal alımı', etki: 'ambar artar' }, { tur: 'iade', ad: 'Ekipten iade', etki: 'ambar artar · ekip azalır' }],
+          cikis: [{ tur: 'zimmet', ad: 'Ekibe ver', etki: 'ambar azalır · ekip artar' }, { tur: 'sarf', ad: 'Sahada kullanıldı', etki: 'ekip azalır' },
+            { tur: 'hurda', ad: 'Hurda', etki: 'ekip azalır' }, { tur: 'cikis', ad: 'Ambardan düş', etki: 'ambar azalır (kayıp, sayım farkı)' }]
+        };
+        const nedenSec = k => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k,
+          ambar: k === 'sarf' || k === 'hurda' ? '' : (this.state.ambarForm.ambar || AMBARLAR[0]),
+          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || SAHA_EKIP[0] || '') : '' } });
+
         // — göstergeler
         const kritikler = tum.filter(x => x.d.kritik);
         const az7 = kritikler.filter(x => x.d.toplam <= 0 || (x.d.kacGun != null && x.d.kacGun < 7)).length;
         const hareketler = (s.ambar && s.ambar.hareket) || [];
         const bugun = new Date(); bugun.setHours(0, 0, 0, 0);
         const gunMs = 86400000;
-        // Son 7 gün: günlük özetten (hareket listesi 400 satırla sınırlı,
-        // günde 50+ işte bir haftayı tutmaz). Gün başına ambardan net çıkan
-        // kalem sayısı; birimler farklı olduğu için miktar toplanmaz.
-        const gunOzet = (s.ambar && s.ambar.gun) || {};
-        const gk = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-        const yediGun = [6, 5, 4, 3, 2, 1, 0].map(i => {
-          const g = gunOzet[gk(new Date(bugun.getTime() - i * gunMs))] || {};
-          return Object.keys(g).filter(m => Number(g[m]) > 0).length;
-        });
-        const yediCesit = new Set([0, 1, 2, 3, 4, 5, 6].flatMap(i => {
-          const g = gunOzet[gk(new Date(bugun.getTime() - i * gunMs))] || {};
-          return Object.keys(g).filter(m => Number(g[m]) > 0);
-        })).size;
         const ambarDeger = tum.reduce((t, x) => t + x.d.toplam * (Number(x.k.fiyat) || 0), 0);
         const ekipDeger = tum.reduce((t, x) => t + x.d.zim * (Number(x.k.fiyat) || 0), 0);
         const ambardaN = tum.filter(x => x.d.toplam > 0).length;
         const katSayi = new Set(stokta.map(k => k.kat)).size;
+        const tukendi = kritikler.filter(x => x.d.toplam <= 0).length, azaldi = kritikler.length - tukendi;
+        // Bugünkü hareket sayısı ve son 7 günün günlük işlem sayısı (küçük çizgi için)
+        const hareketGun = d => hareketler.filter(h => { const m = this.damgaMs(h.damga); return m >= d.getTime() && m < d.getTime() + gunMs; });
+        const bugunHareket = hareketGun(bugun);
+        const bugunGiris = bugunHareket.filter(h => ['giris', 'iade'].includes(h.tur)).length;
+        const yediIslem = [6, 5, 4, 3, 2, 1, 0].map(i => hareketGun(new Date(bugun.getTime() - i * gunMs)).length);
         const kpis = [
-          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda · ' + katSayi + ' kategori', altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
-          { label: 'Kritik seviyede', val: String(kritikler.length), alt: kritikler.length ? az7 + ' tanesi 7 günden az yeter' : 'kritik kalem yok', altC: kritikler.length ? kirmizi : yesil, alarm: kritikler.length > 0, valC: kritikler.length ? kirmizi : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'kritik' ? '' : 'kritik' }) },
-          { label: 'Son 7 gün ambar çıkışı', val: yediGun.reduce((a, b) => a + b, 0) + ' kalem', alt: yediCesit + ' çeşit malzeme · bugün ' + yediGun[6], altC: ui.mut, alarm: false, el: this.kivilcim(yediGun, '#ff9f0a'), git: () => this.setState({ ambarSira: 'tuketim' }) },
-          { label: 'Ambar stok değeri', val: tlKisa(ambarDeger), alt: ekipDeger ? 'ekiplerde ' + tlKisa(ekipDeger) + ' daha' : 'katalog fiyatıyla', altC: ui.mut, alarm: false, el: '', git: null }
+          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda · stok değeri ' + tlKisa(ambarDeger), altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
+          { label: 'Tükenen', val: String(tukendi), alt: tukendi ? 'ambarda kalmadı' : 'tükenen kalem yok', altC: tukendi ? kirmizi : yesil, alarm: tukendi > 0, valC: tukendi ? kirmizi : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'tukenen' ? '' : 'tukenen' }) },
+          { label: 'Azalan', val: String(azaldi), alt: azaldi ? az7 + ' tanesi 7 günden az yeter' : 'azalan kalem yok', altC: azaldi ? turuncu : yesil, alarm: false, valC: azaldi ? turuncu : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'azalan' ? '' : 'azalan' }) },
+          { label: 'Bugün hareket', val: String(bugunHareket.length), alt: bugunGiris + ' giriş · ' + (bugunHareket.length - bugunGiris) + ' çıkış', altC: ui.mut, alarm: false, el: this.kivilcim(yediIslem, '#ff9f0a'), git: null }
         ].map(k => ({ valC: ui.fg, ...k, imlec: k.git ? 'pointer' : 'default', git: k.git || (() => {}) }));
+
+        // — son 14 gün: günlük giriş ve çıkış işlem sayısı (hareket listesinden; ilk 400 hareket)
+        const grafikGun = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map(i => {
+          const d = new Date(bugun.getTime() - i * gunMs);
+          const hh = hareketGun(d);
+          const g = hh.filter(h => ['giris', 'iade'].includes(h.tur)).length;
+          return { d, g, c: hh.length - g };
+        });
+        const gMax = Math.max(1, ...grafikGun.map(x => Math.max(x.g, x.c)));
+        const hareketGrafik = {
+          var: hareketler.length > 0,
+          toplamG: grafikGun.reduce((t, x) => t + x.g, 0), toplamC: grafikGun.reduce((t, x) => t + x.c, 0),
+          gunler: grafikGun.map((x, i) => ({
+            gun: String(x.d.getDate()), i, bugunMu: i === 13,
+            gH: (x.g ? Math.max(6, Math.round(x.g / gMax * 100)) : 0) + '%', cH: (x.c ? Math.max(6, Math.round(x.c / gMax * 100)) : 0) + '%',
+            ipucu: x.d.getDate() + '.' + (x.d.getMonth() + 1) + ' · ' + x.g + ' giriş, ' + x.c + ' çıkış'
+          }))
+        };
 
         // — süzgeç, kategori, sıralama
         const q = sadeMetin(s.ambarQ || '');
@@ -65,7 +87,7 @@
         const sira = s.ambarSira || 'gun';
         let liste = tum.filter(x =>
           (!katF || x.k.kat === katF) &&
-          (!suz || (suz === 'kritik' ? x.d.kritik : suz === 'var' ? x.d.toplam > 0 : suz === 'siparis' ? sipSet.has(x.k.ad) : true)) &&
+          (!suz || (suz === 'kritik' ? x.d.kritik : suz === 'tukenen' ? (x.d.girilmis && x.d.toplam <= 0) : suz === 'azalan' ? (x.d.kritik && x.d.toplam > 0) : suz === 'var' ? x.d.toplam > 0 : suz === 'siparis' ? sipSet.has(x.k.ad) : true)) &&
           (!q || sadeMetin(x.k.ad + ' ' + x.k.kod + ' ' + (MALZEME_KAT[x.k.kat] || '')).includes(q)));
         const gunAnahtar = x => !x.d.girilmis ? 3e9 : (x.d.toplam <= 0 ? -1 : (x.d.kacGun == null ? 2e9 + (x.d.kritik ? 0 : 1) : x.d.kacGun));
         if (sira === 'gun') liste.sort((a, b) => gunAnahtar(a) - gunAnahtar(b) || a.k.ad.localeCompare(b.k.ad, 'tr'));
@@ -78,7 +100,7 @@
         const cip = (on, sec) => ({ bg: on ? 'var(--color-accent)' : ui.surf2, fg: on ? '#fff' : ui.fg, sec });
         const kategoriler = [['', 'Tümü', stokta.length], ...Object.keys(MALZEME_KAT).filter(k => katSay[k] || k === katF).map(k => [k, MALZEME_KAT[k], katSay[k] || 0])]
           .map(([id, l, n]) => ({ l, n: String(n), ...cip(katF === id, () => this.setState({ ambarKat: id })) }));
-        const suzgecler = [['kritik', 'Kritik', kritikler.length], ['var', 'Ambarda olan', ambardaN], ['siparis', 'Siparişte', sip.length]]
+        const suzgecler = [['tukenen', 'Tükenen', tukendi], ['azalan', 'Azalan', azaldi], ['var', 'Ambarda olan', ambardaN], ['siparis', 'Siparişte', sip.length]]
           .map(([id, l, n]) => ({ l, n: String(n), ...cip(suz === id, () => this.setState({ ambarSuz: suz === id ? '' : id })) }));
         const siralar = [['gun', 'Kaç gün yeter'], ['tuketim', 'En çok tüketilen'], ['az', 'A → Z']].map(([id, l]) => ({
           l, bg: sira === id ? ui.surf : 'transparent', golge: sira === id ? '0 1px 3px rgba(0,0,0,.14)' : 'none',
@@ -262,7 +284,7 @@
           not: 'Önce “Giriş” ile mevcut girilir, sahaya çıkacak malzeme ekibe zimmet edilir, iş bitince iade edilir ya da sarf düşülür. Kritik eşiğin altına düşen ya da 7 günden az yetecek kalem kırmızı yazılır.',
           baslikAlt: AMBARLAR.length + ' ambar · ' + stokta.length + ' malzeme çeşidi · ' + zimEkipler.filter(c => Object.keys(zimTablo[c] || {}).length).length + ' ekipte zimmet',
           q: s.ambarQ || '', onQ: e => this.setState({ ambarQ: e.target.value, ambarHepsi: false }),
-          kpis, kategoriler, suzgecler, siralar,
+          kpis, hareketGrafik, kategoriler, suzgecler, siralar,
           ambarAd: AMBARLAR.map((A, i) => ({ ad: kisa(A), c: AMB_RENK[i] })),
           satirlar, satirVar: satirlar.length > 0, satirYok: !satirlar.length,
           bosYazi: q ? '“' + (s.ambarQ || '') + '” ile eşleşen malzeme yok.' : 'Bu süzgece uyan malzeme yok.',
@@ -284,6 +306,7 @@
             { n: String(hareketler.length), label: 'Hareket kaydı', fg: ui.fg }
           ],
           yeni: () => formAc('giris', ''),
+          girisAc: () => formAc('giris', ''), cikisAc: () => formAc('zimmet', ''),
           kalemler: satirlar,
           zimmetler,
           hareketler: hareketler.slice(0, 40).map(x => ({
@@ -298,12 +321,17 @@
           form: {
             on: !!af,
             baslik: af ? HAREKET_AD[af.tur] : '',
-            turler: Object.keys(HAREKET_AD).map(k => ({
-              label: HAREKET_AD[k],
-              ...seg(!!af && af.tur === k, () => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k,
-                ambar: k === 'sarf' || k === 'hurda' ? '' : (this.state.ambarForm.ambar || AMBARLAR[0]),
-                ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || SAHA_EKIP[0] || '') : '' } }))
+            // İki düğme (Giriş / Çıkış) + “neden/nereden”: seçilen neden altı kayıt türünden birine karşılık gelir (veri değişmez)
+            yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].map(([y, l]) => ({
+              label: l, ...seg(!!af && yonDe(af.tur) === y, () => nedenSec(y === 'giris' ? 'giris' : 'zimmet')),
+              alt: y === 'giris' ? 'ambara mal geldi' : 'ambardan ya da ekipten çıktı'
             })),
+            nedenler: !af ? [] : NEDEN[yonDe(af.tur)].map(n => ({
+              ad: n.ad, etki: n.etki, on: af.tur === n.tur,
+              bg: af.tur === n.tur ? 'var(--color-accent)' : ui.surf2, fg: af.tur === n.tur ? '#fff' : ui.fg, fg2: af.tur === n.tur ? 'rgba(255,255,255,.85)' : ui.mut,
+              pick: () => nedenSec(n.tur)
+            })),
+            nedenBaslik: !af ? '' : (yonDe(af.tur) === 'giris' ? 'Nereden geldi?' : 'Neden çıkıyor?'),
             malzeme: af ? af.malzeme : '', malzemeler: STOK_KALEM.map(m => m[0]),
             // masaüstünde yazarak arama: 300+ kalemde açılır liste yerine
             malzemeSecenek: STOK_KALEM.map(m => ({ v: m[0], l: m[3] + ' · ' + (MALZEME_KAT[m[4]] || '') + ' · ' + m[2] })),

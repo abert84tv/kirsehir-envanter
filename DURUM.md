@@ -2179,3 +2179,9 @@ Sürüm 2026.10.05-114.
 - **İş kartı yer haritası:** talep/başvuru kartı (masaüstü + telefon), arıza kartı (masaüstü) ve telefondaki ayrıntılı arıza formunda küçük harita: bildirilen/arıza yeri kırmızı, aday ve seçili tesis (yeşil), varsa ekiplerin son konumu (mor). Talep kartında haritadaki tesise basarak seçilir. (`ozet-harita.html#is`)
 - **Modül bağlamaları:** Özet › Rapor göstergeleri kendi modülüne bağlı (Arıza kapalıyken arıza, Ambar kapalıyken stok/malzeme hareketi/kritik stok görünmez); İş kartı ve arıza formunda Araç modülü kapalıyken araç satırı, araç uyarısı, araç seçimi ve iş emrine araç ekleme çıkmaz; harita ve kart zaten yalnız Arıza/Talep açıkken erişilir.
 - Düzeltmeler: ana CSS dosyasının sonundaki kesik `@media` satırı kapatıldı (eklenen kuralları yutuyordu); duman testi bağlantılardaki `#…` kısmını dosya adından ayırıyor.
+
+## 2026.10.10-179 — Stok sayfası: komuta panosu, Giriş/Çıkış düğmeleri
+- **Pano (masaüstü + telefon):** üstte dört sayı — Malzeme çeşidi (ambarda kaç, stok değeri) · Tükenen · Azalan (7 günden az yeter) · Bugün hareket (giriş/çıkış, 7 günlük çizgi). Sayıya basınca liste süzülür (Tükenen / Azalan süzgeçleri eklendi; eski “Kritik” süzgeci ikiye bölündü).
+- **Son 14 gün: giriş ve çıkış** hareketli çubuk grafiği (günlük işlem sayısı; hareket listesinin ilk 400 kaydından).
+- Sağ sütunda (telefonda üstte) “Tükenmek üzere” uyarıları, “Siparişe ekle” tek basışla; bugünkü hareketler ve ekip zimmeti aynen.
+- **Giriş / Çıkış:** “Hareket gir” yerine iki düğme. Formda önce yön, sonra “nereden/neden” düğmesi (altında etkisi yazar): Giriş → Mal alımı (ambar artar), Ekipten iade (ambar artar, ekip azalır). Çıkış → Ekibe ver (ambar azalır, ekip artar), Sahada kullanıldı (ekip azalır), Hurda (ekip azalır), Ambardan düş (ambar azalır; kayıp/sayım farkı). Kayıtta altı tür ayrı kalır; veri ve raporlar değişmedi.

@@ -2192,3 +2192,18 @@ Sürüm 2026.10.05-114.
 
 ## 2026.10.10-181 — Stok listesi: dar ekranda sütunlar gizlenmez, alt satıra iner
 - 1400 px altında malzeme satırı kart gibi dizilir: üstte ad ve kod, altında etiketli hücreler (Kategori · Ambarlardaki mevcut · Ekiplerde · Son 14 gün · Kaç gün yeter) sığdığı kadar yan yana, sığmayanlar alt satıra geçer. Sütun gizleme kaldırıldı; başlık satırı yalnız geniş ekranda (tablo görünümü) çıkar.
+
+## 2026.10.10-182 — Stok yetkileri: görevler ayrılığı (ekran + sunucu)
+- İncelenen programlar (Odoo, Sortly, Zoho Inventory, envanter iç kontrol rehberleri): işlemi yapan / düzeltmeyi yapan / onaylayan farklı kişi; saha ve ambar personeline “sınırlı erişim”; fiyat bilgisi herkese açık değil.
+- **Yeni yetkiler** (Ayarlar › Yetkiler'de rol matrisi ve kişiye özel istisna olarak görünür; Yönetici kısıtlanamaz):
+  | Yetki | Yönetici | Müdür | Mühendis | Şef | Saha personeli |
+  |---|---|---|---|---|---|
+  | Mal alımı girme (stokGiris) | ✓ | | ✓ | ✓ | |
+  | Ekibe verme / iade alma (stokZimmet) | ✓ | | ✓ | ✓ | |
+  | Sahada kullanılanı düşme (stokSarf) | ✓ | ✓ | ✓ | ✓ | yalnız kendi ekibi |
+  | Hurda ve ambar düzeltmesi (stokDuzelt) | ✓ | ✓ | | | |
+  | Malzeme tanımlama, fiyat, eşik (stokKatalog) | ✓ | ✓ | ✓ | | |
+  | Sipariş listesi (stokSiparis) | ✓ | ✓ | ✓ | ✓ | |
+  Stoğu görme: Stok sayfa yetkisi (Ayarlar › Yetkiler › sayfa yetkisi: Tam / Görür / Yok). “Görür” işlem yaptırmaz, “Yok” sayfayı kapatır.
+- Ekran: Giriş/Çıkış düğmeleri ve neden seçenekleri kişinin yetkisine göre çıkar; saha personelinin ekip listesi yalnız kendi ekibidir; fiyat/tutar/stok değeri yalnız “Rapor” yetkisi olanlara görünür. İşlem anında da denetlenir (`stokIzin`).
+- Sunucu: `stok_izin()` + `ambar_hareket()` her kalemden önce aynı kuralı uygular; yetkisiz kalem “red” listesine yazılır, kalanlar işlenir (SQL-ambar-yetki.sql, uygulandı). Arıza kapanışındaki otomatik sarf, Müdür/Şef/Personel için çalışmaya devam eder.

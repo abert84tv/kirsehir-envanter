@@ -16,10 +16,8 @@ Sipariş listesi
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ ambarEkran.malzemeYeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/36px var(--font-body)">Malzeme tanımla</button>
 </sc-if>
-<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:#1b9a4a;color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v13M6 12l6 6 6-6"></path></svg>Giriş</button>
-<button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7M6 12l6-6 6 6"></path></svg>Çıkış</button>
-</sc-if>
+<sc-if value="{{ ambarEkran.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:#1b9a4a;color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v13M6 12l6 6 6-6"></path></svg>Giriş</button></sc-if>
+<sc-if value="{{ ambarEkran.cikisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7M6 12l6-6 6 6"></path></svg>Çıkış</button></sc-if>
 </div>
 
 <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
@@ -142,7 +140,7 @@ Sipariş listesi
 <span style="font:700 11px/1 var(--font-body);color:{{ x.c }};white-space:nowrap">{{ x.gun }}</span>
 </div>
 </button>
-<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ ambarEkran.siparisYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ x.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-width:94px;text-align:center;font:600 11.5px/1 var(--font-body);padding:7px 10px;border-radius:8px;background:{{ x.bBg }};color:{{ x.bFg }}">{{ x.bL }}</button>
 </sc-if>
 </div>
@@ -188,9 +186,9 @@ Sipariş listesi
 <div style="font:400 11.5px/1.4 var(--font-body);color:{{ z.ozetFg }};margin-top:2px">{{ z.ozet }}</div>
 <sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:6px;margin-top:6px">
-<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);padding:6px 9px">İade</button>
-<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);padding:6px 9px">Sarf</button>
-<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 11px/1 var(--font-body);padding:6px 9px">Hurda</button>
+<sc-if value="{{ z.iadeVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);padding:6px 9px">İade</button></sc-if>
+<sc-if value="{{ z.sarfVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);padding:6px 9px">Sarf</button></sc-if>
+<sc-if value="{{ z.hurdaVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 11px/1 var(--font-body);padding:6px 9px">Hurda</button></sc-if>
 </div>
 </sc-if>
 </div>
@@ -323,9 +321,9 @@ Sipariş listesi
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid {{ ui.rule }};padding-top:14px">
 <sc-if value="{{ ambarEkran.kart.yazabilir }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-<button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button>
-<button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button>
-<button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button>
+<sc-if value="{{ ambarEkran.kart.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button></sc-if>
+<sc-if value="{{ ambarEkran.kart.zimmetVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button></sc-if>
+<sc-if value="{{ ambarEkran.kart.siparisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button></sc-if>
 </div>
 </sc-if>
 <span style="flex:1"></span>

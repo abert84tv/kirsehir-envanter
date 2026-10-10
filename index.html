@@ -1607,10 +1607,8 @@ Sipariş listesi
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ ambarEkran.malzemeYeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:36px;padding:0 12px;border:1px solid {{ ui.rule }};border-radius:10px;background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/36px var(--font-body)">Malzeme tanımla</button>
 </sc-if>
-<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:#1b9a4a;color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v13M6 12l6 6 6-6"></path></svg>Giriş</button>
-<button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7M6 12l6-6 6 6"></path></svg>Çıkış</button>
-</sc-if>
+<sc-if value="{{ ambarEkran.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:#1b9a4a;color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v13M6 12l6 6 6-6"></path></svg>Giriş</button></sc-if>
+<sc-if value="{{ ambarEkran.cikisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 13px/1 var(--font-body)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V7M6 12l6-6 6 6"></path></svg>Çıkış</button></sc-if>
 </div>
 
 <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
@@ -1733,7 +1731,7 @@ Sipariş listesi
 <span style="font:700 11px/1 var(--font-body);color:{{ x.c }};white-space:nowrap">{{ x.gun }}</span>
 </div>
 </button>
-<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ ambarEkran.siparisYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ x.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-width:94px;text-align:center;font:600 11.5px/1 var(--font-body);padding:7px 10px;border-radius:8px;background:{{ x.bBg }};color:{{ x.bFg }}">{{ x.bL }}</button>
 </sc-if>
 </div>
@@ -1779,9 +1777,9 @@ Sipariş listesi
 <div style="font:400 11.5px/1.4 var(--font-body);color:{{ z.ozetFg }};margin-top:2px">{{ z.ozet }}</div>
 <sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:6px;margin-top:6px">
-<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);padding:6px 9px">İade</button>
-<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);padding:6px 9px">Sarf</button>
-<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 11px/1 var(--font-body);padding:6px 9px">Hurda</button>
+<sc-if value="{{ z.iadeVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid {{ ui.rule }};font:600 11px/1 var(--font-body);padding:6px 9px">İade</button></sc-if>
+<sc-if value="{{ z.sarfVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 11px/1 var(--font-body);padding:6px 9px">Sarf</button></sc-if>
+<sc-if value="{{ z.hurdaVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:7px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 11px/1 var(--font-body);padding:6px 9px">Hurda</button></sc-if>
 </div>
 </sc-if>
 </div>
@@ -1914,9 +1912,9 @@ Sipariş listesi
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid {{ ui.rule }};padding-top:14px">
 <sc-if value="{{ ambarEkran.kart.yazabilir }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-<button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button>
-<button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button>
-<button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button>
+<sc-if value="{{ ambarEkran.kart.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button></sc-if>
+<sc-if value="{{ ambarEkran.kart.zimmetVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button></sc-if>
+<sc-if value="{{ ambarEkran.kart.siparisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button></sc-if>
 </div>
 </sc-if>
 <span style="flex:1"></span>
@@ -6465,10 +6463,8 @@ Sipariş listesi
 <div class="scroll ks-gir" style="flex:1;overflow:auto;min-height:0;padding:12px 12px 18px;display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;gap:12px">
 <input type="search" aria-label="Malzeme ara" placeholder="Malzeme adı, kodu ya da kategori…" value="{{ ambarEkran.q }}" onChange="{{ ambarEkran.onQ }}" style="all:unset;box-sizing:border-box;width:100%;min-height:46px;border:1px solid {{ ui.rule }};border-radius:12px;padding:0 13px;font:400 14px/1 var(--font-body);background:{{ ui.surf }};color:{{ ui.fg }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
-<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:#1b9a4a;color:#fff;font:600 14px/46px var(--font-body);text-align:center">↓ Giriş</button>
-<button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/46px var(--font-body);text-align:center">↑ Çıkış</button>
-</sc-if>
+<sc-if value="{{ ambarEkran.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.girisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:#1b9a4a;color:#fff;font:600 14px/46px var(--font-body);text-align:center">↓ Giriş</button></sc-if>
+<sc-if value="{{ ambarEkran.cikisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.cikisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100px;min-height:46px;border-radius:12px;background:var(--color-accent);color:#fff;font:600 14px/46px var(--font-body);text-align:center">↑ Çıkış</button></sc-if>
 <button onClick="{{ ambarEkran.siparisAc }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:46px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};font:600 14px/46px var(--font-body);text-align:center">Sipariş listesi · {{ ambarEkran.sipN }}</button>
 <sc-if value="{{ ambarEkran.katYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ ambarEkran.malzemeYeni }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 100%;min-height:42px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};font:600 13px/42px var(--font-body);text-align:center">Malzeme tanımla</button>
@@ -6513,7 +6509,7 @@ Sipariş listesi
 <div style="font:600 13px/1.3 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ x.ad }}</div>
 <div style="display:flex;align-items:center;gap:7px;margin-top:4px"><div style="flex:1;height:4px;border-radius:2px;background:{{ ui.surf2 }};overflow:hidden"><div style="height:4px;width:{{ x.w }};background:{{ x.c }}"></div></div><span style="font:700 11px/1 var(--font-body);color:{{ x.c }};white-space:nowrap">{{ x.gun }}</span></div>
 </button>
-<sc-if value="{{ ambarEkran.yazabilir }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ ambarEkran.siparisYetki }}" hint-placeholder-val="{{ true }}">
 <button onClick="{{ x.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:36px;padding:0 10px;border-radius:9px;background:{{ x.bBg }};color:{{ x.bFg }};font:600 12px/36px var(--font-body)">{{ x.bL }}</button>
 </sc-if>
 </div>
@@ -6585,9 +6581,9 @@ Sipariş listesi
 <div style="font:400 12px/1.4 var(--font-body);color:{{ z.ozetFg }};margin-top:2px">{{ z.ozet }}</div>
 <sc-if value="{{ z.varMi }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:6px;margin-top:7px">
-<button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:38px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">İade</button>
-<button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/38px var(--font-body)">Sarf</button>
-<button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 12.5px/38px var(--font-body)">Hurda</button>
+<sc-if value="{{ z.iadeVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.iade }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:38px;border-radius:9px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">İade</button></sc-if>
+<sc-if value="{{ z.sarfVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.sarf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/38px var(--font-body)">Sarf</button></sc-if>
+<sc-if value="{{ z.hurdaVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ z.hurda }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:38px;border-radius:9px;border:1px solid var(--color-uyari);color:var(--color-uyari);font:600 12.5px/38px var(--font-body)">Hurda</button></sc-if>
 </div>
 </sc-if>
 </div>
@@ -6718,9 +6714,9 @@ Sipariş listesi
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid {{ ui.rule }};padding-top:14px">
 <sc-if value="{{ ambarEkran.kart.yazabilir }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-<button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button>
-<button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button>
-<button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button>
+<sc-if value="{{ ambarEkran.kart.girisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.giris }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/1 var(--font-body);padding:11px 14px">Giriş</button></sc-if>
+<sc-if value="{{ ambarEkran.kart.zimmetVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.zimmet }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12.5px/1 var(--font-body);padding:10px 14px">Ekibe zimmet</button></sc-if>
+<sc-if value="{{ ambarEkran.kart.siparisVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ambarEkran.kart.siparis }}" title="{{ ambarEkran.kart.sipOneri }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body);padding:10px 14px">{{ ambarEkran.kart.sipL }}</button></sc-if>
 </div>
 </sc-if>
 <span style="flex:1"></span>
@@ -10413,6 +10409,13 @@ const PERMS = [
   ['assign', 'Ekip atama', ['yonetici', 'mudur', 'muhendis', 'sef']],
   ['close', 'Arıza kapatma / onay', ['yonetici', 'mudur', 'sef']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
+  // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
+  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'muhendis', 'sef']],
+  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'muhendis', 'sef']],
+  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'muhendis', 'sef', 'personel']],
+  ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
+  ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur', 'muhendis']],
+  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'sef']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];
@@ -10612,7 +10615,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-181';
+const SURUM = '2026.10.10-182';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11692,6 +11695,20 @@ class Component extends DCLogic {
         () => this.setState({ tab: 'ambar' })), 600);
     }
   }
+  // Stok işlemi yetkisi (ekran ve işlem anında aynı kural; sunucu ambar_hareket aynısını uygular):
+  // rol + kişiye özel istisna (Ayarlar › Yetkiler) + Stok sayfa yetkisi (“Yalnız görür” / “Kapalı” işlem yaptırmaz).
+  // Saha personeli “sahada kullanıldı”yı yalnız kendi ekibi için düşebilir.
+  stokIzin(tur, ekip) {
+    const me = this.state.session;
+    if (!me) return false;
+    if (me.role !== 'yonetici') { const sy = (me.sayfalar || {}).ambar; if (sy === 'gor' || sy === 'yok') return false; }
+    const anahtar = { giris: 'stokGiris', iade: 'stokZimmet', zimmet: 'stokZimmet', sarf: 'stokSarf', hurda: 'stokDuzelt', cikis: 'stokDuzelt' }[tur];
+    if (!anahtar || !this.yetkiVar(me, anahtar)) return false;
+    if (tur === 'sarf' && me.role === 'personel' && me.crew && ekip && ekip !== me.crew) return false;
+    return true;
+  }
+
+
   // Malzeme kataloğu: yeni kalem ya da düzenleme
   malzemeKaydet(f) {
     if (!f) return;
@@ -11822,6 +11839,7 @@ class Component extends DCLogic {
     const birim = kalem.birim;
     const n = Math.abs(parseFloat(String(g.adet || '').replace(',', '.')) || 0);
     if (!n) return this.duyur('Adet girin.', 4000, 'kotu');
+    if (!this.stokIzin(g.tur, g.ekip)) return this.duyur('“' + (HAREKET_AD[g.tur] || g.tur) + '” işlemi için yetkiniz yok' + (g.tur === 'sarf' ? ' (saha personeli yalnız kendi ekibi için düşebilir)' : '') + '. Yetkiyi yöneticiniz Ayarlar › Yetkiler’den verebilir.', 7000, 'kotu');
     if (g.tur !== 'sarf' && g.tur !== 'hurda' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
     if (['zimmet', 'iade', 'sarf', 'hurda'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
     const a = this.state.ambar || {};
@@ -11954,7 +11972,7 @@ class Component extends DCLogic {
       this.modulDurumYaz('ambar', r.data.veri);
       const red = (r.data.red || []);
       if (red.length) {
-        this.duyur('Bakiye yetmediği için işlenmeyen kalem var: '
+        this.duyur('İşlenmeyen kalem var: '
           + red.map(x => x.malzeme + ' (' + x.neden + ')').join(', ')
           + '. Sunucudaki güncel durum yüklendi.', 11000, 'kotu');
       } else if (mesaj) {
@@ -18092,8 +18110,18 @@ class Component extends DCLogic {
         // Ağır hesap (katalog × 30 gün tüketim) yalnız Ambar açıkken yapılır
         if (tabId !== 'ambar') return { acik: false, form: { on: false } };
         const af = s.ambarForm;
-        const yazabilir = yetki('ambar') === 'tam' && (me || {}).role !== 'izleyici';
-        const katYetki = CAN.assign.includes((me || {}).role);
+        // Yetkiler (Ayarlar › Yetkiler): rol + kişiye özel istisna + Stok sayfa yetkisi; saha personeli yalnız kendi ekibini düşer
+        const sayfaYaz = yetki('ambar') === 'tam' && (me || {}).role !== 'izleyici';
+        const EKIPLER = me && me.role === 'personel' && me.crew ? [me.crew] : SAHA_EKIP;
+        const izin = {
+          giris: this.stokIzin('giris'), zimmet: this.stokIzin('zimmet'), sarf: this.stokIzin('sarf', me && me.crew), duzelt: this.stokIzin('hurda'),
+          katalog: sayfaYaz && this.yetkiVar(me, 'stokKatalog'), siparis: sayfaYaz && this.yetkiVar(me, 'stokSiparis'),
+          fiyat: this.yetkiVar(me, 'rapor')    // fiyat ve tutar yalnız rapor yetkisi olanlara gösterilir
+        };
+        const izinTur = { giris: izin.giris, iade: izin.zimmet, zimmet: izin.zimmet, sarf: izin.sarf, hurda: izin.duzelt, cikis: izin.duzelt };
+        const yazabilir = izin.giris || izin.zimmet || izin.sarf || izin.duzelt;
+        const katYetki = izin.katalog;
+        const tlGor = n => izin.fiyat ? this.tl(n) : '';
         const zimTablo = (s.ambar && s.ambar.zimmet) || {};
         const kisa = A => A.replace(' ambarı', '').replace(' ambar', '');
         const AMB_RENK = ['var(--color-accent)', '#5e5ce6', '#ff9f0a', '#34c759'];
@@ -18116,7 +18144,7 @@ class Component extends DCLogic {
         };
         const formAc = (tur, malzeme, ek) => this.setState({ ambarKart: null, ambarForm: {
           tur, malzeme: malzeme || '', ambar: tur === 'sarf' || tur === 'hurda' ? '' : AMBARLAR[0],
-          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(tur) ? (SAHA_EKIP[0] || '') : '', adet: '', not: '', ...(ek || {}) } });
+          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(tur) ? (EKIPLER[0] || '') : '', adet: '', not: '', ...(ek || {}) } });
 
         // Kayıt türü → yön ve neden listesi (ekran sadeliği için; saklanan tür altı olarak kalır)
         const yonDe = tur => ['giris', 'iade'].includes(tur) ? 'giris' : 'cikis';
@@ -18127,7 +18155,7 @@ class Component extends DCLogic {
         };
         const nedenSec = k => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k,
           ambar: k === 'sarf' || k === 'hurda' ? '' : (this.state.ambarForm.ambar || AMBARLAR[0]),
-          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || SAHA_EKIP[0] || '') : '' } });
+          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || EKIPLER[0] || '') : '' } });
 
         // — göstergeler
         const kritikler = tum.filter(x => x.d.kritik);
@@ -18146,7 +18174,7 @@ class Component extends DCLogic {
         const bugunGiris = bugunHareket.filter(h => ['giris', 'iade'].includes(h.tur)).length;
         const yediIslem = [6, 5, 4, 3, 2, 1, 0].map(i => hareketGun(new Date(bugun.getTime() - i * gunMs)).length);
         const kpis = [
-          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda · stok değeri ' + tlKisa(ambarDeger), altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
+          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda' + (izin.fiyat ? ' · stok değeri ' + tlKisa(ambarDeger) : ''), altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
           { label: 'Tükenen', val: String(tukendi), alt: tukendi ? 'ambarda kalmadı' : 'tükenen kalem yok', altC: tukendi ? kirmizi : yesil, alarm: tukendi > 0, valC: tukendi ? kirmizi : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'tukenen' ? '' : 'tukenen' }) },
           { label: 'Azalan', val: String(azaldi), alt: azaldi ? az7 + ' tanesi 7 günden az yeter' : 'azalan kalem yok', altC: azaldi ? turuncu : yesil, alarm: false, valC: azaldi ? turuncu : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'azalan' ? '' : 'azalan' }) },
           { label: 'Bugün hareket', val: String(bugunHareket.length), alt: bugunGiris + ' giriş · ' + (bugunHareket.length - bugunGiris) + ' çıkış', altC: ui.mut, alarm: false, el: this.kivilcim(yediIslem, '#ff9f0a'), git: null }
@@ -18205,7 +18233,7 @@ class Component extends DCLogic {
           const meta = [
             dag.some(n => n > 0) ? AMBARLAR.map((A, i) => dag[i] > 0 ? kisa(A) + ' ' + sayi(dag[i]) : '').filter(Boolean).join(' · ') : 'ambarda yok',
             d.zim ? 'ekiplerde ' + sayi(d.zim) + ' ' + k.birim : '',
-            d.girilmis ? this.tl((d.toplam + d.zim) * (Number(k.fiyat) || 0)) : ''
+            d.girilmis ? tlGor((d.toplam + d.zim) * (Number(k.fiyat) || 0)) : ''
           ].filter(Boolean).join(' · ');
           return {
             ad: k.ad, kod: k.kod, birim: k.birim, katL: MALZEME_KAT[k.kat] || '—',
@@ -18273,7 +18301,8 @@ class Component extends DCLogic {
           const list = Object.keys(t).filter(k => t[k] > 0);
           const deger = list.reduce((x, ad) => x + t[ad] * (Number((this.katalogBul(ad) || {}).fiyat) || 0), 0);
           return {
-            ekip: c, varMi: list.length > 0 && yazabilir, kalem: list.length ? list.length + ' kalem · ' + this.tl(deger) : 'zimmet yok',
+            ekip: c, iadeVar: list.length > 0 && izin.zimmet, sarfVar: list.length > 0 && this.stokIzin('sarf', c), hurdaVar: list.length > 0 && izin.duzelt,
+            varMi: list.length > 0 && (izin.zimmet || this.stokIzin('sarf', c) || izin.duzelt), kalem: list.length ? list.length + ' kalem' + (izin.fiyat ? ' · ' + this.tl(deger) : '') : 'zimmet yok',
             ozet: list.length ? list.map(k => k + ' × ' + sayi(t[k])).join(' · ') : 'zimmetinde malzeme yok',
             ozetFg: list.length ? ui.fg : ui.mut,
             iade: () => formAc('iade', list[0], { ekip: c }),
@@ -18291,7 +18320,7 @@ class Component extends DCLogic {
           const r = satir(x);
           return {
             on: true, ad: kartK.ad, kod: kartK.kod, katL: MALZEME_KAT[kartK.kat] || '—', birim: kartK.birim,
-            fiyat: this.tl(Number(kartK.fiyat) || 0) + ' / ' + kartK.birim, esik: sayi(d.esik) + ' ' + kartK.birim,
+            fiyat: izin.fiyat ? this.tl(Number(kartK.fiyat) || 0) + ' / ' + kartK.birim : '—', esik: sayi(d.esik) + ' ' + kartK.birim,
             pasif: !!kartK.pasif,
             toplam: r.toplam, toplamFg: r.toplamFg, gun: r.gun, gunC: r.gunC,
             hiz: d.tuk.ort > 0 ? 'günde ortalama ' + sayi(d.tuk.ort) + ' ' + birimK(kartK.birim) : '',
@@ -18303,7 +18332,7 @@ class Component extends DCLogic {
             ekipYok: !d.zim,
             hareket: hareketler.filter(h => h.malzeme === kartK.ad).slice(0, 8).map(hSatir),
             hareketYok: !hareketler.some(h => h.malzeme === kartK.ad),
-            yazabilir: yazabilir && !kartK.pasif, katYetki,
+            yazabilir: (izin.giris || izin.zimmet || izin.siparis) && !kartK.pasif, girisVar: izin.giris && !kartK.pasif, zimmetVar: izin.zimmet && !kartK.pasif, siparisVar: izin.siparis && !kartK.pasif, katYetki,
             sipL: sipSet.has(kartK.ad) ? '✓ Siparişte' : 'Siparişe ekle',
             sipOneri: 'öneri: ' + sayi(this.siparisOneri(kartK.ad)) + ' ' + kartK.birim,
             giris: () => formAc('giris', kartK.ad),
@@ -18341,8 +18370,8 @@ class Component extends DCLogic {
 
         // — sipariş listesi
         const siparisPanel = !s.siparisPanel ? { on: false } : {
-          on: true, bos: !sip.length, yazabilir, salt: !yazabilir,
-          toplam: this.tl(sip.reduce((t, x) => t + (Number(x.adet) || 0) * (Number((this.katalogBul(x.malzeme) || {}).fiyat) || 0), 0)),
+          on: true, bos: !sip.length, yazabilir: izin.siparis, salt: !izin.siparis,
+          toplam: izin.fiyat ? this.tl(sip.reduce((t, x) => t + (Number(x.adet) || 0) * (Number((this.katalogBul(x.malzeme) || {}).fiyat) || 0), 0)) : '—',
           kalemler: sip.map(x => {
             const k = this.katalogBul(x.malzeme) || {};
             const d = this.ambarDurum(x.malzeme);
@@ -18351,7 +18380,7 @@ class Component extends DCLogic {
               adet: String(x.adet), onAdet: e => this.siparisAdet(x.id, e.target.value),
               durum: d.toplam <= 0 ? 'ambarda kalmadı'
                 : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
-              tutar: this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)),
+              tutar: izin.fiyat ? this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)) : '',
               ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
               cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + ' listeden çıkarıldı.')
             };
@@ -18396,7 +18425,9 @@ class Component extends DCLogic {
             { n: String(hareketler.length), label: 'Hareket kaydı', fg: ui.fg }
           ],
           yeni: () => formAc('giris', ''),
-          girisAc: () => formAc('giris', ''), cikisAc: () => formAc('zimmet', ''),
+          girisVar: izin.giris || izin.zimmet, cikisVar: izin.zimmet || izin.sarf || izin.duzelt, siparisYetki: izin.siparis,
+          girisAc: () => formAc(['giris', 'iade'].find(k => izinTur[k]) || 'giris', ''),
+          cikisAc: () => formAc(['zimmet', 'sarf', 'hurda', 'cikis'].find(k => izinTur[k]) || 'zimmet', ''),
           kalemler: satirlar,
           zimmetler,
           hareketler: hareketler.slice(0, 40).map(x => ({
@@ -18412,11 +18443,11 @@ class Component extends DCLogic {
             on: !!af,
             baslik: af ? HAREKET_AD[af.tur] : '',
             // İki düğme (Giriş / Çıkış) + “neden/nereden”: seçilen neden altı kayıt türünden birine karşılık gelir (veri değişmez)
-            yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].map(([y, l]) => ({
-              label: l, ...seg(!!af && yonDe(af.tur) === y, () => nedenSec(y === 'giris' ? 'giris' : 'zimmet')),
+            yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].filter(([y]) => NEDEN[y].some(n => izinTur[n.tur])).map(([y, l]) => ({
+              label: l, ...seg(!!af && yonDe(af.tur) === y, () => nedenSec(NEDEN[y].find(n => izinTur[n.tur]).tur)),
               alt: y === 'giris' ? 'ambara mal geldi' : 'ambardan ya da ekipten çıktı'
             })),
-            nedenler: !af ? [] : NEDEN[yonDe(af.tur)].map(n => ({
+            nedenler: !af ? [] : NEDEN[yonDe(af.tur)].filter(n => izinTur[n.tur]).map(n => ({
               ad: n.ad, etki: n.etki, on: af.tur === n.tur,
               bg: af.tur === n.tur ? 'var(--color-accent)' : ui.surf2, fg: af.tur === n.tur ? '#fff' : ui.fg, fg2: af.tur === n.tur ? 'rgba(255,255,255,.85)' : ui.mut,
               pick: () => nedenSec(n.tur)
@@ -18430,7 +18461,7 @@ class Component extends DCLogic {
             ambar: af ? af.ambar : '', ambarlar: AMBARLAR,
             ambarVar: !!af && af.tur !== 'sarf' && af.tur !== 'hurda',
             onAmbar: e => this.setState({ ambarForm: { ...this.state.ambarForm, ambar: e.target.value } }),
-            ekip: af ? af.ekip : '', ekipler: SAHA_EKIP,
+            ekip: af ? af.ekip : '', ekipler: EKIPLER,
             ekipVar: !!af && ['zimmet', 'iade', 'sarf', 'hurda'].includes(af.tur),
             onEkip: e => this.setState({ ambarForm: { ...this.state.ambarForm, ekip: e.target.value } }),
             // Sarf/hurda bir tesise bağlanırsa Özet'teki köy bazlı malzeme

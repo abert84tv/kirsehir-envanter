@@ -106,3 +106,16 @@
         () => this.setState({ tab: 'ambar' })), 600);
     }
   }
+  // Stok işlemi yetkisi (ekran ve işlem anında aynı kural; sunucu ambar_hareket aynısını uygular):
+  // rol + kişiye özel istisna (Ayarlar › Yetkiler) + Stok sayfa yetkisi (“Yalnız görür” / “Kapalı” işlem yaptırmaz).
+  // Saha personeli “sahada kullanıldı”yı yalnız kendi ekibi için düşebilir.
+  stokIzin(tur, ekip) {
+    const me = this.state.session;
+    if (!me) return false;
+    if (me.role !== 'yonetici') { const sy = (me.sayfalar || {}).ambar; if (sy === 'gor' || sy === 'yok') return false; }
+    const anahtar = { giris: 'stokGiris', iade: 'stokZimmet', zimmet: 'stokZimmet', sarf: 'stokSarf', hurda: 'stokDuzelt', cikis: 'stokDuzelt' }[tur];
+    if (!anahtar || !this.yetkiVar(me, anahtar)) return false;
+    if (tur === 'sarf' && me.role === 'personel' && me.crew && ekip && ekip !== me.crew) return false;
+    return true;
+  }
+

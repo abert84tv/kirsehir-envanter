@@ -18,6 +18,13 @@ const PERMS = [
   ['assign', 'Ekip atama', ['yonetici', 'mudur', 'muhendis', 'sef']],
   ['close', 'Arıza kapatma / onay', ['yonetici', 'mudur', 'sef']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
+  // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
+  ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'muhendis', 'sef']],
+  ['stokZimmet', 'Stok: ekibe malzeme verme ve zimmet iadesi alma', ['yonetici', 'muhendis', 'sef']],
+  ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'muhendis', 'sef', 'personel']],
+  ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
+  ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur', 'muhendis']],
+  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'muhendis', 'sef']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];

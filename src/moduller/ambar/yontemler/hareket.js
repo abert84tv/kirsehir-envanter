@@ -9,6 +9,7 @@
     const birim = kalem.birim;
     const n = Math.abs(parseFloat(String(g.adet || '').replace(',', '.')) || 0);
     if (!n) return this.duyur('Adet girin.', 4000, 'kotu');
+    if (!this.stokIzin(g.tur, g.ekip)) return this.duyur('“' + (HAREKET_AD[g.tur] || g.tur) + '” işlemi için yetkiniz yok' + (g.tur === 'sarf' ? ' (saha personeli yalnız kendi ekibi için düşebilir)' : '') + '. Yetkiyi yöneticiniz Ayarlar › Yetkiler’den verebilir.', 7000, 'kotu');
     if (g.tur !== 'sarf' && g.tur !== 'hurda' && !g.ambar) return this.duyur('Ambar seçin.', 4000, 'kotu');
     if (['zimmet', 'iade', 'sarf', 'hurda'].includes(g.tur) && !g.ekip) return this.duyur('Ekip seçin.', 4000, 'kotu');
     const a = this.state.ambar || {};
@@ -141,7 +142,7 @@
       this.modulDurumYaz('ambar', r.data.veri);
       const red = (r.data.red || []);
       if (red.length) {
-        this.duyur('Bakiye yetmediği için işlenmeyen kalem var: '
+        this.duyur('İşlenmeyen kalem var: '
           + red.map(x => x.malzeme + ' (' + x.neden + ')').join(', ')
           + '. Sunucudaki güncel durum yüklendi.', 11000, 'kotu');
       } else if (mesaj) {

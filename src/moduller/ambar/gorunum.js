@@ -2,8 +2,18 @@
         // Ağır hesap (katalog × 30 gün tüketim) yalnız Ambar açıkken yapılır
         if (tabId !== 'ambar') return { acik: false, form: { on: false } };
         const af = s.ambarForm;
-        const yazabilir = yetki('ambar') === 'tam' && (me || {}).role !== 'izleyici';
-        const katYetki = CAN.assign.includes((me || {}).role);
+        // Yetkiler (Ayarlar › Yetkiler): rol + kişiye özel istisna + Stok sayfa yetkisi; saha personeli yalnız kendi ekibini düşer
+        const sayfaYaz = yetki('ambar') === 'tam' && (me || {}).role !== 'izleyici';
+        const EKIPLER = me && me.role === 'personel' && me.crew ? [me.crew] : SAHA_EKIP;
+        const izin = {
+          giris: this.stokIzin('giris'), zimmet: this.stokIzin('zimmet'), sarf: this.stokIzin('sarf', me && me.crew), duzelt: this.stokIzin('hurda'),
+          katalog: sayfaYaz && this.yetkiVar(me, 'stokKatalog'), siparis: sayfaYaz && this.yetkiVar(me, 'stokSiparis'),
+          fiyat: this.yetkiVar(me, 'rapor')    // fiyat ve tutar yalnız rapor yetkisi olanlara gösterilir
+        };
+        const izinTur = { giris: izin.giris, iade: izin.zimmet, zimmet: izin.zimmet, sarf: izin.sarf, hurda: izin.duzelt, cikis: izin.duzelt };
+        const yazabilir = izin.giris || izin.zimmet || izin.sarf || izin.duzelt;
+        const katYetki = izin.katalog;
+        const tlGor = n => izin.fiyat ? this.tl(n) : '';
         const zimTablo = (s.ambar && s.ambar.zimmet) || {};
         const kisa = A => A.replace(' ambarı', '').replace(' ambar', '');
         const AMB_RENK = ['var(--color-accent)', '#5e5ce6', '#ff9f0a', '#34c759'];
@@ -26,7 +36,7 @@
         };
         const formAc = (tur, malzeme, ek) => this.setState({ ambarKart: null, ambarForm: {
           tur, malzeme: malzeme || '', ambar: tur === 'sarf' || tur === 'hurda' ? '' : AMBARLAR[0],
-          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(tur) ? (SAHA_EKIP[0] || '') : '', adet: '', not: '', ...(ek || {}) } });
+          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(tur) ? (EKIPLER[0] || '') : '', adet: '', not: '', ...(ek || {}) } });
 
         // Kayıt türü → yön ve neden listesi (ekran sadeliği için; saklanan tür altı olarak kalır)
         const yonDe = tur => ['giris', 'iade'].includes(tur) ? 'giris' : 'cikis';
@@ -37,7 +47,7 @@
         };
         const nedenSec = k => this.setState({ ambarForm: { ...this.state.ambarForm, tur: k,
           ambar: k === 'sarf' || k === 'hurda' ? '' : (this.state.ambarForm.ambar || AMBARLAR[0]),
-          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || SAHA_EKIP[0] || '') : '' } });
+          ekip: ['zimmet', 'iade', 'sarf', 'hurda'].includes(k) ? (this.state.ambarForm.ekip || EKIPLER[0] || '') : '' } });
 
         // — göstergeler
         const kritikler = tum.filter(x => x.d.kritik);
@@ -56,7 +66,7 @@
         const bugunGiris = bugunHareket.filter(h => ['giris', 'iade'].includes(h.tur)).length;
         const yediIslem = [6, 5, 4, 3, 2, 1, 0].map(i => hareketGun(new Date(bugun.getTime() - i * gunMs)).length);
         const kpis = [
-          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda · stok değeri ' + tlKisa(ambarDeger), altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
+          { label: 'Malzeme çeşidi', val: String(stokta.length), alt: ambardaN + ' tanesi ambarda' + (izin.fiyat ? ' · stok değeri ' + tlKisa(ambarDeger) : ''), altC: ui.mut, alarm: false, el: '', git: () => this.setState({ ambarSuz: '', ambarKat: '' }) },
           { label: 'Tükenen', val: String(tukendi), alt: tukendi ? 'ambarda kalmadı' : 'tükenen kalem yok', altC: tukendi ? kirmizi : yesil, alarm: tukendi > 0, valC: tukendi ? kirmizi : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'tukenen' ? '' : 'tukenen' }) },
           { label: 'Azalan', val: String(azaldi), alt: azaldi ? az7 + ' tanesi 7 günden az yeter' : 'azalan kalem yok', altC: azaldi ? turuncu : yesil, alarm: false, valC: azaldi ? turuncu : ui.fg, el: '', git: () => this.setState({ ambarSuz: s.ambarSuz === 'azalan' ? '' : 'azalan' }) },
           { label: 'Bugün hareket', val: String(bugunHareket.length), alt: bugunGiris + ' giriş · ' + (bugunHareket.length - bugunGiris) + ' çıkış', altC: ui.mut, alarm: false, el: this.kivilcim(yediIslem, '#ff9f0a'), git: null }
@@ -115,7 +125,7 @@
           const meta = [
             dag.some(n => n > 0) ? AMBARLAR.map((A, i) => dag[i] > 0 ? kisa(A) + ' ' + sayi(dag[i]) : '').filter(Boolean).join(' · ') : 'ambarda yok',
             d.zim ? 'ekiplerde ' + sayi(d.zim) + ' ' + k.birim : '',
-            d.girilmis ? this.tl((d.toplam + d.zim) * (Number(k.fiyat) || 0)) : ''
+            d.girilmis ? tlGor((d.toplam + d.zim) * (Number(k.fiyat) || 0)) : ''
           ].filter(Boolean).join(' · ');
           return {
             ad: k.ad, kod: k.kod, birim: k.birim, katL: MALZEME_KAT[k.kat] || '—',
@@ -183,7 +193,8 @@
           const list = Object.keys(t).filter(k => t[k] > 0);
           const deger = list.reduce((x, ad) => x + t[ad] * (Number((this.katalogBul(ad) || {}).fiyat) || 0), 0);
           return {
-            ekip: c, varMi: list.length > 0 && yazabilir, kalem: list.length ? list.length + ' kalem · ' + this.tl(deger) : 'zimmet yok',
+            ekip: c, iadeVar: list.length > 0 && izin.zimmet, sarfVar: list.length > 0 && this.stokIzin('sarf', c), hurdaVar: list.length > 0 && izin.duzelt,
+            varMi: list.length > 0 && (izin.zimmet || this.stokIzin('sarf', c) || izin.duzelt), kalem: list.length ? list.length + ' kalem' + (izin.fiyat ? ' · ' + this.tl(deger) : '') : 'zimmet yok',
             ozet: list.length ? list.map(k => k + ' × ' + sayi(t[k])).join(' · ') : 'zimmetinde malzeme yok',
             ozetFg: list.length ? ui.fg : ui.mut,
             iade: () => formAc('iade', list[0], { ekip: c }),
@@ -201,7 +212,7 @@
           const r = satir(x);
           return {
             on: true, ad: kartK.ad, kod: kartK.kod, katL: MALZEME_KAT[kartK.kat] || '—', birim: kartK.birim,
-            fiyat: this.tl(Number(kartK.fiyat) || 0) + ' / ' + kartK.birim, esik: sayi(d.esik) + ' ' + kartK.birim,
+            fiyat: izin.fiyat ? this.tl(Number(kartK.fiyat) || 0) + ' / ' + kartK.birim : '—', esik: sayi(d.esik) + ' ' + kartK.birim,
             pasif: !!kartK.pasif,
             toplam: r.toplam, toplamFg: r.toplamFg, gun: r.gun, gunC: r.gunC,
             hiz: d.tuk.ort > 0 ? 'günde ortalama ' + sayi(d.tuk.ort) + ' ' + birimK(kartK.birim) : '',
@@ -213,7 +224,7 @@
             ekipYok: !d.zim,
             hareket: hareketler.filter(h => h.malzeme === kartK.ad).slice(0, 8).map(hSatir),
             hareketYok: !hareketler.some(h => h.malzeme === kartK.ad),
-            yazabilir: yazabilir && !kartK.pasif, katYetki,
+            yazabilir: (izin.giris || izin.zimmet || izin.siparis) && !kartK.pasif, girisVar: izin.giris && !kartK.pasif, zimmetVar: izin.zimmet && !kartK.pasif, siparisVar: izin.siparis && !kartK.pasif, katYetki,
             sipL: sipSet.has(kartK.ad) ? '✓ Siparişte' : 'Siparişe ekle',
             sipOneri: 'öneri: ' + sayi(this.siparisOneri(kartK.ad)) + ' ' + kartK.birim,
             giris: () => formAc('giris', kartK.ad),
@@ -251,8 +262,8 @@
 
         // — sipariş listesi
         const siparisPanel = !s.siparisPanel ? { on: false } : {
-          on: true, bos: !sip.length, yazabilir, salt: !yazabilir,
-          toplam: this.tl(sip.reduce((t, x) => t + (Number(x.adet) || 0) * (Number((this.katalogBul(x.malzeme) || {}).fiyat) || 0), 0)),
+          on: true, bos: !sip.length, yazabilir: izin.siparis, salt: !izin.siparis,
+          toplam: izin.fiyat ? this.tl(sip.reduce((t, x) => t + (Number(x.adet) || 0) * (Number((this.katalogBul(x.malzeme) || {}).fiyat) || 0), 0)) : '—',
           kalemler: sip.map(x => {
             const k = this.katalogBul(x.malzeme) || {};
             const d = this.ambarDurum(x.malzeme);
@@ -261,7 +272,7 @@
               adet: String(x.adet), onAdet: e => this.siparisAdet(x.id, e.target.value),
               durum: d.toplam <= 0 ? 'ambarda kalmadı'
                 : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
-              tutar: this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)),
+              tutar: izin.fiyat ? this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)) : '',
               ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
               cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + ' listeden çıkarıldı.')
             };
@@ -306,7 +317,9 @@
             { n: String(hareketler.length), label: 'Hareket kaydı', fg: ui.fg }
           ],
           yeni: () => formAc('giris', ''),
-          girisAc: () => formAc('giris', ''), cikisAc: () => formAc('zimmet', ''),
+          girisVar: izin.giris || izin.zimmet, cikisVar: izin.zimmet || izin.sarf || izin.duzelt, siparisYetki: izin.siparis,
+          girisAc: () => formAc(['giris', 'iade'].find(k => izinTur[k]) || 'giris', ''),
+          cikisAc: () => formAc(['zimmet', 'sarf', 'hurda', 'cikis'].find(k => izinTur[k]) || 'zimmet', ''),
           kalemler: satirlar,
           zimmetler,
           hareketler: hareketler.slice(0, 40).map(x => ({
@@ -322,11 +335,11 @@
             on: !!af,
             baslik: af ? HAREKET_AD[af.tur] : '',
             // İki düğme (Giriş / Çıkış) + “neden/nereden”: seçilen neden altı kayıt türünden birine karşılık gelir (veri değişmez)
-            yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].map(([y, l]) => ({
-              label: l, ...seg(!!af && yonDe(af.tur) === y, () => nedenSec(y === 'giris' ? 'giris' : 'zimmet')),
+            yonler: [['giris', 'Giriş'], ['cikis', 'Çıkış']].filter(([y]) => NEDEN[y].some(n => izinTur[n.tur])).map(([y, l]) => ({
+              label: l, ...seg(!!af && yonDe(af.tur) === y, () => nedenSec(NEDEN[y].find(n => izinTur[n.tur]).tur)),
               alt: y === 'giris' ? 'ambara mal geldi' : 'ambardan ya da ekipten çıktı'
             })),
-            nedenler: !af ? [] : NEDEN[yonDe(af.tur)].map(n => ({
+            nedenler: !af ? [] : NEDEN[yonDe(af.tur)].filter(n => izinTur[n.tur]).map(n => ({
               ad: n.ad, etki: n.etki, on: af.tur === n.tur,
               bg: af.tur === n.tur ? 'var(--color-accent)' : ui.surf2, fg: af.tur === n.tur ? '#fff' : ui.fg, fg2: af.tur === n.tur ? 'rgba(255,255,255,.85)' : ui.mut,
               pick: () => nedenSec(n.tur)
@@ -340,7 +353,7 @@
             ambar: af ? af.ambar : '', ambarlar: AMBARLAR,
             ambarVar: !!af && af.tur !== 'sarf' && af.tur !== 'hurda',
             onAmbar: e => this.setState({ ambarForm: { ...this.state.ambarForm, ambar: e.target.value } }),
-            ekip: af ? af.ekip : '', ekipler: SAHA_EKIP,
+            ekip: af ? af.ekip : '', ekipler: EKIPLER,
             ekipVar: !!af && ['zimmet', 'iade', 'sarf', 'hurda'].includes(af.tur),
             onEkip: e => this.setState({ ambarForm: { ...this.state.ambarForm, ekip: e.target.value } }),
             // Sarf/hurda bir tesise bağlanırsa Özet'teki köy bazlı malzeme

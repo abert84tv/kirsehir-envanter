@@ -321,7 +321,7 @@
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
           const vardimVar = !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi;
           const tamamlaVar = !kapali && ff.status === 'sahada' && kendiIsi;
-          const hedef = onayOn && !canAssign ? 'kontrol' : 'cozuldu';
+          const hedef = onayOn && !canClose ? 'kontrol' : 'cozuldu';
           return {
             var: vardimVar || tamamlaVar, vardimVar, tamamlaVar,
             not: vardimVar ? 'Sahadayım: ekip yerine vardı, iş “Sahada” olur ve başlama zamanı kaydolur.'
@@ -340,21 +340,21 @@
         workflow: wfSteps.filter(([id]) => !['bilgi', 'yonlendirildi'].includes(id) || (ff && ff.status === id)).map(([id, label]) => {
           // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
           // saha ekibi işi Kontrolde durumuna bırakır.
-          const kilit = onayOn && id === 'cozuldu' && !canAssign;
+          const kilit = onayOn && id === 'cozuldu' && !canClose;
           return {
             label, border: ff && ff.status === id ? 'var(--color-accent)' : ui.rule,
             bg: ff && ff.status === id ? ui.pend : 'transparent',
             fg: kilit ? ui.mut : (ff && ff.status === id ? ui.acc : ui.mut),
             op: kilit ? '.45' : '1',
             go: () => {
-              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, kapanışı merkez verir.');
+              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, son onayı ve kapatmayı mühendis (ya da müdür) verir.');
               this.setState({ faultForm: { ...this.state.faultForm, status: id } });
             }
           };
         }),
         // Merkez denetimi: kanıtı görüp onaylar ya da nedenini yazıp iade eder
         onay: {
-          on: !!(onayOn && ff && ff.id && ff.status === 'kontrol' && canAssign),
+          on: !!(onayOn && ff && ff.id && ff.status === 'kontrol' && canClose),
           not: 'Saha işi bitirdi. Fotoğrafları ve notu inceleyin: yeterliyse kapatın, eksikse nedenini yazıp sahaya iade edin.',
           kapat: () => {
             this.setState({ faultForm: { ...this.state.faultForm, status: 'cozuldu' } });
@@ -462,7 +462,7 @@
         })(),
         // Kapanmış kayıt yeniden açılır: geçmiş, fotoğraf ve maliyet korunur
         yenidenAc: {
-          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canAssign),
+          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && (canAssign || canClose)),
           not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
           go: () => {
             const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();

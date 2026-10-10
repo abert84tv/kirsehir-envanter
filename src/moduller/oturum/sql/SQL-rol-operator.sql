@@ -64,3 +64,21 @@ language sql stable as $$
   end
   and not (p_tur = 'sarf' and k.rol::text = 'personel' and coalesce(k.ekip, '') <> '' and coalesce(p_ekip, '') <> k.ekip)
 $$;
+
+-- 3) Son onay ve kapatma Mühendis'te (görevler ayrılığı: atayan operatör ≠ yapan saha şefi ≠ onaylayan mühendis). Uygulandı 2026-10-10.
+do $do$
+declare d text; r record;
+begin
+  for r in select * from (values
+    ('is_emri_kapat', $q$k.rol::text not in ('yonetici','mudur','sef','operator')$q$, $q$k.rol::text not in ('yonetici','mudur','muhendis')$q$),
+    ('is_emri_kapat', 'İş emri kapatma yetkiniz yok.', 'İş emrini yalnızca mühendis, müdür ya da yönetici kapatır (saha işi onaya gönderir).'),
+    ('yetkim_var', $q$when 'close'     then benim_rolum() in ('yonetici','mudur','sef')$q$, $q$when 'close'     then benim_rolum() in ('yonetici','mudur','muhendis')$q$)
+  ) as t(fn, eski, yeni)
+  loop
+    select pg_get_functiondef(p.oid) into d from pg_proc p where p.pronamespace = 'public'::regnamespace and p.proname = r.fn and p.prokind = 'f';
+    if d is null then raise exception 'İşlev bulunamadı: %', r.fn; end if;
+    if position(r.eski in d) = 0 then raise exception '% içinde bulunamadı: %', r.fn, r.eski; end if;
+    execute replace(d, r.eski, r.yeni);
+  end loop;
+end
+$do$;

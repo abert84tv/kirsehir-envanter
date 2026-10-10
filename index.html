@@ -10391,10 +10391,10 @@ const YETKINLIK_ESLEME = [
 ];
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'Onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
-  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler; malzeme kataloğunu ve siparişi yönetir'],
-  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir'],
-  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi kapatır, kullanılan malzemeyi düşer'],
+  ['mudur', 'Müdür', 'İstisnada onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
+  ['muhendis', 'Mühendis', 'İşin teknik son onayını verip kapatır; envanteri, malzeme kataloğunu ve siparişi yönetir'],
+  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir; iade edilen işi yeniden atar'],
+  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi tamamlayıp onaya gönderir, kullanılan malzemeyi düşer'],
   ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
@@ -10409,7 +10409,7 @@ const PERMS = [
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
   ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
   ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
-  ['close', 'Arıza kapatma / onay', ['yonetici', 'mudur', 'sef']],
+  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir)', ['yonetici', 'mudur', 'muhendis']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
   // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
   ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],
@@ -10617,7 +10617,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-183';
+const SURUM = '2026.10.10-184';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -16966,6 +16966,7 @@ class Component extends DCLogic {
     const sayfaTam = (aktif ? suzgecYetki(aktif.sayfa, aktif.suzgec) : yetki(tabId)) === 'tam';
     const canWrite = can('write') && sayfaTam;
     const canAssign = can('assign');
+    const canClose = can('close');   // son onay ve kapatma (Mühendis, Müdür, Yönetici); atayan (operatör) ve yapan (saha şefi) kapatamaz
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';
@@ -19023,7 +19024,7 @@ class Component extends DCLogic {
           const kendiIsi = !!(me && (me.role !== 'personel' || ff.crew === me.crew));
           const vardimVar = !kapali && ff.status !== 'sahada' && ff.status !== 'kontrol' && kendiIsi;
           const tamamlaVar = !kapali && ff.status === 'sahada' && kendiIsi;
-          const hedef = onayOn && !canAssign ? 'kontrol' : 'cozuldu';
+          const hedef = onayOn && !canClose ? 'kontrol' : 'cozuldu';
           return {
             var: vardimVar || tamamlaVar, vardimVar, tamamlaVar,
             not: vardimVar ? 'Sahadayım: ekip yerine vardı, iş “Sahada” olur ve başlama zamanı kaydolur.'
@@ -19042,21 +19043,21 @@ class Component extends DCLogic {
         workflow: wfSteps.filter(([id]) => !['bilgi', 'yonlendirildi'].includes(id) || (ff && ff.status === id)).map(([id, label]) => {
           // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
           // saha ekibi işi Kontrolde durumuna bırakır.
-          const kilit = onayOn && id === 'cozuldu' && !canAssign;
+          const kilit = onayOn && id === 'cozuldu' && !canClose;
           return {
             label, border: ff && ff.status === id ? 'var(--color-accent)' : ui.rule,
             bg: ff && ff.status === id ? ui.pend : 'transparent',
             fg: kilit ? ui.mut : (ff && ff.status === id ? ui.acc : ui.mut),
             op: kilit ? '.45' : '1',
             go: () => {
-              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, kapanışı merkez verir.');
+              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, son onayı ve kapatmayı mühendis (ya da müdür) verir.');
               this.setState({ faultForm: { ...this.state.faultForm, status: id } });
             }
           };
         }),
         // Merkez denetimi: kanıtı görüp onaylar ya da nedenini yazıp iade eder
         onay: {
-          on: !!(onayOn && ff && ff.id && ff.status === 'kontrol' && canAssign),
+          on: !!(onayOn && ff && ff.id && ff.status === 'kontrol' && canClose),
           not: 'Saha işi bitirdi. Fotoğrafları ve notu inceleyin: yeterliyse kapatın, eksikse nedenini yazıp sahaya iade edin.',
           kapat: () => {
             this.setState({ faultForm: { ...this.state.faultForm, status: 'cozuldu' } });
@@ -19164,7 +19165,7 @@ class Component extends DCLogic {
         })(),
         // Kapanmış kayıt yeniden açılır: geçmiş, fotoğraf ve maliyet korunur
         yenidenAc: {
-          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canAssign),
+          on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && (canAssign || canClose)),
           not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
           go: () => {
             const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();
@@ -21685,7 +21686,7 @@ class Component extends DCLogic {
             kapatan: secili.kapatan || '—', kapandi: (secili.kapandi || '').slice(0, 16).replace('T', ' '),
             kullanilanMalzeme: (secili.kullanilanMalzeme || []).map(m => m.malzeme + ' × ' + m.adet).join(', ') || '—',
             toplamSaat: secili.toplamSaat != null ? secili.toplamSaat + ' saat' : '—',
-            kapatVar: (CAN.assign.includes(s.session.role) || CAN.close.includes(s.session.role)) && secili.status !== 'kapatildi' && !s.offline,
+            kapatVar: CAN.close.includes(s.session.role) && secili.status !== 'kapatildi' && !s.offline,
             kapatGo: () => this.isEmriElleKapat(secili),
             ataFormVar: CAN.assign.includes(s.session.role) && secili.status !== 'kapatildi',
             ataForm: {

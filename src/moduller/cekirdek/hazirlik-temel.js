@@ -59,6 +59,7 @@
     const sayfaTam = (aktif ? suzgecYetki(aktif.sayfa, aktif.suzgec) : yetki(tabId)) === 'tam';
     const canWrite = can('write') && sayfaTam;
     const canAssign = can('assign');
+    const canClose = can('close');   // son onay ve kapatma (Mühendis, Müdür, Yönetici); atayan (operatör) ve yapan (saha şefi) kapatamaz
     const canCreateFault = canWrite && arizaOn;
     if (tabId === 'isPano' && !(arizaOn || talepOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn)) tabId = 'harita';

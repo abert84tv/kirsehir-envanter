@@ -1,9 +1,9 @@
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'Onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
-  ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler; malzeme kataloğunu ve siparişi yönetir'],
-  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir'],
-  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi kapatır, kullanılan malzemeyi düşer'],
+  ['mudur', 'Müdür', 'İstisnada onay, düzeltme, silme, rapor; kullanıcı yönetimi hariç'],
+  ['muhendis', 'Mühendis', 'İşin teknik son onayını verip kapatır; envanteri, malzeme kataloğunu ve siparişi yönetir'],
+  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir; iade edilen işi yeniden atar'],
+  ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi tamamlayıp onaya gönderir, kullanılan malzemeyi düşer'],
   ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
 ];
 const ROLE_LABEL = Object.fromEntries(ROLE_ORDER.map(r => [r[0], r[1]]));
@@ -18,7 +18,7 @@ const PERMS = [
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
   ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
   ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
-  ['close', 'Arıza kapatma / onay', ['yonetici', 'mudur', 'sef']],
+  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir)', ['yonetici', 'mudur', 'muhendis']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
   // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
   ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],

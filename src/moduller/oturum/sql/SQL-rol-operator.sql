@@ -89,3 +89,8 @@ $do$;
 --    veri_yaz / veri_yaz_surumlu (stokKatalog, stokSiparis). Varsayılanlar: assign/talepYonet → müdür, operatör · close/stokKatalog → müdür · stokSiparis → müdür, operatör.
 
 -- 5) Son onay ve kapatma (close) Operatör'e verildi (arıza mühendisi yok): rol_yetkisi close → müdür, operatör (+ yönetici). Uygulandı 2026-10-10 (son_onay_operator).
+
+-- 6) Onaylar Müdür'e döndü (açan/atayan operatör kendi işini onaylayamaz). Uygulandı 2026-10-10 (onay_muduru_siparis_onayi_ariza_kapanis_denetimi):
+--    rol_yetkisi: close → müdür · stokSiparisOnay (yeni) → müdür.
+--    ariza_kaydet: Merkez onayı açıkken (kurum_veri modul.onay) kapanış (çözüldü / iptal) yalnız close yetkisi olandan; durumu zaten o olan kaydın başka alanı kaydedilebilir.
+--    veri_yaz / veri_yaz_surumlu: 'siparis' listesinde durum='onayli' kalemi yalnız stokSiparisOnay yetkisi olan işaretleyebilir (önceden onaylı olup id/malzeme/adet değişmeyenler hariç).

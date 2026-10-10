@@ -7,7 +7,7 @@
         const EKIPLER = me && me.role === 'personel' && me.crew ? [me.crew] : SAHA_EKIP;
         const izin = {
           giris: this.stokIzin('giris'), zimmet: this.stokIzin('zimmet'), sarf: this.stokIzin('sarf', me && me.crew), duzelt: this.stokIzin('hurda'),
-          katalog: sayfaYaz && this.yetkiVar(me, 'stokKatalog'), siparis: sayfaYaz && this.yetkiVar(me, 'stokSiparis'),
+          katalog: sayfaYaz && this.yetkiVar(me, 'stokKatalog'), siparis: sayfaYaz && this.yetkiVar(me, 'stokSiparis'), siparisOnay: sayfaYaz && this.yetkiVar(me, 'stokSiparisOnay'),
           fiyat: this.yetkiVar(me, 'rapor')    // fiyat ve tutar yalnız rapor yetkisi olanlara gösterilir
         };
         const izinTur = { giris: izin.giris, iade: izin.zimmet, zimmet: izin.zimmet, sarf: izin.sarf, hurda: izin.duzelt, cikis: izin.duzelt };
@@ -26,6 +26,9 @@
         const stokta = katalog.filter(k => !k.pasif && stoktaMi(k));
         const sip = s.siparis || [];
         const sipSet = new Set(sip.map(x => x.malzeme));
+        const sipMap = new Map(sip.map(x => [x.malzeme, x]));
+        // alım isteği durumu: onay bekliyor / onaylı
+        const sipDurum = ad => { const x = sipMap.get(ad); return !x ? '' : (x.durum === 'onayli' ? '✓ Onaylı' : '⏳ Onay bekliyor'); };
         const tum = stokta.map(k => ({ k, d: this.ambarDurum(k.ad), dag: AMBARLAR.map(A => this.ambarMevcut(k.ad, A)) }));
         const gunC = g => g == null ? ui.mut : (g < 7 ? kirmizi : (g < 15 ? turuncu : yesil));
         const gunYazi = x => {
@@ -160,7 +163,7 @@
               ad: x.k.ad,
               gun: x.d.toplam <= 0 ? 'Tükendi' : (x.d.kacGun != null ? gunYazi(x) : 'eşikte · ' + sayi(x.d.toplam) + ' ' + birimK(x.k.birim)),
               c: g != null && g >= 7 ? turuncu : kirmizi, w: Math.max(4, oran * 100).toFixed(0) + '%',
-              bL: on ? '✓ Siparişte' : 'Siparişe ekle',
+              bL: on ? sipDurum(x.k.ad) : (izin.siparisOnay ? 'Siparişe ekle' : 'Alım isteği aç'),
               bBg: on ? 'rgba(52,199,89,.15)' : (dark ? 'rgba(10,132,255,.2)' : 'rgba(0,113,227,.1)'),
               bFg: on ? '#1b7a36' : ui.acc,
               sec: () => this.siparisEkle(x.k.ad),
@@ -225,7 +228,7 @@
             hareket: hareketler.filter(h => h.malzeme === kartK.ad).slice(0, 8).map(hSatir),
             hareketYok: !hareketler.some(h => h.malzeme === kartK.ad),
             yazabilir: (izin.giris || izin.zimmet || izin.siparis) && !kartK.pasif, girisVar: izin.giris && !kartK.pasif, zimmetVar: izin.zimmet && !kartK.pasif, siparisVar: izin.siparis && !kartK.pasif, katYetki,
-            sipL: sipSet.has(kartK.ad) ? '✓ Siparişte' : 'Siparişe ekle',
+            sipL: sipSet.has(kartK.ad) ? sipDurum(kartK.ad) : (izin.siparisOnay ? 'Siparişe ekle' : 'Alım isteği aç'),
             sipOneri: 'öneri: ' + sayi(this.siparisOneri(kartK.ad)) + ' ' + kartK.birim,
             giris: () => formAc('giris', kartK.ad),
             zimmet: () => formAc('zimmet', kartK.ad, { ambar: (AMBARLAR.find((A, i) => x.dag[i] > 0)) || AMBARLAR[0] }),
@@ -274,18 +277,26 @@
                 : 'ambarda ' + sayi(d.toplam) + ' ' + birimK(x.birim) + (d.kacGun != null ? ' · ' + gunYazi({ d, k }) + ' yeter' : ''),
               tutar: izin.fiyat ? this.tl((Number(x.adet) || 0) * (Number(k.fiyat) || 0)) : '',
               ekleyen: [x.ekleyen, x.damga].filter(Boolean).join(' · '),
-              cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + ' listeden çıkarıldı.')
+              onayMetin: x.durum === 'onayli' ? '✓ Onaylı' + (x.onaylayan ? ' · ' + x.onaylayan : '') : '⏳ Müdür onayı bekliyor',
+              onayRenk: x.durum === 'onayli' ? '#1b9a4a' : '#d97706',
+              onayVar: izin.siparisOnay && x.durum !== 'onayli', onayla: () => this.siparisOnayla(x.id),
+              // alım isteğini açan kendi onaysız isteğini geri çekebilir; onaylı kalemi yalnız onay yetkilisi çıkarır
+              cikarVar: izin.siparis && (x.durum !== 'onayli' || izin.siparisOnay), cikarEtiket: izin.siparisOnay && x.durum !== 'onayli' ? 'Reddet' : '×',
+              cikar: () => this.siparisYaz(sip.filter(y => y.id !== x.id), x.malzeme + (izin.siparisOnay && x.durum !== 'onayli' ? ' alım isteği reddedildi.' : ' listeden çıkarıldı.'))
             };
           }),
           kopyala: () => this.siparisKopyala(),
+          temizleVar: izin.siparisOnay,
           temizle: () => this.siparisYaz([], 'Sipariş listesi temizlendi.'),
+          bekleyen: sip.filter(x => x.durum !== 'onayli').length, bekleyenVar: sip.some(x => x.durum !== 'onayli'),
           kritikEkle: () => {
             const yeni = kritikler.filter(x => !sipSet.has(x.k.ad));
             if (!yeni.length) return this.duyur('Kritik kalemlerin hepsi zaten listede.', 4000);
             this.siparisYaz([...sip, ...yeni.map((x, i) => ({
               id: 's' + Date.now() + i, malzeme: x.k.ad, adet: this.siparisOneri(x.k.ad), birim: x.k.birim,
-              ekleyen: (me || {}).name || '', damga: this.damga()
-            }))], yeni.length + ' kritik kalem listeye eklendi.');
+              ekleyen: (me || {}).name || '', damga: this.damga(),
+              durum: izin.siparisOnay ? 'onayli' : 'istek', ...(izin.siparisOnay ? { onaylayan: (me || {}).name || '', onayDamga: this.damga() } : {})
+            }))], yeni.length + (izin.siparisOnay ? ' kritik kalem listeye eklendi (onaylı).' : ' kritik kalem için alım isteği açıldı — müdür onayı bekliyor.'));
           },
           kapat: () => this.setState({ siparisPanel: false })
         };

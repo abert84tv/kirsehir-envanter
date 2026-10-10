@@ -1,8 +1,8 @@
 const ROLE_ORDER = [
   ['yonetici', 'Yönetici', 'Tüm yetkiler — rol dağıtımı dâhil'],
-  ['mudur', 'Müdür', 'Hurda ve ambar düzeltmesi, katalog, rapor, silme; operatörün yerine son onayı da verebilir; kullanıcı yönetimi hariç'],
+  ['mudur', 'Müdür', 'Arıza, iş emri ve malzeme alım isteklerinin son onayı; hurda ve ambar düzeltmesi, katalog, rapor, silme; kullanıcı yönetimi hariç'],
   ['muhendis', 'Mühendis', 'Envanteri kurar ve düzenler, rapor alır; arıza, iş emri ve stok işleri yoktur — gerekirse Ayarlar › Yetkiler’den verilir'],
-  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir; sahadan gelen işin son onayını verip kapatır ya da iade eder'],
+  ['operator', 'Operatör', 'Talepleri alır, işleri ve ekipleri atar, ambardan ekibe malzeme verir, malzeme alım isteği açar; kendi açtığı işi onaylayamaz'],
   ['sef', 'Saha Şefi', 'Sahadaki ekibi yönetir, işi tamamlayıp onaya gönderir, kullanılan malzemeyi düşer'],
   ['personel', 'Saha Personeli', 'Sahada iş görür: güncelleme, fotoğraf, arıza kaydı, kendi ekibinin malzemesi']
 ];
@@ -18,7 +18,7 @@ const PERMS = [
   ['create', 'Yeni tesis kaydı açma', ['yonetici', 'mudur', 'muhendis']],
   ['assign', 'Ekip atama ve iş emri açma', ['yonetici', 'mudur', 'operator']],
   ['talepYonet', 'Talep ve başvuru yönetimi (kayıt, sınıflandırma, arızaya çevirme)', ['yonetici', 'mudur', 'operator']],
-  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir)', ['yonetici', 'mudur', 'operator']],
+  ['close', 'Arıza ve iş emrinin son onayı / kapatılması (saha işi onaya gönderir; açan ve atayan kişi onaylayamaz)', ['yonetici', 'mudur']],
   ['rapor', 'Rapor ve veri dışa aktarma', ['yonetici', 'mudur', 'muhendis']],
   // Stok / ambar (görevler ayrılığı): işlemi yapan, düzeltmeyi yapan ve katalogu yöneten kişiler farklıdır
   ['stokGiris', 'Stok: ambara mal alımı girme', ['yonetici', 'operator']],
@@ -26,7 +26,8 @@ const PERMS = [
   ['stokSarf', 'Stok: sahada kullanılan malzemeyi düşme (saha personeli yalnız kendi ekibi)', ['yonetici', 'mudur', 'operator', 'sef', 'personel']],
   ['stokDuzelt', 'Stok: hurda ve ambar düzeltmesi (kayıp, sayım farkı)', ['yonetici', 'mudur']],
   ['stokKatalog', 'Stok: malzeme tanımlama, fiyat ve kritik eşik', ['yonetici', 'mudur']],
-  ['stokSiparis', 'Stok: sipariş listesini yönetme', ['yonetici', 'mudur', 'operator']],
+  ['stokSiparis', 'Stok: malzeme alım isteği açma (sipariş listesi)', ['yonetici', 'mudur', 'operator']],
+  ['stokSiparisOnay', 'Stok: malzeme alım isteğini onaylama', ['yonetici', 'mudur']],
   ['sil', 'Kayıt silme / arşivleme', ['yonetici', 'mudur']],
   ['admin', 'Kullanıcı, rol ve cihaz yönetimi', ['yonetici']]
 ];

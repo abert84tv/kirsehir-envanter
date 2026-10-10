@@ -340,14 +340,14 @@
         workflow: wfSteps.filter(([id]) => !['bilgi', 'yonlendirildi'].includes(id) || (ff && ff.status === id)).map(([id, label]) => {
           // Merkez onayı açıkken “Çözüldü”yü yalnızca atama yetkisi olan verir;
           // saha ekibi işi Kontrolde durumuna bırakır.
-          const kilit = onayOn && id === 'cozuldu' && !canClose;
+          const kilit = onayOn && (id === 'cozuldu' || id === 'iptal') && !canClose;
           return {
             label, border: ff && ff.status === id ? 'var(--color-accent)' : ui.rule,
             bg: ff && ff.status === id ? ui.pend : 'transparent',
             fg: kilit ? ui.mut : (ff && ff.status === id ? ui.acc : ui.mut),
             op: kilit ? '.45' : '1',
             go: () => {
-              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın, son onayı ve kapatmayı operatör (ya da müdür) verir.');
+              if (kilit) return this.say('Merkez onayı açık: işi “Kontrolde” bırakın (iptal gerekçesini nota yazın); kapatmayı ve iptali müdür onaylar.');
               this.setState({ faultForm: { ...this.state.faultForm, status: id } });
             }
           };

@@ -47,10 +47,13 @@
     // sarf/hurda işlemine tesis bağlanırsa köy bazlı malzeme raporunda
     // "Tesis belirtilmemiş" yerine gerçek köy · ilçesinde görünür (madde 18)
     const tesisVar = ['sarf', 'hurda'].includes(g.tur) && g.assetId;
+    // mal alımı onaylı alım isteği olmadan girilirse hareket notuna işlenir (müdür incelemesinde görünür)
+    const siparissiz = g.tur === 'giris' && !(this.state.siparis || []).some(x => x.malzeme === g.malzeme && x.durum === 'onayli');
+    const notum = [(g.not || '').trim(), siparissiz ? 'onaylı alım isteği yok' : ''].filter(Boolean).join(' · ');
     const kayit = {
       id: 'h' + Date.now() + Math.random().toString(36).slice(2, 6), damga: this.damga(),
       tur: g.tur, malzeme: g.malzeme, adet: n, birim, ambar: g.ambar || '', ekip: g.ekip || '',
-      kim: (this.state.session && this.state.session.name) || '', not: (g.not || '').trim(),
+      kim: (this.state.session && this.state.session.name) || '', not: notum,
       assetId: tesisVar ? g.assetId : null
     };
     const tesisAd = tesisVar ? (((this.state.assets || []).find(x => x.id === g.assetId) || {}).code || '') : '';

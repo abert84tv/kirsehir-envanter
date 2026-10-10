@@ -81,7 +81,7 @@ Sipariş listesi
 </sc-for>
 </div>
 </div>
-<div class="ks-sk-satir" style="align-items:center;gap:12px;padding:7px 16px;background:{{ ui.surf2 }};border-top:1px solid {{ ui.rule }};font:600 11px/1.2 var(--font-body);color:{{ ui.mut }}">
+<div class="ks-sk-satir ks-sk-bas" style="align-items:center;gap:12px;padding:7px 16px;background:{{ ui.surf2 }};border-top:1px solid {{ ui.rule }};font:600 11px/1.2 var(--font-body);color:{{ ui.mut }}">
 <div>Malzeme</div><div class="ks-sk-kat">Kategori</div><div>Ambarlardaki mevcut</div><div class="ks-sk-ekip">Ekiplerde</div><div class="ks-sk-tuk">Son 14 gün</div><div>Kaç gün yeter</div>
 </div>
 <sc-if value="{{ ambarEkran.satirVar }}" hint-placeholder-val="{{ true }}">
@@ -92,8 +92,8 @@ Sipariş listesi
 <div style="display:flex;align-items:center;gap:6px;font:600 13px/1.25 var(--font-body);min-width:0"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.ad }}</span><sc-if value="{{ m.sipVar }}" hint-placeholder-val="{{ false }}"><span style="flex:none;font:700 10px/1 var(--font-body);padding:3px 5px;border-radius:5px;background:rgba(52,199,89,.15);color:#1b7a36">siparişte</span></sc-if></div>
 <div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};margin-top:2px">{{ m.kod }} · {{ m.birim }}</div>
 </div>
-<div class="ks-sk-kat" style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.katL }}</div>
-<div style="display:flex;align-items:center;gap:8px">
+<div class="ks-sk-kat" style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}"><span class="ks-sk-et">Kategori</span>{{ m.katL }}</div>
+<div><span class="ks-sk-et">Ambarlardaki mevcut</span><div style="display:flex;align-items:center;gap:8px">
 <div style="flex:1;height:8px;border-radius:4px;background:{{ ui.surf2 }};overflow:hidden;display:flex">
 <div style="height:8px;width:{{ m.w0 }};background:var(--color-accent)"></div>
 <div style="height:8px;width:{{ m.w1 }};background:#5e5ce6"></div>
@@ -101,10 +101,10 @@ Sipariş listesi
 <div style="height:8px;width:{{ m.w3 }};background:#34c759"></div>
 </div>
 <div style="font:700 12.5px/1 var(--font-body);min-width:38px;text-align:right;color:{{ m.toplamFg }}">{{ m.toplamN }}</div>
-</div>
-<div class="ks-sk-ekip" style="font:400 12.5px/1.2 var(--font-body)">{{ m.ekipte }}</div>
-<div class="ks-sk-tuk" title="{{ m.tukYazi }}">{{ m.tukEl }}</div>
-<div>
+</div></div>
+<div class="ks-sk-ekip" style="font:400 12.5px/1.2 var(--font-body)"><span class="ks-sk-et">Ekiplerde</span>{{ m.ekipte }}</div>
+<div class="ks-sk-tuk" title="{{ m.tukYazi }}"><span class="ks-sk-et">Son 14 gün</span>{{ m.tukEl }}</div>
+<div><span class="ks-sk-et">Kaç gün yeter</span>
 <div style="display:flex;align-items:baseline;gap:5px;white-space:nowrap"><span style="font:700 13px/1 var(--font-body);color:{{ m.gunC }}">{{ m.gun }}</span><span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }}">{{ m.hiz }}</span></div>
 <div style="height:4px;border-radius:2px;background:{{ ui.surf2 }};margin-top:5px;overflow:hidden"><div style="height:4px;width:{{ m.gunW }};background:{{ m.gunC }};border-radius:2px;transition:width .6s ease"></div></div>
 </div>

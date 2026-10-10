@@ -2189,3 +2189,6 @@ Sürüm 2026.10.05-114.
 ## 2026.10.10-180 — Stok sayfası dar ekranda düzgün dizilir
 - Masaüstü Stok sayfası genişliğe göre dizilir: 1400 px ve üstü liste solda + uyarı sütunu sağda, 6 sütun; 1100–1399 px aynı düzen, 4 sütun (kategori, ekiplerde, son 14 gün gizlenir); 1100 px altı tek sütun: üstte “Tükenmek üzere” ve “Bugünkü hareketler” yan yana, sonra liste (3 sütun), en altta ekip zimmeti. Satırların üst üste binmesi giderildi.
 - CSS: `ks-sk-*` sınıfları (`src/stil/ana.css`). Satır düğmesindeki `all:unset` sınıf kuralını ezdiği için sütun kuralları `!important`.
+
+## 2026.10.10-181 — Stok listesi: dar ekranda sütunlar gizlenmez, alt satıra iner
+- 1400 px altında malzeme satırı kart gibi dizilir: üstte ad ve kod, altında etiketli hücreler (Kategori · Ambarlardaki mevcut · Ekiplerde · Son 14 gün · Kaç gün yeter) sığdığı kadar yan yana, sığmayanlar alt satıra geçer. Sütun gizleme kaldırıldı; başlık satırı yalnız geniş ekranda (tablo görünümü) çıkar.

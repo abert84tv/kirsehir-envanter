@@ -163,6 +163,13 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 .ks-sk-ana{display:grid;grid-template-columns:minmax(0,1fr) 330px}
 .ks-sk-yan{display:flex;flex-direction:column}
 .ks-sk-satir{display:grid!important;grid-template-columns:minmax(0,1fr) 120px 160px 76px 100px 140px!important}
-@media (max-width:1399px){.ks-sk-satir{grid-template-columns:minmax(0,1fr) 160px 140px!important}.ks-sk-kat,.ks-sk-ekip,.ks-sk-tuk{display:none!important}}
+/* Dar: sütun gizlenmez; her malzeme kart gibi olur — üstte ad, altında etiketli hücreler sığdığı kadar yan yana, sığmayan alt satıra iner */
+.ks-sk-et{display:none}
+@media (max-width:1399px){
+  .ks-sk-satir{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))!important;row-gap:8px!important}
+  .ks-sk-satir:not(.ks-sk-bas){padding-top:8px!important;padding-bottom:11px!important}
+  .ks-sk-satir>:first-child{grid-column:1/-1}
+  .ks-sk-et{display:block;font:600 10.5px/1 var(--font-body);color:var(--color-neutral-600,#8e8e93);margin-bottom:5px}
+  .ks-sk-bas{display:none!important}
+}
 @media (max-width:1099px){.ks-sk-ana{display:flex;flex-wrap:wrap}.ks-sk-yan{display:contents}.ks-sk-uyari{order:0;flex:1 1 280px;align-self:flex-start}.ks-sk-liste{order:1;flex:1 1 100%}.ks-sk-zimmet{order:2;flex:1 1 100%}.ks-sk-kiv{display:none}}
-@media (max-width:759px){.ks-sk-satir{grid-template-columns:minmax(0,1fr) 110px 100px!important}}

@@ -2185,3 +2185,7 @@ Sürüm 2026.10.05-114.
 - **Son 14 gün: giriş ve çıkış** hareketli çubuk grafiği (günlük işlem sayısı; hareket listesinin ilk 400 kaydından).
 - Sağ sütunda (telefonda üstte) “Tükenmek üzere” uyarıları, “Siparişe ekle” tek basışla; bugünkü hareketler ve ekip zimmeti aynen.
 - **Giriş / Çıkış:** “Hareket gir” yerine iki düğme. Formda önce yön, sonra “nereden/neden” düğmesi (altında etkisi yazar): Giriş → Mal alımı (ambar artar), Ekipten iade (ambar artar, ekip azalır). Çıkış → Ekibe ver (ambar azalır, ekip artar), Sahada kullanıldı (ekip azalır), Hurda (ekip azalır), Ambardan düş (ambar azalır; kayıp/sayım farkı). Kayıtta altı tür ayrı kalır; veri ve raporlar değişmedi.
+
+## 2026.10.10-180 — Stok sayfası dar ekranda düzgün dizilir
+- Masaüstü Stok sayfası genişliğe göre dizilir: 1400 px ve üstü liste solda + uyarı sütunu sağda, 6 sütun; 1100–1399 px aynı düzen, 4 sütun (kategori, ekiplerde, son 14 gün gizlenir); 1100 px altı tek sütun: üstte “Tükenmek üzere” ve “Bugünkü hareketler” yan yana, sonra liste (3 sütun), en altta ekip zimmeti. Satırların üst üste binmesi giderildi.
+- CSS: `ks-sk-*` sınıfları (`src/stil/ana.css`). Satır düğmesindeki `all:unset` sınıf kuralını ezdiği için sütun kuralları `!important`.

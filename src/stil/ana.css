@@ -158,3 +158,11 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 .ks-ata-harita{flex:none;height:40%;position:relative;border-bottom:1px solid rgba(128,128,128,.25)}
 .ks-ata-panel{flex:1;min-height:0;overflow:auto}
 @media (min-width:900px){.ks-ata-ic{flex-direction:row}.ks-ata-harita{flex:1;height:auto;border-bottom:none}.ks-ata-panel{flex:none;width:430px;border-left:1px solid rgba(128,128,128,.25)}}
+/* Stok sayfası (masaüstü): genişliğe göre dizilim. Geniş: liste solda, uyarı sütunu sağda, 6 sütun.
+   Orta: 4 sütun. Dar: tek sütun (uyarılar listenin üstüne çıkar, yan kartlar yan yana dizilir), 3 sütun. */
+.ks-sk-ana{display:grid;grid-template-columns:minmax(0,1fr) 330px}
+.ks-sk-yan{display:flex;flex-direction:column}
+.ks-sk-satir{display:grid!important;grid-template-columns:minmax(0,1fr) 120px 160px 76px 100px 140px!important}
+@media (max-width:1399px){.ks-sk-satir{grid-template-columns:minmax(0,1fr) 160px 140px!important}.ks-sk-kat,.ks-sk-ekip,.ks-sk-tuk{display:none!important}}
+@media (max-width:1099px){.ks-sk-ana{display:flex;flex-wrap:wrap}.ks-sk-yan{display:contents}.ks-sk-uyari{order:0;flex:1 1 280px;align-self:flex-start}.ks-sk-liste{order:1;flex:1 1 100%}.ks-sk-zimmet{order:2;flex:1 1 100%}.ks-sk-kiv{display:none}}
+@media (max-width:759px){.ks-sk-satir{grid-template-columns:minmax(0,1fr) 110px 100px!important}}

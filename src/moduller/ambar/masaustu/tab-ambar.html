@@ -33,7 +33,7 @@ Sipariş listesi
 <div style="font:700 26px/1.15 var(--font-heading);letter-spacing:-.02em;margin-top:5px;white-space:nowrap;color:{{ k.valC }}">{{ k.val }}</div>
 <div style="font:600 11px/1.3 var(--font-body);color:{{ k.altC }};margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.alt }}</div>
 </div>
-{{ k.el }}
+<span class="ks-sk-kiv">{{ k.el }}</span>
 </button>
 </sc-for>
 </div>
@@ -57,8 +57,8 @@ Sipariş listesi
 </section>
 </sc-if>
 
-<div style="display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:14px;align-items:start">
-<section style="min-width:0;border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};overflow:hidden">
+<div class="ks-sk-ana" style="gap:14px;align-items:start">
+<section class="ks-sk-liste" style="min-width:0;border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};overflow:hidden">
 <div style="display:flex;align-items:center;gap:6px;padding:12px 16px 8px;flex-wrap:wrap">
 <sc-for list="{{ ambarEkran.kategoriler }}" as="c" hint-placeholder-count="7">
 <button onClick="{{ c.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;font:600 12px/1 var(--font-body);padding:6px 10px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }}">{{ c.l }} <span style="opacity:.65">{{ c.n }}</span></button>
@@ -81,18 +81,18 @@ Sipariş listesi
 </sc-for>
 </div>
 </div>
-<div style="display:grid;grid-template-columns:minmax(0,1fr) 120px 160px 76px 100px 140px;align-items:center;gap:12px;padding:7px 16px;background:{{ ui.surf2 }};border-top:1px solid {{ ui.rule }};font:600 11px/1.2 var(--font-body);color:{{ ui.mut }}">
-<div>Malzeme</div><div>Kategori</div><div>Ambarlardaki mevcut</div><div>Ekiplerde</div><div>Son 14 gün</div><div>Kaç gün yeter</div>
+<div class="ks-sk-satir" style="align-items:center;gap:12px;padding:7px 16px;background:{{ ui.surf2 }};border-top:1px solid {{ ui.rule }};font:600 11px/1.2 var(--font-body);color:{{ ui.mut }}">
+<div>Malzeme</div><div class="ks-sk-kat">Kategori</div><div>Ambarlardaki mevcut</div><div class="ks-sk-ekip">Ekiplerde</div><div class="ks-sk-tuk">Son 14 gün</div><div>Kaç gün yeter</div>
 </div>
 <sc-if value="{{ ambarEkran.satirVar }}" hint-placeholder-val="{{ true }}">
 <div>
 <sc-for list="{{ ambarEkran.satirlar }}" as="m" hint-placeholder-count="10">
-<button onClick="{{ m.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:minmax(0,1fr) 120px 160px 76px 100px 140px;align-items:center;gap:12px;padding:0 16px;min-height:50px;border-top:1px solid {{ ui.rule }};background:{{ m.zemin }}" style-hover="background:{{ ui.surf2 }}">
+<button class="ks-sk-satir" onClick="{{ m.ac }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;align-items:center;gap:12px;padding:0 16px;min-height:50px;border-top:1px solid {{ ui.rule }};background:{{ m.zemin }}" style-hover="background:{{ ui.surf2 }}">
 <div style="min-width:0;padding:7px 0">
 <div style="display:flex;align-items:center;gap:6px;font:600 13px/1.25 var(--font-body);min-width:0"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.ad }}</span><sc-if value="{{ m.sipVar }}" hint-placeholder-val="{{ false }}"><span style="flex:none;font:700 10px/1 var(--font-body);padding:3px 5px;border-radius:5px;background:rgba(52,199,89,.15);color:#1b7a36">siparişte</span></sc-if></div>
 <div style="font:400 11px/1.3 var(--font-body);color:{{ ui.mut }};margin-top:2px">{{ m.kod }} · {{ m.birim }}</div>
 </div>
-<div style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.katL }}</div>
+<div class="ks-sk-kat" style="font:400 12px/1.3 var(--font-body);color:{{ ui.mut }}">{{ m.katL }}</div>
 <div style="display:flex;align-items:center;gap:8px">
 <div style="flex:1;height:8px;border-radius:4px;background:{{ ui.surf2 }};overflow:hidden;display:flex">
 <div style="height:8px;width:{{ m.w0 }};background:var(--color-accent)"></div>
@@ -102,8 +102,8 @@ Sipariş listesi
 </div>
 <div style="font:700 12.5px/1 var(--font-body);min-width:38px;text-align:right;color:{{ m.toplamFg }}">{{ m.toplamN }}</div>
 </div>
-<div style="font:400 12.5px/1.2 var(--font-body)">{{ m.ekipte }}</div>
-<div title="{{ m.tukYazi }}">{{ m.tukEl }}</div>
+<div class="ks-sk-ekip" style="font:400 12.5px/1.2 var(--font-body)">{{ m.ekipte }}</div>
+<div class="ks-sk-tuk" title="{{ m.tukYazi }}">{{ m.tukEl }}</div>
 <div>
 <div style="display:flex;align-items:baseline;gap:5px;white-space:nowrap"><span style="font:700 13px/1 var(--font-body);color:{{ m.gunC }}">{{ m.gun }}</span><span style="font:400 10.5px/1 var(--font-body);color:{{ ui.mut }}">{{ m.hiz }}</span></div>
 <div style="height:4px;border-radius:2px;background:{{ ui.surf2 }};margin-top:5px;overflow:hidden"><div style="height:4px;width:{{ m.gunW }};background:{{ m.gunC }};border-radius:2px;transition:width .6s ease"></div></div>
@@ -123,8 +123,8 @@ Sipariş listesi
 </div>
 </section>
 
-<div style="min-width:0;display:flex;flex-direction:column;gap:14px">
-<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 10px">
+<div class="ks-sk-yan" style="min-width:0;gap:14px">
+<section class="ks-sk-uyari" style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 10px">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
 <span class="ks-canli ks-kapali"></span>
 <span style="font:700 14px/1 var(--font-heading)">Tükenmek üzere</span>
@@ -154,7 +154,7 @@ Sipariş listesi
 </sc-if>
 </section>
 
-<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 8px">
+<section class="ks-sk-uyari" style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 8px">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
 <span class="ks-canli"></span>
 <span style="font:700 14px/1 var(--font-heading)">Bugünkü hareketler</span>
@@ -180,7 +180,7 @@ Sipariş listesi
 </sc-if>
 </section>
 
-<section style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 8px">
+<section class="ks-sk-zimmet" style="border-radius:14px;background:{{ ui.surf }};border:1px solid {{ ui.rule }};padding:13px 14px 8px">
 <div style="font:700 14px/1 var(--font-heading);margin-bottom:6px">Ekip zimmeti</div>
 <sc-for list="{{ ambarEkran.zimmetler }}" as="z" hint-placeholder-count="4">
 <div style="padding:8px 2px;border-top:1px solid {{ ui.rule }}">

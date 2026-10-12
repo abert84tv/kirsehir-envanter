@@ -20,6 +20,8 @@
     for (const sayfa in SUZGEC_TANIM) {
       const sira = (RM.suz || {})[sayfa];
       let zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      // iş ve talep modülü kapalıysa “İş panosu” yalnız onay kartlarını taşır: adı da “Onaylar” olur
+      if (!(arizaOn || talepOn)) zs = zs.map(z => z.hedef === 'isPanosu' || z.hedef === 'isPano' ? { ...z, ad: 'Onaylar' } : z);
       if (sira) zs = [...zs].sort((a, b) => { const i = sira.indexOf(a.id), j = sira.indexOf(b.id); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
       gruplar[sayfa] = {
         id: sayfa, ad: (RM.ad || {})[sayfa] || (zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa)), suz: zs,

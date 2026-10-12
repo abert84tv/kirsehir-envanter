@@ -2279,3 +2279,7 @@ Sürüm 2026.10.05-114.
 - **Yol tarifi düğmesi hiçbir şey yapmıyordu** (mod kapalıyken yalnız uyarı): artık mod kendiliğinden açılır ve güzergâh çizilir.
 - **Kapanışta zimmet düşümü ve talep/başvuru kapanışı sunucuya taşındı** (`ariza_kapanis_isle`, ariza_kaydet içinden; dışarıdan çağrılamaz): bağlantı kopsa ya da sekme kapansa da yapılır, aynı işin malzemesi ikinci kez düşmez. Tarayıcıdaki düşüm kaldırıldı; kayıt gelince ambar ve talep listesi sunucudan yenilenir.
 - **Supabase:** 7 işlevin arama yolu sabitlendi; yeni işlev eklenince çalıştırılacak yetki taraması `SQL-yetki-tarama.sql`.
+
+## 2026.10.12-194 — Modüller kapalıyken İş panosu, Envanter yetkisi olmayan kullanıcı
+- **Modüller kapalıyken “İş panosu” görünmesi:** pano tesis ekleme/silme önerilerinin onay kartlarını taşıdığı için açık kalıyordu. Artık yalnız öneri verebilen ya da sırası kendinde/bekleyen önerisi olan kullanıcıya görünür ve adı **“Onaylar”** olur; boş Yeni/Atandı/Sahada sütunları çıkmaz. Arıza ve talep modülü açıkken eskisi gibi İş panosudur.
+- **Envanter'i görmeyecek kullanıcı:** Ayarlar › Kullanıcılar ve yetki'de kişi için Harita, Envanter ve Hat Kesiti sayfaları “Yok” yapılırsa Envanter menüden kalkar. Önceden kapalı modül yüzünden kişi yine haritaya düşebiliyordu (ya da boş sayfa açılıyordu): artık açık olan ilk sayfaya (İş panosu/Özet/Ayarlar) açılır. Not: bu bir ekran gizlemesidir; arıza kartlarında tesis adı görünsün diye tesis verisi yüklenmeye devam eder.

@@ -10751,7 +10751,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.10-193';
+const SURUM = '2026.10.12-194';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -17311,6 +17311,7 @@ class Component extends DCLogic {
     // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
     if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';
     if (sekmeYetki(tabId) === 'yok') tabId = SAYFALAR.map(x => x[0]).find(id => yetki(id) !== 'yok') || 'harita';
+    if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';   // yetki kaydında kalan eski sayfa kimliği
     // Aktif sayfanın yetkisi süzgeç haritasından okunur; haritada karşılığı
     // olmayan sayfa (yerleşim, kuyruk) eski yola düşer.
     const aktif = SUZGEC_ESKI[tabId];
@@ -17320,8 +17321,8 @@ class Component extends DCLogic {
     const canClose = can('close');   // son onay ve kapatma (Müdür); açan/atayan operatör kendi işini onaylayamaz
     const canOnOnay = can('onOnay'); // ön onay (Operatör): sahadan gelen işi müdür onayına gönderir ya da sahaya iade eder
     const canCreateFault = canWrite && arizaOn;
-    // Tesis ekleme/silme önerileri İş panosunda durur: arıza ve talep modülü kapalı olsa da önerisi/onayı olan kullanıcıya pano açık kalır
-    const oneriOn = (s.tesisOneriler || []).length > 0 || can('tesisOner');
+    // Arıza ve talep modülü kapalıyken sayfa yalnız “Onaylar” olarak durur: öneri verebilen ya da sırası kendinde/bekleyen önerisi olan görür
+    const oneriOn = can('tesisOner') || (s.tesisOneriler || []).some(o => o.benim_sira || o.durum === 'muhendis' || o.durum === 'mudur');
     if (tabId === 'isPano' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
@@ -17334,6 +17335,12 @@ class Component extends DCLogic {
     if (tabId === 'telemetri' && !telemetriOn) tabId = 'ekipPano';
     // aktarım ekranı yalnızca bilgisayarda çizilir; telefonda boş gri sayfa çıkıyordu
     if (tabId === 'aktarim' && s.device === 'phone') tabId = 'ayarlar';
+    // Kapalı modül yüzünden haritaya düşülmüş ama Harita/Envanter yetkisi olmayan kullanıcıya harita gösterilmez: açık olan ilk sayfaya gidilir
+    // (hiçbiri yoksa boş sayfa kalır). Envanter ekranları gizlenir; iş kartlarının tesis bilgisi için veri yüklenmeye devam eder.
+    if (sekmeYetki(tabId) === 'yok') {
+      const uygun = id => sekmeYetki(id) !== 'yok' && !(id === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) && !(id === 'ekipPano' && !(arizaOn || aracOn));
+      tabId = ['ozet', 'isPanosu', 'ekipPano', 'ayarlar'].find(uygun) || 'yetkisiz';
+    }
     const myFaults = me && me.role === 'personel' ? s.faults.filter(f => f.crew === me.crew) : s.faults;
     const vis = s.assets.filter(a => s.filter[a.type] && (s.filter.pasif !== false || aktifMi(a)));
     const sel = s.assets.find(a => a.id === s.selected);
@@ -17728,6 +17735,8 @@ class Component extends DCLogic {
     for (const sayfa in SUZGEC_TANIM) {
       const sira = (RM.suz || {})[sayfa];
       let zs = suzgecler(sayfa).filter(z => modulKapi[z.hedef] !== false);
+      // iş ve talep modülü kapalıysa “İş panosu” yalnız onay kartlarını taşır: adı da “Onaylar” olur
+      if (!(arizaOn || talepOn)) zs = zs.map(z => z.hedef === 'isPanosu' || z.hedef === 'isPano' ? { ...z, ad: 'Onaylar' } : z);
       if (sira) zs = [...zs].sort((a, b) => { const i = sira.indexOf(a.id), j = sira.indexOf(b.id); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
       gruplar[sayfa] = {
         id: sayfa, ad: (RM.ad || {})[sayfa] || (zs.length === 1 ? zs[0].ad : (SUZGEC_SAYFA_AD[sayfa] || sayfa)), suz: zs,
@@ -23419,9 +23428,11 @@ class Component extends DCLogic {
         const onayYetkili = can('onOnay') || can('close') || can('stokSiparisOnay') || (!!me && me.role === 'muhendis');
         const KOLON = [
           ...(onayYetkili ? [['onay', 'Onayım bekliyor', '#d97706', 'Onay bekleyen yok']] : []),
-          ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
-          ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
-          ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok'],
+          ...((arizaOn || talepOn) ? [
+            ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
+            ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
+            ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok']
+          ] : [['atandi', 'Onayda bekleyen', '#0a84ff', 'Onayda bekleyen yok']]),
           ['bitti', 'Bitti', '#30d158', 'Son 7 günde kapanan yok']
         ];
         const KOLON_AD = Object.fromEntries(KOLON.map(k => [k[0], k[1]]));

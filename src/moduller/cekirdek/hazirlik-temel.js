@@ -65,6 +65,7 @@
     // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
     if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';
     if (sekmeYetki(tabId) === 'yok') tabId = SAYFALAR.map(x => x[0]).find(id => yetki(id) !== 'yok') || 'harita';
+    if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';   // yetki kaydında kalan eski sayfa kimliği
     // Aktif sayfanın yetkisi süzgeç haritasından okunur; haritada karşılığı
     // olmayan sayfa (yerleşim, kuyruk) eski yola düşer.
     const aktif = SUZGEC_ESKI[tabId];
@@ -74,8 +75,8 @@
     const canClose = can('close');   // son onay ve kapatma (Müdür); açan/atayan operatör kendi işini onaylayamaz
     const canOnOnay = can('onOnay'); // ön onay (Operatör): sahadan gelen işi müdür onayına gönderir ya da sahaya iade eder
     const canCreateFault = canWrite && arizaOn;
-    // Tesis ekleme/silme önerileri İş panosunda durur: arıza ve talep modülü kapalı olsa da önerisi/onayı olan kullanıcıya pano açık kalır
-    const oneriOn = (s.tesisOneriler || []).length > 0 || can('tesisOner');
+    // Arıza ve talep modülü kapalıyken sayfa yalnız “Onaylar” olarak durur: öneri verebilen ya da sırası kendinde/bekleyen önerisi olan görür
+    const oneriOn = can('tesisOner') || (s.tesisOneriler || []).some(o => o.benim_sira || o.durum === 'muhendis' || o.durum === 'mudur');
     if (tabId === 'isPano' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) tabId = 'harita';
     if (tabId === 'ariza' && !arizaOn) tabId = 'harita';
@@ -88,6 +89,12 @@
     if (tabId === 'telemetri' && !telemetriOn) tabId = 'ekipPano';
     // aktarım ekranı yalnızca bilgisayarda çizilir; telefonda boş gri sayfa çıkıyordu
     if (tabId === 'aktarim' && s.device === 'phone') tabId = 'ayarlar';
+    // Kapalı modül yüzünden haritaya düşülmüş ama Harita/Envanter yetkisi olmayan kullanıcıya harita gösterilmez: açık olan ilk sayfaya gidilir
+    // (hiçbiri yoksa boş sayfa kalır). Envanter ekranları gizlenir; iş kartlarının tesis bilgisi için veri yüklenmeye devam eder.
+    if (sekmeYetki(tabId) === 'yok') {
+      const uygun = id => sekmeYetki(id) !== 'yok' && !(id === 'isPanosu' && !(arizaOn || talepOn || oneriOn)) && !(id === 'ekipPano' && !(arizaOn || aracOn));
+      tabId = ['ozet', 'isPanosu', 'ekipPano', 'ayarlar'].find(uygun) || 'yetkisiz';
+    }
     const myFaults = me && me.role === 'personel' ? s.faults.filter(f => f.crew === me.crew) : s.faults;
     const vis = s.assets.filter(a => s.filter[a.type] && (s.filter.pasif !== false || aktifMi(a)));
     const sel = s.assets.find(a => a.id === s.selected);

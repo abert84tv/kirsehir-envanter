@@ -14,9 +14,11 @@
         const onayYetkili = can('onOnay') || can('close') || can('stokSiparisOnay') || (!!me && me.role === 'muhendis');
         const KOLON = [
           ...(onayYetkili ? [['onay', 'Onayım bekliyor', '#d97706', 'Onay bekleyen yok']] : []),
-          ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
-          ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
-          ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok'],
+          ...((arizaOn || talepOn) ? [
+            ['yeni', 'Yeni', '#5e5ce6', 'Yeni iş yok'],
+            ['atandi', 'Atandı', '#0a84ff', 'Atanmış iş yok'],
+            ['sahada', 'Sahada', '#ff9f0a', 'Sahada iş yok']
+          ] : [['atandi', 'Onayda bekleyen', '#0a84ff', 'Onayda bekleyen yok']]),
           ['bitti', 'Bitti', '#30d158', 'Son 7 günde kapanan yok']
         ];
         const KOLON_AD = Object.fromEntries(KOLON.map(k => [k[0], k[1]]));

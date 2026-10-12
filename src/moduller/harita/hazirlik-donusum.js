@@ -1,5 +1,9 @@
     // converter
-    const ce = parseFloat(String(s.conv.e).replace(',', '.')), cn = parseFloat(String(s.conv.n).replace(',', '.')), cmv = this.cm(s.conv.zone);
+    let ce = parseFloat(String(s.conv.e).replace(',', '.')), cn = parseFloat(String(s.conv.n).replace(',', '.'));
+    const cmv = this.cm(s.conv.zone);
+    // Sağa (yüzbinler) ve yukarı (milyonlar) yer değiştirmişse düzeltilir: sağa 1 milyonu geçemez, yukarı Türkiye'de 3,9–4,6 milyondur
+    const yerDegisti = s.conv.sys !== 'DMS' && isFinite(ce) && isFinite(cn) && ce > 1e6 && cn < 1e6;
+    if (yerDegisti) [ce, cn] = [cn, ce];
     // derece-dakika-saniye (Google’ın gösterdiği biçim) → ondalık derece
     const dms = t => {
       const m = String(t || '').match(/(-?\d+(?:[.,]\d+)?)[°\s]+(\d+(?:[.,]\d+)?)['′\s]+(\d+(?:[.,]\d+)?)["″\s]*([NSEWnsew])?/);
@@ -17,7 +21,14 @@
     if (s.conv.sys === 'DMS') {
       const lat = dms(s.conv.e) || parseFloat(String(s.conv.e).replace(',', '.'));
       const lon = dms(s.conv.n) || parseFloat(String(s.conv.n).replace(',', '.'));
-      if (isFinite(lat) && isFinite(lon)) {
+      // Enlem ±90, boylam ±180 dışındaki değer derece olamaz: büyük sayılar çoğunlukla ITRF96/ED50 “sağa / yukarı” (metre) değeridir
+      const dereceDisi = isFinite(lat) && isFinite(lon) && (Math.abs(lat) > 90 || Math.abs(lon) > 180);
+      if (dereceDisi) {
+        out = [{ label: 'Sonuç', value: '—' }];
+        note = Math.abs(lat) > 1000 || Math.abs(lon) > 1000
+          ? 'Girdiğiniz değerler derece değil, metre (sağa / yukarı) gibi görünüyor. ITRF96-3° ya da ED50 3° sekmesini seçin; bu sekme yalnız enlem ve boylam alır (örnek: 39.1462 ve 34.1583).'
+          : 'Enlem −90…90, boylam −180…180 arasında olmalı.';
+      } else if (isFinite(lat) && isFinite(lon)) {
         const [ei, ni] = tmForward(lat, lon, cmv, ELL.grs80);
         const [e50, n50] = wgsToEd50Grid(lat, lon, cmv);
         convLL = [lat, lon];
@@ -49,6 +60,7 @@
           { label: 'Kayma', value: `ΔX ${SHIFT[0]} · ΔY ${SHIFT[1]} · ΔZ ${SHIFT[2]} m` }];
         note = 'ED50 → ITRF96 gerçek datum dönüşümü: Hayford 1924 elipsoidinden GRS80’e Helmert kayması.';
       }
+      if (yerDegisti) note = 'Sağa ve yukarı değerleri yer değiştirmiş görünüyordu — sağa (Y) küçük, yukarı (X) büyük sayıdır; düzeltilerek hesaplandı. ' + note;
       if (!(convLL[0] > BBOX.s && convLL[0] < BBOX.n && convLL[1] > BBOX.w && convLL[1] < BBOX.e))
         note = 'Bu koordinat il sınırının dışına düşüyor — dilim 11 mi 12 mi? ' + note;
     } else { out = [{ label: 'Sonuç', value: '—' }]; note = 'Sağa ve yukarı değerlerini girin.'; }

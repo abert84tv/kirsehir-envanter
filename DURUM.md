@@ -2283,3 +2283,8 @@ Sürüm 2026.10.05-114.
 ## 2026.10.12-194 — Modüller kapalıyken İş panosu, Envanter yetkisi olmayan kullanıcı
 - **Modüller kapalıyken “İş panosu” görünmesi:** pano tesis ekleme/silme önerilerinin onay kartlarını taşıdığı için açık kalıyordu. Artık yalnız öneri verebilen ya da sırası kendinde/bekleyen önerisi olan kullanıcıya görünür ve adı **“Onaylar”** olur; boş Yeni/Atandı/Sahada sütunları çıkmaz. Arıza ve talep modülü açıkken eskisi gibi İş panosudur.
 - **Envanter'i görmeyecek kullanıcı:** Ayarlar › Kullanıcılar ve yetki'de kişi için Harita, Envanter ve Hat Kesiti sayfaları “Yok” yapılırsa Envanter menüden kalkar. Önceden kapalı modül yüzünden kişi yine haritaya düşebiliyordu (ya da boş sayfa açılıyordu): artık açık olan ilk sayfaya (İş panosu/Özet/Ayarlar) açılır. Not: bu bir ekran gizlemesidir; arıza kartlarında tesis adı görünsün diye tesis verisi yüklenmeye devam eder.
+
+## 2026.10.12-195 — Koordinat dönüşümü: yanlış sekme ve yer değiştirmiş değerler
+- Google/WGS84 sekmesine metre cinsinden (sağa/yukarı) değer girilince anlamsız sonuç (örn. −6,9e29) veriyordu. Artık enlem ±90, boylam ±180 dışı girişte sonuç yerine açıklama çıkar ve doğru sekme önerilir.
+- ITRF96/ED50 sekmelerinde sağa (Y) ile yukarı (X) yer değiştirmişse (sağa > 1.000.000, yukarı < 1.000.000) kendiliğinden düzeltilir ve notta belirtilir.
+- Netcad karşılaştırması bekliyor: kullanılan yöntem — ITRF96=WGS84 (GRS80), 3° dilim k₀=1; ED50 için tüm ülke 3 parametreli Helmert (ΔX −84,1 · ΔY −101,5 · ΔZ −127,1 m, Uluslararası 1924 → GRS80), kaynak: src/sabitler/01-koordinat.js.

@@ -64,22 +64,22 @@
     if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('Onaylı isteği yalnızca onay yetkilisi (müdür) geri gönderir.', 5000, 'kotu');
     const x = (this.state.siparis || []).find(y => y.id === id);
     if (!x) return;
-    const neden = (window.prompt('Geri gönderme nedeni — operatör neyi düzeltmeli?') || '').trim();
-    if (!neden) return;
-    const ben = (this.state.session && this.state.session.name) || '';
-    this.denetimYaz('ambar', 'Malzeme isteği geri gönderildi', x.malzeme + ' × ' + x.adet + ' · ' + neden, ben);
-    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'istek', onaylayan: '', onayDamga: '', geriNot: neden + ' · ' + ben + ' · ' + this.damga() } : y), x.malzeme + ' isteği operatöre geri gönderildi.');
+    this.nedenSor('İsteği geri gönder', 'Operatör neyi düzeltmeli?', true, neden => {
+      const ben = (this.state.session && this.state.session.name) || '';
+      this.denetimYaz('ambar', 'Malzeme isteği geri gönderildi', x.malzeme + ' × ' + x.adet + ' · ' + neden, ben);
+      this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'istek', onaylayan: '', onayDamga: '', geriNot: neden + ' · ' + ben + ' · ' + this.damga() } : y), x.malzeme + ' isteği operatöre geri gönderildi.');
+    });
   }
   // Onayla ya da reddet: isteği iptal eder (neden denetim izine yazılır)
   siparisIptal(id) {
     if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('İsteği yalnızca onay yetkilisi (müdür) iptal eder.', 5000, 'kotu');
     const x = (this.state.siparis || []).find(y => y.id === id);
     if (!x) return;
-    const neden = (window.prompt('İptal / ret nedeni') || '').trim();
-    if (!neden) return;
-    const ben = (this.state.session && this.state.session.name) || '';
-    this.denetimYaz('ambar', x.durum === 'onayli' ? 'Onaylı malzeme isteği iptal edildi' : 'Malzeme isteği reddedildi', x.malzeme + ' × ' + x.adet + (x.ekip ? ' → ' + x.ekip : '') + ' · ' + neden, ben);
-    this.siparisYaz((this.state.siparis || []).filter(y => y.id !== id), x.malzeme + (x.durum === 'onayli' ? ' isteği iptal edildi.' : ' isteği reddedildi.'));
+    this.nedenSor('İsteği reddet / iptal et', 'İptal ya da ret nedeni', true, neden => {
+      const ben = (this.state.session && this.state.session.name) || '';
+      this.denetimYaz('ambar', x.durum === 'onayli' ? 'Onaylı malzeme isteği iptal edildi' : 'Malzeme isteği reddedildi', x.malzeme + ' × ' + x.adet + (x.ekip ? ' → ' + x.ekip : '') + ' · ' + neden, ben);
+      this.siparisYaz((this.state.siparis || []).filter(y => y.id !== id), x.malzeme + (x.durum === 'onayli' ? ' isteği iptal edildi.' : ' isteği reddedildi.'));
+    });
   }
   // Müdür (ya da onay yetkisi olan) alım isteğini onaylar
   siparisOnayla(id) {

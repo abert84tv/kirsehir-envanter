@@ -60,7 +60,7 @@
               ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
               : this.setState({ tab: 'aktarim', imp: null })))
       : AYAR_TAB[id] ? () => this.setState({ tab: AYAR_TAB[id] })
-      : () => this.setState({ ayarBolum: id });
+      : () => this.setState({ tab: 'ayarlar', ayarBolum: id });
     let tabId = s.tab;
     // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
     if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';

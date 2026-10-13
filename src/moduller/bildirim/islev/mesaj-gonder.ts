@@ -141,6 +141,10 @@ Deno.serve(async (istek) => {
     return yanit({ ok: false, hata: 'Oturum geçersiz ya da süresi dolmuş — çıkıp yeniden girin.' }, 401);
   }
   const kimAd = kullanici.ad || kullanici.kullanici_ad || 'bilinmiyor';
+  // Yalnız mesaj gönderme işiyle ilgili roller (Operatör ekibe, Müdür/Yönetici duyuru için); izleyici, saha şefi ve mühendis gönderemez
+  if (!['operator', 'mudur', 'yonetici'].includes(String(kullanici.rol || ''))) {
+    return yanit({ ok: false, hata: 'Mesaj gönderme yetkiniz yok (Operatör, Müdür ya da Yönetici gönderir).' }, 403);
+  }
 
   const kanal = (g.kanal || 'SMS');
   const metin = String(g.metin || '').trim();
@@ -148,6 +152,8 @@ Deno.serve(async (istek) => {
   const hamNumaralar: string[] = Array.isArray(g.numaralar) ? g.numaralar : [];
 
   if (!metin) return yanit({ ok: false, hata: 'Mesaj metni boş.' }, 400);
+  if (metin.length > 640) return yanit({ ok: false, hata: 'Mesaj metni çok uzun (en çok 640 karakter).' }, 400);
+  if (hamNumaralar.length > 100) return yanit({ ok: false, hata: 'Tek seferde en çok 100 numara.' }, 400);
 
   const numaralar = hamNumaralar.map(numaraDuzelt).filter(Boolean) as string[];
   const bozuk = hamNumaralar.length - numaralar.length;

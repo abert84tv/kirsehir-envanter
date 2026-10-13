@@ -346,8 +346,26 @@ export async function fotoYukle(file, tesisDbId, kod, aciklama, arizaDbId) {
     p_token: tokenOku(), p_tesis_id: tesisDbId, p_adres: anahtar,
     p_boyut: k.boyut, p_aciklama: aciklama || null, p_ariza_id: arizaDbId || null
   });
-  if (!r.ok) { try { await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
+  // Kayıt başarısız: yüklenen dosya silinmek üzere sunucuda işaretlenir (Storage yalnız işaretli dosyanın silinmesine izin verir), sonra kaldırılır
+  if (!r.ok) { try { await cagir('foto_yukleme_iptal', { p_token: tokenOku(), p_adres: anahtar }); await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
   return { ok: true, data: { id: r.data, anahtar, url: fotoAdres(anahtar), boyut: k.boyut, w: k.w, h: k.h } };
+}
+
+// Tesis önerisine fotoğraf: kayıt henüz yok, dosya Storage'a yüklenir ve önerinin içine yazılır; müdür onaylayınca tesisin fotoğrafı olur
+export async function oneriFotoYukle(file, oneriId) {
+  const c = await istemci();
+  if (!c) return { ok: false, cevrimdisi: true, err: 'Bağlantı kurulamadı.' };
+  let k;
+  try { k = await kucult(file); } catch (e) { return { ok: false, err: 'Fotoğraf okunamadı.' }; }
+  if (!k.blob) return { ok: false, err: 'Fotoğraf dönüştürülemedi.' };
+  const anahtar = `oneri-${oneriId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+  try {
+    const { error } = await c.storage.from(BUCKET).upload(anahtar, k.blob, { contentType: 'image/jpeg', cacheControl: '31536000', upsert: false });
+    if (error) return { ok: false, err: temizle(error.message) };
+  } catch (e) { return { ok: false, cevrimdisi: true, err: 'Yükleme kesildi.' }; }
+  const r = await cagir('tesis_degisiklik_foto_ekle', { p_token: tokenOku(), p_oneri_id: oneriId, p_adres: anahtar, p_boyut: k.boyut });
+  if (!r.ok) { try { await cagir('foto_yukleme_iptal', { p_token: tokenOku(), p_adres: anahtar }); await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
+  return { ok: true };
 }
 
 // Sesli notlar fotoğraflarla aynı depoda; ayıran tek şey tur sütunu
@@ -370,7 +388,8 @@ export async function sesYukle(blob, tesisDbId, kod, saniye, aciklama, arizaDbId
     p_boyut: blob.size, p_sure: saniye || null, p_aciklama: aciklama || null,
     p_ariza_id: arizaDbId || null
   });
-  if (!r.ok) { try { await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
+  // Kayıt başarısız: yüklenen dosya silinmek üzere sunucuda işaretlenir (Storage yalnız işaretli dosyanın silinmesine izin verir), sonra kaldırılır
+  if (!r.ok) { try { await cagir('foto_yukleme_iptal', { p_token: tokenOku(), p_adres: anahtar }); await c.storage.from(BUCKET).remove([anahtar]); } catch (e) {} return r; }
   return { ok: true, data: { id: r.data, anahtar, url: fotoAdres(anahtar) } };
 }
 

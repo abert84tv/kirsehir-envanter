@@ -59,5 +59,7 @@
     this._veriSaat = setInterval(() => {
       if (this.state.session && !this.state.scenario) this.veriYenile(true);
       if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
+      this.onayBildir();
     }, 30000);
+    setTimeout(() => this.onayBildir(), 9000);
   }

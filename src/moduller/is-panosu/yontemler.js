@@ -28,6 +28,15 @@
     if (can('close') && s.modul.talep !== false) n += (s.talepler || []).filter(x => x.durum === 'red').length;
     return n;
   }
+  // Onay bekleyen iş sayısı artınca (ya da girişte) bir kez bildirir; sekme başlığına da sayı yazar. Dokununca İş panosu açılır.
+  onayBildir() {
+    const me = this.state.session;
+    if (!me) { this._onayBildirilen = null; return; }
+    const n = this.onayBekleyenSay(), onc = this._onayBildirilen && this._onayBildirilen.k === me.name ? this._onayBildirilen.n : 0;
+    this._onayBildirilen = { k: me.name, n };
+    try { if (!this.state.basvuruUyari) document.title = (n ? '(' + n + ') ' : '') + 'Kırşehir Envanter'; } catch (e) { /* başlık yazılamadı */ }
+    if (n > onc) this.duyur(n + ' işlem onayınızı bekliyor — dokunun, İş panosu açılsın.', 9000, 'kotu', () => this.setState({ tab: 'isPanosu', panoGorunum: 'pano', isKarti: null, faultForm: null, panel: 'yok' }));
+  }
   panoYeniSayi() {
     const s = this.state;
     let n = 0;

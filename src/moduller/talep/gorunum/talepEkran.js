@@ -132,14 +132,10 @@
               arizaya: () => this.talepArizaya(t.id),
               incele: () => this.talepDurum(t.id, 'incelemede'),
               coz: () => {
-                const c = (window.prompt('Sonuç — ne yapıldı?', t.sonuc || '') || '').trim();
-                if (!c) return;
-                this.talepDurum(t.id, 'cozuldu', c);
+                this.nedenSor('Talebi çözüldü say', 'Sonuç — ne yapıldı?', true, c => this.talepDurum(t.id, 'cozuldu', c));
               },
               red: () => {
-                const c = (window.prompt('Karşılanamama nedeni?', t.sonuc || '') || '').trim();
-                if (!c) return;
-                this.talepDurum(t.id, 'red', c);
+                this.nedenSor('Talep karşılanamadı', 'Karşılanamama nedeni?', true, c => this.talepDurum(t.id, 'red', c));
               }
             };
           }),

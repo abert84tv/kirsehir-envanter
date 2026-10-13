@@ -127,6 +127,12 @@
     };
   }
 
+  // Kısa metin sorar (ret/iade/silme nedeni gibi) — tarayıcının window.prompt penceresi yerine sayfa içi kutu (telefonda da düzgün çalışır).
+  // devam(metin) yalnız “Tamam”a basılınca ve (zorunluysa) metin boş değilse çağrılır.
+  nedenSor(baslik, ipucu, zorunlu, devam) {
+    this._nedenDevam = devam;
+    this.setState({ nedenKutu: { baslik, ipucu: ipucu || '', zorunlu: zorunlu !== false, deger: '', hata: '' } });
+  }
   proj(lat, lon) {
     const z = this.state.zoom, c = this.state.center || { lat: 39.16, lon: 34.12 };
     const k = Math.pow(1.7, z - 11);

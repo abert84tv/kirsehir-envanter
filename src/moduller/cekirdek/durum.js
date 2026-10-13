@@ -259,7 +259,7 @@
       } catch (e) { /* depolama kapalı */ }
       return {};
     })(),
-    ayarBolum: null, alanForm: null,
+    ayarBolum: null, alanForm: null, nedenKutu: null,
     users: [], userForm: null, pwForm: null,
     fotolar: {}, fotoYuk: null, kayitliSesler: {},
     coordMode: false, picked: null, naSz: null, duyuru: null, koyForm: null, buyut: null,

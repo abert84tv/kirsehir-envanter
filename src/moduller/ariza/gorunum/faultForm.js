@@ -360,11 +360,11 @@
           // son onay yetkilisi (müdür) kontrol aşamasındaki işi de ön onay beklemeden onaylayıp kapatabilir; aynı kişi iki kez onaylamaz
           const muduronay = mudurOnayinda || (kontrol && canClose);
           const iadeEt = (hedefDurum, etiket, soru) => () => {
-            const neden = (window.prompt(soru) || '').trim();
-            if (!neden) return;
-            const f = this.state.faultForm;
-            this.setState({ faultForm: { ...f, status: hedefDurum, note: ((f.note || '') + (f.note ? '\n' : '') + etiket + ' · ' + this.damga() + ' · ' + (s.session ? s.session.name + ' · ' : '') + neden) } });
-            this.say((hedefDurum === 'sahada' ? 'Sahaya' : 'Operatöre') + ' iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
+            this.nedenSor('İade et', soru, true, neden => {
+              const f = this.state.faultForm;
+              this.setState({ faultForm: { ...f, status: hedefDurum, note: ((f.note || '') + (f.note ? '\n' : '') + etiket + ' · ' + this.damga() + ' · ' + (s.session ? s.session.name + ' · ' : '') + neden) } });
+              this.say((hedefDurum === 'sahada' ? 'Sahaya' : 'Operatöre') + ' iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
+            });
           };
           return {
             on: !!(ff && ff.id && ((kontrol && (canOnOnay || canClose)) || (mudurOnayinda && canClose))),
@@ -475,16 +475,16 @@
           on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canClose),   // onaylanmış işi yalnız onaylayan (müdür) yeniden açar; operatör bozamaz
           not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
           go: () => {
-            const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();
-            if (!neden) return;
-            const g = this.state.faultForm;
-            this.setState({
-              faultForm: {
-                ...g, status: 'yeniden', tekrar: (g.tekrar || 0) + 1,
-                note: ((g.note || '') + (g.note ? '\n' : '') + 'YENİDEN AÇILDI · ' + this.damga() + ' · ' + neden)
-              }
+            this.nedenSor('Kaydı yeniden aç', 'Yeniden açma nedeni — arıza tekrar mı etti?', true, neden => {
+              const g = this.state.faultForm;
+              this.setState({
+                faultForm: {
+                  ...g, status: 'yeniden', tekrar: (g.tekrar || 0) + 1,
+                  note: ((g.note || '') + (g.note ? '\n' : '') + 'YENİDEN AÇILDI · ' + this.damga() + ' · ' + neden)
+                }
+              });
+              this.say('Kayıt yeniden açıldı — kaydetmeyi tamamlayın.');
             });
-            this.say('Kayıt yeniden açıldı — kaydetmeyi tamamlayın.');
           }
         },
         kanitVar: kanitOn,

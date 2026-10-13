@@ -4503,6 +4503,20 @@ Malzeme istekleri
 </div>
 </div>
 </sc-if>
+<sc-if value="{{ nedenKutu.var }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:95;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box">
+<div style="width:100%;max-width:420px;background:{{ ui.surf }};color:{{ ui.fg }};border-radius:16px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:12px;box-sizing:border-box">
+<span style="font:700 16px/1.3 var(--font-heading)">{{ nedenKutu.baslik }}</span>
+<textarea value="{{ nedenKutu.deger }}" onInput="{{ nedenKutu.onDeger }}" onChange="{{ nedenKutu.onDeger }}" rows="3" placeholder="{{ nedenKutu.ipucu }}" style="all:unset;box-sizing:border-box;width:100%;min-height:84px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};padding:12px;font:500 15px/1.4 var(--font-body);white-space:pre-wrap"></textarea>
+<sc-if value="{{ nedenKutu.hataVar }}" hint-placeholder-val="{{ false }}"><span style="font:600 13px/1.3 var(--font-body);color:var(--color-uyari)">{{ nedenKutu.hata }}</span></sc-if>
+<div style="display:flex;gap:10px">
+<button onClick="{{ nedenKutu.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:48px;line-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 15px/48px var(--font-body)">Vazgeç</button>
+<button onClick="{{ nedenKutu.tamam }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:48px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 15px/48px var(--font-body)">Tamam</button>
+</div>
+</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ barkod.acik }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px">
 <div style="width:min(560px,100%);display:flex;flex-direction:column;gap:12px">
@@ -9733,6 +9747,20 @@ Malzeme istekleri
 </div>
 </div>
 </sc-if>
+<sc-if value="{{ nedenKutu.var }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:95;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box">
+<div style="width:100%;max-width:420px;background:{{ ui.surf }};color:{{ ui.fg }};border-radius:16px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:12px;box-sizing:border-box">
+<span style="font:700 16px/1.3 var(--font-heading)">{{ nedenKutu.baslik }}</span>
+<textarea value="{{ nedenKutu.deger }}" onInput="{{ nedenKutu.onDeger }}" onChange="{{ nedenKutu.onDeger }}" rows="3" placeholder="{{ nedenKutu.ipucu }}" style="all:unset;box-sizing:border-box;width:100%;min-height:84px;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};padding:12px;font:500 15px/1.4 var(--font-body);white-space:pre-wrap"></textarea>
+<sc-if value="{{ nedenKutu.hataVar }}" hint-placeholder-val="{{ false }}"><span style="font:600 13px/1.3 var(--font-body);color:var(--color-uyari)">{{ nedenKutu.hata }}</span></sc-if>
+<div style="display:flex;gap:10px">
+<button onClick="{{ nedenKutu.iptal }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:48px;line-height:48px;border-radius:12px;border:1px solid {{ ui.rule }};font:600 15px/48px var(--font-body)">Vazgeç</button>
+<button onClick="{{ nedenKutu.tamam }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;min-height:48px;border-radius:12px;background:var(--color-accent);color:#fff;font:700 15px/48px var(--font-body)">Tamam</button>
+</div>
+</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ barkod.acik }}" hint-placeholder-val="{{ false }}">
 <div style="position:fixed;inset:0;z-index:2500;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px">
 <div style="width:min(560px,100%);display:flex;flex-direction:column;gap:12px">
@@ -10772,7 +10800,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.13-199';
+const SURUM = '2026.10.13-200';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11099,7 +11127,7 @@ class Component extends DCLogic {
       } catch (e) { /* depolama kapalı */ }
       return {};
     })(),
-    ayarBolum: null, alanForm: null,
+    ayarBolum: null, alanForm: null, nedenKutu: null,
     users: [], userForm: null, pwForm: null,
     fotolar: {}, fotoYuk: null, kayitliSesler: {},
     coordMode: false, picked: null, naSz: null, duyuru: null, koyForm: null, buyut: null,
@@ -11435,6 +11463,12 @@ class Component extends DCLogic {
     };
   }
 
+  // Kısa metin sorar (ret/iade/silme nedeni gibi) — tarayıcının window.prompt penceresi yerine sayfa içi kutu (telefonda da düzgün çalışır).
+  // devam(metin) yalnız “Tamam”a basılınca ve (zorunluysa) metin boş değilse çağrılır.
+  nedenSor(baslik, ipucu, zorunlu, devam) {
+    this._nedenDevam = devam;
+    this.setState({ nedenKutu: { baslik, ipucu: ipucu || '', zorunlu: zorunlu !== false, deger: '', hata: '' } });
+  }
   proj(lat, lon) {
     const z = this.state.zoom, c = this.state.center || { lat: 39.16, lon: 34.12 };
     const k = Math.pow(1.7, z - 11);
@@ -11996,22 +12030,22 @@ class Component extends DCLogic {
     if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('Onaylı isteği yalnızca onay yetkilisi (müdür) geri gönderir.', 5000, 'kotu');
     const x = (this.state.siparis || []).find(y => y.id === id);
     if (!x) return;
-    const neden = (window.prompt('Geri gönderme nedeni — operatör neyi düzeltmeli?') || '').trim();
-    if (!neden) return;
-    const ben = (this.state.session && this.state.session.name) || '';
-    this.denetimYaz('ambar', 'Malzeme isteği geri gönderildi', x.malzeme + ' × ' + x.adet + ' · ' + neden, ben);
-    this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'istek', onaylayan: '', onayDamga: '', geriNot: neden + ' · ' + ben + ' · ' + this.damga() } : y), x.malzeme + ' isteği operatöre geri gönderildi.');
+    this.nedenSor('İsteği geri gönder', 'Operatör neyi düzeltmeli?', true, neden => {
+      const ben = (this.state.session && this.state.session.name) || '';
+      this.denetimYaz('ambar', 'Malzeme isteği geri gönderildi', x.malzeme + ' × ' + x.adet + ' · ' + neden, ben);
+      this.siparisYaz((this.state.siparis || []).map(y => y.id === id ? { ...y, durum: 'istek', onaylayan: '', onayDamga: '', geriNot: neden + ' · ' + ben + ' · ' + this.damga() } : y), x.malzeme + ' isteği operatöre geri gönderildi.');
+    });
   }
   // Onayla ya da reddet: isteği iptal eder (neden denetim izine yazılır)
   siparisIptal(id) {
     if (!this.yetkiVar(this.state.session, 'stokSiparisOnay')) return this.duyur('İsteği yalnızca onay yetkilisi (müdür) iptal eder.', 5000, 'kotu');
     const x = (this.state.siparis || []).find(y => y.id === id);
     if (!x) return;
-    const neden = (window.prompt('İptal / ret nedeni') || '').trim();
-    if (!neden) return;
-    const ben = (this.state.session && this.state.session.name) || '';
-    this.denetimYaz('ambar', x.durum === 'onayli' ? 'Onaylı malzeme isteği iptal edildi' : 'Malzeme isteği reddedildi', x.malzeme + ' × ' + x.adet + (x.ekip ? ' → ' + x.ekip : '') + ' · ' + neden, ben);
-    this.siparisYaz((this.state.siparis || []).filter(y => y.id !== id), x.malzeme + (x.durum === 'onayli' ? ' isteği iptal edildi.' : ' isteği reddedildi.'));
+    this.nedenSor('İsteği reddet / iptal et', 'İptal ya da ret nedeni', true, neden => {
+      const ben = (this.state.session && this.state.session.name) || '';
+      this.denetimYaz('ambar', x.durum === 'onayli' ? 'Onaylı malzeme isteği iptal edildi' : 'Malzeme isteği reddedildi', x.malzeme + ' × ' + x.adet + (x.ekip ? ' → ' + x.ekip : '') + ' · ' + neden, ben);
+      this.siparisYaz((this.state.siparis || []).filter(y => y.id !== id), x.malzeme + (x.durum === 'onayli' ? ' isteği iptal edildi.' : ' isteği reddedildi.'));
+    });
   }
   // Müdür (ya da onay yetkisi olan) alım isteğini onaylar
   siparisOnayla(id) {
@@ -14235,42 +14269,44 @@ class Component extends DCLogic {
     const M = this._sb;
     if (!M || !M.tokenOku() || this.state.offline) return this.say('Öneri göndermek için bağlantı gerekir — çevrimiçi olunca yeniden deneyin.', true);
     const eskiForm = { newAsset: n, naSz: this.state.naSz, scenario: this.state.scenario, tab: this.state.tab };
-    const dosya = (this._naFiles || []).length;
+    const dosyalar = this._naFiles || [];
+    const dosya = dosyalar.length;
     const r = await M.tesisDegisiklikAc({
       tur: 'ekle', tesisTur: n.type, ilce: n.district, koy: n.village, lat: n.lat, lon: n.lon,
       yil: parseInt(n.year, 10) || null, veri: { d: {}, photos: 0 }, aciklama: (n.note || '').trim()
     });
     if (!r.ok) { this.say(r.err + ' Form açık kaldı.', true); return; }
+    // Seçilen fotoğraflar öneriye eklenir (en çok 6); müdür onaylayınca tesisin fotoğrafı olur
+    let yuklenen = 0;
+    for (const f of dosyalar.slice(0, 6)) { const fr = await M.oneriFotoYukle(f, r.data); if (fr && fr.ok) yuklenen++; }
     this._naTemizle();
     this.setState({ scenario: null, newAsset: null, naSz: null, tab: 'harita' });
     this.denetimYaz('kayit', 'Yeni tesis önerildi', (TYPES[n.type] ? TYPES[n.type].kind : n.type) + ' · ' + n.village + ' · ' + n.district, '');
     this.tesisOneriYenile();
     this.say('Öneri gönderildi — ' + n.district + ' mühendisinin onayına gitti; sonra müdür onaylayınca kayıt açılır.'
-      + (dosya ? ' Fotoğraflar öneriye eklenmez; kayıt açılınca kartından yükleyin.' : ''), true);
+      + (dosya ? ' ' + yuklenen + ' / ' + dosya + ' fotoğraf öneriye eklendi.' + (yuklenen < dosya ? ' Eklenemeyenleri kayıt açılınca kartından yükleyin.' : '') : ''), true);
     setTimeout(() => this.setState({ toast: null }), 9000);
   }
   async tesisSilOner(a) {
     const M = this._sb;
     if (!M || !M.tokenOku() || !a.dbId || this.state.offline) return this.say('Silme önerisi için bağlantı gerekir.', true);
-    const neden = window.prompt(a.code + ' için silme önerisi — nedenini kısaca yazın:', '');
-    if (neden === null) return;
-    if (!neden.trim()) return this.say('Silme nedenini yazın — onaylayanlar görecek.', true);
-    const r = await M.tesisDegisiklikAc({ tur: 'sil', tesisId: a.dbId, aciklama: neden.trim() });
-    if (!r.ok) return this.say(r.err, true);
-    this.denetimYaz('kayit', 'Tesis silme önerildi', TYPES[a.type].kind + ' · ' + this.yer(a), a.code);
-    this.setState({ selected: null, panel: 'yok' });
-    this.tesisOneriYenile();
-    this.say(a.code + ' için silme önerisi mühendis onayına gönderildi. Onaylanmadan kayıt silinmez.', true);
-    setTimeout(() => this.setState({ toast: null }), 8000);
+    this.nedenSor(a.code + ' için silme önerisi', 'Neden silinmeli? (onaylayanlar görecek)', true, async neden => {
+      const r = await M.tesisDegisiklikAc({ tur: 'sil', tesisId: a.dbId, aciklama: neden });
+      if (!r.ok) return this.say(r.err, true);
+      this.denetimYaz('kayit', 'Tesis silme önerildi', TYPES[a.type].kind + ' · ' + this.yer(a), a.code);
+      this.setState({ selected: null, panel: 'yok' });
+      this.tesisOneriYenile();
+      this.say(a.code + ' için silme önerisi mühendis onayına gönderildi. Onaylanmadan kayıt silinmez.', true);
+      setTimeout(() => this.setState({ toast: null }), 8000);
+    });
   }
   async tesisOneriKarar(o, karar) {
     const M = this._sb;
     if (!M || !M.tokenOku()) return;
+    // Reddederken neden sayfa içi kutudan alınır (öneren görecek)
+    if (karar === 'red') return this.nedenSor('Öneri reddedilsin mi?', 'Reddetme nedeni (öneren görecek)', true, neden => this.tesisOneriKarar(o, 'redNeden:' + neden));
     let neden = '';
-    if (karar === 'red') {
-      neden = window.prompt('Reddetme nedeni (öneren görecek):', '');
-      if (neden === null) return;
-    }
+    if (String(karar).startsWith('redNeden:')) { neden = karar.slice(9); karar = 'red'; }
     const r = await M.tesisDegisiklikKarar(o.id, karar, neden);
     if (!r.ok) { this.say(r.err, true); return; }
     const ad = (o.tur === 'sil' ? 'Silme' : 'Ekleme') + ' önerisi';
@@ -14854,7 +14890,9 @@ class Component extends DCLogic {
     this._veriSaat = setInterval(() => {
       if (this.state.session && !this.state.scenario) this.veriYenile(true);
       if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
+      this.onayBildir();
     }, 30000);
+    setTimeout(() => this.onayBildir(), 9000);
   }
   mapWin() {
     const f = document.querySelector('iframe[title^="Kırşehir haritası"]');
@@ -16989,6 +17027,15 @@ class Component extends DCLogic {
     if (can('close') && s.modul.talep !== false) n += (s.talepler || []).filter(x => x.durum === 'red').length;
     return n;
   }
+  // Onay bekleyen iş sayısı artınca (ya da girişte) bir kez bildirir; sekme başlığına da sayı yazar. Dokununca İş panosu açılır.
+  onayBildir() {
+    const me = this.state.session;
+    if (!me) { this._onayBildirilen = null; return; }
+    const n = this.onayBekleyenSay(), onc = this._onayBildirilen && this._onayBildirilen.k === me.name ? this._onayBildirilen.n : 0;
+    this._onayBildirilen = { k: me.name, n };
+    try { if (!this.state.basvuruUyari) document.title = (n ? '(' + n + ') ' : '') + 'Kırşehir Envanter'; } catch (e) { /* başlık yazılamadı */ }
+    if (n > onc) this.duyur(n + ' işlem onayınızı bekliyor — dokunun, İş panosu açılsın.', 9000, 'kotu', () => this.setState({ tab: 'isPanosu', panoGorunum: 'pano', isKarti: null, faultForm: null, panel: 'yok' }));
+  }
   panoYeniSayi() {
     const s = this.state;
     let n = 0;
@@ -17175,10 +17222,10 @@ class Component extends DCLogic {
   // Arıza değil: talebi nedenle kapatır
   isKartiKapat(t) {
     if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talebi operatör değerlendirir; siz kartı görüntüleyebilirsiniz.', true);
-    const neden = (window.prompt('Neden arıza değil? (örn. bilgi verildi, başka kurumun görevi)') || '').trim();
-    if (!neden) return;
-    this.talepDurum(t.id, 'red', neden);
-    this.setState({ tab: 'isPanosu', isKarti: null });
+    this.nedenSor('Arıza değil — talebi kapat', 'Neden arıza değil? (örn. bilgi verildi, başka kurumun görevi)', true, neden => {
+      this.talepDurum(t.id, 'red', neden);
+      this.setState({ tab: 'isPanosu', isKarti: null });
+    });
   }
   // Kartlardaki yer haritası (ozet-harita.html#is): hedef nokta, aday/seçili tesis ve (varsa) ekiplerin son konumu
   isHaritaGonder() {
@@ -17327,7 +17374,7 @@ class Component extends DCLogic {
               ? this.duyur('Dış veri aktarımı bilgisayardan yapılır — dosya seçmek ve yüzlerce noktayı tek tek işaretlemek telefon ekranında güvenli değil. Aynı hesapla bilgisayardan girin.', 9000)
               : this.setState({ tab: 'aktarim', imp: null })))
       : AYAR_TAB[id] ? () => this.setState({ tab: AYAR_TAB[id] })
-      : () => this.setState({ ayarBolum: id });
+      : () => this.setState({ tab: 'ayarlar', ayarBolum: id });
     let tabId = s.tab;
     // kaldırılan sayfalar (Talep, Arıza listesi): eski bağlantı ve kayıtlı tercih iş panosuna düşer
     if (tabId === 'talep' || tabId === 'ariza') tabId = 'isPanosu';
@@ -17895,6 +17942,24 @@ class Component extends DCLogic {
           kapat: () => { clearTimeout(this._d); this.setState({ duyuru: null }); }
         };
       })(),
+      // Sayfa içi “neden” kutusu (nedenSor ile açılır)
+      nedenKutu: (() => {
+        const k = s.nedenKutu;
+        if (!k) return { var: false, baslik: '', ipucu: '', deger: '', hata: '', hataVar: false, onDeger: () => {}, tamam: () => {}, iptal: () => {} };
+        const kapat = () => { this._nedenDevam = null; this.setState({ nedenKutu: null }); };
+        return {
+          var: true, baslik: k.baslik, ipucu: k.ipucu, deger: k.deger, hata: k.hata, hataVar: !!k.hata,
+          onDeger: e => this.setState({ nedenKutu: { ...this.state.nedenKutu, deger: e.target.value, hata: '' } }),
+          tamam: () => {
+            const m = String((this.state.nedenKutu || {}).deger || '').trim();
+            if (k.zorunlu && !m) return this.setState({ nedenKutu: { ...this.state.nedenKutu, hata: 'Bir neden yazın.' } });
+            const fn = this._nedenDevam; this._nedenDevam = null;
+            this.setState({ nedenKutu: null }, () => { if (fn) fn(m); });
+          },
+          iptal: kapat
+        };
+      })(),
+
       setDevice: (() => {
         const mk = id => seg(s.deviceMode === id, () => {
           try { localStorage.setItem('ks-device-mode', id); } catch (e) { /* depolama kapalı */ }
@@ -19513,11 +19578,11 @@ class Component extends DCLogic {
           // son onay yetkilisi (müdür) kontrol aşamasındaki işi de ön onay beklemeden onaylayıp kapatabilir; aynı kişi iki kez onaylamaz
           const muduronay = mudurOnayinda || (kontrol && canClose);
           const iadeEt = (hedefDurum, etiket, soru) => () => {
-            const neden = (window.prompt(soru) || '').trim();
-            if (!neden) return;
-            const f = this.state.faultForm;
-            this.setState({ faultForm: { ...f, status: hedefDurum, note: ((f.note || '') + (f.note ? '\n' : '') + etiket + ' · ' + this.damga() + ' · ' + (s.session ? s.session.name + ' · ' : '') + neden) } });
-            this.say((hedefDurum === 'sahada' ? 'Sahaya' : 'Operatöre') + ' iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
+            this.nedenSor('İade et', soru, true, neden => {
+              const f = this.state.faultForm;
+              this.setState({ faultForm: { ...f, status: hedefDurum, note: ((f.note || '') + (f.note ? '\n' : '') + etiket + ' · ' + this.damga() + ' · ' + (s.session ? s.session.name + ' · ' : '') + neden) } });
+              this.say((hedefDurum === 'sahada' ? 'Sahaya' : 'Operatöre') + ' iade edildi, neden nota işlendi — kaydetmeyi tamamlayın.');
+            });
           };
           return {
             on: !!(ff && ff.id && ((kontrol && (canOnOnay || canClose)) || (mudurOnayinda && canClose))),
@@ -19628,16 +19693,16 @@ class Component extends DCLogic {
           on: !!(ff && ff.id && KAPALI_DURUM.includes(ff.status) && canClose),   // onaylanmış işi yalnız onaylayan (müdür) yeniden açar; operatör bozamaz
           not: 'Aynı arıza tekrar görüldüyse yeni kayıt açmak yerine bu kaydı yeniden açın — fotoğrafları, malzemesi ve maliyeti kayıtta kalır, tekrar sayacı artar.',
           go: () => {
-            const neden = (window.prompt('Yeniden açma nedeni — arıza tekrar mı etti?') || '').trim();
-            if (!neden) return;
-            const g = this.state.faultForm;
-            this.setState({
-              faultForm: {
-                ...g, status: 'yeniden', tekrar: (g.tekrar || 0) + 1,
-                note: ((g.note || '') + (g.note ? '\n' : '') + 'YENİDEN AÇILDI · ' + this.damga() + ' · ' + neden)
-              }
+            this.nedenSor('Kaydı yeniden aç', 'Yeniden açma nedeni — arıza tekrar mı etti?', true, neden => {
+              const g = this.state.faultForm;
+              this.setState({
+                faultForm: {
+                  ...g, status: 'yeniden', tekrar: (g.tekrar || 0) + 1,
+                  note: ((g.note || '') + (g.note ? '\n' : '') + 'YENİDEN AÇILDI · ' + this.damga() + ' · ' + neden)
+                }
+              });
+              this.say('Kayıt yeniden açıldı — kaydetmeyi tamamlayın.');
             });
-            this.say('Kayıt yeniden açıldı — kaydetmeyi tamamlayın.');
           }
         },
         kanitVar: kanitOn,
@@ -20112,8 +20177,9 @@ class Component extends DCLogic {
         };
       })(),
       ayar: (() => {
-        const a = tabId === 'ayarlar';
-        const sec = ayarAcik(s);
+        // Çöp kutusu ve Denetim izi ayrı sayfa kimliğiyle açılır ama Ayarlar çerçevesinde kalır (başlık + öteki bölümlere sekmeler)
+        const a = tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop';
+        const sec = tabId === 'denetim' || tabId === 'cop' ? tabId : ayarAcik(s);
         const v = id => a && sec === id;
         return {
           // Liste yalnız hiçbir bölüm seçili değilken görünür
@@ -20222,8 +20288,8 @@ class Component extends DCLogic {
           return {
             ad, alt,
             aktif,
-            zemin: aktif && tabId === 'ayarlar' ? ui.sel : 'transparent',
-            renk: aktif && tabId === 'ayarlar' ? ui.acc : ui.fg,
+            zemin: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.sel : 'transparent',
+            renk: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.acc : ui.fg,
             rozet: gorunen.includes('cop') && copSay ? String(copSay) : '',
             git: ayarGit(gorunen[0])
           };
@@ -23140,14 +23206,10 @@ class Component extends DCLogic {
               arizaya: () => this.talepArizaya(t.id),
               incele: () => this.talepDurum(t.id, 'incelemede'),
               coz: () => {
-                const c = (window.prompt('Sonuç — ne yapıldı?', t.sonuc || '') || '').trim();
-                if (!c) return;
-                this.talepDurum(t.id, 'cozuldu', c);
+                this.nedenSor('Talebi çözüldü say', 'Sonuç — ne yapıldı?', true, c => this.talepDurum(t.id, 'cozuldu', c));
               },
               red: () => {
-                const c = (window.prompt('Karşılanamama nedeni?', t.sonuc || '') || '').trim();
-                if (!c) return;
-                this.talepDurum(t.id, 'red', c);
+                this.nedenSor('Talep karşılanamadı', 'Karşılanamama nedeni?', true, c => this.talepDurum(t.id, 'red', c));
               }
             };
           }),

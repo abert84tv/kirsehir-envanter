@@ -34,9 +34,11 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 |---|---|---|
 | basvuru | `src/moduller/basvuru/islev/telegram.ts` | `telegram-basvuru` |
 | talep | `src/moduller/talep/islev/talep-siniflandir.ts` | `talep-siniflandir` |
-| bildirim | `src/moduller/bildirim/islev/mesaj-gonder.ts` | `mesaj-gonder` (varsa) |
+| bildirim | `src/moduller/bildirim/islev/mesaj-gonder.ts` | `mesaj-gonder` (2026-10-13'te yayınlandı; Netgsm secrets kullanıcı girer; yalnız operatör/müdür/yönetici gönderir) |
 
 | konum | `src/moduller/konum/sql/SQL-konum.sql` | ekip konumu: konum_cihaz/konum_son, konum_yaz (Arvento), konum_gonder (zimmetli cihaz) — ayrıntı KONUM-ALTYAPI.md |
+| cekirdek | `src/moduller/cekirdek/sql/SQL-guvenlik-sertlestirme-2026-10-13.sql` | güvenlik sertleştirmesi: doğrudan tablo erişimi kapatıldı, istemcinin çağırmadığı işlevler kapatıldı, oturum temizliği, FK indeksleri, Storage silme koruması, öneri fotoğrafı işlevleri (belge) |
+| oturum | `src/moduller/oturum/sql/SQL-yetki-testi.sql` | kalıcı yetki testi: geçici kullanıcılarla rol × yetki tablosu, yasak çağrılar, geçersiz jeton, doğrudan tablo erişimi; sonunda hep geri alır (beklenen: `YETKI-TESTI TAMAM`) |
 | oturum | `src/moduller/oturum/sql/SQL-yetki-tarama.sql` | yeni işlev eklenince çalıştırılan yetki taraması (oturum denetimi olmayan, anonimin çağırabildiği işlevleri listeler) |
 | ariza | `src/moduller/ariza/sql/SQL-ariza-kapanis-sunucuda.sql` | arıza son onayla kapanınca zimmet düşümü ve talep/başvuru kapanışı sunucuda (`ariza_kapanis_isle`, dışarıya kapalı) — uygulandı 2026-10-10 |
 | oturum | (migration kullanici_listesi_sef_ekip) | `kullanici_listesi`: saha şefi ve izleyici yalnız kendi satırını görür (diğer roller hepsini; telefon/son giriş yine yalnız yönetici ve müdürde) — uygulandı 2026-10-13 |

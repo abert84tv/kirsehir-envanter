@@ -102,10 +102,10 @@
   // Arıza değil: talebi nedenle kapatır
   isKartiKapat(t) {
     if (!this.yetkiVar(this.state.session, 'talepYonet')) return this.say('Talebi operatör değerlendirir; siz kartı görüntüleyebilirsiniz.', true);
-    const neden = (window.prompt('Neden arıza değil? (örn. bilgi verildi, başka kurumun görevi)') || '').trim();
-    if (!neden) return;
-    this.talepDurum(t.id, 'red', neden);
-    this.setState({ tab: 'isPanosu', isKarti: null });
+    this.nedenSor('Arıza değil — talebi kapat', 'Neden arıza değil? (örn. bilgi verildi, başka kurumun görevi)', true, neden => {
+      this.talepDurum(t.id, 'red', neden);
+      this.setState({ tab: 'isPanosu', isKarti: null });
+    });
   }
   // Kartlardaki yer haritası (ozet-harita.html#is): hedef nokta, aday/seçili tesis ve (varsa) ekiplerin son konumu
   isHaritaGonder() {

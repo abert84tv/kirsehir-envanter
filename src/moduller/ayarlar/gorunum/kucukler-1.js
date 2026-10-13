@@ -1,6 +1,7 @@
       ayar: (() => {
-        const a = tabId === 'ayarlar';
-        const sec = ayarAcik(s);
+        // Çöp kutusu ve Denetim izi ayrı sayfa kimliğiyle açılır ama Ayarlar çerçevesinde kalır (başlık + öteki bölümlere sekmeler)
+        const a = tabId === 'ayarlar' || tabId === 'denetim' || tabId === 'cop';
+        const sec = tabId === 'denetim' || tabId === 'cop' ? tabId : ayarAcik(s);
         const v = id => a && sec === id;
         return {
           // Liste yalnız hiçbir bölüm seçili değilken görünür

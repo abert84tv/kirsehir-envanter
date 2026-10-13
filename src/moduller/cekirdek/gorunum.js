@@ -1,5 +1,6 @@
 //@dahil moduller/cekirdek/gorunum/kucukler-1.js
 //@dahil moduller/cekirdek/gorunum/duyuru.js
+//@dahil moduller/cekirdek/gorunum/nedenKutu.js
 //@dahil moduller/cekirdek/gorunum/kucukler-2.js
 //@dahil moduller/cekirdek/gorunum/sayfaBar.js
 //@dahil moduller/cekirdek/gorunum/surumBilgi.js

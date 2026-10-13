@@ -8,5 +8,5 @@ select p.proname as islev, pg_get_function_identity_arguments(p.oid) as argumanl
   from pg_proc p
  where p.pronamespace = 'public'::regnamespace and p.prokind = 'f' and p.prosecdef
    and p.proacl::text like '%anon=X%'
-   and p.prosrc !~ 'oturum_sahibi|yazma_denetle|oturum_ac|giris|yetkim_var'
+   and p.prosrc !~ 'oturum_sahibi|yazma_denetle|oturum_ac|giris|yetkim_var|yonetici_mi|is_emri_yetkili|telemetri_yetki_denetle'
  order by 1;

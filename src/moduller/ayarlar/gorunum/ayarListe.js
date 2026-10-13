@@ -11,8 +11,8 @@
           return {
             ad, alt,
             aktif,
-            zemin: aktif && tabId === 'ayarlar' ? ui.sel : 'transparent',
-            renk: aktif && tabId === 'ayarlar' ? ui.acc : ui.fg,
+            zemin: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.sel : 'transparent',
+            renk: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.acc : ui.fg,
             rozet: gorunen.includes('cop') && copSay ? String(copSay) : '',
             git: ayarGit(gorunen[0])
           };

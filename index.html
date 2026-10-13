@@ -10162,11 +10162,10 @@ Malzeme istekleri
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:1160},&quot;arizaModulu&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;},&quot;yerlesimSekmesi&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;}}">
 const ELL = { grs80: { a: 6378137, f: 1 / 298.257222101 }, intl: { a: 6378388, f: 1 / 297 } };
-// ED50 → WGS84/ITRF96 (ECEF'te 7 parametreli küçük açı dönüşümü, 2026-10-13): Netcad 8.6 çıktısına (Kırşehir'in beş noktası: Merkez, Kaman,
-// Mucur, Çiçekdağı, Boztepe/Akpınar yöresi) en küçük karelerle uydurulmuştur. Netcad ED50_3 sonuçlarına artık ≤ 5 mm, bir noktayı dışarıda
-// bırakarak tahmin hatası ≤ 13 mm (tüm ülke 3 parametreli kayma 4–5 m sapıyordu). Parametreler bu bölge için geçerlidir (il sınırı dışında kullanmayın).
-// Sıra: dX dY dZ (m) · ölçek (boyutsuz) · rx ry rz (radyan); ED50 = WGS84 + fark(WGS84)
-const ED50_P = [158.944123992, 107.343658818, 41.3531430016, 0.00000619703127998, -0.00000635171526592, 0.0000151946326845, -0.00000394598193027];
+// ED50 → WGS84/ITRF96: Netcad 8.6'nın kullandığı ayarla birebir (Datum Dönüşümü sekmesi, 2026-10-13): bölge “Europe - West (DMA ED50 Mean) (v1)”,
+// ECEF'te 3 parametreli kayma ΔX −87 · ΔY −98 · ΔZ −121 m, dönüklük 0, ölçek 0; elipsoid Uluslararası 1924 (a = 6378388, 1/f = 297).
+// Netcad çıktısıyla karşılaştırma: ≤ 9 mm. ED50 = WGS84 + fark: kaymanın tersi eklenir (87, 98, 121).
+const ED50_P = [87, 98, 121, 0, 0, 0, 0];
 const ed50Fark = (x, y, z) => {
   const [dx, dy, dz, k, rx, ry, rz] = ED50_P;
   return [dx + k * x - ry * z + rz * y, dy + k * y + rx * z - rz * x, dz + k * z - rx * y + ry * x];
@@ -10773,7 +10772,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.13-198';
+const SURUM = '2026.10.13-199';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -17738,19 +17737,19 @@ class Component extends DCLogic {
         ek = 'WGS84 UTM 6° → ITRF96-3°: aynı datum, yalnız dilim ve ölçek farkı (k₀ 0,9996 → 1); sağa değeri 500000’den uzaklaştıkça fark büyür.';
       } else if (sys === 'ITRF96') {
         [lat, lon] = tmInverse(ce, cn, cmv, ELL.grs80);
-        ek = 'ITRF96 → WGS84 yalnızca ters Transverse Mercator; datum hatası yok. ED50 çıktıları Netcad çıktısına uydurulmuş 7 parametreli dönüşümle (Kırşehir bölgesinde Netcad ile mm düzeyinde).';
+        ek = 'ITRF96 → WGS84 yalnızca ters Transverse Mercator; datum hatası yok. ED50 çıktıları Netcad’deki DMA Europe-West ortalamasıyla (ΔX −87 · ΔY −98 · ΔZ −121 m) — Netcad ile mm düzeyinde.';
       } else if (sys === 'ED50_6') {
         [lat, lon] = ed50GridToWgs(ce, cn, 33, UTM_K);
         cm3 = lon < 34.5 ? 33 : 36;
-        ek = 'ED50 6° (UTM, k₀ 0,9996) → ITRF96: Hayford 1924 → GRS80, Netcad çıktısına uydurulmuş 7 parametreli dönüşüm (Kırşehir bölgesi).';
+        ek = 'ED50 6° (UTM, k₀ 0,9996) → ITRF96: Hayford 1924 → GRS80, Netcad’deki DMA Europe-West ortalaması (ΔX −87 · ΔY −98 · ΔZ −121 m).';
       } else {
         [lat, lon] = ed50GridToWgs(ce, cn, cmv);
-        ek = 'ED50 → ITRF96: Hayford 1924 → GRS80, Netcad çıktısına uydurulmuş 7 parametreli dönüşüm (Kırşehir bölgesinde Netcad ile mm düzeyinde).';
+        ek = 'ED50 → ITRF96: Hayford 1924 → GRS80, Netcad’deki DMA Europe-West ortalaması (ΔX −87 · ΔY −98 · ΔZ −121 m); Netcad ile mm düzeyinde.';
       }
       convLL = [lat, lon];
       const kayit = { ITRF96: 'ITRF96-3° girişi', UTM6: 'WGS84 6° girişi', ED50: 'ED50 3° girişi', ED50_6: 'ED50 6° girişi' };
       out = [...hepsi(lat, lon, cm3, sys), { label: kayit[sys] ? 'Orta meridyen' : '', value: sys === 'UTM6' || sys === 'ED50_6' ? '33° D · k₀ = 0,9996 (UTM dilim 36)' : `${cmv}° D · k₀ = 1` },
-        ...(sys === 'ED50' || sys === 'ED50_6' ? [{ label: 'ED50 dönüşümü', value: '7 parametre · Netcad’e uydurulmuş · yalnız Kırşehir' }] : [])];
+        ...(sys === 'ED50' || sys === 'ED50_6' ? [{ label: 'ED50 dönüşümü', value: 'ΔX −87 · ΔY −98 · ΔZ −121 m (DMA Europe-West, Netcad ile aynı)' }] : [])];
       note = ek;
       if (yerDegisti) note = 'Sağa ve yukarı değerleri yer değiştirmiş görünüyordu — sağa (Y) küçük, yukarı (X) büyük sayıdır; düzeltilerek hesaplandı. ' + note;
       if (!(convLL[0] > BBOX.s && convLL[0] < BBOX.n && convLL[1] > BBOX.w && convLL[1] < BBOX.e))

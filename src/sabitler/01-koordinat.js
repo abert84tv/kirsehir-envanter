@@ -1,9 +1,8 @@
 const ELL = { grs80: { a: 6378137, f: 1 / 298.257222101 }, intl: { a: 6378388, f: 1 / 297 } };
-// ED50 → WGS84/ITRF96 (ECEF'te 7 parametreli küçük açı dönüşümü, 2026-10-13): Netcad 8.6 çıktısına (Kırşehir'in beş noktası: Merkez, Kaman,
-// Mucur, Çiçekdağı, Boztepe/Akpınar yöresi) en küçük karelerle uydurulmuştur. Netcad ED50_3 sonuçlarına artık ≤ 5 mm, bir noktayı dışarıda
-// bırakarak tahmin hatası ≤ 13 mm (tüm ülke 3 parametreli kayma 4–5 m sapıyordu). Parametreler bu bölge için geçerlidir (il sınırı dışında kullanmayın).
-// Sıra: dX dY dZ (m) · ölçek (boyutsuz) · rx ry rz (radyan); ED50 = WGS84 + fark(WGS84)
-const ED50_P = [158.944123992, 107.343658818, 41.3531430016, 0.00000619703127998, -0.00000635171526592, 0.0000151946326845, -0.00000394598193027];
+// ED50 → WGS84/ITRF96: Netcad 8.6'nın kullandığı ayarla birebir (Datum Dönüşümü sekmesi, 2026-10-13): bölge “Europe - West (DMA ED50 Mean) (v1)”,
+// ECEF'te 3 parametreli kayma ΔX −87 · ΔY −98 · ΔZ −121 m, dönüklük 0, ölçek 0; elipsoid Uluslararası 1924 (a = 6378388, 1/f = 297).
+// Netcad çıktısıyla karşılaştırma: ≤ 9 mm. ED50 = WGS84 + fark: kaymanın tersi eklenir (87, 98, 121).
+const ED50_P = [87, 98, 121, 0, 0, 0, 0];
 const ed50Fark = (x, y, z) => {
   const [dx, dy, dz, k, rx, ry, rz] = ED50_P;
   return [dx + k * x - ry * z + rz * y, dy + k * y + rx * z - rz * x, dz + k * z - rx * y + ry * x];

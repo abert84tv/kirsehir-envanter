@@ -2305,3 +2305,8 @@ Sürüm 2026.10.05-114.
 - Netcad'in ED50 dönüşümü 3 parametreli değil: ECEF'te 7 parametreli küçük açı dönüşümü Netcad çıktısına uyuyor (artık ≤ 5 mm; bir noktayı dışarıda bırakarak tahmin hatası ≤ 13 mm). Parametreler `ED50_P` olarak src/sabitler/01-koordinat.js'te; **yalnız Kırşehir bölgesi için geçerli** (uydurma noktalar il sınırını kapsıyor).
 - ED50 6° tablosu Netcad'de 3° tablonun ölçekli (k₀ 0,9996) hâliyle uyuşuyor; Y değerleri tam sayıya yuvarlak çıkmış (Netcad girişi).
 - Yeni `koordinat-testi.js`: Netcad referans noktalarıyla 6 yönlü dönüşümü denetler (sınır 2 cm); `node koordinat-testi.js`.
+
+## 2026.10.13-199 — ED50 dönüşümü Netcad'in gerçek parametreleriyle
+- Netcad 8.6 › Dönüşüm › Projeksiyon Parametreleri › **Datum Dönüşümü** sekmesinden okundu: bölge **“Europe - West (DMA ED50 Mean) (v1)”**, **ΔX −87 · ΔY −98 · ΔZ −121 m**, dönüklük 0, ölçek 0; elipsoid Uluslararası 1924 (a = 6.378.388, 1/f = 297). ED50 dönüşümü artık bu üç parametreyle; Netcad çıktısıyla fark ≤ 10 mm (X yönünde sabit ~4–9 mm Netcad'in sayısal ayrıntısı).
+- Önceki sürümdeki (198) “7 parametreli uydurma” kaldırıldı: beş noktaya uyuyordu ama Netcad'in gerçek modeli değildi (il dışında yanlış sonuç verebilirdi). Artık dönüşüm tüm ülkede Netcad ile aynı davranır.
+- Eski değer (−84,1 · −101,5 · −127,1) 4,5–5 m sapıyordu.

@@ -1,4 +1,4 @@
-// Koordinat dönüşümü denetimi — Netcad 8.6 çıktısıyla (2026-10-13, Kırşehir'in 5 noktası) karşılaştırır.
+// Koordinat dönüşümü denetimi — Netcad 8.6 çıktısıyla (2026-10-13, Kırşehir'in 5 noktası; ED50: DMA Europe-West -87 -98 -121) karşılaştırır.
 // Kullanım: node koordinat-testi.js   (fark 2 cm'yi aşarsa hata verir)
 const fs = require('fs');
 eval(fs.readFileSync(__dirname + '/src/sabitler/01-koordinat.js', 'utf8').replace(/^const /gm, 'var ').replace(/^function (\w+)/gm, 'var $1 = function $1'));

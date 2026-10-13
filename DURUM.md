@@ -2288,3 +2288,8 @@ Sürüm 2026.10.05-114.
 - Google/WGS84 sekmesine metre cinsinden (sağa/yukarı) değer girilince anlamsız sonuç (örn. −6,9e29) veriyordu. Artık enlem ±90, boylam ±180 dışı girişte sonuç yerine açıklama çıkar ve doğru sekme önerilir.
 - ITRF96/ED50 sekmelerinde sağa (Y) ile yukarı (X) yer değiştirmişse (sağa > 1.000.000, yukarı < 1.000.000) kendiliğinden düzeltilir ve notta belirtilir.
 - Netcad karşılaştırması bekliyor: kullanılan yöntem — ITRF96=WGS84 (GRS80), 3° dilim k₀=1; ED50 için tüm ülke 3 parametreli Helmert (ΔX −84,1 · ΔY −101,5 · ΔZ −127,1 m, Uluslararası 1924 → GRS80), kaynak: src/sabitler/01-koordinat.js.
+
+## 2026.10.13-196 — Koordinat dönüşümüne “WGS84 6°” (UTM) eklendi
+- Netcad'deki “WGS84 6 derece” (UTM dilim 36, orta meridyen 33° D, ölçek k₀ = 0,9996) programda yoktu; kullanıcı bu değerleri “Google / WGS84” sekmesine girip anlamsız sonuç alıyordu. Yeni **WGS84 6°** sekmesi sağa (Y) / yukarı (X) alır, enlem-boylam, ITRF96-3° (dilim 11/12), ED50 ve Google DMS sonuçlarını verir.
+- Öteki sekmelerin sonuçlarına da “WGS84 UTM 6° sağa / yukarı” satırı eklendi. `tmForward` / `tmInverse` ölçek katsayısı (k₀) parametresi aldı (varsayılan 1: 3° dilim).
+- Doğrulama (kullanıcının elle yazdığı değerler): ITRF96-3° (569730 , 4340810) → WGS84 6° (569702.11 , 4339073.68) ≈ (569702 , 4339074); WGS84 6° (569702 , 4339074) → ITRF96-3° (569729.89 , 4340810.32) ≈ (569730 , 4340810).

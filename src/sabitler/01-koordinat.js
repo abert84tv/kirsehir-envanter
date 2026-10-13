@@ -2,7 +2,8 @@ const ELL = { grs80: { a: 6378137, f: 1 / 298.257222101 }, intl: { a: 6378388, f
 const SHIFT = [-84.1, -101.5, -127.1];
 const D = Math.PI / 180;
 
-function tmForward(lat, lon, cm, ell) {
+// k0: orta meridyen ölçek katsayısı — 3° dilimde (TUREF/ITRF96, ED50 3°) 1, UTM 6° dilimde 0,9996
+function tmForward(lat, lon, cm, ell, k0 = 1) {
   const { a, f } = ell, e2 = 2 * f - f * f, ep2 = e2 / (1 - e2);
   const p = lat * D, l = lon * D, l0 = cm * D;
   const N = a / Math.sqrt(1 - e2 * Math.sin(p) ** 2);
@@ -11,13 +12,13 @@ function tmForward(lat, lon, cm, ell) {
     - (3 * e2 / 8 + 3 * e2 ** 2 / 32 + 45 * e2 ** 3 / 1024) * Math.sin(2 * p)
     + (15 * e2 ** 2 / 256 + 45 * e2 ** 3 / 1024) * Math.sin(4 * p)
     - (35 * e2 ** 3 / 3072) * Math.sin(6 * p));
-  return [500000 + N * (A + (1 - T + C) * A ** 3 / 6 + (5 - 18 * T + T * T + 72 * C - 58 * ep2) * A ** 5 / 120),
-    M + N * Math.tan(p) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A ** 4 / 24 + (61 - 58 * T + T * T + 600 * C - 330 * ep2) * A ** 6 / 720)];
+  return [500000 + k0 * N * (A + (1 - T + C) * A ** 3 / 6 + (5 - 18 * T + T * T + 72 * C - 58 * ep2) * A ** 5 / 120),
+    k0 * (M + N * Math.tan(p) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A ** 4 / 24 + (61 - 58 * T + T * T + 600 * C - 330 * ep2) * A ** 6 / 720))];
 }
-function tmInverse(E, N, cm, ell) {
+function tmInverse(E, N0, cm, ell, k0 = 1) {
   const { a, f } = ell, e2 = 2 * f - f * f, ep2 = e2 / (1 - e2);
   const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2));
-  const x = E - 500000;
+  const x = (E - 500000) / k0, N = N0 / k0;
   const mu = N / (a * (1 - e2 / 4 - 3 * e2 ** 2 / 64 - 5 * e2 ** 3 / 256));
   const p1 = mu + (3 * e1 / 2 - 27 * e1 ** 3 / 32) * Math.sin(2 * mu)
     + (21 * e1 ** 2 / 16 - 55 * e1 ** 4 / 32) * Math.sin(4 * mu) + (151 * e1 ** 3 / 96) * Math.sin(6 * mu);

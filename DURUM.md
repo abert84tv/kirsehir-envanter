@@ -2299,3 +2299,9 @@ Sürüm 2026.10.05-114.
 - Haritada bir noktaya tıklayınca çıkan koordinat çubuğuna (masaüstü ve telefon) “WGS84 6°” satırı eklendi.
 - Harita altyapısı: tesis konumları veritabanında **WGS84 enlem-boylam (derece)** olarak saklanır; harita Leaflet, görüntü Web Mercator (EPSG:3857) altlığı üzerindedir. İçe aktarma da WGS84 ondalık derece bekler. ITRF96 ile WGS84 aynı kabul edilir (fark cm–dm).
 - `kullanici_listesi`: saha şefi ve izleyici yalnız kendi hesabını görür.
+
+## 2026.10.13-198 — ED50 dönüşümü Netcad'e göre düzeltildi
+- Netcad 8.6'dan alınan beş nokta (ITRF96_3, WGS84_6, ED50_3, ED50_6) ile karşılaştırıldı: ITRF96 3° ↔ WGS84 6° zaten 5 mm içinde uyumluydu; **ED50 sonuçları 4,5–5 m sapıyordu** (tüm ülke 3 parametreli kayma).
+- Netcad'in ED50 dönüşümü 3 parametreli değil: ECEF'te 7 parametreli küçük açı dönüşümü Netcad çıktısına uyuyor (artık ≤ 5 mm; bir noktayı dışarıda bırakarak tahmin hatası ≤ 13 mm). Parametreler `ED50_P` olarak src/sabitler/01-koordinat.js'te; **yalnız Kırşehir bölgesi için geçerli** (uydurma noktalar il sınırını kapsıyor).
+- ED50 6° tablosu Netcad'de 3° tablonun ölçekli (k₀ 0,9996) hâliyle uyuşuyor; Y değerleri tam sayıya yuvarlak çıkmış (Netcad girişi).
+- Yeni `koordinat-testi.js`: Netcad referans noktalarıyla 6 yönlü dönüşümü denetler (sınır 2 cm); `node koordinat-testi.js`.

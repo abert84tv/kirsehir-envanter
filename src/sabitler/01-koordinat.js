@@ -1,5 +1,13 @@
 const ELL = { grs80: { a: 6378137, f: 1 / 298.257222101 }, intl: { a: 6378388, f: 1 / 297 } };
-const SHIFT = [-84.1, -101.5, -127.1];
+// ED50 → WGS84/ITRF96 (ECEF'te 7 parametreli küçük açı dönüşümü, 2026-10-13): Netcad 8.6 çıktısına (Kırşehir'in beş noktası: Merkez, Kaman,
+// Mucur, Çiçekdağı, Boztepe/Akpınar yöresi) en küçük karelerle uydurulmuştur. Netcad ED50_3 sonuçlarına artık ≤ 5 mm, bir noktayı dışarıda
+// bırakarak tahmin hatası ≤ 13 mm (tüm ülke 3 parametreli kayma 4–5 m sapıyordu). Parametreler bu bölge için geçerlidir (il sınırı dışında kullanmayın).
+// Sıra: dX dY dZ (m) · ölçek (boyutsuz) · rx ry rz (radyan); ED50 = WGS84 + fark(WGS84)
+const ED50_P = [158.944123992, 107.343658818, 41.3531430016, 0.00000619703127998, -0.00000635171526592, 0.0000151946326845, -0.00000394598193027];
+const ed50Fark = (x, y, z) => {
+  const [dx, dy, dz, k, rx, ry, rz] = ED50_P;
+  return [dx + k * x - ry * z + rz * y, dy + k * y + rx * z - rz * x, dz + k * z - rx * y + ry * x];
+};
 const D = Math.PI / 180;
 
 // k0: orta meridyen ölçek katsayısı — 3° dilimde (TUREF/ITRF96, ED50 3°) 1, UTM 6° dilimde 0,9996
@@ -51,12 +59,16 @@ function ecefToGeo(x, y, z, ell) {
 // ED50 (Uluslararası 1924) ızgarası ↔ WGS84: k0 = 1 → ED50 3° dilim, k0 = 0,9996 → ED50 6° (UTM) dilim
 const ed50GridToWgs = (E, N, cm, k0 = 1) => {
   const [la, lo] = tmInverse(E, N, cm, ELL.intl, k0);
-  const [x, y, z] = geoToEcef(la, lo, ELL.intl);
-  return ecefToGeo(x + SHIFT[0], y + SHIFT[1], z + SHIFT[2], ELL.grs80);
+  const [bx, by, bz] = geoToEcef(la, lo, ELL.intl);
+  // ED50 = WGS84 + fark(WGS84): ters yönde yinelemeli çözülür (fark ~40 m, 3 yineleme mm altına iner)
+  let x = bx, y = by, z = bz;
+  for (let i = 0; i < 4; i++) { const d = ed50Fark(x, y, z); x = bx - d[0]; y = by - d[1]; z = bz - d[2]; }
+  return ecefToGeo(x, y, z, ELL.grs80);
 };
 const wgsToEd50Geo = (lat, lon) => {
   const [x, y, z] = geoToEcef(lat, lon, ELL.grs80);
-  return ecefToGeo(x - SHIFT[0], y - SHIFT[1], z - SHIFT[2], ELL.intl);
+  const d = ed50Fark(x, y, z);
+  return ecefToGeo(x + d[0], y + d[1], z + d[2], ELL.intl);
 };
 const wgsToEd50Grid = (lat, lon, cm, k0 = 1) => {
   const [la, lo] = wgsToEd50Geo(lat, lon);

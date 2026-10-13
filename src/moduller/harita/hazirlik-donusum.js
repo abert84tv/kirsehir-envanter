@@ -67,19 +67,19 @@
         ek = 'WGS84 UTM 6° → ITRF96-3°: aynı datum, yalnız dilim ve ölçek farkı (k₀ 0,9996 → 1); sağa değeri 500000’den uzaklaştıkça fark büyür.';
       } else if (sys === 'ITRF96') {
         [lat, lon] = tmInverse(ce, cn, cmv, ELL.grs80);
-        ek = 'ITRF96 → WGS84 yalnızca ters Transverse Mercator; datum hatası yok. ED50 çıktıları ülke geneli 3 parametreli Helmert ile (2–5 m artık hata).';
+        ek = 'ITRF96 → WGS84 yalnızca ters Transverse Mercator; datum hatası yok. ED50 çıktıları Netcad çıktısına uydurulmuş 7 parametreli dönüşümle (Kırşehir bölgesinde Netcad ile mm düzeyinde).';
       } else if (sys === 'ED50_6') {
         [lat, lon] = ed50GridToWgs(ce, cn, 33, UTM_K);
         cm3 = lon < 34.5 ? 33 : 36;
-        ek = 'ED50 6° (UTM, k₀ 0,9996) → ITRF96: Hayford 1924 elipsoidinden GRS80’e Helmert kayması.';
+        ek = 'ED50 6° (UTM, k₀ 0,9996) → ITRF96: Hayford 1924 → GRS80, Netcad çıktısına uydurulmuş 7 parametreli dönüşüm (Kırşehir bölgesi).';
       } else {
         [lat, lon] = ed50GridToWgs(ce, cn, cmv);
-        ek = 'ED50 → ITRF96 gerçek datum dönüşümü: Hayford 1924 elipsoidinden GRS80’e Helmert kayması.';
+        ek = 'ED50 → ITRF96: Hayford 1924 → GRS80, Netcad çıktısına uydurulmuş 7 parametreli dönüşüm (Kırşehir bölgesinde Netcad ile mm düzeyinde).';
       }
       convLL = [lat, lon];
       const kayit = { ITRF96: 'ITRF96-3° girişi', UTM6: 'WGS84 6° girişi', ED50: 'ED50 3° girişi', ED50_6: 'ED50 6° girişi' };
       out = [...hepsi(lat, lon, cm3, sys), { label: kayit[sys] ? 'Orta meridyen' : '', value: sys === 'UTM6' || sys === 'ED50_6' ? '33° D · k₀ = 0,9996 (UTM dilim 36)' : `${cmv}° D · k₀ = 1` },
-        ...(sys === 'ED50' || sys === 'ED50_6' ? [{ label: 'Kayma', value: `ΔX ${SHIFT[0]} · ΔY ${SHIFT[1]} · ΔZ ${SHIFT[2]} m` }] : [])];
+        ...(sys === 'ED50' || sys === 'ED50_6' ? [{ label: 'ED50 dönüşümü', value: '7 parametre · Netcad’e uydurulmuş · yalnız Kırşehir' }] : [])];
       note = ek;
       if (yerDegisti) note = 'Sağa ve yukarı değerleri yer değiştirmiş görünüyordu — sağa (Y) küçük, yukarı (X) büyük sayıdır; düzeltilerek hesaplandı. ' + note;
       if (!(convLL[0] > BBOX.s && convLL[0] < BBOX.n && convLL[1] > BBOX.w && convLL[1] < BBOX.e))

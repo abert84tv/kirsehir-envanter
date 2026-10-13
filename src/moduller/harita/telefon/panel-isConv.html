@@ -4,9 +4,9 @@
 <button onClick="{{ closePanel }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:700 15px/1 var(--font-body);display:flex;align-items:center;justify-content:center">×</button>
 </div>
 <div style="padding:14px">
-<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:14px">
+<div style="display:flex;flex-wrap:wrap;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:14px;overflow:hidden">
 <sc-for list="{{ convSystems }}" as="c" hint-placeholder-count="2">
-<button onClick="{{ c.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:11px 12px;font:600 12px/1.2 var(--font-body);letter-spacing:-.01em;background:{{ c.bg }};color:{{ c.fg }};border-right:1px solid {{ ui.rule }}">{{ c.label }}</button>
+<button onClick="{{ c.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 auto;text-align:left;padding:11px 12px;font:600 12px/1.2 var(--font-body);letter-spacing:-.01em;background:{{ c.bg }};color:{{ c.fg }};border-right:1px solid {{ ui.rule }}">{{ c.label }}</button>
 </sc-for>
 </div>
 <div style="display:flex;gap:10px;margin-bottom:12px">

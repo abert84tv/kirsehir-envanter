@@ -3,13 +3,13 @@
 <div>
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:7px">Araç</div>
 <div style="font:600 21px/1.05 var(--font-heading);letter-spacing:-.022em">Koordinat dönüşümü</div>
-<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">ED50 ↔ ITRF96-3° ↔ WGS84 / Google</div>
+<div style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }};margin-top:6px">ITRF96-3° ↔ WGS84 6° ↔ ED50 3° / 6° ↔ Google (enlem-boylam)</div>
 </div>
 </div>
 <div style="padding:16px 18px">
-<div style="display:flex;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:14px">
+<div style="display:flex;flex-wrap:wrap;border-radius:10px;border:1px solid {{ ui.rule }};margin-bottom:14px;overflow:hidden">
 <sc-for list="{{ convSystems }}" as="c" hint-placeholder-count="3">
-<button onClick="{{ c.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:left;padding:10px 10px;font:600 11px/1.2 var(--font-body);letter-spacing:-.01em;background:{{ c.bg }};color:{{ c.fg }};border-right:1px solid {{ ui.rule }}">{{ c.label }}</button>
+<button onClick="{{ c.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 auto;text-align:left;padding:10px 10px;font:600 11px/1.2 var(--font-body);letter-spacing:-.01em;background:{{ c.bg }};color:{{ c.fg }};border-right:1px solid {{ ui.rule }}">{{ c.label }}</button>
 </sc-for>
 </div>
 <div style="display:flex;gap:10px;margin-bottom:11px">

@@ -14,6 +14,10 @@
 <span style="font:400 10px/1 var(--font-body);letter-spacing:-.01em;opacity:.6">ITRF96-3°</span>
 <span style="font:600 13.5px/1 ui-monospace,Menlo,monospace">{{ coordBar.itrf }}</span>
 </span>
+<span style="display:flex;flex-direction:column;gap:2px">
+<span style="font:400 10px/1 var(--font-body);letter-spacing:-.01em;opacity:.6">WGS84 6°</span>
+<span style="font:600 13.5px/1 ui-monospace,Menlo,monospace">{{ coordBar.utm }}</span>
+</span>
 <span style="flex:1"></span>
 <button onClick="{{ coordBar.kopyala }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:11px 12px">Kopyala</button>
 <button onClick="{{ coordBar.donustur }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:10px;border:1px solid {{ ui.bg }};color:{{ ui.bg }};font:600 11px/1 var(--font-body);letter-spacing:-.01em;padding:11px 12px">Dönüştürücüye at</button>

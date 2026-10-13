@@ -48,13 +48,17 @@ function ecefToGeo(x, y, z, ell) {
   }
   return [lat / D, lon / D];
 }
-const ed50GridToWgs = (E, N, cm) => {
-  const [la, lo] = tmInverse(E, N, cm, ELL.intl);
+// ED50 (Uluslararası 1924) ızgarası ↔ WGS84: k0 = 1 → ED50 3° dilim, k0 = 0,9996 → ED50 6° (UTM) dilim
+const ed50GridToWgs = (E, N, cm, k0 = 1) => {
+  const [la, lo] = tmInverse(E, N, cm, ELL.intl, k0);
   const [x, y, z] = geoToEcef(la, lo, ELL.intl);
   return ecefToGeo(x + SHIFT[0], y + SHIFT[1], z + SHIFT[2], ELL.grs80);
 };
-const wgsToEd50Grid = (lat, lon, cm) => {
+const wgsToEd50Geo = (lat, lon) => {
   const [x, y, z] = geoToEcef(lat, lon, ELL.grs80);
-  const [la, lo] = ecefToGeo(x - SHIFT[0], y - SHIFT[1], z - SHIFT[2], ELL.intl);
-  return tmForward(la, lo, cm, ELL.intl);
+  return ecefToGeo(x - SHIFT[0], y - SHIFT[1], z - SHIFT[2], ELL.intl);
+};
+const wgsToEd50Grid = (lat, lon, cm, k0 = 1) => {
+  const [la, lo] = wgsToEd50Geo(lat, lon);
+  return tmForward(la, lo, cm, ELL.intl, k0);
 };

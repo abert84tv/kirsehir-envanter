@@ -1,9 +1,11 @@
       coordBar: (() => {
         const p = s.picked;
-        if (!p) return { on: false, rows: [], wgs: '', dms: '', itrf: '', bekle: '' };
+        if (!p) return { on: false, rows: [], wgs: '', dms: '', itrf: '', utm: '', bekle: '' };
         const zone = p.lon < 34.5 ? '11' : '12';
         const cmv = this.cm(zone);
         const [ei, ni] = tmForward(p.lat, p.lon, cmv, ELL.grs80);
+        const uz = Math.floor((p.lon + 180) / 6) + 1;
+        const [eu, nu] = tmForward(p.lat, p.lon, 6 * uz - 183, ELL.grs80, 0.9996);
         const dd = (v, ns) => {
           const s0 = v < 0 ? (ns ? 'S' : 'W') : (ns ? 'N' : 'E');
           const av = Math.abs(v), g = Math.floor(av), mn = Math.floor((av - g) * 60), sc = ((av - g) * 60 - mn) * 60;
@@ -14,6 +16,7 @@
           wgs: `${p.lat.toFixed(6)} , ${p.lon.toFixed(6)}`,
           dms: `${dd(p.lat, true)} ${dd(p.lon, false)}`,
           itrf: `${ei.toFixed(2)} , ${ni.toFixed(2)} · dilim ${zone}`,
+          utm: `${eu.toFixed(2)} , ${nu.toFixed(2)} · dilim ${uz}`,
           kopyala: () => {
             const t = `${p.lat.toFixed(6)}, ${p.lon.toFixed(6)}`;
             try { navigator.clipboard.writeText(t); } catch (e) { /* izin yok */ }

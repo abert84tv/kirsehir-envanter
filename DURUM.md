@@ -2293,3 +2293,9 @@ Sürüm 2026.10.05-114.
 - Netcad'deki “WGS84 6 derece” (UTM dilim 36, orta meridyen 33° D, ölçek k₀ = 0,9996) programda yoktu; kullanıcı bu değerleri “Google / WGS84” sekmesine girip anlamsız sonuç alıyordu. Yeni **WGS84 6°** sekmesi sağa (Y) / yukarı (X) alır, enlem-boylam, ITRF96-3° (dilim 11/12), ED50 ve Google DMS sonuçlarını verir.
 - Öteki sekmelerin sonuçlarına da “WGS84 UTM 6° sağa / yukarı” satırı eklendi. `tmForward` / `tmInverse` ölçek katsayısı (k₀) parametresi aldı (varsayılan 1: 3° dilim).
 - Doğrulama (kullanıcının elle yazdığı değerler): ITRF96-3° (569730 , 4340810) → WGS84 6° (569702.11 , 4339073.68) ≈ (569702 , 4339074); WGS84 6° (569702 , 4339074) → ITRF96-3° (569729.89 , 4340810.32) ≈ (569730 , 4340810).
+
+## 2026.10.13-197 — Koordinat sistemleri birbirine tam çevriliyor, harita koordinat çubuğunda 6°
+- Dönüşüm ekranı beş sistem arasında tam matris: **ITRF96-3° · WGS84 6° (UTM) · ED50 3° · ED50 6° (UTM) · Google/WGS84 (enlem-boylam)**. Hangi sekmeden girilirse öteki sistemlerin hepsi (ayrıca ED50 enlem-boylam ve Google DMS) gösterilir. Gidiş-dönüş denetlendi: ITRF96 (569730 , 4340810) → ED50 3° (569769.72 , 4340991.85) → ITRF96 (569730.00 , 4340810.00).
+- Haritada bir noktaya tıklayınca çıkan koordinat çubuğuna (masaüstü ve telefon) “WGS84 6°” satırı eklendi.
+- Harita altyapısı: tesis konumları veritabanında **WGS84 enlem-boylam (derece)** olarak saklanır; harita Leaflet, görüntü Web Mercator (EPSG:3857) altlığı üzerindedir. İçe aktarma da WGS84 ondalık derece bekler. ITRF96 ile WGS84 aynı kabul edilir (fark cm–dm).
+- `kullanici_listesi`: saha şefi ve izleyici yalnız kendi hesabını görür.

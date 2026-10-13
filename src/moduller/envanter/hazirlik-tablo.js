@@ -30,12 +30,23 @@
         && (!envF.aktiflik || aktifAd(a) === envF.aktiflik)
         && (!envF.hazir || (HAZIR[envF.hazir] && HAZIR[envF.hazir][1](a))))
       .sort((a, b) => kar(envVal(a, envSort.k), envVal(b, envSort.k)) * envSort.dir);
+    // Liste 50'şerli sayfalarda gösterilir; süzgeç, arama ya da sıra değişince ilk sayfaya dönülür (imza karşılaştırması)
+    const ENV_SAYFA = 50;
+    const envImza = JSON.stringify([qn, envQn, envF, envSort]);
+    const envSayfaSay = Math.max(1, Math.ceil(envSatir.length / ENV_SAYFA));
+    const envSayfaNo = Math.min(envSayfaSay - 1, s.envSayfa && s.envSayfa.imza === envImza ? s.envSayfa.n : 0);
+    const envSayfaSatir = envSatir.slice(envSayfaNo * ENV_SAYFA, (envSayfaNo + 1) * ENV_SAYFA);
+    const envSayfaGit = n => () => this.setState({ envSayfa: { imza: envImza, n: Math.max(0, Math.min(envSayfaSay - 1, n)) } });
     const ENV_KOL = [['code', 'Kod'], ['type', 'Tür'], ['place', 'Köy / İlçe'], ['year', 'Yapım yılı'], ['photos', 'Fotoğraf'], ['aktiflik', 'Durum'], ['status', 'Eşitleme']];
     const envTik = k => () => this.setState(st => ({ envSort: { k, dir: (st.envSort && st.envSort.k === k) ? -st.envSort.dir : 1 } }));
     const envKontrol = {
       q: s.envQ || '',
       onQ: e => this.setState({ envQ: e.target.value }),
       sayi: envSatir.length + ' / ' + vis.length + ' kayıt',
+      sayfaVar: envSatir.length > ENV_SAYFA,
+      sayfaMetin: (envSayfaNo * ENV_SAYFA + 1) + '–' + Math.min(envSatir.length, (envSayfaNo + 1) * ENV_SAYFA) + ' / ' + envSatir.length,
+      onceki: envSayfaGit(envSayfaNo - 1), sonraki: envSayfaGit(envSayfaNo + 1),
+      oncekiOp: envSayfaNo > 0 ? '1' : '.35', sonrakiOp: envSayfaNo < envSayfaSay - 1 ? '1' : '.35',
       bosMu: envSatir.length === 0,
       suzuluyor: !!(envQn || envF.tur || envF.ilce || envF.durum || envF.aktiflik || envF.hazir),
       bosNot: (envQn || envF.tur || envF.ilce || envF.durum || envF.aktiflik || envF.hazir) ? 'Bu süzgeçle kayıt yok — süzgeci temizleyin.' : 'Henüz envanter kaydı yok.',

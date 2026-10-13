@@ -2323,3 +2323,8 @@ Sürüm 2026.10.05-114.
 - **Eşdeğerlik (3.2):** `esdeger-bilinen.json`'daki 126 fark gözden geçirildi: hepsi bilinçli tasarım farkı (masaüstü sürükle-bırak/tablo, telefon sade saha ekranı, gezinme); eksik özellik yok.
 - **Performans:** index.html 1,87 MB (gzip ≈ 389 KB), tek render ≈ 13 ms; veritabanı birkaç MB — bu aşamada iyileştirme gerekmedi. Kullanılmayan 41 indeks (çoğu yeni FK indeksi) ve küçük eski tablolar (`talepler`, `profil`, `tercih`) zararsız, bırakıldı.
 - **Bilinen sınır:** Storage'a yükleme (INSERT) hâlâ herkese açık (program Supabase Auth kullanmadığı için); kova 10 MB ve yalnız resim/ses türüyle sınırlı. Köysüz 96 tesis otomatik atanmadı (25 yakın aday ilçe uyuşmazlığı taşıyor) — "Köyleri ata" ile elle.
+
+## 2026.10.14-201 — Envanter listesi sayfalandı, Bakım'da "Kaydı yok" listesi kapalı
+- **Envanter listesi (masaüstü ve telefon):** 342 satır tek uzun liste yerine 50'şerli sayfalar ("‹ Önceki · 1–50 / 342 · Sonraki ›"). Arama, süzgeç ya da sıra değişince ilk sayfaya dönülür. Ekran yüksekliği ≈ 18.900 → 3.000 px.
+- **Bakım:** "Bakım kaydı olmayanlar" (340 tesis) varsayılan kapalı; tek özet satırı + "Listeyi göster" düğmesi. ≈ 2.280 → 770 px. Geciken ve yaklaşan bakımlar aynen yukarıda.
+- Ölçüm (tüm modüller açık, masaüstü): Envanter 3.050 · İş panosu 1.910 · Bakım 770 · Ambar 2.920 · Araç 1.250 · Özet 3.260 · Ayarlar 2.220 px. Sıradaki adaylar (karar gerekir): Özet, Ambar stok kartları, Arıza formu iki katman, Tesis kartı boş alan katlama.

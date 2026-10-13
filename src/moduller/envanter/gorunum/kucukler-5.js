@@ -32,7 +32,7 @@
       })(),
       kartAc: () => sel && this.setState({ card: sel }),
       envKontrol: envKontrol,
-      list: envSatir.map(a => {
+      list: envSayfaSatir.map(a => {
         const pend = a.sync === 'pending';
         return {
           code: a.code, typeLabel: TYPES[a.type].kind, place: this.yer(a),

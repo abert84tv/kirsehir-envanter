@@ -49,8 +49,10 @@
 <sc-if value="{{ bakim.kayitsizVar }}" hint-placeholder-val="{{ false }}">
 <div style="padding:13px 20px;border-bottom:1px solid {{ ui.rule }};border-top:1px solid {{ ui.rule }};display:flex;align-items:baseline;justify-content:space-between;gap:14px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Bakım kaydı olmayanlar</span>
-<span style="font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ bakim.kayitsizNot }}</span>
+<span style="flex:1;font:400 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ bakim.kayitsizNot }}</span>
+<button onClick="{{ bakim.kayitsizTik }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 11.5px/1 var(--font-body);padding:9px 12px">{{ bakim.kayitsizDugme }}</button>
 </div>
+<sc-if value="{{ bakim.kayitsizAcik }}" hint-placeholder-val="{{ false }}">
 <sc-for list="{{ bakim.kayitsiz }}" as="b" hint-placeholder-count="10">
 <div style="display:flex;align-items:center;gap:14px;padding:10px 20px;border-bottom:1px solid {{ ui.rule }}">
 <button onClick="{{ b.open }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;display:flex;align-items:center;gap:14px;min-width:0;text-align:left">
@@ -64,6 +66,7 @@
 </sc-if>
 </div>
 </sc-for>
+</sc-if>
 </sc-if>
 <div style="height:16px"></div>
 </div>

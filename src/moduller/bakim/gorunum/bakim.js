@@ -41,6 +41,10 @@
           gecikenlerVar: bakimOn && gec.length > 0,
           yaklasanlar: yak.slice(0, 30).map(line),
           yaklasanlarVar: yak.length > 0,
+          // “Kaydı yok” listesi varsayılan kapalı: yüzlerce satırı tek özet satırına indirir, istenirse açılır
+          kayitsizAcik: !!s.bakimYokAcik,
+          kayitsizDugme: s.bakimYokAcik ? 'Listeyi gizle' : 'Listeyi göster (' + Math.min(yok.length, 40) + ')',
+          kayitsizTik: () => this.setState(st => ({ bakimYokAcik: !st.bakimYokAcik })),
           kayitsiz: yok.slice(0, 40).map(line),
           kayitsizVar: yok.length > 0,
           kayitsizNot: `${yok.length} kayıtta son bakım tarihi yok — bakım takvimi ancak tarih girildikten sonra çalışır.`,

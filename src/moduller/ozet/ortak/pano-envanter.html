@@ -54,27 +54,6 @@
 </div>
 </div>
 
-<!-- Dağılım haritası (tam genişlik) -->
-<sc-if value="{{ ozetPano.harita.var }}" hint-placeholder-val="{{ true }}">
-<div class="ks-modul" style="--m:2;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
-<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
-<div style="display:flex;flex-direction:column;gap:3px">
-<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
-<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
-</div>
-<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-<sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
-<button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
-</sc-for>
-<sc-if value="{{ ozetPano.harita.hepsiVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ozetPano.harita.hepsi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;font:600 12px/36px var(--font-body);color:{{ ui.acc }}">Hepsini göster</button></sc-if>
-</div>
-</div>
-<div style="border-radius:12px;overflow:hidden;border:1px solid {{ ui.rule }};height:380px;position:relative;background:{{ ui.surf2 }}">
-<iframe id="ks-ozet-harita" src="ozet-harita.html" title="Kayıtların dağılım haritası" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:none;display:block"></iframe>
-</div>
-</div>
-</sc-if>
-
 <!-- Veri tamamlanma -->
 <sc-if value="{{ ozetPano.tamam.var }}" hint-placeholder-val="{{ true }}">
 <div class="ks-modul" style="--m:2;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:16px;min-width:0">
@@ -94,6 +73,60 @@
 </button>
 </sc-for>
 </div>
+</div>
+</div>
+</sc-if>
+
+<!-- İlçelere göre -->
+<div class="ks-modul" style="--m:5;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">İlçelere göre</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">İlçeye basınca kayıtlar listede açılır</span>
+</div>
+<div style="display:flex;gap:12px;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkKuyu }}"></span>Kuyu</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDepo }}"></span>Depo</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDiger }}"></span>Diğer</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ ozetPano.ilceSatir }}" as="r" hint-placeholder-count="7">
+<button class="ks-satir" onClick="{{ r.git }}" title="{{ r.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px">
+<span style="flex:none;width:76px;font:500 13px/1.2 var(--font-body);color:{{ ui.fg }}">{{ r.ad }}</span>
+<span style="flex:1;min-width:0;display:flex;gap:2px;height:12px">
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wK }};background:{{ ozetPano.renkKuyu }}"></span>
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wD }};background:{{ ozetPano.renkDepo }}"></span>
+<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wO }};background:{{ ozetPano.renkDiger }}"></span>
+</span>
+<span style="flex:none;width:34px;text-align:right;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.n }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<!-- Ayrıntılı göstergeler: varsayılan kapalı -->
+<div style="grid-column:1 / -1;display:flex;justify-content:center">
+<button onClick="{{ ozetPano.ayrintiTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;border-radius:12px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};color:{{ ui.fg }};font:600 13px/1 var(--font-body);padding:14px 22px">{{ ozetPano.ayrintiEtiket }}</button>
+</div>
+<sc-if value="{{ ozetPano.ayrintiAcik }}" hint-placeholder-val="{{ false }}">
+<!-- Dağılım haritası (tam genişlik) -->
+<sc-if value="{{ ozetPano.harita.var }}" hint-placeholder-val="{{ true }}">
+<div class="ks-modul" style="--m:2;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+<div style="display:flex;flex-direction:column;gap:3px">
+<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">Dağılım haritası</span>
+<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">Türe basınca haritadan gizlenir ya da geri gelir · {{ ozetPano.harita.say }}</span>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+<sc-for list="{{ ozetPano.harita.turler }}" as="t" hint-placeholder-count="4">
+<button onClick="{{ t.pick }}" title="{{ t.ipucu }}" aria-pressed="{{ t.acik }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:18px;border:1.5px solid {{ t.kenar }};opacity:{{ t.op }};color:{{ t.fg }};font:600 12px/1 var(--font-body)"><span style="width:10px;height:10px;border-radius:50%;background:{{ t.renk }}"></span>{{ t.ad }} <span style="font-weight:500;opacity:.7">{{ t.n }}</span></button>
+</sc-for>
+<sc-if value="{{ ozetPano.harita.hepsiVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ozetPano.harita.hepsi }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:36px;padding:0 12px;font:600 12px/36px var(--font-body);color:{{ ui.acc }}">Hepsini göster</button></sc-if>
+</div>
+</div>
+<div style="border-radius:12px;overflow:hidden;border:1px solid {{ ui.rule }};height:380px;position:relative;background:{{ ui.surf2 }}">
+<iframe id="ks-ozet-harita" src="ozet-harita.html" title="Kayıtların dağılım haritası" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:none;display:block"></iframe>
 </div>
 </div>
 </sc-if>
@@ -148,34 +181,6 @@
 </sc-for>
 </div>
 </sc-if>
-</div>
-
-<!-- İlçelere göre -->
-<div class="ks-modul" style="--m:5;border-radius:16px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
-<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
-<div style="display:flex;flex-direction:column;gap:3px">
-<span style="font:700 15px/1.2 var(--font-heading);letter-spacing:-.015em">İlçelere göre</span>
-<span style="font:400 12.5px/1.4 var(--font-body);color:{{ ui.mut }}">İlçeye basınca kayıtlar listede açılır</span>
-</div>
-<div style="display:flex;gap:12px;font:500 12px/1 var(--font-body);color:{{ ui.mut }}">
-<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkKuyu }}"></span>Kuyu</span>
-<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDepo }}"></span>Depo</span>
-<span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:{{ ozetPano.renkDiger }}"></span>Diğer</span>
-</div>
-</div>
-<div style="display:flex;flex-direction:column;gap:2px">
-<sc-for list="{{ ozetPano.ilceSatir }}" as="r" hint-placeholder-count="7">
-<button class="ks-satir" onClick="{{ r.git }}" title="{{ r.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px">
-<span style="flex:none;width:76px;font:500 13px/1.2 var(--font-body);color:{{ ui.fg }}">{{ r.ad }}</span>
-<span style="flex:1;min-width:0;display:flex;gap:2px;height:12px">
-<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wK }};background:{{ ozetPano.renkKuyu }}"></span>
-<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wD }};background:{{ ozetPano.renkDepo }}"></span>
-<span class="ks-cubuk ks-cubuk-iz" style="--i:{{ r.i }};width:{{ r.wO }};background:{{ ozetPano.renkDiger }}"></span>
-</span>
-<span style="flex:none;width:34px;text-align:right;font:700 13px/1 var(--font-heading);color:{{ ui.fg }}">{{ r.n }}</span>
-</button>
-</sc-for>
-</div>
 </div>
 
 <!-- Nüfusa göre kuyu -->
@@ -325,5 +330,6 @@
 </div>
 </sc-if>
 
+</sc-if>
 </div>
 </sc-if>

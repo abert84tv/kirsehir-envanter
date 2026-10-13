@@ -2328,3 +2328,11 @@ Sürüm 2026.10.05-114.
 - **Envanter listesi (masaüstü ve telefon):** 342 satır tek uzun liste yerine 50'şerli sayfalar ("‹ Önceki · 1–50 / 342 · Sonraki ›"). Arama, süzgeç ya da sıra değişince ilk sayfaya dönülür. Ekran yüksekliği ≈ 18.900 → 3.000 px.
 - **Bakım:** "Bakım kaydı olmayanlar" (340 tesis) varsayılan kapalı; tek özet satırı + "Listeyi göster" düğmesi. ≈ 2.280 → 770 px. Geciken ve yaklaşan bakımlar aynen yukarıda.
 - Ölçüm (tüm modüller açık, masaüstü): Envanter 3.050 · İş panosu 1.910 · Bakım 770 · Ambar 2.920 · Araç 1.250 · Özet 3.260 · Ayarlar 2.220 px. Sıradaki adaylar (karar gerekir): Özet, Ambar stok kartları, Arıza formu iki katman, Tesis kartı boş alan katlama.
+
+## 2026.10.14-202 — Sadeleştirme: üst çubuk menüsü, sade arıza kartı, tesis kartı, Özet
+Benzer saha/bakım programlarının (Dynamics 365 Field Service, UpKeep, Maximo, Fiix, Esri Field Maps) ortak düzenine göre: ana eylem öne, nadir kullanılanlar tek tıkla açılan ayrıntıya.
+- **Üst çubuk (masaüstü):** Yenile, Koordinat dönüşümü, Açıklamalar (?), Tema ve Çıkış tek ⋮ menüsüne girdi (telefondaki menüyle aynı düzen). Çubukta başlık, Canlı göstergesi, ⋮ ve "+ Yeni tesis" kaldı.
+- **Arıza / iş kartı (masaüstü kartı, masaüstü paneli, telefon ayrıntılı form):** durum seçici ("Açık/Atandı/…") "Durumu elle değiştir ▾" altına girdi, üstte "Şu anki durum" yazar; "Sahadayım / İşi tamamla" ve onay kutusu eskisi gibi öne çıkık. Hedef süre, ana arıza, planlı zaman "Gelişmiş" altında (durum "Beklemede" iken bekleme nedeni otomatik görünür). Masaüstü kart ≈ 3.800 → 2.570 px.
+- **Tesis kartı:** yalnız dolu alanlar görünür; boş alanlar "N boş alanı göster ▾" ile açılır (kuyu: 870 px, açıkken 2.320 px). Hızlı eylemler (yol tarifi, arıza aç, fotoğraf, düzenle) ve Bilgi/Foto/Arıza/Geçmiş sekmeleri zaten vardı.
+- **Özet › Envanter:** dağılım, hizmet durumu, veri tamamlanma ve ilçelere göre kaldı; diğer 10 gösterge "Ayrıntılı göstergeleri göster ▾" altında. ≈ 3.260 → 1.140 px.
+- **Ambar stok:** geniş ekranda zaten başlıklı tablo; değişiklik gerekmedi.

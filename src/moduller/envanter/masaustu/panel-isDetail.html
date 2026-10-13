@@ -59,6 +59,9 @@
 <span style="font:600 13.5px/1.35 var(--font-body);color:{{ r.color }};text-align:right">{{ r.value }}</span>
 </div>
 </sc-for>
+<sc-if value="{{ detail.bosSay }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ detail.bosTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:block;margin:12px 18px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 12px/1 var(--font-body);padding:12px 14px;text-align:center">{{ detail.bosEtiket }}</button>
+</sc-if>
 </div>
 </sc-if>
 <sc-if value="{{ detail.showGecmis }}" hint-placeholder-val="{{ false }}">

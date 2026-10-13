@@ -108,19 +108,32 @@
         gecmisNot: (s.log[sel.id] || []).length === 0
           ? 'Bu oturumda bu kayıtta değişiklik yapılmadı. Not yazma, deneme ekleme, fotoğraf ekleme ve arıza açma işlemleri buraya kim-ne zaman-nereden diye yazılır.'
           : `${(s.log[sel.id] || []).length} değişiklik kayıtlı. Gerçek kurulumda bu geçmiş silinmez, denetimde bu liste sorulur.`,
-        rows: (s.detailTab === 'gecmis'
-          ? []
-          : [
+        // Boş alanlar varsayılan gizli: yalnız dolu alanlar görünür, “N boş alanı göster” ile açılır (başlık satırı yalnız dolu alt satırı varsa kalır)
+        ...(() => {
+          const tum = s.detailTab === 'gecmis' ? [] : [
             [sel.type === 'kuyu' ? 'Kuyu barkodu' : 'Tesis barkodu', 'BK-' + sel.code.slice(3)],
             ['Direk barkodu', sel.type === 'kuyu' ? 'BD-' + sel.code.slice(-4) : '—'],
             ...this.rows(sel)
-          ]
-        ).map(([label, value, hi]) => ({
-          label: hi === 2 ? label.toUpperCase() : label,
-          value: String(value),
-          color: hi === 2 ? ui.acc : (String(value) === '—' ? ui.mut : (hi ? ui.acc : ui.fg)),
-          bg: hi === 2 ? ui.surf2 : (hi === 1 ? ui.pend : 'transparent')
-        })),
+          ];
+          const bos = r => r[2] !== 2 && String(r[1]) === '—';
+          const dolu = [];
+          tum.forEach((r, i) => {
+            if (r[2] === 2) { const sonraki = tum.slice(i + 1).find(x => x[2] === 2 || !bos(x)); if (sonraki && sonraki[2] !== 2) dolu.push(r); return; }
+            if (!bos(r)) dolu.push(r);
+          });
+          const goster = s.detayBosAcik ? tum : dolu;
+          return {
+            bosSay: tum.filter(bos).length, bosAcik: !!s.detayBosAcik,
+            bosTog: () => this.setState({ detayBosAcik: !this.state.detayBosAcik }),
+            bosEtiket: s.detayBosAcik ? 'Boş alanları gizle ▴' : tum.filter(bos).length + ' boş alanı göster ▾',
+            rows: goster.map(([label, value, hi]) => ({
+              label: hi === 2 ? label.toUpperCase() : label,
+              value: String(value),
+              color: hi === 2 ? ui.acc : (String(value) === '—' ? ui.mut : (hi ? ui.acc : ui.fg)),
+              bg: hi === 2 ? ui.surf2 : (hi === 1 ? ui.pend : 'transparent')
+            }))
+          };
+        })(),
         // sunucudan gelen gerçek fotoğraflar; bağlantı yoksa eski yer tutucular
         foto: (() => {
           const list = (s.fotolar || {})[sel.dbId];

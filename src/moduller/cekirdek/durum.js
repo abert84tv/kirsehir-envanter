@@ -10,7 +10,7 @@
     mapBase: 'street', navMode: false, route: null,
     scenario: null, newAsset: null,
     role: 'Ofis Mühendisi', tab: 'harita', query: '',
-    envQ: '', envSort: { k: 'code', dir: 1 }, envF: {}, envSayfa: null, bakimYokAcik: false,
+    envQ: '', envSort: { k: 'code', dir: 1 }, envF: {}, envSayfa: null, bakimYokAcik: false, masaMenuAcik: false, faultDurumElle: false, faultGelismis: false, detayBosAcik: false, ozetAyrinti: false,
     arzQ: '', arzSort: { k: 'no', dir: 1 }, arzF: {},
     zoom: 11, center: null, fly: null,
     assets: [],

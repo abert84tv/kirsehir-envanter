@@ -194,6 +194,8 @@
 
         return {
           var: true, bos: toplam === 0, zemin,
+          ayrintiAcik: !!s.ozetAyrinti, ayrintiEtiket: s.ozetAyrinti ? 'Ayrıntılı göstergeleri gizle ▴' : 'Ayrıntılı göstergeleri göster ▾',
+          ayrintiTog: () => this.setState({ ozetAyrinti: !this.state.ozetAyrinti }),
           renkKuyu: REN.kuyu, renkDepo: REN.depo, renkDiger: DIGER, renkVurgu: 'var(--color-accent)', iz: ui.rule,
           toplam, turDonut: halka(tur.map(x => ({ n: x.n, renk: REN[x.t] }))), turSatir,
           aktif, pasif, aktifYuzde, pasifVar: pasif > 0,

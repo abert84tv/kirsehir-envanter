@@ -273,6 +273,18 @@
         })(),
         kaydetmiyor: !(ff && ff.kayitta),
         crewLocked: !canAssign, crewOpacity: canAssign ? '1' : '.55',
+        // Sade görünüm: durum seçici ve “hedef süre / ana arıza / planlı zaman” varsayılan kapalı; tek ana eylem (Sahadayım, İşi tamamla, onay) üstte kalır
+        durumElle: {
+          acik: !!s.faultDurumElle,
+          etiket: (s.faultDurumElle ? 'Durum seçiciyi gizle ▴' : 'Durumu elle değiştir ▾'),
+          tog: () => this.setState({ faultDurumElle: !this.state.faultDurumElle }),
+          simdi: 'Şu anki durum: ' + ((wfSteps.find(([id]) => ff && id === ff.status) || [, ff ? ff.status : ''])[1])
+        },
+        gelismis: {
+          var: !!ff, acik: !!s.faultGelismis,
+          etiket: s.faultGelismis ? 'Gelişmiş ayarları gizle ▴' : 'Gelişmiş: hedef süre, ana arıza, planlı zaman ▾',
+          tog: () => this.setState({ faultGelismis: !this.state.faultGelismis })
+        },
         sla: (() => {
           if (!ff) return { goster: false };
           const ek = ff.ek || {};
@@ -286,7 +298,7 @@
           const bagli = ff.dbId ? (s.faults || []).filter(x => x.ek && x.ek.anaId === ff.dbId) : [];
           const varsayilan = this.sureGun(ff.priority);
           return {
-            goster: true, yonetim: yonetimRol && sureOn, yonetimDegil: !yonetimRol && sureOn,
+            goster: !!s.faultGelismis || ff.status === 'bekleme', yonetim: yonetimRol && sureOn, yonetimDegil: !yonetimRol && sureOn,
             slaYazi: ek.slaIptal ? 'Bu arıza SLA dışı sayılıyor.' : 'SLA süresi: ' + (ek.slaGun != null ? ek.slaGun : varsayilan) + ' gün. Değişikliği yönetici yapar.',
             gun: ek.slaGun != null ? String(ek.slaGun) : '', varsayilan: String(varsayilan) + ' (öncelikten)',
             iptal: !!ek.slaIptal,

@@ -56,6 +56,23 @@
           ];
         })()
       },
+      // Masaüstü üst çubuğu: sık kullanılmayan düğmeler tek ⋮ menüsünde (yenile, koordinat dönüşümü, açıklamalar, tema, çıkış)
+      masaMenu: {
+        acik: !!s.masaMenuAcik, kenar: s.masaMenuAcik ? 'var(--color-accent)' : ui.rule,
+        zemin: s.masaMenuAcik ? 'var(--color-accent)' : 'transparent', yazi: s.masaMenuAcik ? '#fff' : ui.fg,
+        ac: () => this.setState({ masaMenuAcik: !this.state.masaMenuAcik }),
+        kapat: () => this.setState({ masaMenuAcik: false }),
+        ogeler: (() => {
+          const k = fn => () => { this.setState({ masaMenuAcik: false }); fn(); };
+          return [
+            { ikon: '↻', ad: 'Yenile (eşitle)', renk: ui.fg, git: k(() => this.baglan()) },
+            { ikon: '⇄', ad: 'Koordinat dönüşümü', renk: ui.fg, git: k(() => this.setState({ panel: s.panel === 'donusum' ? 'yok' : 'donusum' })) },
+            { ikon: '?', ad: s.yardim ? 'Açıklamaları gizle' : 'Açıklamaları göster', renk: ui.fg, git: k(() => this.yardimDegistir()) },
+            { ikon: dark ? '☀' : '☾', ad: dark ? 'Açık tema' : 'Koyu tema', renk: ui.fg, git: k(() => this.temaSec(dark ? 'light' : 'dark')) },
+            { ikon: '⎋', ad: 'Çıkış', renk: '#d92d20', git: k(() => this.renderVals().logout()) }
+          ];
+        })()
+      },
       toggleTheme: () => this.temaSec(dark ? 'light' : 'dark'),
       onQuery: e => this.setState({ query: e.target.value }),
       onQueryKey: e => {

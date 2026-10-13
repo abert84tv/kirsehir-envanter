@@ -250,10 +250,14 @@
 <span style="font:400 11.5px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.hizli.not }}</span>
 </div>
 </sc-if>
+<button onClick="{{ faultForm.durumElle.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin-bottom:9px;border-radius:9px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);padding:9px 11px">{{ faultForm.durumElle.etiket }}</button>
+<span style="display:block;margin-bottom:8px;font:500 12px/1.4 var(--font-body);color:{{ ui.mut }}">{{ faultForm.durumElle.simdi }}</span>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-if value="{{ faultForm.durumElle.acik }}" hint-placeholder-val="{{ false }}">
 <sc-for list="{{ faultForm.workflow }}" as="w" hint-placeholder-count="4">
 <button onClick="{{ w.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;opacity:{{ w.op }};padding:9px 12px;border-radius:10px;border:1px solid {{ w.border }};background:{{ w.bg }};color:{{ w.fg }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">{{ w.label }}</button>
 </sc-for>
+</sc-if>
 <sc-if value="{{ faultForm.yenidenAc.on }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:11px;border-radius:10px;border:1px solid {{ ui.rule }};padding:12px 13px;display:flex;flex-direction:column;gap:10px">
 <span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }}">Kapanmış kayıt</span>
@@ -281,6 +285,9 @@
 
 </div>
 <div style="padding:0 18px 14px">
+<sc-if value="{{ faultForm.gelismis.var }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ faultForm.gelismis.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;margin:2px 0 8px;border-radius:9px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);padding:9px 11px">{{ faultForm.gelismis.etiket }}</button>
+</sc-if>
 <sc-if value="{{ faultForm.sla.goster }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid {{ ui.rule }};padding-top:12px;margin-top:6px">
 <span style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">Süre ve bağlantılar</span>

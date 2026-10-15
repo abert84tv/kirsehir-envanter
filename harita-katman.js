@@ -41,13 +41,13 @@ export function katmanKur(map, o) {
 
   // ── zeminler
   const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap katkıcıları', maxZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1
+    attribution: '© OpenStreetMap katkıcıları', maxZoom: 21, maxNativeZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1
   });
   const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 19, className: 'ks-sat', updateWhenZooming: false, keepBuffer: 1
+    attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 21, maxNativeZoom: 18, className: 'ks-sat', updateWhenZooming: false, keepBuffer: 1
   });
   const satLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Yer adları: Esri', maxZoom: 19, pane: 'shadowPane'
+    attribution: 'Yer adları: Esri', maxZoom: 21, maxNativeZoom: 17, pane: 'shadowPane'
   });
   street.addTo(map);
   function setBase(kind) {
@@ -120,7 +120,7 @@ export function katmanKur(map, o) {
         fillColor: TUR_RENK[g.tur] || '#0071e3', fillOpacity: pasif ? .35 : .95
       });
     } else {
-      mk = L.marker([g.lat, g.lon], { icon: ksPin(g.tur, { ref: g.kind === 'isu', pasif, pend, fault }), keyboard: false });
+      mk = L.marker([g.lat, g.lon], { icon: ksPin(g.tur, { ref: g.kind === 'isu', pasif, pend, fault, etiket: g.kind === 'a' && a.d ? a.d.ad : '' }), keyboard: false });
     }
     if (g.kind === 'a') {
       if (mod === 'e') {

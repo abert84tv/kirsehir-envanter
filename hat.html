@@ -144,9 +144,9 @@ const el = id => document.getElementById(id);
 const map = L.map('map', { zoomControl: false }).setView([39.15091, 34.15952], 13);
 L.control.zoom({ position: 'topright' }).addTo(map);
 const sokak = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  { maxZoom: 19, attribution: '© OpenStreetMap', className: 'ks-tiles' }).addTo(map);
+  { maxZoom: 21, maxNativeZoom: 19, attribution: '© OpenStreetMap', className: 'ks-tiles' }).addTo(map);
 const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  { maxZoom: 19, attribution: 'Esri, Maxar', className: 'ks-sat' });
+  { maxZoom: 21, maxNativeZoom: 18, attribution: 'Esri, Maxar', className: 'ks-sat' });
 let uyduAcik = false;
 
 let tesis = null, hatlar = [], tur = 'terfi', cizim = null, yazma = true;

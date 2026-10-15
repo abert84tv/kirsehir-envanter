@@ -49,11 +49,14 @@ const KSP_SVG = {
   kaynak: '<svg viewBox="0 0 24 24"><path d="M12 3v9M8.5 8.5 12 12l3.5-3.5"/><path d="M4 17c3-3 5 3 8 0s5 3 8 0"/></svg>',
   memba: '<svg viewBox="0 0 24 24"><path d="M3 10h11a4 4 0 1 1 0 8h-2"/><path d="M6 7 3 10l3 3"/></svg>'
 };
-// tur: kuyu | depo | ag | ges | baca | vana | kaynak | memba; o: { ref, pend, fault, pasif }
+// tur: kuyu | depo | ag | ges | baca | vana | kaynak | memba; o: { ref, pend, fault, pasif, etiket }
 function ksPin(tur, o) {
   o = o || {};
   const cls = 'ksp ' + tur + (o.ref ? ' ref' : '') + (o.pasif ? ' pasif' : (o.pend ? ' pend' : '')) + (o.fault && !o.pasif ? ' fault' : '');
-  return L.divIcon({ className: '', iconSize: [28, 28], iconAnchor: [14, 14], html: '<div class="' + cls + '">' + (KSP_SVG[tur] || '') + '</div>' });
+  // Baca dikdörtgen çizilir ve çizimdeki adını (P1…) taşır
+  const baca = tur === 'baca', ad = baca && o.etiket ? String(o.etiket).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) : '';
+  const boy = baca ? [38, 22] : [28, 28];
+  return L.divIcon({ className: '', iconSize: boy, iconAnchor: [boy[0] / 2, boy[1] / 2], html: '<div class="' + cls + '">' + (ad ? '<b>' + ad + '</b>' : (KSP_SVG[tur] || '')) + '</div>' });
 }
 
 // Uzaktan bakınca işaretler küçük renkli noktaya iner (yakınlaşınca simgeli hâli açılır)

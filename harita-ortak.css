@@ -37,8 +37,12 @@ body.dark .ksp.kuyu{--ksp:#4aa3ff}body.dark .ksp.depo{--ksp:#fbbf24}body.dark .k
 body.dark .ksp.baca{--ksp:#2bb5a5}body.dark .ksp.vana{--ksp:#e5566d}body.dark .ksp.ges{--ksp:#f5c542}body.dark .ksp.kaynak{--ksp:#22d3ee}body.dark .ksp.memba{--ksp:#4ade80}
 
 .ksp{margin:auto}
+/* Baca: dikdörtgen, içinde çizimdeki adı */
+.ksp.baca{width:38px;height:22px;border-radius:4px}
+.ksp b{font:700 11px/1 var(--font-body,system-ui,sans-serif);letter-spacing:.01em;white-space:nowrap}
 .ksz-ince .ksp{width:12px;height:12px;border-radius:50%;border-width:2px;box-shadow:0 1px 3px rgba(0,0,0,.35)}
-.ksz-ince .ksp svg{display:none}
+.ksz-ince .ksp svg,.ksz-ince .ksp b{display:none}
+.ksz-ince .ksp.baca{width:14px;height:9px;border-radius:2px}
 .ksz-ince .ksp.fault:after{top:-4px;right:-4px;width:8px;height:8px}
 .ksz-ince .ks-lbl,.ksz-ince .ks-tlbl{display:none}
 .ksz-ince .ksp.ref,.ksz-ince .ksp.pasif{border-style:solid}

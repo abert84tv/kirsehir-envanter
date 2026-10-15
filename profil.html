@@ -288,7 +288,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 </div>
 <script>
 const KS = { lat: 39.15091, lon: 34.15952 };
-const map = L.map('map', { zoomControl: true, attributionControl: true, preferCanvas: true }).setView([KS.lat, KS.lon], 10);
+const map = L.map('map', { zoomControl: true, attributionControl: true, maxZoom: 21, preferCanvas: true }).setView([KS.lat, KS.lon], 10);
 ksPinZoom(map, 12);
 let noktalar = [], pinler = [], hat = null, segEt = [], ornek = [], imlec = null, ekleModu = false, sonTesisTik = 0, istek = 0;
 

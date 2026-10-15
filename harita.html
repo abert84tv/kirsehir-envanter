@@ -169,7 +169,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 <script type="module">
 import { katmanKur, hatMesafe } from './harita-katman.js';
 
-const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true, preferCanvas: true, zoomSnap: 0.5, zoomDelta: 0.5, wheelPxPerZoomLevel: 90 });
+const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true, maxZoom: 21, preferCanvas: true, zoomSnap: 0.5, zoomDelta: 0.5, wheelPxPerZoomLevel: 90 });
 ksPinZoom(map, 12);
 const SUZ_KEY = 'ks-suzgec';
 

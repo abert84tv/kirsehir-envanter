@@ -99,6 +99,9 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 #tools .ks-katman .k-menu button.arac{font-weight:500;font-size:12.5px;padding:11px 14px}
 #tools .ks-katman .k-menu button.arac.on::after{content:'✓';margin-left:auto;color:var(--color-accent);font-weight:700}
 #tools .ks-katman .k-menu button.arac.on{background:transparent;color:var(--color-text)}
+#tools .ks-katman .k-menu .k-sw{width:18px;height:5px;border-radius:3px;flex:none}
+#tools .ks-katman .k-menu button.arac .k-ad{flex:1;white-space:nowrap}
+#tools .ks-katman .k-menu button small{font:500 11px/1 var(--font-body);color:var(--color-neutral-500,#8e8e93);white-space:nowrap}
 
 /* Harita simgeleri — hepsi aynı dilde (katman, yol tarifi, mesafe ölç, hat kesiti araçları, konumuma git):
    yüzey renginde yuvarlak kare + mavi simge; üzerine gelince mavi tonlu zemin ve mavi kenar; etkin olunca mavi dolu + beyaz simge. */

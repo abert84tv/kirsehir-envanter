@@ -130,6 +130,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
     <button class="arac kal" id="t-hat">Hat güzergâhları</button>
     <button class="arac kal on" id="t-sebeke">Baca ve vanalar</button>
+    <div id="t-gruplar"></div>
   </div>
 </div>
 </div>
@@ -220,6 +221,24 @@ function sebekeGoster(f) {
   document.getElementById('t-sebeke').classList.toggle('on', sebekeAcik);
 }
 document.getElementById('t-sebeke').onclick = () => { try { parent.postMessage({ ks: 'sebekeKatman', on: !sebekeAcik }, '*'); } catch (e) { /* çerçeve yok */ } };
+// Hat grupları (Hat 1, Hat 2 …): her biri kendi renginde, ayrı ayrı açılıp kapanır
+function gruplariCiz() {
+  const kap = document.getElementById('t-gruplar'); if (!kap) return;
+  const g = K.hatGruplari();
+  kap.innerHTML = '';
+  if (!g.length) return;
+  const b = document.createElement('div'); b.className = 'k-baslik'; b.textContent = 'Hat grupları'; kap.appendChild(b);
+  for (const x of g) {
+    const d = document.createElement('button');
+    d.className = 'arac kal' + (x.acik ? ' on' : '');
+    const sw = document.createElement('span'); sw.className = 'k-sw'; sw.style.background = x.renk;
+    const ad = document.createElement('span'); ad.className = 'k-ad'; ad.textContent = x.ad;
+    const n = document.createElement('small'); n.textContent = x.n + ' · ' + (x.uz >= 1000 ? (x.uz / 1000).toFixed(2) + ' km' : Math.round(x.uz) + ' m'); d.title = x.ad + ': ' + x.n + ' boru parçası, toplam ' + n.textContent.split(' · ')[1];
+    d.append(sw, ad, n);
+    d.onclick = () => { K.grupAc(x.ad, !x.acik); gruplariCiz(); };
+    kap.appendChild(d);
+  }
+}
 function applyLabels() { document.getElementById('t-labels').classList.toggle('on', K.etiket()); }
 document.getElementById('t-labels').onclick = () => { K.setEtiket(!K.etiket()); applyLabels(); };
 applyLabels();
@@ -426,6 +445,7 @@ addEventListener('message', e => {
   if (d.ks === 'assets' && Array.isArray(d.assets)) K.setData(d.assets, Array.isArray(d.faults) ? d.faults : null);
   if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) {
     K.setHat(d.hatlar);
+    gruplariCiz();
   }
   if (d.ks === 'hatKatman') hatKatman(d.on);
   if (d.ks === 'filter') {

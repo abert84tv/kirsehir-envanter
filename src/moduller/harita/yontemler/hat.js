@@ -30,7 +30,7 @@
     const a = (this.state.assets || []).find(x => x.id === assetId);
     if (!M || !M.hatKaydet || !M.tokenOku() || !a || !a.dbId || this.state.offline) { if (a && a.dbId) this.hatBekleyenEkle(assetId); return; }
     M.hatKaydet(a.dbId, (liste || []).map(x => ({
-      tur: x.tur, noktalar: x.noktalar,
+      tur: x.tur, noktalar: x.noktalar, grup: x.grup || null,
       // Boru çapı ve malzemesi açıklama alanına "Ø110 mm · PE100 · not" biçiminde yazılır
       aciklama: [x.cap ? 'Ø' + x.cap + ' mm' : '', x.malzeme || '', x.aciklama || ''].filter(Boolean).join(' · ') || null
     }))).then(r => {
@@ -53,7 +53,7 @@
       const a = (this.state.assets || []).find(x => x.id === id);
       if (!a || !a.dbId) continue;
       const liste = (this.state.hatlar || {})[id] || [];
-      const r = await M.hatKaydet(a.dbId, liste.map(x => ({ tur: x.tur, noktalar: x.noktalar,
+      const r = await M.hatKaydet(a.dbId, liste.map(x => ({ tur: x.tur, noktalar: x.noktalar, grup: x.grup || null,
         aciklama: [x.cap ? 'Ø' + x.cap + ' mm' : '', x.malzeme || '', x.aciklama || ''].filter(Boolean).join(' · ') || null })));
       if (r.ok) this.hatBekleyenCikar(id); else if (r.cevrimdisi) break;
     }
@@ -73,7 +73,7 @@
       const id = kimlik[x.tesis_id];
       if (!id) continue;
       (tablo[id] = tablo[id] || []).push({
-        id: 'h' + x.id, dbId: x.id, tur: x.tur,
+        id: 'h' + x.id, dbId: x.id, tur: x.tur, grup: x.grup || '',
         noktalar: (x.noktalar || []).map(p => [+p[0], +p[1]]),
         ...(() => {
           const m = /^Ø(\d+) mm(?: · ([^·]+?))?(?: · (.*))?$/.exec(String(x.aciklama || ''));
@@ -102,7 +102,7 @@
     for (const id in tablo) {
       for (const x of (tablo[id] || [])) {
         if (!x || !(x.noktalar || []).length) continue;
-        duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '' });
+        duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '', grup: x.grup || '', cap: x.cap || '' });
       }
     }
     this.toMap({ ks: 'hatlar', hatlar: duz });

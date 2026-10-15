@@ -2346,3 +2346,8 @@ Benzer saha/bakım programlarının (Dynamics 365 Field Service, UpKeep, Maximo,
 ## 2026.10.15-204 — Baca dikdörtgen işaret, yakın zoomda harita görüntüsü
 - **Baca işareti dikdörtgen** ve içinde çizimdeki adı (P1…P18) yazar; uzaktan bakınca küçük dikdörtgen noktaya iner. Vana kelebek simgesi aynı.
 - **Çok yakınlaşınca harita kaybolması giderildi:** Esri uydu karoları bu bölgede yalnız 18. yakınlaştırmaya kadar var (19'da "veri yok" karosu geliyordu), yer adı katmanı 17'ye kadar, OSM 19'a kadar. Kaynak karolar bittiği yerde mevcut karo büyütülür (bulanıklaşır ama görüntü kalır); azami yakınlaşma 21. Ana harita, Özet haritası, Hat çizim ve Hat kesiti haritalarında.
+
+## 2026.10.15-205 — Hat grupları: her grup kendi renginde, ayrı ayrı açılır/kapanır
+- Hat parçası bir **gruba** bağlanır (`hat.grup`: "Hat 1", "Hat 2", "Ana boru" ya da proje adı). Harita grubu kendi rengiyle çizer: "Hat N" için N'inci renk (Hat 1 mavi, Hat 2 kırmızı, Hat 3 yeşil…, 10 renk), "Ana boru" siyah, başka adlar addan türetilen renk. Grupsuz hatlar eskisi gibi hat türü rengiyle çizilir. Üzerine gelince tooltip: grup · tür · kod · çap · uzunluk.
+- **Katman menüsü** (harita sağ üst): "Hat grupları" bölümü — her grup renk çizgisi, parça sayısı ve toplam uzunluğuyla; tek dokunuşla açılıp kapanır, seçim cihazda kalır. Çok hatlı büyük projelerde grup grup açıp kapatmak için.
+- Eşrefli hatları gruplandı: Ana boru (1 parça), Hat 1 (3), Hat 2 (14). `hat_listesi`/`hat_kaydet` grup alanını taşır; hat çizim sayfası gruplu hatları kaydederken grubu korur. Hat çizim sayfasından yeni hat çizerken grup adı henüz sorulmaz (grupsuz kalır).

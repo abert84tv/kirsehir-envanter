@@ -11,6 +11,18 @@ import { ISU_KAYNAK, ISU_MEMBA, ISU_ISUDEPO } from './isu-katmanlar.js';
 
 export const HAT_REN = { terfi: '#0071e3', isale: '#201e1d', sebeke: '#6c6763', ag: '#1b6ef3', og: '#7b3fbf', dc: '#c08a00' };
 export const HAT_AD = { terfi: 'Terfi hattı', isale: 'İsale hattı', sebeke: 'Şebeke hattı', ag: 'AG enerji hattı', og: 'OG enerji hattı', dc: 'GES DC hattı' };
+// Hat grupları (Hat 1, Hat 2 … ya da proje adı): her grup kendi rengiyle çizilir.
+// "Hat N" için N'inci renk (Hat 1 mavi, Hat 2 kırmızı …), başka adlar için addan türetilen renk.
+const GRUP_PALET = ['#1b6ef3', '#e03131', '#2f9e44', '#f08c00', '#7048e8', '#0c8599', '#c2255c', '#5c940d', '#e8590c', '#495057'];
+export function grupRenk(ad) {
+  if (!ad) return null;
+  if (/^ana boru$/i.test(ad)) return '#201e1d';
+  const m = /(\d+)\s*$/.exec(ad);
+  let i = 0;
+  if (m) i = parseInt(m[1], 10) - 1;
+  else for (const c of ad) i = (i * 31 + c.charCodeAt(0)) >>> 0;
+  return GRUP_PALET[((i % GRUP_PALET.length) + GRUP_PALET.length) % GRUP_PALET.length];
+}
 export function hatMesafe(a, b) {
   const rd = x => x * Math.PI / 180;
   const dLat = rd(b[0] - a[0]), dLon = rd(b[1] - a[1]);
@@ -21,6 +33,7 @@ export const hatKm = v => v >= 1000 ? (v / 1000).toFixed(v < 10000 ? 2 : 1) + ' 
 
 const KAPALI = ['cozuldu', 'iptal'];
 const HAT_KEY = 'ks-hat-katman';
+const HAT_GIZLI_KEY = 'ks-hat-gizli';
 const ISU_ESIK_M = 30;
 const DOM_ZOOM = 12, DOM_SINIR = 260, ETIKET_ZOOM = 14;
 const TUR_RENK = { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', baca: '#0e8a7d', vana: '#d6336c', kaynak: '#0891b2', memba: '#15803d' };
@@ -37,7 +50,9 @@ export function katmanKur(map, o) {
   let { assets, faults } = buildAssets(DATA);
   let openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
   let sonFilter = null, wantLabels = true, hatVeri = [], hatAcik = true, base = 'street';
+  let hatGizli = new Set();
   try { hatAcik = localStorage.getItem(HAT_KEY) !== '0'; } catch (e) { /* depolama kapalı */ }
+  try { hatGizli = new Set(JSON.parse(localStorage.getItem(HAT_GIZLI_KEY) || '[]')); } catch (e) { /* depolama kapalı */ }
 
   // ── zeminler
   const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -63,14 +78,15 @@ export function katmanKur(map, o) {
     hatLayer.clearLayers();
     if (!hatAcik) return;
     for (const h of hatVeri) {
+      if (h.grup && hatGizli.has(h.grup)) continue;
       const p = (h.noktalar || []).map(x => [+x[0], +x[1]]).filter(x => isFinite(x[0]) && isFinite(x[1]));
       if (p.length < 2) continue;
       let uz = 0;
       for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
-      const renk = HAT_REN[h.tur] || '#201e1d';
+      const renk = grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d';
       L.polyline(p, { color: '#fff', weight: 8, opacity: .65, interactive: false }).addTo(hatLayer);
       L.polyline(p, { color: renk, weight: 4.5, opacity: .95 })
-        .bindTooltip((HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + ' · ' + hatKm(uz), { sticky: true })
+        .bindTooltip((h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz), { sticky: true })
         .addTo(hatLayer);
     }
   }
@@ -194,6 +210,24 @@ export function katmanKur(map, o) {
       cizHatlar();
     },
     hatAcik: () => hatAcik,
+    // Hat grupları: ad, renk, parça sayısı, toplam uzunluk (m), açık mı
+    hatGruplari() {
+      const g = new Map();
+      for (const h of hatVeri) {
+        if (!h.grup) continue;
+        const p = (h.noktalar || []).map(x => [+x[0], +x[1]]).filter(x => isFinite(x[0]) && isFinite(x[1]));
+        let uz = 0; for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
+        const o2 = g.get(h.grup) || { ad: h.grup, renk: grupRenk(h.grup), n: 0, uz: 0 };
+        o2.n++; o2.uz += uz; g.set(h.grup, o2);
+      }
+      return [...g.values()].map(x => ({ ...x, acik: !hatGizli.has(x.ad) }))
+        .sort((a, b) => String(a.ad).localeCompare(String(b.ad), 'tr', { numeric: true }));
+    },
+    grupAc(ad, on) {
+      if (on) hatGizli.delete(ad); else hatGizli.add(ad);
+      try { localStorage.setItem(HAT_GIZLI_KEY, JSON.stringify([...hatGizli])); } catch (e) { /* depolama kapalı */ }
+      cizHatlar();
+    },
     setEtiket(on) { wantLabels = !!on; gorunumGuncelle(); },
     etiket: () => wantLabels,
     assets: () => assets,

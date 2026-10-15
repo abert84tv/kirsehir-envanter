@@ -105,6 +105,10 @@
         duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '', koy: koy[id] || '', grup: x.grup || '', cap: x.cap || '' });
       }
     }
+    // Aynı veri yeniden gönderilmez: harita her seferinde bütün hatları silip çizmesin
+    const imza = JSON.stringify(duz);
+    if (imza === this._hatImza) return;
+    this._hatImza = imza;
     this.toMap({ ks: 'hatlar', hatlar: duz });
   }
   hatUzunluk(noktalar) {

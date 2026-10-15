@@ -31,9 +31,13 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 <script>
 // Harita bir hata yüzünden boş kalmasın: hata görünür bir şeritle bildirilir, ana uygulamaya haber verilir;
 // katman modülü hiç yüklenemezse düz zemin haritası yine açılır (bkz. yedekKatman).
+const hataGorulen = new Set(); let hataSayac = 0;
 function haritaHata(msg, kalici) {
+  const anahtar = String(msg).slice(0, 120);
+  if (hataGorulen.has(anahtar)) return;          // tekrarlayan hata uygulamayı ve denetim kaydını doldurmasın
+  hataGorulen.add(anahtar);
   try { console.error('[harita]', msg); } catch (e) { /* konsol yok */ }
-  try { parent.postMessage({ ks: 'haritaHata', msg: String(msg).slice(0, 300) }, '*'); } catch (e) { /* çerçeve yok */ }
+  if (++hataSayac <= 5) { try { parent.postMessage({ ks: 'haritaHata', msg: String(msg).slice(0, 300) }, '*'); } catch (e) { /* çerçeve yok */ } }
   let b = document.getElementById('ks-hata');
   if (!b) {
     b = document.createElement('div'); b.id = 'ks-hata';
@@ -508,6 +512,7 @@ ksUzunBasisKur(map, () => !pickName && !coordMode, noktaBirak);
 // dış uygulamadan tema / filtre / rota komutları
 const mesajIsle = e => {
   const d = e.data || {};
+  if (d.ks === 'ping') { try { parent.postMessage({ ks: 'ready' }, '*'); } catch (err) { /* çerçeve yok */ } return; }
   if (d.ks === 'theme') document.body.classList.toggle('dark', d.dark);
   // Konumu boş / geçersiz bir kayda uçulmaz: null enlem Leaflet'te bütün katmanların çizimini bozar
   const konumVar = (la, lo) => la !== null && lo !== null && la !== undefined && lo !== undefined && la !== '' && lo !== '' && Number.isFinite(+la) && Number.isFinite(+lo);

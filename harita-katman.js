@@ -99,8 +99,10 @@ export function katmanKur(map, o) {
         for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
         const renk = grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d';
         if (kal.halo) L.polyline(p, { color: '#fff', weight: kal.halo, opacity: .65, interactive: false }).addTo(hatLayer);
-        L.polyline(p, { color: renk, weight: kal.w, opacity: .95 })
-          .bindTooltip((h.koy ? h.koy + ' · ' : '') + (h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz), { sticky: true })
+        const yazi = (h.koy ? h.koy + ' · ' : '') + (h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz);
+        // Tooltip ilk üzerine gelişte kurulur: yüzlerce hat için baştan yüzlerce tooltip nesnesi üretilmez
+        L.polyline(p, { color: renk, weight: kal.w, opacity: .95, smoothFactor: 1.5 })
+          .once('mouseover', function (ev) { this.bindTooltip(yazi, { sticky: true }).openTooltip(ev.latlng); })
           .addTo(hatLayer);
       } catch (e) { if (typeof o.hata === 'function') o.hata('Hat çizilemedi: ' + (e && e.message || e)); }
     }
@@ -169,7 +171,7 @@ export function katmanKur(map, o) {
   }
   function gorunumGuncelle() {
     const z = map.getZoom(), dom = z >= DOM_ZOOM;
-    const mod = dom ? (wantLabels && z >= ETIKET_ZOOM ? 'e' : 'd') : 'n';
+    let mod = dom ? (wantLabels && z >= ETIKET_ZOOM ? 'e' : 'd') : 'n';
     const b = map.getBounds().pad(dom ? .15 : .3), mrk = map.getCenter();
     let ad = [];
     for (const g of ogeler) {
@@ -181,6 +183,8 @@ export function katmanKur(map, o) {
       ad.sort((x, y) => x._d - y._d);
       ad.length = DOM_SINIR;
     }
+    // Kalıcı etiket yüzlerce DOM düğümü demek: 80'den fazla işaret varsa etiketler üzerine gelince açılır
+    if (mod === 'e' && ad.length > 80) mod = 'd';
     const hedef = new Set(ad.map(g => g.key));
     for (const [k, c] of canli) {
       if (!hedef.has(k) || c.mod !== mod) { goruntuKatman.removeLayer(c.mk); canli.delete(k); }

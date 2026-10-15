@@ -1,9 +1,9 @@
   baslatMesajlar() {
     this._msg = e => {
       const d = e.data || {};
-      if (d.ks === 'ready') { this._haritaHazir = true; this.pushMap(); }
+      if (d.ks === 'ready') { this._haritaHazir = true; this._hatImza = null; this.pushMap(); }
       // Haritanın kendi hata şeridi gösterildi: denetim izine de yazılır (kullanıcı "harita gelmiyor" derse nedeni görülür)
-      if (d.ks === 'haritaHata') { try { this.denetimYaz('veri', 'Harita hatası', String(d.msg || '').slice(0, 200), 'Harita'); } catch (e) { /* denetim yok */ } return; }
+      if (d.ks === 'haritaHata') { this._haritaHataSay = (this._haritaHataSay || 0) + 1; if (this._haritaHataSay > 5) return; try { this.denetimYaz('veri', 'Harita hatası', String(d.msg || '').slice(0, 200), 'Harita'); } catch (e) { /* denetim yok */ } return; }
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
       // Köy atama penceresindeki harita: hazır olunca veri gider; nokta ya da aday köye basılınca seçim güncellenir
       if (d.ks === 'koyAtaHazir') { this.koyAtaHaritaGonder(); return; }
@@ -91,7 +91,15 @@
       if (this._haritaHazir) return;
       const f = document.querySelector('iframe[title^="Kırşehir haritası"]');
       if (f) {
-        if (deneme === 0) { try { f.src = f.src; } catch (e) { /* çerçeve yok */ } setTimeout(() => bekci(1), 20000); }
+        if (deneme === 0) {
+          // Önce "hazır mısın" diye sorulur (hazır iletisi kaçırılmış olabilir); 4 sn yanıt yoksa çerçeve yenilenir
+          try { f.contentWindow.postMessage({ ks: 'ping' }, '*'); } catch (e) { /* çerçeve yok */ }
+          setTimeout(() => {
+            if (this._haritaHazir) return;
+            try { f.src = f.src; } catch (e) { /* çerçeve yok */ }
+            setTimeout(() => bekci(1), 20000);
+          }, 4000);
+        }
         else this.duyur('Harita açılamadı. İnternet bağlantınızı denetleyip sayfayı yenileyin.', 9000, 'kotu');
       } else setTimeout(() => bekci(deneme), 5000);
     };

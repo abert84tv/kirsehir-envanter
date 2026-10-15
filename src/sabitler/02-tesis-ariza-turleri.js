@@ -3,13 +3,17 @@ const TYPES = {
   kuyu: { label: 'Kuyu', glyph: 'K', kind: 'Su kuyusu', pre: 'KUY' },
   depo: { label: 'Depo', glyph: 'D', kind: 'Su deposu', pre: 'DEP' },
   ag: { label: 'AG', glyph: 'A', kind: 'AG şebeke / pano', pre: 'AGP' },
-  ges: { label: 'GES', glyph: 'G', kind: 'Güneş enerji santrali', pre: 'GES' }
+  ges: { label: 'GES', glyph: 'G', kind: 'Güneş enerji santrali', pre: 'GES' },
+  baca: { label: 'Baca', glyph: 'B', kind: 'Şebeke bacası', pre: 'BAC' },
+  vana: { label: 'Vana', glyph: 'V', kind: 'Şebeke vanası', pre: 'VAN' }
 };
 const FAULT_TYPES = {
   kuyu: ['Pompa çalışmıyor', 'Debi düşüklüğü', 'Kolon borusu kaçağı', 'Motor aşırı akım', 'RF haberleşme kesildi', 'Diğer'],
   depo: ['Depo kaçağı / çatlak', 'Klorlama cihazı arızası', 'Seviye sensörü arızası', 'Kapak / güvenlik', 'RF modülü arızası', 'Diğer'],
   ag: ['Elektrik kesintisi', 'Sigorta attı', 'Kontaktör / röle arızası', 'Kablo arızası', 'Pano su aldı', 'Diğer'],
-  ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer']
+  ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer'],
+  baca: ['Kapak kırık / yok', 'Su kaçağı', 'Çökme / göçük', 'Temizlik gerekiyor', 'Diğer'],
+  vana: ['Vana kaçağı', 'Vana açılmıyor / kapanmıyor', 'Mil / gövde arızası', 'Vana odası su dolu', 'Diğer']
 };
 // İş grubu → arıza türleri. Arıza ekranında önce grup, sonra yalnız o
 // gruba ait türler açılır listede gelir. "tesis" grubun hangi tesis türüne
@@ -36,7 +40,7 @@ const ARIZA_GRUP = {
     'Tıkanıklık', 'Taşma', 'Rögar kapağı kırık / yok', 'Koku', 'Hat çökmesi / göçük', 'Foseptik dolu', 'Diğer'] }
 };
 // Tesis türünden varsayılan grup; eski kayıtta grup yoksa türden tahmin
-const TESIS_GRUP = { kuyu: 'kuyu', depo: 'depo', ag: 'elektrik', ges: 'ges' };
+const TESIS_GRUP = { kuyu: 'kuyu', depo: 'depo', ag: 'elektrik', ges: 'ges', baca: 'su', vana: 'su' };
 function arizaGrubu(f, a) {
   if (f && ARIZA_GRUP[f.grup]) return f.grup;
   if (a && TESIS_GRUP[a.type]) return TESIS_GRUP[a.type];
@@ -50,4 +54,4 @@ function arizaGrubu(f, a) {
 // anahtarında durur. Ambar mevcudu ve zimmet malzeme ADINA göre tutulur,
 // bu yüzden hareketi olan malzemenin adı değiştirilemez.
 // Özet haritası ve göstergeler: türe göre sabit renkler (haritadaki işaretlerle aynı; koyu temada ayrı adımlar)
-const turRenk = dark => dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };
+const turRenk = dark => dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700', baca: '#2bb5a5', vana: '#e5566d' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', baca: '#0e8a7d', vana: '#d6336c' };

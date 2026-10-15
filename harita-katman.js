@@ -23,7 +23,7 @@ const KAPALI = ['cozuldu', 'iptal'];
 const HAT_KEY = 'ks-hat-katman';
 const ISU_ESIK_M = 30;
 const DOM_ZOOM = 12, DOM_SINIR = 260, ETIKET_ZOOM = 14;
-const TUR_RENK = { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', kaynak: '#0891b2', memba: '#15803d' };
+const TUR_RENK = { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', baca: '#0e8a7d', vana: '#d6336c', kaynak: '#0891b2', memba: '#15803d' };
 // Kaynak/Memba/Depo referans noktaları: gerçek kayıtla (30 m) çakışanlar elenir
 const ISU_KATMAN = {
   kaynak: { veri: ISU_KAYNAK, suzgec: 'kaynak', ad: 'ISU Kaynak noktası (referans)', eslesir: ['kuyu'] },

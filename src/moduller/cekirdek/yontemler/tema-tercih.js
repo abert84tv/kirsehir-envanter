@@ -20,6 +20,7 @@
         out.filter = {
           kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
           ag: p.filter.ag !== false, ges: p.filter.ges !== false,
+          baca: p.filter.baca !== false, vana: p.filter.vana !== false,
           pasif: p.filter.pasif !== false,
           // ISU katmanları: eski kayıtta yoksa "Tümü" ile birlikte açık gelir
           kaynak: 'kaynak' in p.filter ? p.filter.kaynak !== false : true,
@@ -62,6 +63,7 @@
       const f = {
         kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
         ag: s.filter.ag !== false, ges: s.filter.ges !== false,
+        baca: s.filter.baca !== false, vana: s.filter.vana !== false,
         pasif: s.filter.pasif !== false,
         kaynak: s.filter.kaynak !== false, memba: s.filter.memba !== false
       };

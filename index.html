@@ -10335,13 +10335,17 @@ const TYPES = {
   kuyu: { label: 'Kuyu', glyph: 'K', kind: 'Su kuyusu', pre: 'KUY' },
   depo: { label: 'Depo', glyph: 'D', kind: 'Su deposu', pre: 'DEP' },
   ag: { label: 'AG', glyph: 'A', kind: 'AG şebeke / pano', pre: 'AGP' },
-  ges: { label: 'GES', glyph: 'G', kind: 'Güneş enerji santrali', pre: 'GES' }
+  ges: { label: 'GES', glyph: 'G', kind: 'Güneş enerji santrali', pre: 'GES' },
+  baca: { label: 'Baca', glyph: 'B', kind: 'Şebeke bacası', pre: 'BAC' },
+  vana: { label: 'Vana', glyph: 'V', kind: 'Şebeke vanası', pre: 'VAN' }
 };
 const FAULT_TYPES = {
   kuyu: ['Pompa çalışmıyor', 'Debi düşüklüğü', 'Kolon borusu kaçağı', 'Motor aşırı akım', 'RF haberleşme kesildi', 'Diğer'],
   depo: ['Depo kaçağı / çatlak', 'Klorlama cihazı arızası', 'Seviye sensörü arızası', 'Kapak / güvenlik', 'RF modülü arızası', 'Diğer'],
   ag: ['Elektrik kesintisi', 'Sigorta attı', 'Kontaktör / röle arızası', 'Kablo arızası', 'Pano su aldı', 'Diğer'],
-  ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer']
+  ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer'],
+  baca: ['Kapak kırık / yok', 'Su kaçağı', 'Çökme / göçük', 'Temizlik gerekiyor', 'Diğer'],
+  vana: ['Vana kaçağı', 'Vana açılmıyor / kapanmıyor', 'Mil / gövde arızası', 'Vana odası su dolu', 'Diğer']
 };
 // İş grubu → arıza türleri. Arıza ekranında önce grup, sonra yalnız o
 // gruba ait türler açılır listede gelir. "tesis" grubun hangi tesis türüne
@@ -10368,7 +10372,7 @@ const ARIZA_GRUP = {
     'Tıkanıklık', 'Taşma', 'Rögar kapağı kırık / yok', 'Koku', 'Hat çökmesi / göçük', 'Foseptik dolu', 'Diğer'] }
 };
 // Tesis türünden varsayılan grup; eski kayıtta grup yoksa türden tahmin
-const TESIS_GRUP = { kuyu: 'kuyu', depo: 'depo', ag: 'elektrik', ges: 'ges' };
+const TESIS_GRUP = { kuyu: 'kuyu', depo: 'depo', ag: 'elektrik', ges: 'ges', baca: 'su', vana: 'su' };
 function arizaGrubu(f, a) {
   if (f && ARIZA_GRUP[f.grup]) return f.grup;
   if (a && TESIS_GRUP[a.type]) return TESIS_GRUP[a.type];
@@ -10382,7 +10386,7 @@ function arizaGrubu(f, a) {
 // anahtarında durur. Ambar mevcudu ve zimmet malzeme ADINA göre tutulur,
 // bu yüzden hareketi olan malzemenin adı değiştirilemez.
 // Özet haritası ve göstergeler: türe göre sabit renkler (haritadaki işaretlerle aynı; koyu temada ayrı adımlar)
-const turRenk = dark => dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00' };
+const turRenk = dark => dark ? { kuyu: '#3d8bfd', depo: '#d4770a', ag: '#9a78e8', ges: '#b88700', baca: '#2bb5a5', vana: '#e5566d' } : { kuyu: '#0071e3', depo: '#b45309', ag: '#7b3fbf', ges: '#c08a00', baca: '#0e8a7d', vana: '#d6336c' };
 
 const MALZEME_BASLANGIC = [
   ['Dalgıç pompa (kademe değişimi)', 18500, 'adet', 'pompa'],
@@ -10865,7 +10869,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.14-202';
+const SURUM = '2026.10.15-203';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -10925,6 +10929,12 @@ const ALANLAR = {
   ],
   ges: [
     ['GES', [['year', 'Devreye alma yılı', '', 'sayi'], ['guc', 'Kurulu güç', 'kW', 'sayi'], ['panelAdet', 'Panel adedi', '', 'sayi'], ['inverter', 'İnverter', '', 'metin'], ['baglanti', 'Bağlantı tipi', '', 'metin'], ['bakim', 'Son bakım', '', 'tarih']]]
+  ],
+  baca: [
+    ['Baca', [['ad', 'Çizimdeki adı', '', 'metin'], ['hat', 'Bağlı hat', '', 'metin'], ['parca', 'Boru parçası', '', 'metin'], ['cap', 'Boru çapı', 'mm', 'sayi'], ['zeminKot', 'Zemin kotu', 'm', 'sayi'], ['piyezoKot', 'Piyezometre kotu', 'm', 'sayi'], ['basinc', 'İşletme basıncı', 'm', 'sayi'], ['bakim', 'Son bakım', '', 'tarih']]]
+  ],
+  vana: [
+    ['Vana', [['ad', 'Çizimdeki adı', '', 'metin'], ['vanaTip', 'Vana tipi', '', 'metin'], ['hat', 'Bağlı hat', '', 'metin'], ['parca', 'Boru parçası', '', 'metin'], ['cap', 'Boru çapı', 'mm', 'sayi'], ['zeminKot', 'Zemin kotu', 'm', 'sayi'], ['bakim', 'Son bakım', '', 'tarih']]]
   ]
 };
 const rng = seed => { let s = seed; return () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648; };
@@ -10960,7 +10970,7 @@ class Component extends DCLogic {
     filter: (() => {
       // kaynak/memba: ISU'dan gelen referans katmanları — "Tümü" bunları da kapsar (2026.10.06);
       // depo süzgeci ise ISU depo referans noktalarını da kapsar (bkz. harita.html)
-      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: true, memba: true };
+      const v = { kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, pasif: true, kaynak: true, memba: true };
       try {
         const p = JSON.parse(localStorage.getItem('ks-suzgec') || 'null');
         // Eski kayıtta ISU kapalı saklıydı: bir kez açılır (sonra kullanıcının seçimi korunur)
@@ -11343,6 +11353,7 @@ class Component extends DCLogic {
         out.filter = {
           kuyu: p.filter.kuyu !== false, depo: p.filter.depo !== false,
           ag: p.filter.ag !== false, ges: p.filter.ges !== false,
+          baca: p.filter.baca !== false, vana: p.filter.vana !== false,
           pasif: p.filter.pasif !== false,
           // ISU katmanları: eski kayıtta yoksa "Tümü" ile birlikte açık gelir
           kaynak: 'kaynak' in p.filter ? p.filter.kaynak !== false : true,
@@ -11385,6 +11396,7 @@ class Component extends DCLogic {
       const f = {
         kuyu: s.filter.kuyu !== false, depo: s.filter.depo !== false,
         ag: s.filter.ag !== false, ges: s.filter.ges !== false,
+        baca: s.filter.baca !== false, vana: s.filter.vana !== false,
         pasif: s.filter.pasif !== false,
         kaynak: s.filter.kaynak !== false, memba: s.filter.memba !== false
       };
@@ -11834,7 +11846,7 @@ class Component extends DCLogic {
       let es = null, ed = Infinity;
       varolan.forEach(a => { const d = this.mesafeM(a, p); if (d < ed) { ed = d; es = a; } });
       const kayitli = es && ed < 30 ? es.code : '';
-      const tur = /depo/i.test(p.name) ? 'depo' : (/kuyu|sondaj/i.test(p.name) ? 'kuyu' : (/\bges\b|güneş/i.test(p.name) ? 'ges' : (/pano|\bag\b|trafo/i.test(p.name) ? 'ag' : null)));
+      const tur = /depo/i.test(p.name) ? 'depo' : (/kuyu|sondaj/i.test(p.name) ? 'kuyu' : (/\bges\b|güneş/i.test(p.name) ? 'ges' : (/pano|\bag\b|trafo/i.test(p.name) ? 'ag' : (/baca/i.test(p.name) ? 'baca' : (/vana/i.test(p.name) ? 'vana' : null)))));
       return {
         i, name: p.name, lat: +p.lat.toFixed(6), lon: +p.lon.toFixed(6), icinde, kayitli,
         district: koy && kd < 6000 && koy[4] ? koy[4] : (this.enYakinIlce(p.lat, p.lon) || ''),
@@ -13936,7 +13948,7 @@ class Component extends DCLogic {
     const copKod = new Set((this.state.cop || [])
       .filter(r => r.tur !== 'foto')
       .map(r => String(r.kod || '').trim().toUpperCase()));
-    for (const t of ['kuyu', 'depo', 'ag', 'ges']) {
+    for (const t of ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana']) {
       const on = 'KS-' + TYPES[t].pre + '-';
       const ayni = (this.state.assets || []).filter(a => a.type === t);
       const dolu = new Set();
@@ -15263,6 +15275,8 @@ class Component extends DCLogic {
         if (a) { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' }); if (a.dbId) this.fotoYenile(a.dbId); }
         return;
       }
+      // Haritadaki "Baca ve vanalar" düğmesi: iki süzgeç birlikte açılır/kapanır
+      if (d.ks === 'sebekeKatman') { this.setState({ filter: { ...this.state.filter, baca: !!d.on, vana: !!d.on } }, () => this.pushMap()); return; }
       if (d.ks === 'hatKatman') {
         try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
         this.setState({ hatKatman: !!d.on });
@@ -15926,7 +15940,7 @@ class Component extends DCLogic {
       .map(n => '<tr><td>' + esc(n) + '</td><td>' + byD[n].n + '</td><td>' + byD[n].kuyu +
         '</td><td>' + byD[n].depo + '</td><td>' + byD[n].aktif + '</td><td>' + byD[n].pasif +
         '</td></tr>').join('');
-    const satirT = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
+    const satirT = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].map(t => {
       const hep = s.assets.filter(a => a.type === t);
       const ak = hep.filter(a => aktifMi(a)).length;
       return '<tr><td>' + esc(TYPES[t].kind) + '</td><td>' + ak + '</td><td>' + (hep.length - ak) +
@@ -20419,8 +20433,8 @@ class Component extends DCLogic {
         const u = s.session;
         if (!u) return '';
         const zemin = { street: 'Sokak', sat: 'Uydu', hyb: 'Uydu + ad' }[s.mapBase] || 'Sokak';
-        const acik = ['kuyu', 'depo', 'ag', 'ges'].filter(k => s.filter[k]);
-        const suzgec = acik.length === 4 ? 'bütün türler açık'
+        const acik = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].filter(k => s.filter[k]);
+        const suzgec = acik.length === 6 ? 'bütün türler açık'
           : (acik.length ? 'yalnızca ' + acik.map(k => TYPES[k].label).join(', ') : 'hepsi kapalı');
         return `${u.name} olarak yaptığınız her seçim bu cihazda saklanıyor: harita zemini ${zemin}, ${s.theme === 'dark' ? 'koyu' : 'açık'} tema, ulaşım modu ${s.navMode ? 'açık' : 'kapalı'}, kayıt süzgeci ${suzgec}, bildirim kanalı ${s.bildirimKanal || 'SMS'} (${s.bildirimEsik || 'Acil ve yüksek'}), koordinat sistemi ${s.conv.sys === 'DMS' ? 'Google / WGS84' : s.conv.sys + '-3°'} dilim ${s.conv.zone}, en son açık ekran ve sekme. Bir dahaki girişinizde program tam bıraktığınız gibi açılır. Başka biri kendi hesabıyla girdiğinde kendi ayarlarını görür.`;
       })(),
@@ -20430,7 +20444,7 @@ class Component extends DCLogic {
         try { localStorage.setItem('ks-tema', 'light'); } catch (e) { /* yok */ }
         this.setState({
           mapBase: 'street', theme: 'light', navMode: false,
-          filter: { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: false, memba: false },
+          filter: { kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, pasif: true, kaynak: false, memba: false },
           bildirimKanal: 'SMS', bildirimEsik: 'Acil ve yüksek',
           conv: { sys: 'ITRF96', zone: '11', e: '615860', n: '4322830' },
           tab: 'harita', detailTab: 'bilgi'
@@ -22179,8 +22193,8 @@ class Component extends DCLogic {
         };
       })(),
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
-      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
-        const turler = ['kuyu', 'depo', 'ag', 'ges', 'kaynak', 'memba'];
+      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['baca', 'Baca'], ['vana', 'Vana'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
+        const turler = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
         const on = id === 'all' ? turler.every(t => s.filter[t])
           : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];
         return {
@@ -22193,7 +22207,7 @@ class Component extends DCLogic {
           telBg: ui.surf,
           telFg: on ? ui.acc : ui.mut,
           toggle: () => id === 'all'
-            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
+            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, baca: !on, vana: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
             : id === 'pasif'
               ? this.setState({ filter: { ...s.filter, pasif: s.filter.pasif === false } }, () => this.pushMap())
               : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
@@ -22205,8 +22219,8 @@ class Component extends DCLogic {
         kisa: `${vis.length} kayıt`,
         line2: 'OpenStreetMap' },
       map: {
-        filtreBos: !['kuyu', 'depo', 'ag', 'ges'].some(k => s.filter[k]),
-        hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, kaynak: true, memba: true } }, () => this.pushMap()),
+        filtreBos: !['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].some(k => s.filter[k]),
+        hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true } }, () => this.pushMap()),
         display: tabId === 'harita' ? 'flex' : 'none', arizaBtn: canCreateFault ? 'flex' : 'none' },
       zoomIn: () => this.setState({ zoom: Math.min(15.5, s.zoom + 1) }),
       zoomOut: () => this.setState({ zoom: Math.max(9, s.zoom - 1) }),
@@ -22958,7 +22972,7 @@ class Component extends DCLogic {
         const toplam = A.length;
         const REN = turRenk(dark);
         const DIGER = dark ? '#8e8e93' : '#a8a29e';
-        const SIRA = ['kuyu', 'depo', 'ag', 'ges'];
+        const SIRA = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'];
         const yuzde = (n, t) => t ? Math.round(n / t * 100) : 0;
         const git = f => () => this.setState({ tab: 'envanter', envQ: '', envF: f });
         const zemin = ui.surf;

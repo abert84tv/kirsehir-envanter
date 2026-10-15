@@ -129,6 +129,7 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <div class="k-baslik">Haritada göster</div>
     <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
     <button class="arac kal" id="t-hat">Hat güzergâhları</button>
+    <button class="arac kal on" id="t-sebeke">Baca ve vanalar</button>
   </div>
 </div>
 </div>
@@ -212,6 +213,13 @@ document.getElementById('t-hat').onclick = () => {
   // Tercih uygulamada saklanır: kullanıcı kapattıysa bir dahaki girişte kapalı gelir
   try { parent.postMessage({ ks: 'hatKatman', on: K.hatAcik() }, '*'); } catch (e) { /* çerçeve yok */ }
 };
+// Baca ve vana işaretleri tek düğmeyle açılıp kapanır; süzgeç uygulamada durur, durum geri gelir
+let sebekeAcik = true;
+function sebekeGoster(f) {
+  sebekeAcik = !f || (f.baca !== false && f.vana !== false);
+  document.getElementById('t-sebeke').classList.toggle('on', sebekeAcik);
+}
+document.getElementById('t-sebeke').onclick = () => { try { parent.postMessage({ ks: 'sebekeKatman', on: !sebekeAcik }, '*'); } catch (e) { /* çerçeve yok */ } };
 function applyLabels() { document.getElementById('t-labels').classList.toggle('on', K.etiket()); }
 document.getElementById('t-labels').onclick = () => { K.setEtiket(!K.etiket()); applyLabels(); };
 applyLabels();
@@ -423,6 +431,7 @@ addEventListener('message', e => {
   if (d.ks === 'filter') {
     try { localStorage.setItem(SUZ_KEY, JSON.stringify(d.filter)); } catch (e) { /* depolama kapalı */ }
     K.setFilter(d.filter);
+    sebekeGoster(d.filter);
   }
 });
 parent.postMessage({ ks: 'ready' }, '*');

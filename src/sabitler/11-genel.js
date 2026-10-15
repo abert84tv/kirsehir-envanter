@@ -1,4 +1,4 @@
-const SURUM = '2026.10.14-202';
+const SURUM = '2026.10.15-203';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -58,6 +58,12 @@ const ALANLAR = {
   ],
   ges: [
     ['GES', [['year', 'Devreye alma yılı', '', 'sayi'], ['guc', 'Kurulu güç', 'kW', 'sayi'], ['panelAdet', 'Panel adedi', '', 'sayi'], ['inverter', 'İnverter', '', 'metin'], ['baglanti', 'Bağlantı tipi', '', 'metin'], ['bakim', 'Son bakım', '', 'tarih']]]
+  ],
+  baca: [
+    ['Baca', [['ad', 'Çizimdeki adı', '', 'metin'], ['hat', 'Bağlı hat', '', 'metin'], ['parca', 'Boru parçası', '', 'metin'], ['cap', 'Boru çapı', 'mm', 'sayi'], ['zeminKot', 'Zemin kotu', 'm', 'sayi'], ['piyezoKot', 'Piyezometre kotu', 'm', 'sayi'], ['basinc', 'İşletme basıncı', 'm', 'sayi'], ['bakim', 'Son bakım', '', 'tarih']]]
+  ],
+  vana: [
+    ['Vana', [['ad', 'Çizimdeki adı', '', 'metin'], ['vanaTip', 'Vana tipi', '', 'metin'], ['hat', 'Bağlı hat', '', 'metin'], ['parca', 'Boru parçası', '', 'metin'], ['cap', 'Boru çapı', 'mm', 'sayi'], ['zeminKot', 'Zemin kotu', 'm', 'sayi'], ['bakim', 'Son bakım', '', 'tarih']]]
   ]
 };
 const rng = seed => { let s = seed; return () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648; };

@@ -17,6 +17,8 @@
         if (a) { this.flyTo(a.lat, a.lon, 16); this.setState({ selected: a.id, panel: 'detay', detailTab: 'bilgi', tab: 'harita' }); if (a.dbId) this.fotoYenile(a.dbId); }
         return;
       }
+      // Haritadaki "Baca ve vanalar" düğmesi: iki süzgeç birlikte açılır/kapanır
+      if (d.ks === 'sebekeKatman') { this.setState({ filter: { ...this.state.filter, baca: !!d.on, vana: !!d.on } }, () => this.pushMap()); return; }
       if (d.ks === 'hatKatman') {
         try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
         this.setState({ hatKatman: !!d.on });

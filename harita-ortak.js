@@ -44,10 +44,12 @@ const KSP_SVG = {
   depo: '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5"/><path d="M4 12c2-2 4 2 6 0s4 2 6 0 3 1 4 0"/></svg>',
   ag: '<svg viewBox="0 0 24 24"><path d="M13 2 5 14h6l-1 8 8-12h-6z"/></svg>',
   ges: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>',
+  baca: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/></svg>',
+  vana: '<svg viewBox="0 0 24 24"><path d="M4 6v12l8-6zM20 6v12l-8-6z"/></svg>',
   kaynak: '<svg viewBox="0 0 24 24"><path d="M12 3v9M8.5 8.5 12 12l3.5-3.5"/><path d="M4 17c3-3 5 3 8 0s5 3 8 0"/></svg>',
   memba: '<svg viewBox="0 0 24 24"><path d="M3 10h11a4 4 0 1 1 0 8h-2"/><path d="M6 7 3 10l3 3"/></svg>'
 };
-// tur: kuyu | depo | ag | ges | kaynak | memba; o: { ref, pend, fault, pasif }
+// tur: kuyu | depo | ag | ges | baca | vana | kaynak | memba; o: { ref, pend, fault, pasif }
 function ksPin(tur, o) {
   o = o || {};
   const cls = 'ksp ' + tur + (o.ref ? ' ref' : '') + (o.pasif ? ' pasif' : (o.pend ? ' pend' : '')) + (o.fault && !o.pasif ? ' fault' : '');

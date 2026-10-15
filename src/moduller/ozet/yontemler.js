@@ -42,7 +42,7 @@
       .map(n => '<tr><td>' + esc(n) + '</td><td>' + byD[n].n + '</td><td>' + byD[n].kuyu +
         '</td><td>' + byD[n].depo + '</td><td>' + byD[n].aktif + '</td><td>' + byD[n].pasif +
         '</td></tr>').join('');
-    const satirT = ['kuyu', 'depo', 'ag', 'ges'].map(t => {
+    const satirT = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].map(t => {
       const hep = s.assets.filter(a => a.type === t);
       const ak = hep.filter(a => aktifMi(a)).length;
       return '<tr><td>' + esc(TYPES[t].kind) + '</td><td>' + ak + '</td><td>' + (hep.length - ak) +

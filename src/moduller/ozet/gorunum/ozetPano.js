@@ -7,7 +7,7 @@
         const toplam = A.length;
         const REN = turRenk(dark);
         const DIGER = dark ? '#8e8e93' : '#a8a29e';
-        const SIRA = ['kuyu', 'depo', 'ag', 'ges'];
+        const SIRA = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'];
         const yuzde = (n, t) => t ? Math.round(n / t * 100) : 0;
         const git = f => () => this.setState({ tab: 'envanter', envQ: '', envF: f });
         const zemin = ui.surf;

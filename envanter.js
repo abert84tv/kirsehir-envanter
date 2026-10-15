@@ -10,14 +10,18 @@ export const TYPES = {
   kuyu: { label: 'Kuyu', glyph: 'K', kind: 'Su kuyusu', pre: 'KUY' },
   depo: { label: 'Depo', glyph: 'D', kind: 'Su deposu', pre: 'DEP' },
   ag: { label: 'AG', glyph: 'A', kind: 'AG şebeke / pano', pre: 'AGP' },
-  ges: { label: 'GES', glyph: 'G', kind: 'Güneş enerji santrali', pre: 'GES' }
+  ges: { label: 'GES', glyph: 'G', kind: 'Güneş enerji santrali', pre: 'GES' },
+  baca: { label: 'Baca', glyph: 'B', kind: 'Şebeke bacası', pre: 'BAC' },
+  vana: { label: 'Vana', glyph: 'V', kind: 'Şebeke vanası', pre: 'VAN' }
 };
 
 export const FAULT_TYPES = {
   kuyu: ['Pompa çalışmıyor', 'Debi düşüklüğü', 'Kolon borusu kaçağı', 'Motor aşırı akım', 'RF haberleşme kesildi', 'Diğer'],
   depo: ['Depo kaçağı / çatlak', 'Klorlama cihazı arızası', 'Seviye sensörü arızası', 'Kapak / güvenlik', 'RF modülü arızası', 'Diğer'],
   ag: ['Elektrik kesintisi', 'Sigorta attı', 'Kontaktör / röle arızası', 'Kablo arızası', 'Pano su aldı', 'Diğer'],
-  ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer']
+  ges: ['İnverter arızası', 'Panel kırığı', 'Üretim düşüklüğü', 'Bağlantı / şalt arızası', 'Diğer'],
+  baca: ['Kapak kırık / yok', 'Su kaçağı', 'Çökme / göçük', 'Temizlik gerekiyor', 'Diğer'],
+  vana: ['Vana kaçağı', 'Vana açılmıyor / kapanmıyor', 'Mil / gövde arızası', 'Vana odası su dolu', 'Diğer']
 };
 
 export const CREWS = ['Atanmadı', 'Ekip 1 — Merkez', 'Ekip 2 — Kaman', 'Ekip 3 — Mucur', 'Ekip 4 — Çiçekdağı'];
@@ -39,7 +43,8 @@ const BOS_ALANLAR = {
   filtre: '', cakil: '', kot: '', suAnaliz: '', suAnalizTarih: '', klorDeger: '', pompaMarka: '',
   pompaModel: '', kademe: '', motorSeri: '', montajTarih: '', termik: '', akim: '', isletmeSaat: '',
   sayac: '', yedekPompa: '', pompaHesap: '', klorCihaz: '', seviyeSensor: '', terfiUzunluk: '',
-  terfiCap: '', hizmetKoy: '', nufus: '', abone: '', temizlik: '', kapak: ''
+  terfiCap: '', hizmetKoy: '', nufus: '', abone: '', temizlik: '', kapak: '',
+  ad: '', hat: '', parca: '', zeminKot: '', piyezoKot: '', basinc: '', vanaTip: ''
 };
 
 export function buildAssets() {

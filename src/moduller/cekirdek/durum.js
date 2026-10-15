@@ -27,7 +27,7 @@
     filter: (() => {
       // kaynak/memba: ISU'dan gelen referans katmanları — "Tümü" bunları da kapsar (2026.10.06);
       // depo süzgeci ise ISU depo referans noktalarını da kapsar (bkz. harita.html)
-      const v = { kuyu: true, depo: true, ag: true, ges: true, pasif: true, kaynak: true, memba: true };
+      const v = { kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, pasif: true, kaynak: true, memba: true };
       try {
         const p = JSON.parse(localStorage.getItem('ks-suzgec') || 'null');
         // Eski kayıtta ISU kapalı saklıydı: bir kez açılır (sonra kullanıcının seçimi korunur)

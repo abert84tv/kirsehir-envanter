@@ -125,7 +125,7 @@
       let es = null, ed = Infinity;
       varolan.forEach(a => { const d = this.mesafeM(a, p); if (d < ed) { ed = d; es = a; } });
       const kayitli = es && ed < 30 ? es.code : '';
-      const tur = /depo/i.test(p.name) ? 'depo' : (/kuyu|sondaj/i.test(p.name) ? 'kuyu' : (/\bges\b|güneş/i.test(p.name) ? 'ges' : (/pano|\bag\b|trafo/i.test(p.name) ? 'ag' : null)));
+      const tur = /depo/i.test(p.name) ? 'depo' : (/kuyu|sondaj/i.test(p.name) ? 'kuyu' : (/\bges\b|güneş/i.test(p.name) ? 'ges' : (/pano|\bag\b|trafo/i.test(p.name) ? 'ag' : (/baca/i.test(p.name) ? 'baca' : (/vana/i.test(p.name) ? 'vana' : null)))));
       return {
         i, name: p.name, lat: +p.lat.toFixed(6), lon: +p.lon.toFixed(6), icinde, kayitli,
         district: koy && kd < 6000 && koy[4] ? koy[4] : (this.enYakinIlce(p.lat, p.lon) || ''),

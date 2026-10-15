@@ -1,5 +1,5 @@
 // ── ortak veri: tesis, arıza, deneme, saha notu
-const TUR_KOD = { kuyu: 'kuyu', depo: 'depo', ag: 'ag', ges: 'ges' };
+const TUR_KOD = { kuyu: 'kuyu', depo: 'depo', ag: 'ag', ges: 'ges', baca: 'baca', vana: 'vana' };
 
 // Veritabanı tesis satırı → programın kullandığı biçim
 export function tesisSuret(r) {

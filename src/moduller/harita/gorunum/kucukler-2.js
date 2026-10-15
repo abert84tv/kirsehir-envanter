@@ -39,8 +39,8 @@
         };
       })(),
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
-      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
-        const turler = ['kuyu', 'depo', 'ag', 'ges', 'kaynak', 'memba'];
+      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['baca', 'Baca'], ['vana', 'Vana'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
+        const turler = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
         const on = id === 'all' ? turler.every(t => s.filter[t])
           : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];
         return {
@@ -53,7 +53,7 @@
           telBg: ui.surf,
           telFg: on ? ui.acc : ui.mut,
           toggle: () => id === 'all'
-            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
+            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, baca: !on, vana: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
             : id === 'pasif'
               ? this.setState({ filter: { ...s.filter, pasif: s.filter.pasif === false } }, () => this.pushMap())
               : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
@@ -65,8 +65,8 @@
         kisa: `${vis.length} kayıt`,
         line2: 'OpenStreetMap' },
       map: {
-        filtreBos: !['kuyu', 'depo', 'ag', 'ges'].some(k => s.filter[k]),
-        hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, kaynak: true, memba: true } }, () => this.pushMap()),
+        filtreBos: !['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].some(k => s.filter[k]),
+        hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true } }, () => this.pushMap()),
         display: tabId === 'harita' ? 'flex' : 'none', arizaBtn: canCreateFault ? 'flex' : 'none' },
       zoomIn: () => this.setState({ zoom: Math.min(15.5, s.zoom + 1) }),
       zoomOut: () => this.setState({ zoom: Math.max(9, s.zoom - 1) }),

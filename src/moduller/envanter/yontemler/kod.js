@@ -10,7 +10,7 @@
     const copKod = new Set((this.state.cop || [])
       .filter(r => r.tur !== 'foto')
       .map(r => String(r.kod || '').trim().toUpperCase()));
-    for (const t of ['kuyu', 'depo', 'ag', 'ges']) {
+    for (const t of ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana']) {
       const on = 'KS-' + TYPES[t].pre + '-';
       const ayni = (this.state.assets || []).filter(a => a.type === t);
       const dolu = new Set();

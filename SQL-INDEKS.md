@@ -6,6 +6,8 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 | Modül | Dosya | Not |
 |---|---|---|
 | envanter | `src/moduller/envanter/sql/SQL-tesis-degisiklik-onayi.sql` | tesis ekleme/silme önerisi ve iki aşamalı onay (şef → mühendis → müdür); şef ekip süzgeci; çöp temizleme yetkisi; veri okuma ve ekip konumu süzgeçleri — uygulandı 2026-10-10 |
+| envanter | `src/moduller/envanter/sql/SQL-baca-vana-turleri-2026-10-15.sql` | tesis türlerine `baca`, `vana`; `tesis_kod_siradaki` güncellemesi — uygulandı 2026-10-15 |
+| aktarim | `src/moduller/aktarim/sql/SQL-esrefli-sebeke-2026-10-15.sql` | Eşrefli şebekesi: 18 hat + 18 baca + 4 vana (tek seferlik veri aktarımı) |
 | ambar | `src/moduller/ambar/sql/SQL-ambar-hurda.sql` | hurda hareket türü |
 | ambar | `src/moduller/ambar/sql/SQL-ambar-yetki.sql` | stok yetkileri (görevler ayrılığı): `stok_izin` + `ambar_hareket` yetki denetimi — uygulandı 2026-10-10; 8) sil rolü, foto/yerleşim/denetim korumaları |
 | oturum | `src/moduller/oturum/sql/SQL-rol-operator.sql` | altı rol: rol türüne `operator` eklendi; rol listeli işlevler (ariza_ek_kaydet, basvuru_engelle, is_emri_kapat, is_emri_yetkili, veri_yaz/_surumlu, yetkim_var) ve `stok_izin` güncellendi — uygulandı 2026-10-10; 8) sil rolü, foto/yerleşim/denetim korumaları |

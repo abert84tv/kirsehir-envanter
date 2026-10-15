@@ -96,13 +96,13 @@
   // Hatlar ana haritada da görünür: kayıt kodu ve uzunluğu ile
   hatlariYolla() {
     const tablo = this.state.hatlar || {};
-    const kod = {};
-    (this.state.assets || []).forEach(a => { kod[a.id] = a.code; });
+    const kod = {}, koy = {};
+    (this.state.assets || []).forEach(a => { kod[a.id] = a.code; koy[a.id] = a.village || a.district || ''; });
     const duz = [];
     for (const id in tablo) {
       for (const x of (tablo[id] || [])) {
         if (!x || !(x.noktalar || []).length) continue;
-        duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '', grup: x.grup || '', cap: x.cap || '' });
+        duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '', koy: koy[id] || '', grup: x.grup || '', cap: x.cap || '' });
       }
     }
     this.toMap({ ks: 'hatlar', hatlar: duz });

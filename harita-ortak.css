@@ -100,6 +100,14 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 #tools .ks-katman .k-menu button.arac.on::after{content:'✓';margin-left:auto;color:var(--color-accent);font-weight:700}
 #tools .ks-katman .k-menu button.arac.on{background:transparent;color:var(--color-text)}
 #tools .ks-katman .k-menu .k-sw{width:18px;height:5px;border-radius:3px;flex:none}
+#tools .ks-katman .k-menu .k-proje{display:flex;border-bottom:1px solid var(--color-divider)}
+#tools .ks-katman .k-menu .k-proje>button:first-child{flex:1;border-bottom:none}
+#tools .ks-katman .k-menu .k-proje>.k-ok{flex:none;width:38px;justify-content:center;border-bottom:none;border-left:1px solid var(--color-divider);padding:0;color:var(--color-neutral-600)}
+#tools .ks-katman .k-menu button.k-grup{padding-left:26px;font-size:12px}
+#tools .ks-katman .k-menu .k-bos{padding:10px 14px;font:500 12px/1.4 var(--font-body);color:var(--color-neutral-600)}
+#tools .ks-katman .k-menu input#t-ara{box-sizing:border-box;width:calc(100% - 20px);margin:6px 10px;padding:8px 10px;border:1px solid var(--color-divider);border-radius:8px;background:var(--color-surface);color:var(--color-text);font:500 13px/1 var(--font-body)}
+#tools .ks-katman .k-menu .k-toplu-k{display:flex;border-top:1px solid var(--color-divider)}
+#tools .ks-katman .k-menu button.k-toplu{flex:1;justify-content:center;font-size:12px;color:var(--color-accent);border-bottom:none}
 #tools .ks-katman .k-menu button.arac .k-ad{flex:1;white-space:nowrap}
 #tools .ks-katman .k-menu button small{font:500 11px/1 var(--font-body);color:var(--color-neutral-500,#8e8e93);white-space:nowrap}
 

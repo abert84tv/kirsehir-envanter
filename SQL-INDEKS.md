@@ -8,6 +8,7 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 | envanter | `src/moduller/envanter/sql/SQL-tesis-degisiklik-onayi.sql` | tesis ekleme/silme önerisi ve iki aşamalı onay (şef → mühendis → müdür); şef ekip süzgeci; çöp temizleme yetkisi; veri okuma ve ekip konumu süzgeçleri — uygulandı 2026-10-10 |
 | envanter | `src/moduller/envanter/sql/SQL-baca-vana-turleri-2026-10-15.sql` | tesis türlerine `baca`, `vana`; `tesis_kod_siradaki` güncellemesi — uygulandı 2026-10-15 |
 | harita | `src/moduller/harita/sql/SQL-hat-grup-2026-10-15.sql` | `hat.grup` sütunu; `hat_listesi` ve `hat_kaydet` grup alanını taşır — uygulandı 2026-10-15 |
+| aktarim | `src/moduller/aktarim/sql/SQL-gulveren-celebiusagi-sebeke-2026-10-15.sql` | Gülveren ve Çelebiuşağı şebekesi: 2 depo + 35 hat + 33 baca/vana (tek seferlik veri aktarımı) |
 | aktarim | `src/moduller/aktarim/sql/SQL-esrefli-sebeke-2026-10-15.sql` | Eşrefli şebekesi: 18 hat + 18 baca + 4 vana (tek seferlik veri aktarımı) |
 | ambar | `src/moduller/ambar/sql/SQL-ambar-hurda.sql` | hurda hareket türü |
 | ambar | `src/moduller/ambar/sql/SQL-ambar-yetki.sql` | stok yetkileri (görevler ayrılığı): `stok_izin` + `ambar_hareket` yetki denetimi — uygulandı 2026-10-10; 8) sil rolü, foto/yerleşim/denetim korumaları |

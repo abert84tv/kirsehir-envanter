@@ -28,6 +28,38 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 <script src="./vendor/leaflet.js"></script>
 <link rel="stylesheet" href="harita-ortak.css">
 <script src="harita-ortak.js"></script>
+<script>
+// Harita bir hata yüzünden boş kalmasın: hata görünür bir şeritle bildirilir, ana uygulamaya haber verilir;
+// katman modülü hiç yüklenemezse düz zemin haritası yine açılır (bkz. yedekKatman).
+function haritaHata(msg, kalici) {
+  try { console.error('[harita]', msg); } catch (e) { /* konsol yok */ }
+  try { parent.postMessage({ ks: 'haritaHata', msg: String(msg).slice(0, 300) }, '*'); } catch (e) { /* çerçeve yok */ }
+  let b = document.getElementById('ks-hata');
+  if (!b) {
+    b = document.createElement('div'); b.id = 'ks-hata';
+    b.style.cssText = 'position:absolute;left:8px;right:8px;bottom:34px;z-index:1500;background:#fff7e6;color:#7a4b00;border:1px solid #f0c36d;border-radius:10px;padding:9px 12px;font:600 12px/1.35 system-ui,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.18);display:flex;gap:10px;align-items:center';
+    b.innerHTML = '<span id="ks-hata-m" style="flex:1"></span><button id="ks-hata-y" style="all:unset;cursor:pointer;font-weight:700;color:#0071e3;padding:4px 6px">Yenile</button><button id="ks-hata-k" style="all:unset;cursor:pointer;padding:4px 6px" aria-label="Kapat">✕</button>';
+    (document.body || document.documentElement).appendChild(b);
+    b.querySelector('#ks-hata-y').onclick = () => location.reload();
+    b.querySelector('#ks-hata-k').onclick = () => b.remove();
+  }
+  b.querySelector('#ks-hata-m').textContent = (kalici ? 'Harita tam yüklenemedi: ' : 'Haritada bir sorun oluştu: ') + String(msg).slice(0, 140);
+}
+addEventListener('error', e => { if (e && e.message && !/ResizeObserver|^Script error/i.test(e.message)) haritaHata(e.message); });
+addEventListener('unhandledrejection', e => haritaHata((e.reason && e.reason.message) || e.reason || 'bilinmeyen hata'));
+// Yedek katman: kayıt katmanı çalışmazsa yalnız zemin haritası (sokak/uydu) açık kalır
+function yedekKatman(map) {
+  const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 21, maxNativeZoom: 19, attribution: '© OpenStreetMap katkıcıları' }).addTo(map);
+  const uydu = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 21, maxNativeZoom: 18, attribution: 'Uydu görüntüsü: Esri, Maxar' });
+  let base = 'street', etiket = true, hat = true;
+  return {
+    TYPES: {}, setBase(k) { base = k; osm.remove(); uydu.remove(); (k === 'street' ? osm : uydu).addTo(map); }, base: () => base,
+    setData() {}, setFilter() {}, setHat() {}, hatKatman(on) { hat = !!on; }, hatAcik: () => hat,
+    setEtiket(on) { etiket = !!on; }, etiket: () => etiket, assets: () => [], bounds: () => L.latLngBounds([[38.76, 33.28], [39.8, 34.66]]),
+    durum: () => ({ canli: 0, oge: 0 }), hatProjeleri: () => [], projeAc() {}, grupAc() {}
+  };
+}
+</script>
 <style>
   html,body{margin:0;height:100%;font-family:var(--font-body);background:var(--color-bg)}
   #map{position:absolute;inset:0}
@@ -168,7 +200,9 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
 </div>
 
 <script type="module">
-import { katmanKur, hatMesafe } from './harita-katman.js';
+let katmanKur = null, hatMesafe = (a, b) => L.latLng(a).distanceTo(L.latLng(b));
+try { ({ katmanKur, hatMesafe } = await import('./harita-katman.js')); }
+catch (e) { haritaHata('katman dosyası yüklenemedi (' + ((e && e.message) || e) + ')', true); }
 
 const map = L.map('map', { center: [39.28, 33.97], zoom: 9, zoomControl: true, scrollWheelZoom: true, maxZoom: 21, preferCanvas: true, zoomSnap: 0.5, zoomDelta: 0.5, wheelPxPerZoomLevel: 90 });
 ksPinZoom(map, 12);
@@ -176,7 +210,9 @@ const SUZ_KEY = 'ks-suzgec';
 
 // Zemin, işaretler, ISU noktaları, hatlar, arıza noktaları ve süzgeç ortak modülden gelir
 // (Hat Kesiti haritasıyla birebir aynı). Burada yalnız tıklama davranışı tanımlıdır.
-const K = katmanKur(map, {
+let K;
+try { if (!katmanKur) throw new Error('katman modülü yok'); K = katmanKur(map, {
+  hata: m => haritaHata(m),
   tikla(g) {
     if (olcAcik) { olcEkle(g.lat, g.kind === 'a' ? g.a.code : (g.isu ? g.isu.ad : 'Nokta'), g.lon); return; }
     if (g.kind === 'a') {
@@ -192,7 +228,8 @@ const K = katmanKur(map, {
     noktaBirak({ lat: g.lat, lng: g.lon });
   },
   arizaAc(f) { parent.postMessage({ ks: 'arizaAc', id: f.id }, '*'); }
-});
+}); }
+catch (e) { haritaHata('kayıt katmanı kurulamadı (' + ((e && e.message) || e) + ')', true); K = yedekKatman(map); }
 window.ksHarita = { map, durum: () => K.durum(), filtre: f => K.setFilter(f) };
 const assetsAl = () => K.assets();
 
@@ -221,24 +258,66 @@ function sebekeGoster(f) {
   document.getElementById('t-sebeke').classList.toggle('on', sebekeAcik);
 }
 document.getElementById('t-sebeke').onclick = () => { try { parent.postMessage({ ks: 'sebekeKatman', on: !sebekeAcik }, '*'); } catch (e) { /* çerçeve yok */ } };
-// Hat grupları (Hat 1, Hat 2 …): her biri kendi renginde, ayrı ayrı açılıp kapanır
+// Hat projeleri: köy (tesis) başına bir katman; içinde Hat 1, Hat 2 … ayrı ayrı açılıp kapanır.
+// Liste yalnız haritada görünen alandaki köyleri gösterir (yüzlerce köy olunca uzamaz); arama tüm köylerde çalışır.
+let acikProje = null, projeAra = '';
+const kmYaz = m => m >= 1000 ? (m / 1000).toFixed(2) + ' km' : Math.round(m) + ' m';
 function gruplariCiz() {
   const kap = document.getElementById('t-gruplar'); if (!kap) return;
-  const g = K.hatGruplari();
-  kap.innerHTML = '';
-  if (!g.length) return;
-  const b = document.createElement('div'); b.className = 'k-baslik'; b.textContent = 'Hat grupları'; kap.appendChild(b);
-  for (const x of g) {
+  const tum = K.hatProjeleri();
+  if (!tum.length) { kap.innerHTML = ''; kap.dataset.kuruldu = ''; return; }
+  if (!kap.dataset.kuruldu) {
+    kap.dataset.kuruldu = '1';
+    kap.innerHTML = '<div class="k-baslik">Hat projeleri</div><input id="t-ara" type="search" placeholder="Köy ara…" autocomplete="off"><div id="t-liste"></div><div id="t-hepsi"></div>';
+    const ara = kap.querySelector('#t-ara');
+    ara.oninput = () => { projeAra = ara.value; listeCiz(); };
+    ara.onkeydown = e => e.stopPropagation();
+  }
+  kap.querySelector('#t-ara').style.display = tum.length > 5 ? '' : 'none';
+  listeCiz();
+}
+function listeCiz() {
+  const kap = document.getElementById('t-gruplar'), L1 = kap && kap.querySelector('#t-liste'); if (!L1) return;
+  const tum = K.hatProjeleri();
+  const ara = projeAra.trim().toLocaleLowerCase('tr');
+  const sinir = map.getBounds(), mk = map.getCenter();
+  const uzak = x => Math.hypot((x.bbox[0][0] + x.bbox[1][0]) / 2 - mk.lat, ((x.bbox[0][1] + x.bbox[1][1]) / 2 - mk.lng) * 0.78);
+  let liste = tum.filter(x => ara ? (x.ad + ' ' + x.kod).toLocaleLowerCase('tr').includes(ara) : sinir.intersects(x.bbox));
+  liste.sort((a, b) => uzak(a) - uzak(b));
+  const fazla = Math.max(0, liste.length - 30); liste = liste.slice(0, 30);
+  L1.innerHTML = '';
+  for (const x of liste) {
+    const satir = document.createElement('div'); satir.className = 'k-proje';
     const d = document.createElement('button');
     d.className = 'arac kal' + (x.acik ? ' on' : '');
-    const sw = document.createElement('span'); sw.className = 'k-sw'; sw.style.background = x.renk;
+    d.title = x.ad + ' · ' + x.kod + ': ' + x.n + ' boru parçası, toplam ' + kmYaz(x.uz);
     const ad = document.createElement('span'); ad.className = 'k-ad'; ad.textContent = x.ad;
-    const n = document.createElement('small'); n.textContent = x.n + ' · ' + (x.uz >= 1000 ? (x.uz / 1000).toFixed(2) + ' km' : Math.round(x.uz) + ' m'); d.title = x.ad + ': ' + x.n + ' boru parçası, toplam ' + n.textContent.split(' · ')[1];
-    d.append(sw, ad, n);
-    d.onclick = () => { K.grupAc(x.ad, !x.acik); gruplariCiz(); };
-    kap.appendChild(d);
+    const n = document.createElement('small'); n.textContent = x.n + ' · ' + kmYaz(x.uz);
+    d.append(ad, n);
+    d.onclick = () => { K.projeAc(x.kod, !x.acik); listeCiz(); };
+    const ok = document.createElement('button'); ok.className = 'k-ok'; ok.textContent = acikProje === x.kod ? '▾' : '▸';
+    ok.title = 'Hat 1, Hat 2 … ayrı ayrı'; ok.onclick = e => { e.stopPropagation(); acikProje = acikProje === x.kod ? null : x.kod; listeCiz(); };
+    satir.append(d, ok); L1.appendChild(satir);
+    if (acikProje === x.kod) for (const g of x.gruplar) {
+      const b = document.createElement('button'); b.className = 'arac kal k-grup' + (x.acik && g.acik ? ' on' : '');
+      const sw = document.createElement('span'); sw.className = 'k-sw'; sw.style.background = g.renk;
+      const ga = document.createElement('span'); ga.className = 'k-ad'; ga.textContent = g.ad;
+      const gn = document.createElement('small'); gn.textContent = g.n + ' · ' + kmYaz(g.uz);
+      b.append(sw, ga, gn);
+      b.onclick = () => { if (!x.acik) K.projeAc(x.kod, true); K.grupAc(x.kod, g.ad, !g.acik); listeCiz(); };
+      L1.appendChild(b);
+    }
+  }
+  if (!liste.length) { const bos = document.createElement('div'); bos.className = 'k-bos'; bos.textContent = ara ? 'Eşleşen köy yok.' : 'Bu alanda hat yok — haritayı kaydırın ya da köy arayın.'; L1.appendChild(bos); }
+  if (fazla) { const f = document.createElement('div'); f.className = 'k-bos'; f.textContent = '+ ' + fazla + ' köy daha — aramayı daraltın.'; L1.appendChild(f); }
+  const H1 = kap.querySelector('#t-hepsi'); H1.innerHTML = '';
+  if (liste.length > 1) {
+    const mk2 = (yazi, on) => { const b = document.createElement('button'); b.className = 'arac k-toplu'; b.textContent = yazi; b.onclick = () => { liste.forEach(x => K.projeAc(x.kod, on)); listeCiz(); }; return b; };
+    const w = document.createElement('div'); w.className = 'k-toplu-k'; w.append(mk2('Listedekileri aç', true), mk2('Listedekileri kapat', false)); H1.appendChild(w);
   }
 }
+document.getElementById('katman-dugme').addEventListener('click', () => setTimeout(() => { try { listeCiz(); } catch (e) { /* liste yok */ } }, 0));
+map.on('moveend', () => { if (document.getElementById('katman').classList.contains('acik')) { try { listeCiz(); } catch (e) { /* liste yok */ } } });
 function applyLabels() { document.getElementById('t-labels').classList.toggle('on', K.etiket()); }
 document.getElementById('t-labels').onclick = () => { K.setEtiket(!K.etiket()); applyLabels(); };
 applyLabels();
@@ -427,10 +506,12 @@ ksUzunBasisKur(map, () => !pickName && !coordMode, noktaBirak);
 
 
 // dış uygulamadan tema / filtre / rota komutları
-addEventListener('message', e => {
+const mesajIsle = e => {
   const d = e.data || {};
   if (d.ks === 'theme') document.body.classList.toggle('dark', d.dark);
-  if (d.ks === 'fly') { ilKilitle(); map.flyTo([d.lat, d.lon], d.zoom || 13, { duration: .8 }); }
+  // Konumu boş / geçersiz bir kayda uçulmaz: null enlem Leaflet'te bütün katmanların çizimini bozar
+  const konumVar = (la, lo) => la !== null && lo !== null && la !== undefined && lo !== undefined && la !== '' && lo !== '' && Number.isFinite(+la) && Number.isFinite(+lo);
+  if (d.ks === 'fly' && konumVar(d.lat, d.lon)) { ilKilitle(); map.flyTo([+d.lat, +d.lon], d.zoom || 13, { duration: .8 }); }
   if (d.ks === 'setBase') setBase(d.base, true);
   if (d.ks === 'navMode') setNav(!!d.on);
   if (d.ks === 'pick') setPick(d.name || null);
@@ -453,7 +534,8 @@ addEventListener('message', e => {
     K.setFilter(d.filter);
     sebekeGoster(d.filter);
   }
-});
+};
+addEventListener('message', e => { try { mesajIsle(e); } catch (err) { haritaHata('ileti işlenemedi (' + ((err && err.message) || err) + ')'); } });
 parent.postMessage({ ks: 'ready' }, '*');
 </script>
 </body>

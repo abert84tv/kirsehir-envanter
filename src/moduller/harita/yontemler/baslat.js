@@ -1,7 +1,9 @@
   baslatMesajlar() {
     this._msg = e => {
       const d = e.data || {};
-      if (d.ks === 'ready') this.pushMap();
+      if (d.ks === 'ready') { this._haritaHazir = true; this.pushMap(); }
+      // Haritanın kendi hata şeridi gösterildi: denetim izine de yazılır (kullanıcı "harita gelmiyor" derse nedeni görülür)
+      if (d.ks === 'haritaHata') { try { this.denetimYaz('veri', 'Harita hatası', String(d.msg || '').slice(0, 200), 'Harita'); } catch (e) { /* denetim yok */ } return; }
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
       // Köy atama penceresindeki harita: hazır olunca veri gider; nokta ya da aday köye basılınca seçim güncellenir
       if (d.ks === 'koyAtaHazir') { this.koyAtaHaritaGonder(); return; }
@@ -82,4 +84,16 @@
       }
     };
     addEventListener('message', this._msg);
+    // Harita çerçevesi 20 sn içinde "hazır" demezse (dosya yüklenememiş, betik hatası) bir kez yeniden yüklenir;
+    // yine açılmazsa kullanıcıya haber verilir — harita sessizce boş kalmasın
+    this._haritaHazir = false;
+    const bekci = (deneme) => {
+      if (this._haritaHazir) return;
+      const f = document.querySelector('iframe[title^="Kırşehir haritası"]');
+      if (f) {
+        if (deneme === 0) { try { f.src = f.src; } catch (e) { /* çerçeve yok */ } setTimeout(() => bekci(1), 20000); }
+        else this.duyur('Harita açılamadı. İnternet bağlantınızı denetleyip sayfayı yenileyin.', 9000, 'kotu');
+      } else setTimeout(() => bekci(deneme), 5000);
+    };
+    setTimeout(() => bekci(0), 20000);
   }

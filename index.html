@@ -10869,7 +10869,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-205';
+const SURUM = '2026.10.15-206';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -15162,13 +15162,13 @@ class Component extends DCLogic {
   // Hatlar ana haritada da görünür: kayıt kodu ve uzunluğu ile
   hatlariYolla() {
     const tablo = this.state.hatlar || {};
-    const kod = {};
-    (this.state.assets || []).forEach(a => { kod[a.id] = a.code; });
+    const kod = {}, koy = {};
+    (this.state.assets || []).forEach(a => { kod[a.id] = a.code; koy[a.id] = a.village || a.district || ''; });
     const duz = [];
     for (const id in tablo) {
       for (const x of (tablo[id] || [])) {
         if (!x || !(x.noktalar || []).length) continue;
-        duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '', grup: x.grup || '', cap: x.cap || '' });
+        duz.push({ tur: x.tur, noktalar: x.noktalar, kod: kod[id] || '', koy: koy[id] || '', grup: x.grup || '', cap: x.cap || '' });
       }
     }
     this.toMap({ ks: 'hatlar', hatlar: duz });
@@ -15259,7 +15259,9 @@ class Component extends DCLogic {
   baslatMesajlar() {
     this._msg = e => {
       const d = e.data || {};
-      if (d.ks === 'ready') this.pushMap();
+      if (d.ks === 'ready') { this._haritaHazir = true; this.pushMap(); }
+      // Haritanın kendi hata şeridi gösterildi: denetim izine de yazılır (kullanıcı "harita gelmiyor" derse nedeni görülür)
+      if (d.ks === 'haritaHata') { try { this.denetimYaz('veri', 'Harita hatası', String(d.msg || '').slice(0, 200), 'Harita'); } catch (e) { /* denetim yok */ } return; }
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
       // Köy atama penceresindeki harita: hazır olunca veri gider; nokta ya da aday köye basılınca seçim güncellenir
       if (d.ks === 'koyAtaHazir') { this.koyAtaHaritaGonder(); return; }
@@ -15340,6 +15342,18 @@ class Component extends DCLogic {
       }
     };
     addEventListener('message', this._msg);
+    // Harita çerçevesi 20 sn içinde "hazır" demezse (dosya yüklenememiş, betik hatası) bir kez yeniden yüklenir;
+    // yine açılmazsa kullanıcıya haber verilir — harita sessizce boş kalmasın
+    this._haritaHazir = false;
+    const bekci = (deneme) => {
+      if (this._haritaHazir) return;
+      const f = document.querySelector('iframe[title^="Kırşehir haritası"]');
+      if (f) {
+        if (deneme === 0) { try { f.src = f.src; } catch (e) { /* çerçeve yok */ } setTimeout(() => bekci(1), 20000); }
+        else this.duyur('Harita açılamadı. İnternet bağlantınızı denetleyip sayfayı yenileyin.', 9000, 'kotu');
+      } else setTimeout(() => bekci(deneme), 5000);
+    };
+    setTimeout(() => bekci(0), 20000);
   }
   // İş emri: "İş emri" düğmesi artık gerçek, numaralı bir kayıt açıyor
   // (madde 3-5/9/12-14, 2026.09.30 — daha önce yalnızca bir toast gösteriyordu).

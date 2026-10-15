@@ -23,6 +23,12 @@ export function grupRenk(ad) {
   else for (const c of ad) i = (i * 31 + c.charCodeAt(0)) >>> 0;
   return GRUP_PALET[((i % GRUP_PALET.length) + GRUP_PALET.length) % GRUP_PALET.length];
 }
+// Geçerli konum: null / boş / sayı olmayan değer harita çizimini tümden bozar (Leaflet projeksiyonu
+// null enlemde hata verir ve zoom sonrası bütün katmanlar çizilmez) — bu yüzden sıkı denetlenir.
+export function konumGecerli(lat, lon) {
+  const sayi = v => v !== null && v !== undefined && v !== '' && Number.isFinite(+v);
+  return sayi(lat) && sayi(lon) && Math.abs(+lat) <= 90 && Math.abs(+lon) <= 180;
+}
 export function hatMesafe(a, b) {
   const rd = x => x * Math.PI / 180;
   const dLat = rd(b[0] - a[0]), dLon = rd(b[1] - a[1]);
@@ -46,7 +52,7 @@ const ISU_KATMAN = {
 
 // o: { tikla(oge), arizaAc(f), hatTikla(h) }  — oge: { kind:'a'|'isu', tur, lat, lon, a?, isu? }
 export function katmanKur(map, o) {
-  o = Object.assign({ tikla() {}, arizaAc() {}, etiketTikla: null }, o || {});
+  o = Object.assign({ tikla() {}, arizaAc() {}, etiketTikla: null, hata: null }, o || {});
   let { assets, faults } = buildAssets(DATA);
   let openFaults = new Set(faults.filter(f => !KAPALI.includes(f.status)).map(f => f.assetId));
   let sonFilter = null, wantLabels = true, hatVeri = [], hatAcik = true, base = 'street';
@@ -74,22 +80,32 @@ export function katmanKur(map, o) {
 
   // ── hat güzergâhları
   const hatLayer = L.layerGroup().addTo(map);
+  // Gizleme anahtarları: "kod|*" köyün (projenin) bütün hatları, "kod|Hat 1" tek hat grubu
+  const hatGizliMi = h => hatGizli.has((h.kod || '') + '|*') || hatGizli.has((h.kod || '') + '|' + (h.grup || 'Hat'));
+  // Uzaktan ince çizgi (yüzlerce hat birbirine karışmasın), yaklaştıkça kalınlaşır
+  const hatKova = () => { const z = map.getZoom(); return z < 12 ? 0 : (z < 14 ? 1 : 2); };
+  let sonKova = -1;
   function cizHatlar() {
     hatLayer.clearLayers();
+    sonKova = hatKova();
     if (!hatAcik) return;
+    const kal = [{ w: 2.5, halo: 0 }, { w: 3.5, halo: 6 }, { w: 4.5, halo: 8 }][sonKova];
     for (const h of hatVeri) {
-      if (h.grup && hatGizli.has(h.grup)) continue;
-      const p = (h.noktalar || []).map(x => [+x[0], +x[1]]).filter(x => isFinite(x[0]) && isFinite(x[1]));
-      if (p.length < 2) continue;
-      let uz = 0;
-      for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
-      const renk = grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d';
-      L.polyline(p, { color: '#fff', weight: 8, opacity: .65, interactive: false }).addTo(hatLayer);
-      L.polyline(p, { color: renk, weight: 4.5, opacity: .95 })
-        .bindTooltip((h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz), { sticky: true })
-        .addTo(hatLayer);
+      if (hatGizliMi(h)) continue;
+      try {
+        const p = (h.noktalar || []).filter(x => x && konumGecerli(x[0], x[1])).map(x => [+x[0], +x[1]]);
+        if (p.length < 2) continue;
+        let uz = 0;
+        for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
+        const renk = grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d';
+        if (kal.halo) L.polyline(p, { color: '#fff', weight: kal.halo, opacity: .65, interactive: false }).addTo(hatLayer);
+        L.polyline(p, { color: renk, weight: kal.w, opacity: .95 })
+          .bindTooltip((h.koy ? h.koy + ' · ' : '') + (h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz), { sticky: true })
+          .addTo(hatLayer);
+      } catch (e) { if (typeof o.hata === 'function') o.hata('Hat çizilemedi: ' + (e && e.message || e)); }
     }
   }
+  map.on('zoomend', () => { if (hatKova() !== sonKova) cizHatlar(); });
   cizHatlar();
 
   // ── görünüm yöneticisi
@@ -108,7 +124,7 @@ export function katmanKur(map, o) {
   function ogeleriKur() {
     const imza = assets.length + '|' + assets.map(a => a.id + a.type + a.status + a.sync + a.lat + a.lon).join(',').length + '|' + [...openFaults].join(',');
     if (imza === ogeImza) { ogeAcik(); gorunumGuncelle(); return; }
-    ogeImza = imza;
+    ogeImza = '';
     ogeler = [];
     for (const a of assets) ogeler.push({ key: 'a' + a.id, kind: 'a', tur: a.type, lat: a.lat, lon: a.lon, a });
     for (const [ad, isu] of Object.entries(ISU_KATMAN)) {
@@ -121,6 +137,7 @@ export function katmanKur(map, o) {
     goruntuKatman.clearLayers(); canli.clear();
     ogeAcik();
     gorunumGuncelle();
+    ogeImza = imza;
   }
   // Etiket iki satır: kod ve altında köy · ilçe (köyü yazılmamış kayıtta yalnız ilçe)
   const kacis = x => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -170,9 +187,11 @@ export function katmanKur(map, o) {
     }
     for (const g of ad) {
       if (canli.has(g.key)) continue;
-      const mk = isaretYap(g, mod);
-      mk.addTo(goruntuKatman);
-      canli.set(g.key, { mk, mod });
+      try {
+        const mk = isaretYap(g, mod);
+        mk.addTo(goruntuKatman);
+        canli.set(g.key, { mk, mod });
+      } catch (e) { if (typeof o.hata === 'function') o.hata('İşaret çizilemedi (' + (g.a ? g.a.code : g.key) + '): ' + (e && e.message || e)); }
     }
   }
   function plan() { clearTimeout(gz); gz = setTimeout(gorunumGuncelle, 100); }
@@ -182,7 +201,7 @@ export function katmanKur(map, o) {
     // Arıza noktaları: ekibin sahada kaydettiği koordinat; açık arızalar kırmızı
     noktaLayer.clearLayers();
     for (const f of faults) {
-      if (!f || !f.nokta || KAPALI.includes(f.status)) continue;
+      if (!f || !f.nokta || !konumGecerli(f.nokta.lat, f.nokta.lon) || KAPALI.includes(f.status)) continue;
       const yer = f.koy ? f.koy + (f.district ? ' · ' + f.district : '') : (f.district || '');
       L.circleMarker([f.nokta.lat, f.nokta.lon], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#d70015', fillOpacity: .95 })
         .bindPopup(`<b>${f.no || 'Arıza'}</b><br>${f.type || ''}<br>${yer}` +
@@ -198,7 +217,7 @@ export function katmanKur(map, o) {
     TYPES,
     setBase, base: () => base,
     setData(a, f) {
-      if (Array.isArray(a)) assets = a;
+      if (Array.isArray(a)) assets = a.filter(x => x && konumGecerli(x.lat, x.lon)).map(x => (typeof x.lat === 'number' && typeof x.lon === 'number') ? x : { ...x, lat: +x.lat, lon: +x.lon });
       if (Array.isArray(f)) { faults = f; openFaults = new Set(faults.filter(x => !KAPALI.includes(x.status)).map(x => x.assetId)); }
       veriYaz();
     },
@@ -210,24 +229,29 @@ export function katmanKur(map, o) {
       cizHatlar();
     },
     hatAcik: () => hatAcik,
-    // Hat grupları: ad, renk, parça sayısı, toplam uzunluk (m), açık mı
-    hatGruplari() {
-      const g = new Map();
+    // Hat projeleri (köy/tesis başına): { kod, ad, n, uz, bbox, acik, gruplar:[{ad, renk, n, uz, acik}] }
+    hatProjeleri() {
+      const pr = new Map();
       for (const h of hatVeri) {
-        if (!h.grup) continue;
-        const p = (h.noktalar || []).map(x => [+x[0], +x[1]]).filter(x => isFinite(x[0]) && isFinite(x[1]));
+        const p = (h.noktalar || []).filter(x => x && konumGecerli(x[0], x[1])).map(x => [+x[0], +x[1]]);
+        if (p.length < 2) continue;
         let uz = 0; for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
-        const o2 = g.get(h.grup) || { ad: h.grup, renk: grupRenk(h.grup), n: 0, uz: 0 };
-        o2.n++; o2.uz += uz; g.set(h.grup, o2);
+        const kod = h.kod || '?';
+        const x = pr.get(kod) || { kod, ad: h.koy || kod, n: 0, uz: 0, s: 90, w: 180, nn: -90, e: -180, gr: new Map() };
+        for (const q of p) { x.s = Math.min(x.s, q[0]); x.nn = Math.max(x.nn, q[0]); x.w = Math.min(x.w, q[1]); x.e = Math.max(x.e, q[1]); }
+        x.n++; x.uz += uz;
+        const gk = h.grup || 'Hat';
+        const g = x.gr.get(gk) || { ad: gk, renk: grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d', n: 0, uz: 0, acik: !hatGizli.has(kod + '|' + gk) };
+        g.n++; g.uz += uz; x.gr.set(gk, g);
+        pr.set(kod, x);
       }
-      return [...g.values()].map(x => ({ ...x, acik: !hatGizli.has(x.ad) }))
-        .sort((a, b) => String(a.ad).localeCompare(String(b.ad), 'tr', { numeric: true }));
+      const dogal = (a, b) => String(a.ad).localeCompare(String(b.ad), 'tr', { numeric: true });
+      return [...pr.values()].map(x => ({ kod: x.kod, ad: x.ad, n: x.n, uz: x.uz, bbox: [[x.s, x.w], [x.nn, x.e]],
+        acik: !hatGizli.has(x.kod + '|*'), gruplar: [...x.gr.values()].sort(dogal) })).sort(dogal);
     },
-    grupAc(ad, on) {
-      if (on) hatGizli.delete(ad); else hatGizli.add(ad);
-      try { localStorage.setItem(HAT_GIZLI_KEY, JSON.stringify([...hatGizli])); } catch (e) { /* depolama kapalı */ }
-      cizHatlar();
-    },
+    hatGizleYaz() { try { localStorage.setItem(HAT_GIZLI_KEY, JSON.stringify([...hatGizli])); } catch (e) { /* depolama kapalı */ } cizHatlar(); },
+    projeAc(kod, on) { if (on) hatGizli.delete(kod + '|*'); else hatGizli.add(kod + '|*'); this.hatGizleYaz(); },
+    grupAc(kod, ad, on) { if (on) hatGizli.delete(kod + '|' + ad); else hatGizli.add(kod + '|' + ad); this.hatGizleYaz(); },
     setEtiket(on) { wantLabels = !!on; gorunumGuncelle(); },
     etiket: () => wantLabels,
     assets: () => assets,

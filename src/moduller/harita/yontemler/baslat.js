@@ -20,7 +20,7 @@
         return;
       }
       // Haritadaki "Baca ve vanalar" düğmesi: iki süzgeç birlikte açılır/kapanır
-      if (d.ks === 'sebekeKatman') { this.setState({ filter: { ...this.state.filter, baca: !!d.on, vana: !!d.on } }, () => this.pushMap()); return; }
+      if (d.ks === 'suzgec') { this.suzgecDegis(d.id); return; }
       if (d.ks === 'hatKatman') {
         try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
         this.setState({ hatKatman: !!d.on });

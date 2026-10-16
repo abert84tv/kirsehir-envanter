@@ -213,6 +213,9 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
     <button data-z="sat"><i></i>Uydu</button>
     <button data-z="hyb"><i></i>Uydu + ad</button>
     <div class="k-ayrac"></div>
+    <div class="k-baslik">Kayıt türleri</div>
+    <div class="k-izgara" id="t-turler"></div>
+    <div class="k-ayrac"></div>
     <div class="k-baslik">Haritada göster</div>
           <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
           <button class="arac kal" id="t-hat">Hat güzergâhları</button>
@@ -658,7 +661,7 @@ window.addEventListener('message', ev => {
   if (!d) return;
   if (d.ks === 'theme') { document.body.classList.toggle('dark', d.dark); return; }
   if (d.ks === 'setBase') { Kcalis(K => { K.setBase(d.base); zeminDugme(d.base); }); return; }
-  if (d.ks === 'filter') { Kcalis(K => K.setFilter(d.filter)); return; }
+  if (d.ks === 'filter') { turMenu.guncelle(d.filter); Kcalis(K => K.setFilter(d.filter)); return; }
   if (d.ks === 'hatlar' && Array.isArray(d.hatlar)) { Kcalis(K => K.setHat(d.hatlar)); return; }
   if (d.ks === 'hatKatman') { Kcalis(K => { K.hatKatman(d.on); hatDugme(); }); return; }
   if (d.ks === 'assets' && Array.isArray(d.assets)) { Kcalis(K => K.setData(d.assets, Array.isArray(d.faults) ? d.faults : null)); return; }
@@ -706,6 +709,8 @@ map.on('click movestart', () => katmanMenu.kapat());
 const katmanMenu = ksKatmanKur(k => Kcalis(K => { K.setBase(k); zeminDugme(k); try { parent.postMessage({ ks: 'base', base: k }, '*'); } catch (e) { /* çerçeve yok */ } }));
 katmanMenu.isaret('street');
 function zeminDugme(kind) { katmanMenu.isaret(kind); }
+const turMenu = ksTurMenu(el('t-turler'));
+{ let f0 = null; try { f0 = JSON.parse(localStorage.getItem('ks-suzgec') || 'null'); } catch (e) { /* depolama kapalı */ } turMenu.guncelle(f0 || { kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true, pasif: true }); }
 function etiketDugme() { if (K) el('t-labels').classList.toggle('on', K.etiket()); }
 function hatDugme() { if (K) el('t-hat').classList.toggle('on', K.hatAcik()); }
 el('t-labels').onclick = () => Kcalis(K => { K.setEtiket(!K.etiket()); etiketDugme(); });

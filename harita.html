@@ -164,10 +164,12 @@ function yedekKatman(map) {
     <button data-z="sat"><i></i>Uydu</button>
     <button data-z="hyb"><i></i>Uydu + ad</button>
     <div class="k-ayrac"></div>
+    <div class="k-baslik">Kayıt türleri</div>
+    <div class="k-izgara" id="t-turler"></div>
+    <div class="k-ayrac"></div>
     <div class="k-baslik">Haritada göster</div>
     <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
     <button class="arac kal" id="t-hat">Hat güzergâhları</button>
-    <button class="arac kal on" id="t-sebeke">Baca ve vanalar</button>
     <div id="t-gruplar"></div>
   </div>
 </div>
@@ -257,13 +259,9 @@ document.getElementById('t-hat').onclick = () => {
   // Tercih uygulamada saklanır: kullanıcı kapattıysa bir dahaki girişte kapalı gelir
   try { parent.postMessage({ ks: 'hatKatman', on: K.hatAcik() }, '*'); } catch (e) { /* çerçeve yok */ }
 };
-// Baca ve vana işaretleri tek düğmeyle açılıp kapanır; süzgeç uygulamada durur, durum geri gelir
-let sebekeAcik = true;
-function sebekeGoster(f) {
-  sebekeAcik = !f || (f.baca !== false && f.vana !== false);
-  document.getElementById('t-sebeke').classList.toggle('on', sebekeAcik);
-}
-document.getElementById('t-sebeke').onclick = () => { try { parent.postMessage({ ks: 'sebekeKatman', on: !sebekeAcik }, '*'); } catch (e) { /* çerçeve yok */ } };
+// Kayıt türleri (Tümü, Kuyu … ISU): süzgeç uygulamada durur, güncel durum 'filter' iletisiyle geri gelir
+const turMenu = ksTurMenu(document.getElementById('t-turler'));
+{ let f0 = null; try { f0 = JSON.parse(localStorage.getItem(SUZ_KEY) || 'null'); } catch (e) { /* depolama kapalı */ } turMenu.guncelle(f0 || { kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true, pasif: true }); }
 // Hat projeleri: köy (tesis) başına bir katman; içinde Hat 1, Hat 2 … ayrı ayrı açılıp kapanır.
 // Liste yalnız haritada görünen alandaki köyleri gösterir (yüzlerce köy olunca uzamaz); arama tüm köylerde çalışır.
 let acikProje = null, projeAra = '';
@@ -539,7 +537,7 @@ const mesajIsle = e => {
   if (d.ks === 'filter') {
     try { localStorage.setItem(SUZ_KEY, JSON.stringify(d.filter)); } catch (e) { /* depolama kapalı */ }
     K.setFilter(d.filter);
-    sebekeGoster(d.filter);
+    turMenu.guncelle(d.filter);
   }
 };
 addEventListener('message', e => { try { mesajIsle(e); } catch (err) { haritaHata('ileti işlenemedi (' + ((err && err.message) || err) + ')'); } });

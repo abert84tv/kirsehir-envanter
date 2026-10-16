@@ -66,6 +66,30 @@ function ksPinZoom(map, esik) {
   map.on('zoomend', uygula); uygula();
 }
 
+// Katman menüsündeki "Kayıt türleri" bölümü (Tümü, Kuyu, Depo … Pasifler, ISU): eskiden sayfanın üstünde süzgeç çubuğuydu.
+// Seçim uygulamada durur; düğmeye basınca ana uygulamaya { ks:'suzgec', id } gider, güncel süzgeç geri 'filter' ile gelir.
+const KS_TURLER = [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['baca', 'Baca'], ['vana', 'Vana'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']];
+function ksTurMenu(kap) {
+  if (!kap) return { guncelle() {} };
+  const dugme = {};
+  for (const [id, ad] of KS_TURLER) {
+    const b = document.createElement('button');
+    b.className = 'arac kal' + (id === 'all' ? ' k-tumu' : '');
+    b.textContent = ad;
+    b.onclick = e => { e.stopPropagation(); try { parent.postMessage({ ks: 'suzgec', id }, '*'); } catch (err) { /* çerçeve yok */ } };
+    kap.appendChild(b); dugme[id] = b;
+  }
+  const tur = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
+  function guncelle(f) {
+    f = f || {};
+    for (const [id] of KS_TURLER) {
+      const ac = id === 'all' ? tur.every(t => f[t]) : id === 'pasif' ? f.pasif !== false : !!f[id];
+      dugme[id].classList.toggle('on', ac);
+    }
+  }
+  return { guncelle };
+}
+
 // Katman menüsü (Sokak / Uydu / Uydu + ad): simgeye basınca açılır, seçim yapınca ya da başka yere basınca kapanır.
 //   sec(kind) — seçilen zemin için çağrılır; dönen nesnenin isaret(kind) işlevi seçili zemini işaretler.
 function ksKatmanKur(sec) {

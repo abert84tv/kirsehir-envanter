@@ -69,19 +69,11 @@
 </sc-for>
 </div>
 <button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
-<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Süzgeç <span style="font-size:10px">{{ telSuz.ok }}</span></button>
 </div>
-<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
-<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
-</sc-for>
-</div>
-</sc-if>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button></sc-if>
-<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)">{{ ikonlar.arizaBuyuk }}</button></sc-if>
+<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
 </div>
 </div>

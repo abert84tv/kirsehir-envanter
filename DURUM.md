@@ -2377,3 +2377,8 @@ Masaüstü sol menüsünden "Saha işleri / Envanter / Çözümleme / Sistem" ba
 - **Telefon "Bütün ekranlar":** grup başlıkları kaldırıldı (masaüstü sol menüyle aynı).
 - **Hat çizimde grup:** hat bitirilince / KML içe aktarılınca grup adı sorulur (öneri: son kullanılan, yoksa "Hat N+1"); hat satırındaki "Grup" düğmesiyle sonradan değiştirilir; boş bırakılırsa grupsuz kalır.
 - **Köy ataması (veri):** köyü boş 96 tesisten 94'üne en yakın köy yazıldı (≤5 km; `SQL-koy-ata-2026-10-16.sql`). İlçe değiştirilmedi; her kayıtta `d.koyOtomatik` işaretli ("Köyü otomatik yazılan" süzgeci). Atlananlar: KS-KUY-0030 ve 0031 (en yakın köy 5,7 km).
+
+## 2026.10.15-211 — Harita türleri katman menüsünde; harita düğmeleri aynı boyutta
+- **Kayıt türleri (Tümü, Kuyu, Depo, AG, GES, Baca, Vana, Pasifler, ISU Kaynak, ISU Memba)** haritanın üstündeki süzgeç çubuğundan çıkarıldı; harita katman menüsüne ("Kayıt türleri" bölümü, iki sütunlu açma/kapama) taşındı — masaüstü ve telefon, Envanter haritası ve Hat kesiti. Harita bu şerit kadar büyüdü; telefondaki "Süzgeç" düğmesi ve açılır çipler de kalktı. Seçim uygulamada durur (`suzgec` iletisi → `suzgecDegis`). "Baca ve vanalar" düğmesi gereksiz kaldı (Baca ve Vana ayrı ayrı).
+- **Düğmeler aynı dilde:** haritadaki bütün düğmeler (katman, yol tarifi, mesafe, konumuma git, yeni arıza, yakınlaştır/uzaklaştır) 42 px, 12 px köşe, yüzey rengi, mavi simge, aynı gölge. Telefon ve masaüstü aynı.
+- Katman menüsü uzun olunca kaydırılabilir (eskiden `overflow:hidden` yüzünden kesiliyordu).

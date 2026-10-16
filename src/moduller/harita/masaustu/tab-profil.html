@@ -1,11 +1,6 @@
 <!-- profil: mesafe ve yol profili -->
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
-<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
-</sc-for>
-</div>
 <iframe src="profil.html" title="Mesafe ve yol profili" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 </div>
 </sc-if>

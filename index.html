@@ -539,16 +539,10 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 </sc-if>
 
 <div style="flex:1;position:relative;min-width:0;min-height:0;display:{{ map.display }};flex-direction:column">
-<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
-</sc-for>
-<span style="flex:1 1 auto;min-width:0;margin-left:auto;padding-left:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 11.5px/1.2 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}" title="{{ counts.line1 }} · nokta bırakmak için haritaya çift tıklayın">{{ counts.kisa }} · çift tıkla nokta bırak</span>
-</div>
 <iframe src="harita.html" title="Kırşehir haritası" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
-<div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:10px;align-items:flex-end">
-<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:46px;height:46px;background:{{ ui.fg }};border-radius:10px;border:1px solid {{ ui.fg }};color:{{ ui.bg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:var(--color-accent);border-color:var(--color-accent);color:#fff">{{ ikonlar.ariza }}</button></sc-if>
-<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
+<div style="position:absolute;right:18px;bottom:20px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)">{{ ikonlar.ariza }}</button></sc-if>
+<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
 </div>
 </div>
 
@@ -748,11 +742,6 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <!-- profil: mesafe ve yol profili -->
 <sc-if value="{{ tab.profil }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:{{ ui.bg }}">
-<div class="scroll" style="flex:none;display:flex;align-items:center;gap:7px;min-width:0;overflow-x:auto;padding:7px 20px;background:{{ ui.surf }};border-bottom:1px solid {{ ui.rule }}">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:6px 13px;border-radius:15px;font:600 12.5px/1.2 var(--font-body);letter-spacing:-.012em;background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
-</sc-for>
-</div>
 <iframe src="profil.html" title="Mesafe ve yol profili" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 </div>
 </sc-if>
@@ -5507,20 +5496,12 @@ Malzeme istekleri
 </sc-for>
 </div>
 <button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
-<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 13px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 13px/1 var(--font-body);display:flex;align-items:center;gap:6px">Süzgeç <span style="font-size:10px">{{ telSuz.ok }}</span></button>
 </div>
-<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
-<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
-</sc-for>
-</div>
-</sc-if>
 </div>
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:52px;height:52px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 4px 12px rgba(0,0,0,.25);color:{{ ui.fg }};display:{{ map.arizaBtn }};align-items:center;justify-content:center">{{ ikonlar.arizaBuyuk }}</button></sc-if>
-<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:44px;height:44px;background:{{ ui.surf }};border-radius:14px;border:1px solid {{ ui.rule }};box-shadow:0 3px 12px rgba(0,0,0,.22);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
+<sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)">{{ ikonlar.arizaBuyuk }}</button></sc-if>
+<button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
 </div>
 </div>
 
@@ -5602,17 +5583,9 @@ Malzeme istekleri
 <button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:38px;display:flex;align-items:center;justify-content:center;padding:0 4px;border-radius:9px;background:{{ z.bg }};color:{{ z.fg }};box-shadow:{{ z.golge }};font:600 13px/1.2 var(--font-body);text-align:center;white-space:nowrap">{{ z.label }}</button>
 </sc-for>
 </div>
-<button onClick="{{ telSuz.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 10px;border-radius:11px;border:1px solid {{ telSuz.kenar }};background:{{ telSuz.zemin }};color:{{ telSuz.yazi }};font:600 12.5px/1 var(--font-body)">Süzgeç</button>
 <button onClick="{{ telSuz.aracTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:44px;padding:0 10px;border-radius:11px;border:1px solid {{ telSuz.aracKenar }};background:{{ telSuz.aracZemin }};color:{{ telSuz.aracYazi }};font:600 12.5px/1 var(--font-body);display:flex;align-items:center;gap:4px">Araç <span style="font-size:10px">{{ telSuz.aracOk }}</span></button>
 <button onClick="{{ telSuz.tamTog }}" aria-label="Tam ekran" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:44px;height:44px;border-radius:11px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};display:flex;align-items:center;justify-content:center;font:600 18px/1 var(--font-body)">{{ telSuz.tamIk }}</button>
 </div>
-<sc-if value="{{ telSuz.acik }}" hint-placeholder-val="{{ false }}">
-<div class="ks-gir" style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 10px 10px">
-<sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
-<button onClick="{{ f.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;text-align:center;padding:10px 14px;border-radius:18px;font:600 13px/1.2 var(--font-body);background:{{ f.bg }};color:{{ f.fg }};border:1px solid {{ f.kenar }}">{{ f.label }}</button>
-</sc-for>
-</div>
-</sc-if>
 </div>
 <iframe src="profil.html" title="Mesafe ve yol profili (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 </div>
@@ -10867,7 +10840,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-210';
+const SURUM = '2026.10.15-211';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -15010,6 +14983,16 @@ class Component extends DCLogic {
       w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
     }
   }
+  // Haritadaki katman menüsünün "Kayıt türleri" bölümünden gelen açma/kapama (Tümü, Kuyu … Pasifler, ISU)
+  suzgecDegis(id) {
+    const f = this.state.filter, turler = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
+    let yeni;
+    if (id === 'all') { const ac = !turler.every(t => f[t]); yeni = { ...f }; turler.forEach(t => { yeni[t] = ac; }); }
+    else if (id === 'pasif') yeni = { ...f, pasif: f.pasif === false };
+    else if (turler.includes(id)) yeni = { ...f, [id]: !f[id] };
+    else return;
+    this.setState({ filter: yeni }, () => this.pushMap());
+  }
   // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
   toMap(msg) {
     const w = this.mapWin(); if (w) w.postMessage(msg, '*');
@@ -15300,7 +15283,7 @@ class Component extends DCLogic {
         return;
       }
       // Haritadaki "Baca ve vanalar" düğmesi: iki süzgeç birlikte açılır/kapanır
-      if (d.ks === 'sebekeKatman') { this.setState({ filter: { ...this.state.filter, baca: !!d.on, vana: !!d.on } }, () => this.pushMap()); return; }
+      if (d.ks === 'suzgec') { this.suzgecDegis(d.id); return; }
       if (d.ks === 'hatKatman') {
         try { localStorage.setItem('ks-hat-katman', d.on ? '1' : '0'); } catch (e) { /* depolama kapalı */ }
         this.setState({ hatKatman: !!d.on });
@@ -22242,26 +22225,6 @@ class Component extends DCLogic {
         };
       })(),
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
-      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['baca', 'Baca'], ['vana', 'Vana'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
-        const turler = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
-        const on = id === 'all' ? turler.every(t => s.filter[t])
-          : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];
-        return {
-          label,
-          bg: on ? (dark ? 'rgba(10,132,255,.20)' : 'var(--color-accent-100)') : 'transparent',
-          fg: on ? ui.acc : ui.mut,
-          kenar: on ? (dark ? 'rgba(10,132,255,.42)' : 'var(--color-accent-300)') : ui.rule,
-          // telefonda haritanın üstünde yüzer: hepsi beyaz kalır,
-          // açık olan mavi yazar — haritanın okunurluğu bozulmaz
-          telBg: ui.surf,
-          telFg: on ? ui.acc : ui.mut,
-          toggle: () => id === 'all'
-            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, baca: !on, vana: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
-            : id === 'pasif'
-              ? this.setState({ filter: { ...s.filter, pasif: s.filter.pasif === false } }, () => this.pushMap())
-              : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
-        };
-      }),
       counts: {
         line1: `${vis.length} kayıt · ${vis.filter(a => aktifMi(a)).length} aktif · ${vis.filter(a => !aktifMi(a)).length} pasif`,
         // Süzgeç çubuğunda yer az: kısa biçim yazılır, tamamı ipucunda durur

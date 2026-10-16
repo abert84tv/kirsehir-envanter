@@ -39,26 +39,6 @@
         };
       })(),
       markers, flyPing: !!s.fly, fly: s.fly ? this.proj(s.fly.lat, s.fly.lon) : { x: 50, y: 50 },
-      filters: [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['baca', 'Baca'], ['vana', 'Vana'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']].map(([id, label]) => {
-        const turler = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
-        const on = id === 'all' ? turler.every(t => s.filter[t])
-          : id === 'pasif' ? s.filter.pasif !== false : s.filter[id];
-        return {
-          label,
-          bg: on ? (dark ? 'rgba(10,132,255,.20)' : 'var(--color-accent-100)') : 'transparent',
-          fg: on ? ui.acc : ui.mut,
-          kenar: on ? (dark ? 'rgba(10,132,255,.42)' : 'var(--color-accent-300)') : ui.rule,
-          // telefonda haritanın üstünde yüzer: hepsi beyaz kalır,
-          // açık olan mavi yazar — haritanın okunurluğu bozulmaz
-          telBg: ui.surf,
-          telFg: on ? ui.acc : ui.mut,
-          toggle: () => id === 'all'
-            ? this.setState({ filter: { ...s.filter, kuyu: !on, depo: !on, ag: !on, ges: !on, baca: !on, vana: !on, kaynak: !on, memba: !on } }, () => this.pushMap())
-            : id === 'pasif'
-              ? this.setState({ filter: { ...s.filter, pasif: s.filter.pasif === false } }, () => this.pushMap())
-              : this.setState({ filter: { ...s.filter, [id]: !s.filter[id] } }, () => this.pushMap())
-        };
-      }),
       counts: {
         line1: `${vis.length} kayıt · ${vis.filter(a => aktifMi(a)).length} aktif · ${vis.filter(a => !aktifMi(a)).length} pasif`,
         // Süzgeç çubuğunda yer az: kısa biçim yazılır, tamamı ipucunda durur

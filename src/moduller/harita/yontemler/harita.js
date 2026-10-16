@@ -25,6 +25,16 @@
       w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
     }
   }
+  // Haritadaki katman menüsünün "Kayıt türleri" bölümünden gelen açma/kapama (Tümü, Kuyu … Pasifler, ISU)
+  suzgecDegis(id) {
+    const f = this.state.filter, turler = ['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana', 'kaynak', 'memba'];
+    let yeni;
+    if (id === 'all') { const ac = !turler.every(t => f[t]); yeni = { ...f }; turler.forEach(t => { yeni[t] = ac; }); }
+    else if (id === 'pasif') yeni = { ...f, pasif: f.pasif === false };
+    else if (turler.includes(id)) yeni = { ...f, [id]: !f[id] };
+    else return;
+    this.setState({ filter: yeni }, () => this.pushMap());
+  }
   // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
   toMap(msg) {
     const w = this.mapWin(); if (w) w.postMessage(msg, '*');

@@ -70,7 +70,9 @@ function ksPinZoom(map, esik) {
 // Seçim uygulamada durur; düğmeye basınca ana uygulamaya { ks:'suzgec', id } gider, güncel süzgeç geri 'filter' ile gelir.
 const KS_TURLER = [['all', 'Tümü'], ['kuyu', 'Kuyu'], ['depo', 'Depo'], ['ag', 'AG'], ['ges', 'GES'], ['baca', 'Baca'], ['vana', 'Vana'], ['pasif', 'Pasifler'], ['kaynak', 'ISU Kaynak'], ['memba', 'ISU Memba']];
 function ksTurMenu(kap) {
-  if (!kap) return { guncelle() {} };
+  if (!kap) return { guncelle() {}, kapat() {} };
+  const menu = ksKatmanKur(null, 'turler');
+  const dugmeKap = document.getElementById('turler');
   const dugme = {};
   for (const [id, ad] of KS_TURLER) {
     const b = document.createElement('button');
@@ -86,20 +88,26 @@ function ksTurMenu(kap) {
       const ac = id === 'all' ? tur.every(t => f[t]) : id === 'pasif' ? f.pasif !== false : !!f[id];
       dugme[id].classList.toggle('on', ac);
     }
+    // Süzgeç uygulanmışsa (bir tür kapalıysa) düğmenin köşesinde turuncu nokta çıkar
+    if (dugmeKap) dugmeKap.classList.toggle('suzulu', !(tur.every(t => f[t]) && f.pasif !== false));
   }
-  return { guncelle };
+  return { guncelle, kapat: menu.kapat };
 }
 
 // Katman menüsü (Sokak / Uydu / Uydu + ad): simgeye basınca açılır, seçim yapınca ya da başka yere basınca kapanır.
 //   sec(kind) — seçilen zemin için çağrılır; dönen nesnenin isaret(kind) işlevi seçili zemini işaretler.
-function ksKatmanKur(sec) {
-  const k = document.getElementById('katman');
+function ksKatmanKur(sec, id) {
+  id = id || 'katman';
+  const k = document.getElementById(id);
   if (!k) return { isaret() {}, kapat() {} };
   const kapat = () => k.classList.remove('acik');
   const isaret = kind => k.querySelectorAll('.k-menu button[data-z]').forEach(b => b.classList.toggle('on', b.dataset.z === kind));
-  document.getElementById('katman-dugme').addEventListener('click', e => {
+  document.getElementById(id + '-dugme').addEventListener('click', e => {
     e.stopPropagation();
-    k.classList.toggle('acik');
+    const ac = !k.classList.contains('acik');
+    // Tek seferde yalnız bir menü açık kalır (zemin menüsü ve kayıt türleri menüsü)
+    document.querySelectorAll('.ks-katman.acik').forEach(x => x.classList.remove('acik'));
+    k.classList.toggle('acik', ac);
   });
   k.querySelectorAll('.k-menu button[data-z]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); kapat(); sec(b.dataset.z); }));
   // Harita menüsü seçenekleri: bir seçeneğe basınca menü kapanır (açma-kapama anahtarları — etiketler, hatlar — açık kalır)

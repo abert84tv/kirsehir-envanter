@@ -164,13 +164,17 @@ function yedekKatman(map) {
     <button data-z="sat"><i></i>Uydu</button>
     <button data-z="hyb"><i></i>Uydu + ad</button>
     <div class="k-ayrac"></div>
-    <div class="k-baslik">Kayıt türleri</div>
-    <div class="k-izgara" id="t-turler"></div>
-    <div class="k-ayrac"></div>
     <div class="k-baslik">Haritada göster</div>
     <button class="arac kal" id="t-labels">Kayıt etiketleri</button>
     <button class="arac kal" id="t-hat">Hat güzergâhları</button>
     <div id="t-gruplar"></div>
+  </div>
+</div>
+<div class="ks-katman" id="turler">
+  <button class="k-dugme" id="turler-dugme" aria-label="Kayıt türleri" title="Kayıt türleri — kuyu, depo, baca … hangileri görünsün"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 7.5V19l-4-2v-4.5L4 5Z"/></svg></button>
+  <div class="k-menu">
+    <div class="k-baslik">Kayıt türleri</div>
+    <div class="k-izgara" id="t-turler"></div>
   </div>
 </div>
 </div>
@@ -467,7 +471,7 @@ async function routeTo(a) {
 
 
 
-map.on('click movestart', () => katmanMenu.kapat());
+map.on('click movestart', () => { katmanMenu.kapat(); turMenu.kapat(); });
 
 // köy konumu işaretleme modu — kullanıcı haritaya bir kez dokunur, konum kaydedilir
 let pickName = null;

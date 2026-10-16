@@ -2382,3 +2382,6 @@ Masaüstü sol menüsünden "Saha işleri / Envanter / Çözümleme / Sistem" ba
 - **Kayıt türleri (Tümü, Kuyu, Depo, AG, GES, Baca, Vana, Pasifler, ISU Kaynak, ISU Memba)** haritanın üstündeki süzgeç çubuğundan çıkarıldı; harita katman menüsüne ("Kayıt türleri" bölümü, iki sütunlu açma/kapama) taşındı — masaüstü ve telefon, Envanter haritası ve Hat kesiti. Harita bu şerit kadar büyüdü; telefondaki "Süzgeç" düğmesi ve açılır çipler de kalktı. Seçim uygulamada durur (`suzgec` iletisi → `suzgecDegis`). "Baca ve vanalar" düğmesi gereksiz kaldı (Baca ve Vana ayrı ayrı).
 - **Düğmeler aynı dilde:** haritadaki bütün düğmeler (katman, yol tarifi, mesafe, konumuma git, yeni arıza, yakınlaştır/uzaklaştır) 42 px, 12 px köşe, yüzey rengi, mavi simge, aynı gölge. Telefon ve masaüstü aynı.
 - Katman menüsü uzun olunca kaydırılabilir (eskiden `overflow:hidden` yüzünden kesiliyordu).
+
+## 2026.10.15-212 — Kayıt türleri ayrı düğmede
+Kayıt türleri (Tümü, Kuyu … ISU) zemin menüsünden çıkarıldı; katman düğmesinin hemen altında **kendi süzgeç düğmesi** (huni simgesi) var, kendi menüsünü açar. Bir tür kapalıysa düğmenin köşesinde turuncu nokta çıkar (süzgeç uygulandığı anlaşılsın). İki menüden yalnız biri açık kalır. Envanter haritası ve Hat kesiti aynı.

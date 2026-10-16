@@ -298,8 +298,7 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 </div>
 <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:4px 12px 8px;gap:2px">
 <sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
-<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:6px">
-<div class="ks-et" style="padding:6px 12px 4px;font:700 10.5px/1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:{{ ui.mut }}">{{ g.baslik }}</div>
+<div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:10px">
 <sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
 <button onClick="{{ n.go }}" title="{{ n.label }}" aria-label="{{ n.label }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;background:{{ n.pill }};color:{{ n.fg }}" style-hover="background:{{ n.hover }}">
 <span style="flex:none;width:18px;height:18px;display:flex;align-items:center;justify-content:center">{{ n.ikon }}</span>
@@ -10869,7 +10868,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-208';
+const SURUM = '2026.10.15-209';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';

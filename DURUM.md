@@ -2368,3 +2368,6 @@ Kasmanın üç olası kaynağı kapatıldı (yerelde ölçülen harita çizimi z
 - **Asıl kasma kaynağı:** uygulama her 30 sn'de tesis/arıza/not/hat/köy/iş emri/başvuru/öneri/çöp listelerini sunucudan çekip, veri aynı olsa bile her birini `setState` ile yazıyordu (≈8 tam ekran yeniden çizimi + haritaya tüm listenin kopyası + cihaz kopyası için derin kopya). Artık otomatik yenilemede (`veriYenile(true, true)`) veri ekrandakiyle aynıysa hiçbiri yazılmaz (`ayniMi`); elle/kayıt sonrası yenilemeler eskisi gibi tam çalışır.
 - **Haritaya veri gönderimi:** süzgeç/tema değişince bütün kayıt listesi yeniden kopyalanmıyor; yalnız liste değiştiyse ya da harita çerçevesi yenilendiyse gidiyor.
 - **Hata düzeltmesi:** haritadaki işaret imzası yalnız uzunluktu; bir kaydın konumu/adı aynı uzunlukta değişince (ör. konum düzeltme) işaret eski yerinde kalıyordu. Artık gerçek özet (FNV-1a) ve kod/köy/ilçe/baca adı da içinde.
+
+## 2026.10.15-209 — Sol menüde grup başlıkları kaldırıldı
+Masaüstü sol menüsünden "Saha işleri / Envanter / Çözümleme / Sistem" başlıkları kaldırıldı; sayfalar aynı sırada, gruplar arası küçük boşlukla duruyor. Telefondaki "Bütün ekranlar" listesi değişmedi.

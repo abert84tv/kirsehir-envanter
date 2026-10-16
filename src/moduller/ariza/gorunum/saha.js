@@ -94,6 +94,9 @@
             })),
             s0: adim === 0 && f.status !== 'bekleme', s1: adim === 1, s2: adim === 2,
             beklemede: f.status === 'bekleme', bekNeden: (f.ek && f.ek.beklemeNeden) || 'neden belirtilmedi',
+            // Nadir işlemler (beklemeye al, araç arızası/kaza) tek "Diğer" düğmesinin altında: ana düğme dışında dikkat dağıtmasın
+            digerAc: !!s.sahaDigerAc, digerEtiket: s.sahaDigerAc ? 'Diğer ▴' : 'Diğer: beklemeye al, araç arızası ▾',
+            digerTog: () => this.setState({ sahaDigerAc: !this.state.sahaDigerAc }),
             bekle: () => this.setState({ bekleSheet: { id: f.id } }),
             olay: () => this.setState({ olaySheet: { id: f.id } }),
             devam: () => this.sahaDurum(f, (f.ek && f.ek.oncekiDurum && f.ek.oncekiDurum !== 'bekleme') ? f.ek.oncekiDurum : 'atandi'),

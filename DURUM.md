@@ -2388,3 +2388,6 @@ Kayıt türleri (Tümü, Kuyu … ISU) zemin menüsünden çıkarıldı; katman 
 
 ## 2026.10.15-213 — İş kartı kısaldı
 Operatör akışı: İş kartında (masaüstü + telefon) sistemin önerdiği değerler tek satır özet olarak görünür; yalnız değiştirmek isteyen açar. **Ne arızası:** "Su kesintisi · Boru patlağı · Acil" + Değiştir (sistem önerisinin gerekçesi altında). **Nerede:** "Köy · İlçe · Tesis kodu" + Değiştir; tesis/köy eksikse bölüm kendiliğinden açık kalır. **Kim gidecek:** ekipler kısa satır (ad, nöbetçi/bölge/açık iş, uzaklık); üye ve araç ayrıntısı yalnız seçili ekipte, uyarılar (izinli, araç yok) her zaman. **Zaman ve not:** tek kapalı satır "Planla / not ekle". Altta tek **Ata** düğmesi aynı. Tek dokunuşla atama istenmedi (kullanıcı kararı); ekip seçimi operatörde kalır.
+
+## 2026.10.15-214 — Saha ekranı: nadir işlemler "Diğer" altında
+Telefon > İşler > Bana atanan: iş kartında her adımda büyük ana düğme (Sahaya vardım / İşi tamamla / Kapat) öne çıkıyor; "Beklemeye al" ve "Araç arızası / kaza" tek "Diğer ▾" düğmesinin altına alındı (sahada çoğu iş için gerekmiyor). Akışın kendisi aynı: Atandı → Sahadayım → Tamamlandı.

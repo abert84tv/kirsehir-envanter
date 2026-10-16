@@ -2385,3 +2385,6 @@ Masaüstü sol menüsünden "Saha işleri / Envanter / Çözümleme / Sistem" ba
 
 ## 2026.10.15-212 — Kayıt türleri ayrı düğmede
 Kayıt türleri (Tümü, Kuyu … ISU) zemin menüsünden çıkarıldı; katman düğmesinin hemen altında **kendi süzgeç düğmesi** (huni simgesi) var, kendi menüsünü açar. Bir tür kapalıysa düğmenin köşesinde turuncu nokta çıkar (süzgeç uygulandığı anlaşılsın). İki menüden yalnız biri açık kalır. Envanter haritası ve Hat kesiti aynı.
+
+## 2026.10.15-213 — İş kartı kısaldı
+Operatör akışı: İş kartında (masaüstü + telefon) sistemin önerdiği değerler tek satır özet olarak görünür; yalnız değiştirmek isteyen açar. **Ne arızası:** "Su kesintisi · Boru patlağı · Acil" + Değiştir (sistem önerisinin gerekçesi altında). **Nerede:** "Köy · İlçe · Tesis kodu" + Değiştir; tesis/köy eksikse bölüm kendiliğinden açık kalır. **Kim gidecek:** ekipler kısa satır (ad, nöbetçi/bölge/açık iş, uzaklık); üye ve araç ayrıntısı yalnız seçili ekipte, uyarılar (izinli, araç yok) her zaman. **Zaman ve not:** tek kapalı satır "Planla / not ekle". Altta tek **Ata** düğmesi aynı. Tek dokunuşla atama istenmedi (kullanıcı kararı); ekip seçimi operatörde kalır.

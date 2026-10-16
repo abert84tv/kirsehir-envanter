@@ -1,6 +1,6 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.15-212';
+const SURUM = 'ks-2026.10.15-213';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo-2';
 // Uydu karoları 20-40 KB: 3000 karo ≈ 60-100 MB. Eskiden 900'dü; bir köyü gezmek bile sığmıyor, karolar sürekli silinip yeniden iniyordu.

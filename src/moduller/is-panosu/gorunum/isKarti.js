@@ -99,7 +99,7 @@
           ].filter(Boolean);
           const secili = k.ekip === e.ad;
           ekipListe.push({
-            ad: e.ad, secili,
+            ad: e.ad, secili, detayVar: secili,
             sira: (nobetci ? -100 : 0) + (bolgede ? -50 : 0) + (kisiler.length && !calisan.length ? 300 : 0) + (taze && km != null ? km / 1000 : 60) + acik * 2,
             neden: [nobetci ? 'bugün nöbetçi' : '', bolgede ? (e.bolgeler || []).length ? k.ilce + ' bölgesi' : 'tüm il' : '', acik + ' açık iş'].filter(Boolean).join(' · '),
             uyeler: kisiler.map(p => ({ ad: p.ad, durum: PERSONEL_YOK.includes(p.durum) ? (PERSONEL_DURUM[p.durum] || '') : '', renk: PERSONEL_YOK.includes(p.durum) ? '#d97706' : ui.fg })),
@@ -116,6 +116,10 @@
         ekipListe.sort((a, b) => a.sira - b.sira);
 
         const secEkip = ekipListe.find(e => e.secili) || null;
+        // Kısa kart: sınıf, yer, zaman/not önerilmiş değerleriyle tek satır özet olarak görünür; "Değiştir" ile açılır.
+        // Yer eksikse (tesis ya da köy seçilmemiş) bölüm kendiliğinden açık kalır.
+        const yerGerekli = sebeke ? !k.koy : !k.assetId;
+        const yerOzetParca = [k.koy, k.ilce].filter(Boolean).join(' · ') + (secAsset ? ' · ' + secAsset.code : '');
         const eksik = [
           sebeke && !k.koy ? 'köy yazılmamış' : '',
           !sebeke && !k.assetId ? 'tesis seçilmemiş' : '',
@@ -133,6 +137,12 @@
           konumBildirim: k.tur === 'b' && kay.lat != null ? 'Bildirimde konum var: ' + (+kay.lat).toFixed(5) + ', ' + (+kay.lon).toFixed(5) : '',
           konumBildirimVar: k.tur === 'b' && kay.lat != null,
           haritada: () => { this.setState({ tab: 'harita' }); this.toMap({ ks: 'go', lat: kay.lat, lon: kay.lon, label: 'Bildirilen konum' }); },
+          // kısa kart: özetler ve aç/kapa
+          sinifAc: !!k.sinifAc, sinifTog: () => yaz({ sinifAc: !k.sinifAc }),
+          sinifOzet: G.ad + ' · ' + (k.ariza || 'tür seçilmedi') + ' · ' + (k.oncelik || 'Normal'),
+          yerAc: !!k.yerAc || yerGerekli, yerTogVar: !yerGerekli, yerTog: () => yaz({ yerAc: !k.yerAc }),
+          yerOzet: yerOzetParca || 'Yer seçilmedi',
+          digerAc: !!k.digerAc || (k.zaman || 'hemen') === 'ileri' || !!(k.not || '').trim(), digerTog: () => yaz({ digerAc: !k.digerAc }),
           // 2. Sınıf
           gruplar: Object.keys(ARIZA_GRUP).map(g => ({ v: g, l: ARIZA_GRUP[g].ad })),
           grup: k.grup, onGrup: e => { const g = e.target.value; yaz({ grup: g, ariza: ARIZA_GRUP[g].turler[0], assetId: null }); },

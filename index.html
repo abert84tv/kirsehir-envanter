@@ -3799,6 +3799,11 @@ Malzeme istekleri
 
 <div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:12px">
 <span style="font:700 14px/1 var(--font-heading)">2 · Ne arızası</span>
+<sc-if value="{{ !isKartiEkran.sinifAc }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="flex:1 1 200px;font:700 15px/1.3 var(--font-body)">{{ isKartiEkran.sinifOzet }}</span><button onClick="{{ isKartiEkran.sinifTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Değiştir</button></div>
+<sc-if value="{{ isKartiEkran.gerekceVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 12px/1.5 var(--font-body);color:{{ ui.mut }}">Sistem önerisi: <sc-for list="{{ isKartiEkran.gerekce }}" as="r" hint-placeholder-count="2"><span>{{ r }}. </span></sc-for></div></sc-if>
+</sc-if>
+<sc-if value="{{ isKartiEkran.sinifAc }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:10px;flex-wrap:wrap">
 <label style="flex:1 1 220px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Sınıf</span>
 <select value="{{ isKartiEkran.grup }}" onChange="{{ isKartiEkran.onGrup }}" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body);cursor:pointer"><sc-for list="{{ isKartiEkran.gruplar }}" as="g" hint-placeholder-count="6"><option value="{{ g.v }}">{{ g.l }}</option></sc-for></select></label>
@@ -3809,11 +3814,16 @@ Malzeme istekleri
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-for list="{{ isKartiEkran.oncelikler }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ o.bg }};color:{{ o.fg }};font:700 13.5px/44px var(--font-body)">{{ o.l }}</button></sc-for>
 </div></div>
-<sc-if value="{{ isKartiEkran.gerekceVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 12px/1.5 var(--font-body);color:{{ ui.mut }}">Sistem önerisi: <sc-for list="{{ isKartiEkran.gerekce }}" as="r" hint-placeholder-count="2"><span>{{ r }}. </span></sc-for></div></sc-if>
+<button onClick="{{ isKartiEkran.sinifTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:40px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13px/40px var(--font-body)">Tamam</button>
+</sc-if>
 </div>
 
 <div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:12px">
 <span style="font:700 14px/1 var(--font-heading)">3 · Nerede</span>
+<sc-if value="{{ !isKartiEkran.yerAc }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="flex:1 1 200px;font:700 15px/1.3 var(--font-body)">{{ isKartiEkran.yerOzet }}</span><button onClick="{{ isKartiEkran.yerTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Değiştir</button></div>
+</sc-if>
+<sc-if value="{{ isKartiEkran.yerAc }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:10px;flex-wrap:wrap">
 <label style="flex:1 1 200px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">İlçe</span>
 <select value="{{ isKartiEkran.ilce }}" onChange="{{ isKartiEkran.onIlce }}" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body);cursor:pointer"><option value="">Seçin…</option><sc-for list="{{ isKartiEkran.ilceler }}" as="i" hint-placeholder-count="7"><option value="{{ i.v }}">{{ i.v }}</option></sc-for></select></label>
@@ -3835,18 +3845,19 @@ Malzeme istekleri
 <sc-if value="{{ isKartiEkran.tesisYok }}" hint-placeholder-val="{{ false }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Bu köyde ya da aramada tesis bulunamadı.</div></sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ isKartiEkran.yerTogVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isKartiEkran.yerTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:40px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13px/40px var(--font-body)">Tamam</button></sc-if>
+</sc-if>
 </div>
 
-<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:10px">
 <span style="font:700 14px/1 var(--font-heading)">4 · Kim gidecek</span>
-<div style="font:500 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ isKartiEkran.ekipNot }}</div>
 <sc-if value="{{ isKartiEkran.ekipYok }}" hint-placeholder-val="{{ false }}"><div style="font:600 13px/1.4 var(--font-body);color:#d97706">Henüz ekip tanımlı değil. Ayarlar › Ekipler’den ekip, personel ve araç girilmeli; şimdilik arıza ekipsiz oluşturulabilir.</div></sc-if>
-<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;flex-direction:column;gap:8px">
 <sc-for list="{{ isKartiEkran.ekipler }}" as="e" hint-placeholder-count="3">
-<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:12px 14px;border-radius:12px;border:2px solid {{ e.kenar }};background:{{ e.bg }};color:{{ e.fg }};display:flex;flex-direction:column;gap:6px">
+<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:10px 14px;border-radius:12px;border:2px solid {{ e.kenar }};background:{{ e.bg }};color:{{ e.fg }};display:flex;flex-direction:column;gap:5px">
 <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font:700 15px/1.2 var(--font-heading)">{{ e.ad }}</span><span style="font:500 12px/1.2 var(--font-body);color:{{ e.mut }}">{{ e.neden }}</span><span style="flex:1"></span><span style="font:700 12px/1.2 var(--font-body);color:{{ e.konumRenk }}">{{ e.konumMetin }}</span></div>
-<div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">{{ e.uyeNot }} — <sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3"><span style="color:{{ u.renk }}">{{ u.ad }} {{ u.durum }} · </span></sc-for></div>
-<sc-if value="{{ e.aracVar }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">Araç: {{ e.aracMetin }}</div></sc-if>
+<sc-if value="{{ e.detayVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">{{ e.uyeNot }} — <sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3"><span style="color:{{ u.renk }}">{{ u.ad }} {{ u.durum }} · </span></sc-for></div>
+<sc-if value="{{ e.aracVar }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">Araç: {{ e.aracMetin }}</div></sc-if></sc-if>
 <sc-if value="{{ e.uyariVar }}" hint-placeholder-val="{{ false }}"><div style="font:700 12.5px/1.4 var(--font-body);color:#d97706"><sc-for list="{{ e.uyari }}" as="w" hint-placeholder-count="1"><span>⚠ {{ w }}  </span></sc-for></div></sc-if>
 </button>
 </sc-for>
@@ -3854,16 +3865,17 @@ Malzeme istekleri
 </div>
 
 <div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:12px">
-<span style="font:700 14px/1 var(--font-heading)">5 · Ne zaman</span>
+<span style="font:700 14px/1 var(--font-heading)">5 · Zaman ve not</span>
+<sc-if value="{{ !isKartiEkran.digerAc }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="flex:1 1 200px;font:600 14px/1.3 var(--font-body)">Hemen · not yok</span><button onClick="{{ isKartiEkran.digerTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Planla / not ekle</button></div>
+</sc-if>
+<sc-if value="{{ isKartiEkran.digerAc }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-for list="{{ isKartiEkran.zamanSec }}" as="z" hint-placeholder-count="2"><button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ z.bg }};color:{{ z.fg }};font:700 13.5px/44px var(--font-body)">{{ z.l }}</button></sc-for>
 </div>
 <sc-if value="{{ isKartiEkran.ileri }}" hint-placeholder-val="{{ false }}"><input type="datetime-local" value="{{ isKartiEkran.planli }}" onChange="{{ isKartiEkran.onPlanli }}" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body);max-width:280px"></sc-if>
-</div>
-
-<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:16px 18px;display:flex;flex-direction:column;gap:10px">
-<span style="font:700 14px/1 var(--font-heading)">6 · Not</span>
 <textarea value="{{ isKartiEkran.not }}" onChange="{{ isKartiEkran.onNot }}" rows="3" placeholder="Ekibin bilmesi gereken bir şey varsa yazın (isteğe bağlı)" style="all:unset;box-sizing:border-box;min-height:80px;padding:12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/1.5 var(--font-body);white-space:pre-wrap"></textarea>
+</sc-if>
 </div>
 
 </div>
@@ -8614,6 +8626,11 @@ Malzeme istekleri
 
 <div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:14px;display:flex;flex-direction:column;gap:12px">
 <span style="font:700 14px/1 var(--font-heading)">2 · Ne arızası</span>
+<sc-if value="{{ !isKartiEkran.sinifAc }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="flex:1 1 200px;font:700 15px/1.3 var(--font-body)">{{ isKartiEkran.sinifOzet }}</span><button onClick="{{ isKartiEkran.sinifTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Değiştir</button></div>
+<sc-if value="{{ isKartiEkran.gerekceVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 12px/1.5 var(--font-body);color:{{ ui.mut }}">Sistem önerisi: <sc-for list="{{ isKartiEkran.gerekce }}" as="r" hint-placeholder-count="2"><span>{{ r }}. </span></sc-for></div></sc-if>
+</sc-if>
+<sc-if value="{{ isKartiEkran.sinifAc }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:10px;flex-wrap:wrap">
 <label style="flex:1 1 220px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">Sınıf</span>
 <select value="{{ isKartiEkran.grup }}" onChange="{{ isKartiEkran.onGrup }}" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body);cursor:pointer"><sc-for list="{{ isKartiEkran.gruplar }}" as="g" hint-placeholder-count="6"><option value="{{ g.v }}">{{ g.l }}</option></sc-for></select></label>
@@ -8624,11 +8641,16 @@ Malzeme istekleri
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-for list="{{ isKartiEkran.oncelikler }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ o.bg }};color:{{ o.fg }};font:700 13.5px/44px var(--font-body)">{{ o.l }}</button></sc-for>
 </div></div>
-<sc-if value="{{ isKartiEkran.gerekceVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 12px/1.5 var(--font-body);color:{{ ui.mut }}">Sistem önerisi: <sc-for list="{{ isKartiEkran.gerekce }}" as="r" hint-placeholder-count="2"><span>{{ r }}. </span></sc-for></div></sc-if>
+<button onClick="{{ isKartiEkran.sinifTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:40px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13px/40px var(--font-body)">Tamam</button>
+</sc-if>
 </div>
 
 <div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:14px;display:flex;flex-direction:column;gap:12px">
 <span style="font:700 14px/1 var(--font-heading)">3 · Nerede</span>
+<sc-if value="{{ !isKartiEkran.yerAc }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="flex:1 1 200px;font:700 15px/1.3 var(--font-body)">{{ isKartiEkran.yerOzet }}</span><button onClick="{{ isKartiEkran.yerTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Değiştir</button></div>
+</sc-if>
+<sc-if value="{{ isKartiEkran.yerAc }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:10px;flex-wrap:wrap">
 <label style="flex:1 1 200px;display:flex;flex-direction:column;gap:5px"><span style="font:600 12px/1 var(--font-body);color:{{ ui.mut }}">İlçe</span>
 <select value="{{ isKartiEkran.ilce }}" onChange="{{ isKartiEkran.onIlce }}" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body);cursor:pointer"><option value="">Seçin…</option><sc-for list="{{ isKartiEkran.ilceler }}" as="i" hint-placeholder-count="7"><option value="{{ i.v }}">{{ i.v }}</option></sc-for></select></label>
@@ -8650,18 +8672,19 @@ Malzeme istekleri
 <sc-if value="{{ isKartiEkran.tesisYok }}" hint-placeholder-val="{{ false }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ ui.mut }}">Bu köyde ya da aramada tesis bulunamadı.</div></sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ isKartiEkran.yerTogVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ isKartiEkran.yerTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;align-self:flex-start;min-height:40px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 13px/40px var(--font-body)">Tamam</button></sc-if>
+</sc-if>
 </div>
 
-<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:14px;display:flex;flex-direction:column;gap:12px">
+<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:14px;display:flex;flex-direction:column;gap:10px">
 <span style="font:700 14px/1 var(--font-heading)">4 · Kim gidecek</span>
-<div style="font:500 12.5px/1.5 var(--font-body);color:{{ ui.mut }}">{{ isKartiEkran.ekipNot }}</div>
 <sc-if value="{{ isKartiEkran.ekipYok }}" hint-placeholder-val="{{ false }}"><div style="font:600 13px/1.4 var(--font-body);color:#d97706">Henüz ekip tanımlı değil. Ayarlar › Ekipler’den ekip, personel ve araç girilmeli; şimdilik arıza ekipsiz oluşturulabilir.</div></sc-if>
-<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;flex-direction:column;gap:8px">
 <sc-for list="{{ isKartiEkran.ekipler }}" as="e" hint-placeholder-count="3">
-<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:12px 14px;border-radius:12px;border:2px solid {{ e.kenar }};background:{{ e.bg }};color:{{ e.fg }};display:flex;flex-direction:column;gap:6px">
+<button onClick="{{ e.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:10px 14px;border-radius:12px;border:2px solid {{ e.kenar }};background:{{ e.bg }};color:{{ e.fg }};display:flex;flex-direction:column;gap:5px">
 <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font:700 15px/1.2 var(--font-heading)">{{ e.ad }}</span><span style="font:500 12px/1.2 var(--font-body);color:{{ e.mut }}">{{ e.neden }}</span><span style="flex:1"></span><span style="font:700 12px/1.2 var(--font-body);color:{{ e.konumRenk }}">{{ e.konumMetin }}</span></div>
-<div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">{{ e.uyeNot }} — <sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3"><span style="color:{{ u.renk }}">{{ u.ad }} {{ u.durum }} · </span></sc-for></div>
-<sc-if value="{{ e.aracVar }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">Araç: {{ e.aracMetin }}</div></sc-if>
+<sc-if value="{{ e.detayVar }}" hint-placeholder-val="{{ false }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">{{ e.uyeNot }} — <sc-for list="{{ e.uyeler }}" as="u" hint-placeholder-count="3"><span style="color:{{ u.renk }}">{{ u.ad }} {{ u.durum }} · </span></sc-for></div>
+<sc-if value="{{ e.aracVar }}" hint-placeholder-val="{{ true }}"><div style="font:500 13px/1.4 var(--font-body);color:{{ e.mut }}">Araç: {{ e.aracMetin }}</div></sc-if></sc-if>
 <sc-if value="{{ e.uyariVar }}" hint-placeholder-val="{{ false }}"><div style="font:700 12.5px/1.4 var(--font-body);color:#d97706"><sc-for list="{{ e.uyari }}" as="w" hint-placeholder-count="1"><span>⚠ {{ w }}  </span></sc-for></div></sc-if>
 </button>
 </sc-for>
@@ -8669,16 +8692,17 @@ Malzeme istekleri
 </div>
 
 <div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:14px;display:flex;flex-direction:column;gap:12px">
-<span style="font:700 14px/1 var(--font-heading)">5 · Ne zaman</span>
+<span style="font:700 14px/1 var(--font-heading)">5 · Zaman ve not</span>
+<sc-if value="{{ !isKartiEkran.digerAc }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="flex:1 1 200px;font:600 14px/1.3 var(--font-body)">Hemen · not yok</span><button onClick="{{ isKartiEkran.digerTog }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};font:600 12.5px/38px var(--font-body)">Planla / not ekle</button></div>
+</sc-if>
+<sc-if value="{{ isKartiEkran.digerAc }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:8px;flex-wrap:wrap">
 <sc-for list="{{ isKartiEkran.zamanSec }}" as="z" hint-placeholder-count="2"><button onClick="{{ z.pick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:46px;padding:0 18px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ z.bg }};color:{{ z.fg }};font:700 13.5px/44px var(--font-body)">{{ z.l }}</button></sc-for>
 </div>
 <sc-if value="{{ isKartiEkran.ileri }}" hint-placeholder-val="{{ false }}"><input type="datetime-local" value="{{ isKartiEkran.planli }}" onChange="{{ isKartiEkran.onPlanli }}" style="all:unset;box-sizing:border-box;min-height:46px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:600 14px/46px var(--font-body);max-width:280px"></sc-if>
-</div>
-
-<div style="border-radius:14px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:14px;display:flex;flex-direction:column;gap:10px">
-<span style="font:700 14px/1 var(--font-heading)">6 · Not</span>
 <textarea value="{{ isKartiEkran.not }}" onChange="{{ isKartiEkran.onNot }}" rows="3" placeholder="Ekibin bilmesi gereken bir şey varsa yazın (isteğe bağlı)" style="all:unset;box-sizing:border-box;min-height:80px;padding:12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.bg }};color:{{ ui.fg }};font:500 14px/1.5 var(--font-body);white-space:pre-wrap"></textarea>
+</sc-if>
 </div>
 
 </div>
@@ -10840,7 +10864,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-212';
+const SURUM = '2026.10.15-213';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -24032,7 +24056,7 @@ class Component extends DCLogic {
           ].filter(Boolean);
           const secili = k.ekip === e.ad;
           ekipListe.push({
-            ad: e.ad, secili,
+            ad: e.ad, secili, detayVar: secili,
             sira: (nobetci ? -100 : 0) + (bolgede ? -50 : 0) + (kisiler.length && !calisan.length ? 300 : 0) + (taze && km != null ? km / 1000 : 60) + acik * 2,
             neden: [nobetci ? 'bugün nöbetçi' : '', bolgede ? (e.bolgeler || []).length ? k.ilce + ' bölgesi' : 'tüm il' : '', acik + ' açık iş'].filter(Boolean).join(' · '),
             uyeler: kisiler.map(p => ({ ad: p.ad, durum: PERSONEL_YOK.includes(p.durum) ? (PERSONEL_DURUM[p.durum] || '') : '', renk: PERSONEL_YOK.includes(p.durum) ? '#d97706' : ui.fg })),
@@ -24049,6 +24073,10 @@ class Component extends DCLogic {
         ekipListe.sort((a, b) => a.sira - b.sira);
 
         const secEkip = ekipListe.find(e => e.secili) || null;
+        // Kısa kart: sınıf, yer, zaman/not önerilmiş değerleriyle tek satır özet olarak görünür; "Değiştir" ile açılır.
+        // Yer eksikse (tesis ya da köy seçilmemiş) bölüm kendiliğinden açık kalır.
+        const yerGerekli = sebeke ? !k.koy : !k.assetId;
+        const yerOzetParca = [k.koy, k.ilce].filter(Boolean).join(' · ') + (secAsset ? ' · ' + secAsset.code : '');
         const eksik = [
           sebeke && !k.koy ? 'köy yazılmamış' : '',
           !sebeke && !k.assetId ? 'tesis seçilmemiş' : '',
@@ -24066,6 +24094,12 @@ class Component extends DCLogic {
           konumBildirim: k.tur === 'b' && kay.lat != null ? 'Bildirimde konum var: ' + (+kay.lat).toFixed(5) + ', ' + (+kay.lon).toFixed(5) : '',
           konumBildirimVar: k.tur === 'b' && kay.lat != null,
           haritada: () => { this.setState({ tab: 'harita' }); this.toMap({ ks: 'go', lat: kay.lat, lon: kay.lon, label: 'Bildirilen konum' }); },
+          // kısa kart: özetler ve aç/kapa
+          sinifAc: !!k.sinifAc, sinifTog: () => yaz({ sinifAc: !k.sinifAc }),
+          sinifOzet: G.ad + ' · ' + (k.ariza || 'tür seçilmedi') + ' · ' + (k.oncelik || 'Normal'),
+          yerAc: !!k.yerAc || yerGerekli, yerTogVar: !yerGerekli, yerTog: () => yaz({ yerAc: !k.yerAc }),
+          yerOzet: yerOzetParca || 'Yer seçilmedi',
+          digerAc: !!k.digerAc || (k.zaman || 'hemen') === 'ileri' || !!(k.not || '').trim(), digerTog: () => yaz({ digerAc: !k.digerAc }),
           // 2. Sınıf
           gruplar: Object.keys(ARIZA_GRUP).map(g => ({ v: g, l: ARIZA_GRUP[g].ad })),
           grup: k.grup, onGrup: e => { const g = e.target.value; yaz({ grup: g, ariza: ARIZA_GRUP[g].turler[0], assetId: null }); },

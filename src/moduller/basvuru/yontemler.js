@@ -9,7 +9,7 @@
       id: x.id, takip: x.takip, ad: x.ad, tel: x.tel || '', sifat: x.sifat, ilce: x.ilce || '', koy: x.koy, konu: x.konu,
       aciklama: x.aciklama, lat: x.lat, lon: x.lon, durum: x.durum, sonuc: x.sonuc || '', talepNo: x.talep_no || '', zaman: x.olusma
     }));
-    this.setState({ basvurular: liste }, () => this.basvuruEsitle());
+    if (!this.ayniMi(liste, this.state.basvurular)) this.setState({ basvurular: liste }, () => this.basvuruEsitle());
     if (this.state.basvuruUyari && !liste.some(b => b.durum === 'yeni')) this.setState({ basvuruUyari: null });
     this.basvuruUyar(liste);
   }

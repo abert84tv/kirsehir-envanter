@@ -29,6 +29,12 @@ export function konumGecerli(lat, lon) {
   const sayi = v => v !== null && v !== undefined && v !== '' && Number.isFinite(+v);
   return sayi(lat) && sayi(lon) && Math.abs(+lat) <= 90 && Math.abs(+lon) <= 180;
 }
+// Hızlı 32 bit özet (FNV-1a): "veri değişti mi" denetimi için
+function ozet(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(36) + s.length;
+}
 export function hatMesafe(a, b) {
   const rd = x => x * Math.PI / 180;
   const dLat = rd(b[0] - a[0]), dLon = rd(b[1] - a[1]);
@@ -124,7 +130,8 @@ export function katmanKur(map, o) {
     }
   }
   function ogeleriKur() {
-    const imza = assets.length + '|' + assets.map(a => a.id + a.type + a.status + a.sync + a.lat + a.lon).join(',').length + '|' + [...openFaults].join(',');
+    // İmza gerçek bir özettir (eskiden yalnız uzunluktu: konumun son hanesi ya da adı değişince işaret eski yerinde kalıyordu)
+    const imza = assets.length + '|' + ozet(assets.map(a => [a.id, a.type, a.status, a.sync, a.lat, a.lon, a.code, a.village, a.district, a.d && a.d.ad].join('~')).join('|') + '#' + [...openFaults].join(','));
     if (imza === ogeImza) { ogeAcik(); gorunumGuncelle(); return; }
     ogeImza = '';
     ogeler = [];

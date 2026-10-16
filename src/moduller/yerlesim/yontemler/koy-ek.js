@@ -74,6 +74,7 @@
       if (!d) continue;
       (tablo[d.id] = tablo[d.id] || []).push({ id: y.id, ad: y.ad, lat: y.lat, lon: y.lon });
     }
+    if (this.ayniMi(tablo, this.state.ekKoyler)) return;
     try { localStorage.setItem('ks-ek-koyler', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
     this.setState({ ekKoyler: tablo });
   }

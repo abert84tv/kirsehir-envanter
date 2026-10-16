@@ -10869,7 +10869,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-207';
+const SURUM = '2026.10.15-208';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11719,6 +11719,12 @@ class Component extends DCLogic {
     };
     window.addEventListener('keydown', this._esc);
   }
+  // Sunucudan gelen veri ekrandakiyle aynıysa yeniden çizdirme (30 sn'lik yenilemede boşuna sekiz kez çiziliyordu)
+  ayniMi(a, b) {
+    if (a === b) return true;
+    try { return JSON.stringify(a) === JSON.stringify(b); } catch (e) { return false; }
+  }
+
   // Dosyadan içe aktarma — 2026.10.01'e kadar bu fonksiyon dosyayı hiç okumuyor,
   // her seferinde aynı 12 uydurma satırı ilçe merkezlerinin yanına koyuyordu.
   makeImport(source) {
@@ -13148,7 +13154,7 @@ class Component extends DCLogic {
       id: x.id, takip: x.takip, ad: x.ad, tel: x.tel || '', sifat: x.sifat, ilce: x.ilce || '', koy: x.koy, konu: x.konu,
       aciklama: x.aciklama, lat: x.lat, lon: x.lon, durum: x.durum, sonuc: x.sonuc || '', talepNo: x.talep_no || '', zaman: x.olusma
     }));
-    this.setState({ basvurular: liste }, () => this.basvuruEsitle());
+    if (!this.ayniMi(liste, this.state.basvurular)) this.setState({ basvurular: liste }, () => this.basvuruEsitle());
     if (this.state.basvuruUyari && !liste.some(b => b.durum === 'yeni')) this.setState({ basvuruUyari: null });
     this.basvuruUyar(liste);
   }
@@ -13584,7 +13590,7 @@ class Component extends DCLogic {
         yazilabilir: r.yazilabilir !== false
       });
       out.sort((a, b) => String(b.silindi || '').localeCompare(String(a.silindi || '')));
-      this.setState({ cop: out });
+      if (!this.ayniMi(out, this.state.cop)) this.setState({ cop: out });
     } catch (e) { /* çöp kutusu okunamadı — SQL henüz çalıştırılmamış olabilir */ }
   }
   // ── Personel havuzu ──────────────────────────────────────────
@@ -14340,7 +14346,7 @@ class Component extends DCLogic {
     const M = this._sb;
     if (!M || !M.tokenOku() || !M.tesisDegisiklikListesi) return;
     const r = await M.tesisDegisiklikListesi();
-    if (r && r.ok) this.setState({ tesisOneriler: r.data || [] });
+    if (r && r.ok && !this.ayniMi(r.data || [], this.state.tesisOneriler)) this.setState({ tesisOneriler: r.data || [] });
   }
   async tesisEkleOner(n) {
     const M = this._sb;
@@ -14804,7 +14810,7 @@ class Component extends DCLogic {
   tesisBekle(id) {
     this.setState(st => ({ assets: (st.assets || []).map(x => x.id === id ? { ...x, sync: 'pending' } : x) }));
   }
-  async veriYenile(sessiz) {
+  async veriYenile(sessiz, periyodik) {
     const M = this._sb;
     if (!M || !M.tokenOku()) return;
     if (this.state.offline && sessiz) return;
@@ -14862,6 +14868,14 @@ class Component extends DCLogic {
     const yerel = (this.state.assets || []).filter(x =>
       x && !x.dbId && !sunucuKod.has(String(x.code || '').toUpperCase()));
     const birlesik = yerel.length ? [...yerel, ...assets] : assets;
+    // Otomatik (30 sn) yenilemede veri değişmediyse ekran yeniden çizilmez, haritaya veri gitmez, cihaz kopyası yazılmaz
+    const s0 = this.state;
+    const degismedi = periyodik && s0.sunucu && !yerel.length && this.ayniMi(birlesik, s0.assets) && this.ayniMi(faults, s0.faults) && this.ayniMi(notes, s0.notes);
+    if (degismedi) {
+      this.hatYenile(); this.ekKoyYenile();
+      this.copYenile(); this.isEmriYenile(); this.basvuruYenile(); this.tesisOneriYenile();
+      return;
+    }
     this.yerelTesisYaz(yerel);
     this.setState({ assets: birlesik, faults, notes, sunucu: true, sonEsitleme: this.damga() },
       () => { this.fotoNiyetGeriYukle(); this.hatYenile(); this.ekKoyYenile(); });
@@ -14965,7 +14979,7 @@ class Component extends DCLogic {
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
     this._veriSaat = setInterval(() => {
-      if (this.state.session && !this.state.scenario) this.veriYenile(true);
+      if (this.state.session && !this.state.scenario) this.veriYenile(true, true);
       if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
       this.onayBildir();
     }, 30000);
@@ -14991,13 +15005,17 @@ class Component extends DCLogic {
     w.postMessage({ ks: 'navMode', on: this.state.navMode }, '*');
     setTimeout(() => this.hatlariYolla(), 60);
     // harita çerçevesi yenilenirse kendi listesine döner — kayıtları geri yolla
-    if (this.state.sunucu && this.state.assets.length) {
+    // Kayıtlar yalnız haritaya henüz gitmediyse (ya da çerçeve yenilendiyse) gönderilir: süzgeç değişince bütün liste yeniden kopyalanmaz
+    if (this.state.sunucu && this.state.assets.length
+        && (this._haritaAssets !== this.state.assets || this._haritaFaults !== this.state.faults)) {
+      this._haritaAssets = this.state.assets; this._haritaFaults = this.state.faults;
       w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
     }
   }
   // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
   toMap(msg) {
     const w = this.mapWin(); if (w) w.postMessage(msg, '*');
+    if (msg && msg.ks === 'assets') { this._haritaAssets = msg.assets; this._haritaFaults = msg.faults; }
     if (['assets', 'hatlar', 'hatKatman', 'filter', 'setBase', 'theme'].includes(msg && msg.ks)) {
       const p = this.profilWin(); if (p) { try { p.postMessage(msg, '*'); } catch (e) { /* çerçeve yok */ } }
     }
@@ -15152,6 +15170,8 @@ class Component extends DCLogic {
     for (const k in yerel) if (!sunucudakiKayit.has(k)) tablo[k] = yerel[k];
     // Gönderilmemiş (çevrimdışı çizilmiş) hatlar sunucudaki eski hâliyle ezilmez
     for (const id of this.hatBekleyenOku()) if (yerel[id]) tablo[id] = yerel[id];
+    // Sunucudaki hatlar ekrandakiyle aynıysa yazma ve yeniden çizme
+    if (this.ayniMi(tablo, this.state.hatlar)) return;
     try { localStorage.setItem('ks-hatlar', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
     this.setState({ hatlar: tablo }, () => {
       this.hatlariYolla();
@@ -15263,7 +15283,7 @@ class Component extends DCLogic {
   baslatMesajlar() {
     this._msg = e => {
       const d = e.data || {};
-      if (d.ks === 'ready') { this._haritaHazir = true; this._hatImza = null; this.pushMap(); }
+      if (d.ks === 'ready') { this._haritaHazir = true; this._hatImza = null; this._haritaAssets = null; this._haritaFaults = null; this.pushMap(); }
       // Haritanın kendi hata şeridi gösterildi: denetim izine de yazılır (kullanıcı "harita gelmiyor" derse nedeni görülür)
       if (d.ks === 'haritaHata') { this._haritaHataSay = (this._haritaHataSay || 0) + 1; if (this._haritaHataSay > 5) return; try { this.denetimYaz('veri', 'Harita hatası', String(d.msg || '').slice(0, 200), 'Harita'); } catch (e) { /* denetim yok */ } return; }
       if (d.ks === 'ozetHaritaHazir') { this.ozetHaritaGonder(); return; }
@@ -15380,7 +15400,11 @@ class Component extends DCLogic {
     const [r, er] = await Promise.all([M.isEmriListesi(), M.isEmriEkListesi ? M.isEmriEkListesi() : Promise.resolve({ ok: false })]);
     const ek = {};
     if (er && er.ok) for (const x of (er.data || [])) ek[x.is_emri_id] = { ekipler: Array.isArray(x.ek_ekipler) ? x.ek_ekipler : [], altIsler: Array.isArray(x.alt_isler) ? x.alt_isler : [] };
-    if (r.ok) this.setState(st => ({ isEmirleri: (r.data || []).map(M.isEmriSuret), isEmriEk: er && er.ok ? ek : (st.isEmriEk || {}) }), () => this.isEmriTamamla());
+    if (r.ok) {
+      const yeni = (r.data || []).map(M.isEmriSuret);
+      if (this.ayniMi(yeni, this.state.isEmirleri) && (!(er && er.ok) || this.ayniMi(ek, this.state.isEmriEk))) return;
+      this.setState(st => ({ isEmirleri: yeni, isEmriEk: er && er.ok ? ek : (st.isEmriEk || {}) }), () => this.isEmriTamamla());
+    }
   }
   // Bir iş emrine ek ekip ve sıralı alt işler (şartname 4.4)
   async isEmriEkYaz(dbId, ek) {
@@ -16853,6 +16877,7 @@ class Component extends DCLogic {
       if (!d) continue;
       (tablo[d.id] = tablo[d.id] || []).push({ id: y.id, ad: y.ad, lat: y.lat, lon: y.lon });
     }
+    if (this.ayniMi(tablo, this.state.ekKoyler)) return;
     try { localStorage.setItem('ks-ek-koyler', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
     this.setState({ ekKoyler: tablo });
   }

@@ -147,7 +147,7 @@
   tesisBekle(id) {
     this.setState(st => ({ assets: (st.assets || []).map(x => x.id === id ? { ...x, sync: 'pending' } : x) }));
   }
-  async veriYenile(sessiz) {
+  async veriYenile(sessiz, periyodik) {
     const M = this._sb;
     if (!M || !M.tokenOku()) return;
     if (this.state.offline && sessiz) return;
@@ -205,6 +205,14 @@
     const yerel = (this.state.assets || []).filter(x =>
       x && !x.dbId && !sunucuKod.has(String(x.code || '').toUpperCase()));
     const birlesik = yerel.length ? [...yerel, ...assets] : assets;
+    // Otomatik (30 sn) yenilemede veri değişmediyse ekran yeniden çizilmez, haritaya veri gitmez, cihaz kopyası yazılmaz
+    const s0 = this.state;
+    const degismedi = periyodik && s0.sunucu && !yerel.length && this.ayniMi(birlesik, s0.assets) && this.ayniMi(faults, s0.faults) && this.ayniMi(notes, s0.notes);
+    if (degismedi) {
+      this.hatYenile(); this.ekKoyYenile();
+      this.copYenile(); this.isEmriYenile(); this.basvuruYenile(); this.tesisOneriYenile();
+      return;
+    }
     this.yerelTesisYaz(yerel);
     this.setState({ assets: birlesik, faults, notes, sunucu: true, sonEsitleme: this.damga() },
       () => { this.fotoNiyetGeriYukle(); this.hatYenile(); this.ekKoyYenile(); });

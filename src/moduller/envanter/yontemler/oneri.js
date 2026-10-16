@@ -4,7 +4,7 @@
     const M = this._sb;
     if (!M || !M.tokenOku() || !M.tesisDegisiklikListesi) return;
     const r = await M.tesisDegisiklikListesi();
-    if (r && r.ok) this.setState({ tesisOneriler: r.data || [] });
+    if (r && r.ok && !this.ayniMi(r.data || [], this.state.tesisOneriler)) this.setState({ tesisOneriler: r.data || [] });
   }
   async tesisEkleOner(n) {
     const M = this._sb;

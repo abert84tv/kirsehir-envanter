@@ -57,7 +57,7 @@
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
     this._veriSaat = setInterval(() => {
-      if (this.state.session && !this.state.scenario) this.veriYenile(true);
+      if (this.state.session && !this.state.scenario) this.veriYenile(true, true);
       if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
       this.onayBildir();
     }, 30000);

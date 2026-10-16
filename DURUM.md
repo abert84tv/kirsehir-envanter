@@ -2363,3 +2363,8 @@ Kasmanın üç olası kaynağı kapatıldı (yerelde ölçülen harita çizimi z
 - **Gereksiz yeniden çizim:** hat verisi değişmediyse harita yeniden gönderilmez/çizilmez (her yenilemede bütün hatlar silinip çiziliyordu); hat tooltip'leri ilk üzerine gelişte kurulur (yüzlerce tooltip nesnesi baştan üretilmiyordu); çizgiler hafifçe sadeleştirilir.
 - **Etiket sayısı:** ekranda 80'den fazla işaret varsa kalıcı etiketler üzerine gelince açılır (yüzlerce DOM düğümü).
 - **Bekçi:** harita "hazır" iletisini kaçırdıysa önce `ping` ile sorulur, yanıt gelmezse (4 sn) çerçeve yenilenir; gereksiz yeniden yükleme olmaz.
+
+## 2026.10.15-208 — Harita kararlılığı: 30 sn'lik yenileme ve işaret imzası
+- **Asıl kasma kaynağı:** uygulama her 30 sn'de tesis/arıza/not/hat/köy/iş emri/başvuru/öneri/çöp listelerini sunucudan çekip, veri aynı olsa bile her birini `setState` ile yazıyordu (≈8 tam ekran yeniden çizimi + haritaya tüm listenin kopyası + cihaz kopyası için derin kopya). Artık otomatik yenilemede (`veriYenile(true, true)`) veri ekrandakiyle aynıysa hiçbiri yazılmaz (`ayniMi`); elle/kayıt sonrası yenilemeler eskisi gibi tam çalışır.
+- **Haritaya veri gönderimi:** süzgeç/tema değişince bütün kayıt listesi yeniden kopyalanmıyor; yalnız liste değiştiyse ya da harita çerçevesi yenilendiyse gidiyor.
+- **Hata düzeltmesi:** haritadaki işaret imzası yalnız uzunluktu; bir kaydın konumu/adı aynı uzunlukta değişince (ör. konum düzeltme) işaret eski yerinde kalıyordu. Artık gerçek özet (FNV-1a) ve kod/köy/ilçe/baca adı da içinde.

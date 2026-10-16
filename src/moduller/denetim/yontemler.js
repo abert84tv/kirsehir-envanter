@@ -185,6 +185,6 @@
         yazilabilir: r.yazilabilir !== false
       });
       out.sort((a, b) => String(b.silindi || '').localeCompare(String(a.silindi || '')));
-      this.setState({ cop: out });
+      if (!this.ayniMi(out, this.state.cop)) this.setState({ cop: out });
     } catch (e) { /* çöp kutusu okunamadı — SQL henüz çalıştırılmamış olabilir */ }
   }

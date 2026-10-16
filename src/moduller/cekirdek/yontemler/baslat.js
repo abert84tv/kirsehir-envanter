@@ -42,3 +42,8 @@
     };
     window.addEventListener('keydown', this._esc);
   }
+  // Sunucudan gelen veri ekrandakiyle aynıysa yeniden çizdirme (30 sn'lik yenilemede boşuna sekiz kez çiziliyordu)
+  ayniMi(a, b) {
+    if (a === b) return true;
+    try { return JSON.stringify(a) === JSON.stringify(b); } catch (e) { return false; }
+  }

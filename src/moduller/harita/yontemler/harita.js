@@ -18,13 +18,17 @@
     w.postMessage({ ks: 'navMode', on: this.state.navMode }, '*');
     setTimeout(() => this.hatlariYolla(), 60);
     // harita çerçevesi yenilenirse kendi listesine döner — kayıtları geri yolla
-    if (this.state.sunucu && this.state.assets.length) {
+    // Kayıtlar yalnız haritaya henüz gitmediyse (ya da çerçeve yenilendiyse) gönderilir: süzgeç değişince bütün liste yeniden kopyalanmaz
+    if (this.state.sunucu && this.state.assets.length
+        && (this._haritaAssets !== this.state.assets || this._haritaFaults !== this.state.faults)) {
+      this._haritaAssets = this.state.assets; this._haritaFaults = this.state.faults;
       w.postMessage({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }, '*');
     }
   }
   // Harita iletileri hem Envanter haritasına hem Hat Kesiti haritasına gider: ikisi aynı katmanları gösterir
   toMap(msg) {
     const w = this.mapWin(); if (w) w.postMessage(msg, '*');
+    if (msg && msg.ks === 'assets') { this._haritaAssets = msg.assets; this._haritaFaults = msg.faults; }
     if (['assets', 'hatlar', 'hatKatman', 'filter', 'setBase', 'theme'].includes(msg && msg.ks)) {
       const p = this.profilWin(); if (p) { try { p.postMessage(msg, '*'); } catch (e) { /* çerçeve yok */ } }
     }

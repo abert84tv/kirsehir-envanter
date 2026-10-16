@@ -11,7 +11,11 @@
     const [r, er] = await Promise.all([M.isEmriListesi(), M.isEmriEkListesi ? M.isEmriEkListesi() : Promise.resolve({ ok: false })]);
     const ek = {};
     if (er && er.ok) for (const x of (er.data || [])) ek[x.is_emri_id] = { ekipler: Array.isArray(x.ek_ekipler) ? x.ek_ekipler : [], altIsler: Array.isArray(x.alt_isler) ? x.alt_isler : [] };
-    if (r.ok) this.setState(st => ({ isEmirleri: (r.data || []).map(M.isEmriSuret), isEmriEk: er && er.ok ? ek : (st.isEmriEk || {}) }), () => this.isEmriTamamla());
+    if (r.ok) {
+      const yeni = (r.data || []).map(M.isEmriSuret);
+      if (this.ayniMi(yeni, this.state.isEmirleri) && (!(er && er.ok) || this.ayniMi(ek, this.state.isEmriEk))) return;
+      this.setState(st => ({ isEmirleri: yeni, isEmriEk: er && er.ok ? ek : (st.isEmriEk || {}) }), () => this.isEmriTamamla());
+    }
   }
   // Bir iş emrine ek ekip ve sıralı alt işler (şartname 4.4)
   async isEmriEkYaz(dbId, ek) {

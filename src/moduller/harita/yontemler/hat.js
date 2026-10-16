@@ -86,6 +86,8 @@
     for (const k in yerel) if (!sunucudakiKayit.has(k)) tablo[k] = yerel[k];
     // Gönderilmemiş (çevrimdışı çizilmiş) hatlar sunucudaki eski hâliyle ezilmez
     for (const id of this.hatBekleyenOku()) if (yerel[id]) tablo[id] = yerel[id];
+    // Sunucudaki hatlar ekrandakiyle aynıysa yazma ve yeniden çizme
+    if (this.ayniMi(tablo, this.state.hatlar)) return;
     try { localStorage.setItem('ks-hatlar', JSON.stringify(tablo)); } catch (e) { /* depolama kapalı */ }
     this.setState({ hatlar: tablo }, () => {
       this.hatlariYolla();

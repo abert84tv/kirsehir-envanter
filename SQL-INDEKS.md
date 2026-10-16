@@ -47,3 +47,4 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 | oturum | `src/moduller/oturum/sql/SQL-yetki-tarama.sql` | yeni işlev eklenince çalıştırılan yetki taraması (oturum denetimi olmayan, anonimin çağırabildiği işlevleri listeler) |
 | ariza | `src/moduller/ariza/sql/SQL-ariza-kapanis-sunucuda.sql` | arıza son onayla kapanınca zimmet düşümü ve talep/başvuru kapanışı sunucuda (`ariza_kapanis_isle`, dışarıya kapalı) — uygulandı 2026-10-10 |
 | oturum | (migration kullanici_listesi_sef_ekip) | `kullanici_listesi`: saha şefi ve izleyici yalnız kendi satırını görür (diğer roller hepsini; telefon/son giriş yine yalnız yönetici ve müdürde) — uygulandı 2026-10-13 |
+| aktarim | `src/moduller/aktarim/sql/SQL-koy-ata-2026-10-16.sql` | köyü boş 94 tesise en yakın köy yazıldı (≤5 km, ilçe değişmedi, `d.koyOtomatik` işaretli) — uygulandı 2026-10-16 |

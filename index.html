@@ -9760,8 +9760,7 @@ Malzeme istekleri
 </div>
 <sc-for list="{{ menuSayfa.gruplar }}" as="g" hint-placeholder-count="4">
 <div style="flex:none;display:flex;flex-direction:column;align-items:stretch">
-<div style="padding:18px 16px 7px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
-<div style="margin:0 12px;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">
+<div style="margin:12px 12px 0;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">
 <sc-for list="{{ g.ogeler }}" as="n" hint-placeholder-count="3">
 <button onClick="{{ n.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;flex:none;display:flex;align-items:center;gap:12px;min-height:52px;padding:0 15px;border-bottom:1px solid {{ ui.rule }}">
 <span style="flex:1;font:500 16px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ n.fgList }}">{{ n.label }}</span>
@@ -10868,7 +10867,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-209';
+const SURUM = '2026.10.15-210';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';

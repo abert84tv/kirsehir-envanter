@@ -67,14 +67,24 @@ export function katmanKur(map, o) {
   try { hatGizli = new Set(JSON.parse(localStorage.getItem(HAT_GIZLI_KEY) || '[]')); } catch (e) { /* depolama kapalı */ }
 
   // ── zeminler
-  const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap katkıcıları', maxZoom: 21, maxNativeZoom: 19, className: 'ks-tiles', updateWhenZooming: false, keepBuffer: 1
+  // Harita yarım zoom basamağıyla (14,5 gibi) çalışır; Leaflet yarım basamakta bir üst karo seviyesini alır ve
+  // ekranı kaplayan karo sayısı yaklaşık iki katına çıkar. Uydu karoları (büyük dosyalar) yarım basamakta
+  // bir alt seviyeden alınır: karo sayısı ~yarıya iner, görüntü çok az yumuşar.
+  const SatKaro = L.TileLayer.extend({
+    _setView(c, z, a, b) {
+      L.TileLayer.prototype._setView.call(this, c, Math.floor(z), a, b);
+      this._setZoomTransforms(c, z);
+    }
   });
-  const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 21, maxNativeZoom: 18, className: 'ks-sat', updateWhenZooming: false, keepBuffer: 1
+  // updateWhenIdle:false — telefonda Leaflet varsayılanı karoları yalnız kaydırma bitince yükler; kaydırırken de yüklensin
+  const street = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap katkıcıları', maxZoom: 21, maxNativeZoom: 19, className: 'ks-tiles', updateWhenZooming: false, updateWhenIdle: false, updateInterval: 100, keepBuffer: 1
+  });
+  const sat = new SatKaro('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Uydu görüntüsü: Esri, Maxar, Earthstar Geographics', maxZoom: 21, maxNativeZoom: 18, className: 'ks-sat', updateWhenZooming: false, updateWhenIdle: false, updateInterval: 100, keepBuffer: 1
   });
   const satLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Yer adları: Esri', maxZoom: 21, maxNativeZoom: 17, pane: 'shadowPane'
+    attribution: 'Yer adları: Esri', maxZoom: 21, maxNativeZoom: 17, pane: 'shadowPane', updateWhenIdle: false, updateInterval: 100
   });
   street.addTo(map);
   function setBase(kind) {

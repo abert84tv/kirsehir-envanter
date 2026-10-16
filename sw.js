@@ -1,9 +1,11 @@
 // Çevrimdışı çalışma: uygulama kabuğunu cihaza kaydeder, internet yokken oradan açar.
 // Veritabanı (Supabase) istekleri buradan GEÇMEZ; kayıt kuyruğu uygulamanın kendi içindedir.
-const SURUM = 'ks-2026.10.15-209';
+const SURUM = 'ks-2026.10.15-210';
 const KABUK = SURUM + '-kabuk';
 const HARITA = 'ks-harita-karo-2';
-const KARO_LIMIT = 900;
+// Uydu karoları 20-40 KB: 3000 karo ≈ 60-100 MB. Eskiden 900'dü; bir köyü gezmek bile sığmıyor, karolar sürekli silinip yeniden iniyordu.
+const KARO_LIMIT = 3000;
+let karoSay = 0;
 
 const ON_YUKLE = [
   '/', '/harita', '/hat', '/profil', '/ozet-harita.html',
@@ -79,7 +81,9 @@ async function karo(istek) {
     try { r = await fetch(new Request(istek.url, { mode: 'cors', credentials: 'omit', signal: ac.signal })); }
     finally { clearTimeout(zt); }
     if (r && r.ok) {
+      // Sınır denetimi her karoda değil 50 karoda bir yapılır (binlerce anahtarı her seferinde listelemek yavaştı)
       c.put(istek.url, r.clone()).then(async () => {
+        if (++karoSay % 50) return;
         const anahtarlar = await c.keys();
         if (anahtarlar.length > KARO_LIMIT) {
           for (const a of anahtarlar.slice(0, anahtarlar.length - KARO_LIMIT)) await c.delete(a);

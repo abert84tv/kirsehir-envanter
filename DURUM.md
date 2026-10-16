@@ -2371,3 +2371,9 @@ Kasmanın üç olası kaynağı kapatıldı (yerelde ölçülen harita çizimi z
 
 ## 2026.10.15-209 — Sol menüde grup başlıkları kaldırıldı
 Masaüstü sol menüsünden "Saha işleri / Envanter / Çözümleme / Sistem" başlıkları kaldırıldı; sayfalar aynı sırada, gruplar arası küçük boşlukla duruyor. Telefondaki "Bütün ekranlar" listesi değişmedi.
+
+## 2026.10.15-210 — Uydu hızı, hat grubu, köy ataması
+- **Uydu/harita hızı:** uydu karoları yarım zoom basamağında (14,5 gibi) bir alt seviyeden alınır — ekranı kaplayan karo sayısı ~yarıya iner (36 → 12-16); telefonda karolar yalnız kaydırma bitince değil kaydırırken de yüklenir (`updateWhenIdle:false`); Esri/OSM sunucularına önceden bağlanılır (`preconnect`); servis çalışanı karo önbelleği 900 → 3000 karo, sınır denetimi her karoda değil 50'de bir (eskiden bir köyü gezmek bile önbelleğe sığmıyordu).
+- **Telefon "Bütün ekranlar":** grup başlıkları kaldırıldı (masaüstü sol menüyle aynı).
+- **Hat çizimde grup:** hat bitirilince / KML içe aktarılınca grup adı sorulur (öneri: son kullanılan, yoksa "Hat N+1"); hat satırındaki "Grup" düğmesiyle sonradan değiştirilir; boş bırakılırsa grupsuz kalır.
+- **Köy ataması (veri):** köyü boş 96 tesisten 94'üne en yakın köy yazıldı (≤5 km; `SQL-koy-ata-2026-10-16.sql`). İlçe değiştirilmedi; her kayıtta `d.koyOtomatik` işaretli ("Köyü otomatik yazılan" süzgeci). Atlananlar: KS-KUY-0030 ve 0031 (en yakın köy 5,7 km).

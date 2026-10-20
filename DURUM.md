@@ -2391,3 +2391,11 @@ Operatör akışı: İş kartında (masaüstü + telefon) sistemin önerdiği de
 
 ## 2026.10.15-214 — Saha ekranı: nadir işlemler "Diğer" altında
 Telefon > İşler > Bana atanan: iş kartında her adımda büyük ana düğme (Sahaya vardım / İşi tamamla / Kapat) öne çıkıyor; "Beklemeye al" ve "Araç arızası / kaza" tek "Diğer ▾" düğmesinin altına alındı (sahada çoğu iş için gerekmiyor). Akışın kendisi aynı: Atandı → Sahadayım → Tamamlandı.
+
+## 2026.10.15-215 — Envanter raporları: Genel rapor, İlçe raporu, Köy karnesi, çok sayfalı Excel
+- Özet sayfasında **Rapor ▾** paneli (masaüstü + telefon): **Genel envanter raporu**, **İlçe raporu**, **Köy karnesi** (köy seçilir). PDF = yazdırma penceresi ("PDF olarak kaydet"). Yeni kod: `src/moduller/ozet/yontemler/rapor.js`.
+- **Genel rapor:** özet kutuları (kayıt, aktif, pasif, hat km, baca, vana), tür bazında aktif/pasif, ilçe dağılımı (köy, kuyu, depo, baca, vana, hat km), şebeke hatları (çapa ve türe göre km), veri durumu (köyü boş, otomatik köy, yaklaşık konum, fotoğrafsız, pasif). Arıza/ekip/malzeme bölümleri yalnız Arıza modülü açıkken eklenir.
+- **İlçe raporu:** her ilçe ayrı sayfa; köy tablosu (kuyu, depo, baca, vana, hat km, aktif/pasif, not) ve ilçe toplamı.
+- **Köy karnesi:** köy özeti, karo gerektirmeyen vektör şema (hat grupları renkli, kuyu/depo/baca/vana simgeleri), tesis tablosu (kayıttaki dolu alanlar etiketleriyle), hat tablosu (grup, tür, çap, malzeme, uzunluk), eksik/dikkat listesi.
+- PDF raporlarda "Deneme…" köylerindeki test kayıtları hesaba katılmaz (altta kaç kayıt dışarıda kaldığı yazar). **Excel** tam veri dışa aktarımıdır, hepsini içerir.
+- **Excel:** artık dört sayfalı .xlsx — Tesisler (alan etiketleri okunur adlarla, hat m sütunu; arıza sütunu yalnız modül açıkken), Hatlar, Köy özeti, İlçe özeti. Kitaplık yüklenemezse eski CSV'ye düşer.

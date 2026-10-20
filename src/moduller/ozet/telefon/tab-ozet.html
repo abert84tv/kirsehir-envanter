@@ -4,6 +4,16 @@
 <div style="font:600 17px/1.1 var(--font-heading);letter-spacing:-.022em;margin-bottom:4px">Özet</div>
 <div style="font:400 12px/1.45 var(--font-body);color:{{ ui.mut }}">Envanterin dağılımı, hizmet durumu ve yakınımdaki tesisler.</div>
 </div>
+<sc-if value="{{ rapor.acik }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf2 }}">
+<button onClick="{{ rapor.genel }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};color:{{ ui.fg }};font:600 12.5px/40px var(--font-body)">Genel envanter raporu</button>
+<button onClick="{{ rapor.ilce }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};color:{{ ui.fg }};font:600 12.5px/40px var(--font-body)">İlçe raporu</button>
+<div style="display:flex;flex:1 1 280px;gap:8px;min-width:0">
+<select value="{{ rapor.koy }}" onChange="{{ rapor.onKoy }}" style="all:unset;box-sizing:border-box;flex:1;min-width:0;min-height:42px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};color:{{ ui.fg }};font:600 12.5px/40px var(--font-body);cursor:pointer"><option value="">Köy karnesi için köy seçin…</option><sc-for list="{{ rapor.koyler }}" as="k" hint-placeholder-count="3"><option value="{{ k.v }}">{{ k.l }}</option></sc-for></select>
+<button onClick="{{ rapor.karne }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:42px;padding:0 16px;border-radius:10px;background:var(--color-accent);color:#fff;font:700 12.5px/42px var(--font-body);opacity:{{ rapor.karneOp }}">Karne</button>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{ ozet.statsVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <sc-for list="{{ ozet.stats }}" as="st" hint-placeholder-count="6">
@@ -16,7 +26,7 @@
 </sc-if>
 <div style="display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">
 <button onClick="{{ exportExcel }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12px/1 var(--font-body);padding:13px 10px">Excel</button>
-<button onClick="{{ exportPdf }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body);padding:13px 10px">PDF rapor</button>
+<button onClick="{{ rapor.tog }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;text-align:center;border-radius:10px;border:1px solid var(--color-accent);color:{{ ui.acc }};font:600 12px/1 var(--font-body);padding:13px 10px">Rapor ▾</button>
 </div>
 <sc-if value="{{ ozet.sekmeVar }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid {{ ui.rule }}">

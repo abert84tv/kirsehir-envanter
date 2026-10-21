@@ -102,7 +102,7 @@
   // Planlı işin zamanı gelince (uygulama açıkken) ekibe bildirim gösterilir
   planliKontrol() {
     const me = this.state.session;
-    if (!me) return;
+    if (!me || this.state.modul.ariza === false) return;   // Arıza modülü kapalıyken planlı iş bildirimi çıkmaz
     let goruldu;
     try { goruldu = JSON.parse(localStorage.getItem('ks-planli-uyari') || '[]'); } catch (e) { goruldu = []; }
     const simdi = Date.now();

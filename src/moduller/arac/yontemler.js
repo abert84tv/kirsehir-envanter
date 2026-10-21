@@ -127,6 +127,7 @@
   // Muayene ve sigortası yaklaşan / geçen araçlar için günde bir kez uyarı
   aracBelgeUyari() {
     const me = this.state.session;
+    if (this.state.modul.arac === false) return;   // Araç modülü kapalıyken belge uyarısı çıkmaz
     if (!me || !(this.yetkiVar(me, 'assign') || this.yetkiVar(me, 'close') || me.role === 'sef')) return;
     const liste = ((this.state.arac || {}).list || []);
     if (!liste.length) return;

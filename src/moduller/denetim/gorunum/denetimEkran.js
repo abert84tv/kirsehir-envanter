@@ -17,7 +17,8 @@
           ],
           q: s.denetimQ,
           onQ: e => this.setState({ denetimQ: e.target.value }),
-          sinifSec: [['', 'Hepsi'], ...Object.entries(DENETIM_SINIF)].map(([k, ad]) => ({
+          // Kapalı modüle ait sınıf düğmeleri (Arıza, Ambar, Bakım, Talep, Bildirim) çıkmaz; kayıtlar yine "Hepsi"nde görünür
+          sinifSec: [['', 'Hepsi'], ...Object.entries(DENETIM_SINIF)].filter(([k]) => !({ ariza: 'ariza', bildirim: 'ariza', ambar: 'ambar', bakim: 'bakim', talep: 'talep' }[k]) || s.modul[{ ariza: 'ariza', bildirim: 'ariza', ambar: 'ambar', bakim: 'bakim', talep: 'talep' }[k]] !== false).map(([k, ad]) => ({
             label: ad, ...seg(s.denetimSinif === k, () => this.setState({ denetimSinif: k }))
           })),
           kim: s.denetimKim, kimler,

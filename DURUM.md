@@ -2399,3 +2399,13 @@ Telefon > İşler > Bana atanan: iş kartında her adımda büyük ana düğme (
 - **Köy karnesi:** köy özeti, karo gerektirmeyen vektör şema (hat grupları renkli, kuyu/depo/baca/vana simgeleri), tesis tablosu (kayıttaki dolu alanlar etiketleriyle), hat tablosu (grup, tür, çap, malzeme, uzunluk), eksik/dikkat listesi.
 - PDF raporlarda "Deneme…" köylerindeki test kayıtları hesaba katılmaz (altta kaç kayıt dışarıda kaldığı yazar). **Excel** tam veri dışa aktarımıdır, hepsini içerir.
 - **Excel:** artık dört sayfalı .xlsx — Tesisler (alan etiketleri okunur adlarla, hat m sütunu; arıza sütunu yalnız modül açıkken), Hatlar, Köy özeti, İlçe özeti. Kitaplık yüklenemezse eski CSV'ye düşer.
+
+## 2026.10.21-217 — Açılış hızı, menü/telefon düzeltmeleri, envanter dışı bildirimler kapalı
+- **Açılış hızı (en büyük kazanç):** 1,8 MB'lık şablon artık canlı DOM'a girmiyor (`src/kabuk.html`: `template` içinde, çalışma zamanı metni yeniden okuyup derliyor; boş canlı `x-dc ` öğesi boşluklu yazılı). Açılışta 7 gereksiz harita iframe'i yüklenmiyor; yükleme bitişi ~400 → ~95 ms, DOM ~tek kalemde küçüldü. **Kural:** gerçek x-dc bloğu metinde ilk açılış / son kapanış olmalı (`parseDcText`).
+- **Telefon "Tümü":** Tümü listesi açıkken alt çubuktan sayfa seçilince liste kapanır (eskiden üstte açık kalıyordu); Tümü düğmesi aç/kapa. Alt çubuk, modüller kapalıyken Envanter · Özet · Ayarlar · Tümü.
+- **Ayarlar (masaüstü):** sol bölüm listesi "« Listeyi gizle" ile kapanır, "☰ Bölümler" ile açılır (tercih cihazda hatırlanır). "Veri ve gizlilik" ikiye bölündü: Veri · Gizlilik ve denetim.
+- **Envanter dışı bildirimler:** Arıza/Araç/Bakım/Talep modülü kapalıyken araç belge uyarısı, planlı iş bildirimi, ekip konumu paylaşımı ve iş emri otomatik kapatma çalışmaz; Denetim izinde ilgili sınıf düğmeleri (Arıza, Ambar, Bakım, Talep, Bildirim) çıkmaz (kayıtlar "Hepsi"de durur).
+- Özet'te Rapor paneli açık gelir; telefon haritasında (arıza modülü kapalıyken) "+" yeni tesis düğmesi; üst çubukta "Bekleyen N" ile ağ durumu tek hap.
+- Hat çizimi yalnız görünen alan + çevresi için (`harita-katman.js`); sekme arka plandayken 30/60 sn yenileme durur, sekmeye dönünce hemen yenilenir; telefon çubuk ölçümü ResizeObserver ile.
+- Yeni tesiste aynı türde 30 m içinde kayıt varsa bir kez uyarı (ikinci Kaydet onay); alan düzenlemede geçmişe "hangi alan neden nereye" yazılır.
+- Bilinen açık: `hat_kaydet` (bir tesisin bütün hatlarını toptan yazar) sürüm denetimsiz — iki kişi aynı köyde aynı anda hat çizerse sonraki öncekini siler (sunucu işi). Ayrıntı: ONIZLEME-NOTLARI.md.

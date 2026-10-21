@@ -12,6 +12,7 @@
   // Zimmetli cihaz: ekip hesabıyla girilmiş, "paylaş" açık ve uygulama açıkken konum dakikada bir gider
   konumGonderTik() {
     const me = this.state.session;
+    if (this.state.modul.ariza === false && this.state.modul.arac === false) return;   // ekip/araç modülleri kapalıyken konum paylaşılmaz
     if (!this.state.konumPaylasim || !me || !me.crew || this.state.offline || !this._sb || !this._sb.konumGonder) return;
     if (typeof document !== 'undefined' && document.hidden) return;
     if (!navigator.geolocation) return;

@@ -117,7 +117,7 @@
   // oturum başına bir kez kendiliğinden kapatır
   isEmriTamamla() {
     // kendiliğinden kapatma son onay yetkisi ister (sunucu is_emri_kapat aynı kuralı uygular)
-    if (!this.yetkiVar(this.state.session, 'close') || this.state.offline) return;
+    if (!this.yetkiVar(this.state.session, 'close') || this.state.offline || this.state.modul.ariza === false) return;
     this._ieDenendi = this._ieDenendi || new Set();
     for (const ie of (this.state.isEmirleri || [])) {
       if (ie.status === 'kapatildi' || this._ieDenendi.has(ie.dbId)) continue;

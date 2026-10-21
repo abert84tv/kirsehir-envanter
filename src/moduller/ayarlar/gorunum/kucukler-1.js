@@ -6,6 +6,9 @@
         return {
           // Liste yalnız hiçbir bölüm seçili değilken görünür
           listeAcik: a && !sec,
+          // Masaüstü sol liste: açık/kapalı (tercih hatırlanır)
+          listeVar: !s.ayarListeKapali, listeKapali: !!s.ayarListeKapali,
+          listeTog: () => { const k = !s.ayarListeKapali; try { localStorage.setItem('ks-ayar-liste', k ? '0' : '1'); } catch (e) { /* depolama kapalı */ } this.setState({ ayarListeKapali: k }); },
           detay: a && !!sec,
           bolumAd: ayarAdi(sec),
           // Aynı başlığın öteki bölümleri üst sekmeler olarak (tek bölümlü başlıkta sekme çıkmaz)

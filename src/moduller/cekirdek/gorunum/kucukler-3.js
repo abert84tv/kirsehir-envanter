@@ -47,7 +47,7 @@
         // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
         const KISA = (RM.ad || {}).kaynaklar ? {} : { kaynaklar: 'Kaynaklar' };
         return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
-          label: 'Tümü', go: () => this.setState({ menuAcik: true }),
+          label: 'Tümü', go: () => this.setState({ menuAcik: !s.menuAcik }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
           mark: 'transparent', dot: s.menuAcik ? 'var(--color-accent)' : 'transparent',
           badge: acikBadge > 0, badgeN: acikBadge

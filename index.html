@@ -2653,7 +2653,9 @@ Malzeme istekleri
 <!-- ayarlar -->
 <sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;min-height:0;background:{{ ui.bg }}">
+<sc-if value="{{ ayar.listeVar }}" hint-placeholder-val="{{ true }}">
 <div class="scroll" style="flex:none;width:264px;overflow:auto;border-right:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:4px 10px 24px">
+<button onClick="{{ ayar.listeTog }}" title="Bölüm listesini gizle" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;margin-top:6px;border-radius:10px;color:{{ ui.mut }};font:600 12px/1 var(--font-body)" style-hover="background:{{ ui.surf2 }}">« Listeyi gizle</button>
 <sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
 <div style="padding:18px 10px 6px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
 <sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
@@ -2664,9 +2666,13 @@ Malzeme istekleri
 </sc-for>
 </sc-for>
 </div>
+</sc-if>
 <div class="scroll" style="flex:1;min-width:0;overflow:auto">
 <sc-if value="{{ ayar.detay }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:14px 20px 4px;background:{{ ui.bg }}">
+<sc-if value="{{ ayar.listeKapali }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ ayar.listeTog }}" title="Bölüm listesini göster" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body)" style-hover="background:{{ ui.surf2 }}">☰ Bölümler</button>
+</sc-if>
 <span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ayar.bolumAd }}</span>
 </div>
 <sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">
@@ -10900,7 +10906,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.21-216';
+const SURUM = '2026.10.21-217';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11129,6 +11135,8 @@ class Component extends DCLogic {
     })(),
     denetimQ: '', denetimSinif: '', denetimKim: '',
     menuAcik: false,
+    // Masaüstü Ayarlar: sol bölüm listesi gizlenebilir; tercih cihazda hatırlanır
+    ayarListeKapali: (() => { try { return localStorage.getItem('ks-ayar-liste') === '0'; } catch (e) { return false; } })(),
     // Sunucuya işlenmeyi bekleyen ambar hareketleri
     ambarKuyruk: (() => {
       try {
@@ -12522,6 +12530,7 @@ class Component extends DCLogic {
   // Muayene ve sigortası yaklaşan / geçen araçlar için günde bir kez uyarı
   aracBelgeUyari() {
     const me = this.state.session;
+    if (this.state.modul.arac === false) return;   // Araç modülü kapalıyken belge uyarısı çıkmaz
     if (!me || !(this.yetkiVar(me, 'assign') || this.yetkiVar(me, 'close') || me.role === 'sef')) return;
     const liste = ((this.state.arac || {}).list || []);
     if (!liste.length) return;
@@ -12682,7 +12691,7 @@ class Component extends DCLogic {
   // Planlı işin zamanı gelince (uygulama açıkken) ekibe bildirim gösterilir
   planliKontrol() {
     const me = this.state.session;
-    if (!me) return;
+    if (!me || this.state.modul.ariza === false) return;   // Arıza modülü kapalıyken planlı iş bildirimi çıkmaz
     let goruldu;
     try { goruldu = JSON.parse(localStorage.getItem('ks-planli-uyari') || '[]'); } catch (e) { goruldu = []; }
     const simdi = Date.now();
@@ -15571,7 +15580,7 @@ class Component extends DCLogic {
   // oturum başına bir kez kendiliğinden kapatır
   isEmriTamamla() {
     // kendiliğinden kapatma son onay yetkisi ister (sunucu is_emri_kapat aynı kuralı uygular)
-    if (!this.yetkiVar(this.state.session, 'close') || this.state.offline) return;
+    if (!this.yetkiVar(this.state.session, 'close') || this.state.offline || this.state.modul.ariza === false) return;
     this._ieDenendi = this._ieDenendi || new Set();
     for (const ie of (this.state.isEmirleri || [])) {
       if (ie.status === 'kapatildi' || this._ieDenendi.has(ie.dbId)) continue;
@@ -17626,6 +17635,7 @@ class Component extends DCLogic {
   // Zimmetli cihaz: ekip hesabıyla girilmiş, "paylaş" açık ve uygulama açıkken konum dakikada bir gider
   konumGonderTik() {
     const me = this.state.session;
+    if (this.state.modul.ariza === false && this.state.modul.arac === false) return;   // ekip/araç modülleri kapalıyken konum paylaşılmaz
     if (!this.state.konumPaylasim || !me || !me.crew || this.state.offline || !this._sb || !this._sb.konumGonder) return;
     if (typeof document !== 'undefined' && document.hidden) return;
     if (!navigator.geolocation) return;
@@ -18216,7 +18226,8 @@ class Component extends DCLogic {
     // Bir süzgeci bile görünmeyen sayfa menüde çıkmaz
     const navVisible = MENU_SIRA.map(id => gruplar[id]).filter(g => g && g.suz.length && !(RM.gizle || []).includes(g.id));
     const navItem = g => ({
-      label: g.ad, go: () => { this.geziMenu(); this.setState({ tab: (g.suz[0] || {}).hedef || 'harita' }); },
+      // Telefonda "Tümü" listesi açıkken alt çubuktan sayfa seçilince liste de kapanır (eskiden üstünde açık kalıyordu)
+      label: g.ad, go: () => { this.geziMenu(); this.setState({ tab: (g.suz[0] || {}).hedef || 'harita', menuAcik: false }); },
       // Etkin sayfa dolu mavi hap; ötekiler zeminsiz
       pill: g.acik ? 'var(--color-accent)' : 'transparent',
       hover: g.acik ? 'var(--color-accent)' : (dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.045)'),
@@ -18542,7 +18553,7 @@ class Component extends DCLogic {
         // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
         const KISA = (RM.ad || {}).kaynaklar ? {} : { kaynaklar: 'Kaynaklar' };
         return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
-          label: 'Tümü', go: () => this.setState({ menuAcik: true }),
+          label: 'Tümü', go: () => this.setState({ menuAcik: !s.menuAcik }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
           mark: 'transparent', dot: s.menuAcik ? 'var(--color-accent)' : 'transparent',
           badge: acikBadge > 0, badgeN: acikBadge
@@ -20600,6 +20611,9 @@ class Component extends DCLogic {
         return {
           // Liste yalnız hiçbir bölüm seçili değilken görünür
           listeAcik: a && !sec,
+          // Masaüstü sol liste: açık/kapalı (tercih hatırlanır)
+          listeVar: !s.ayarListeKapali, listeKapali: !!s.ayarListeKapali,
+          listeTog: () => { const k = !s.ayarListeKapali; try { localStorage.setItem('ks-ayar-liste', k ? '0' : '1'); } catch (e) { /* depolama kapalı */ } this.setState({ ayarListeKapali: k }); },
           detay: a && !!sec,
           bolumAd: ayarAdi(sec),
           // Aynı başlığın öteki bölümleri üst sekmeler olarak (tek bölümlü başlıkta sekme çıkmaz)
@@ -21097,7 +21111,8 @@ class Component extends DCLogic {
           ],
           q: s.denetimQ,
           onQ: e => this.setState({ denetimQ: e.target.value }),
-          sinifSec: [['', 'Hepsi'], ...Object.entries(DENETIM_SINIF)].map(([k, ad]) => ({
+          // Kapalı modüle ait sınıf düğmeleri (Arıza, Ambar, Bakım, Talep, Bildirim) çıkmaz; kayıtlar yine "Hepsi"nde görünür
+          sinifSec: [['', 'Hepsi'], ...Object.entries(DENETIM_SINIF)].filter(([k]) => !({ ariza: 'ariza', bildirim: 'ariza', ambar: 'ambar', bakim: 'bakim', talep: 'talep' }[k]) || s.modul[{ ariza: 'ariza', bildirim: 'ariza', ambar: 'ambar', bakim: 'bakim', talep: 'talep' }[k]] !== false).map(([k, ad]) => ({
             label: ad, ...seg(s.denetimSinif === k, () => this.setState({ denetimSinif: k }))
           })),
           kim: s.denetimKim, kimler,

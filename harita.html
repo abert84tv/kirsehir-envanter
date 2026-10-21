@@ -268,7 +268,17 @@ const turMenu = ksTurMenu(document.getElementById('t-turler'));
 { let f0 = null; try { f0 = JSON.parse(localStorage.getItem(SUZ_KEY) || 'null'); } catch (e) { /* depolama kapalı */ } turMenu.guncelle(f0 || { kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true, pasif: true }); }
 // Hat projeleri: köy (tesis) başına bir katman; içinde Hat 1, Hat 2 … ayrı ayrı açılıp kapanır.
 // Liste yalnız haritada görünen alandaki köyleri gösterir (yüzlerce köy olunca uzamaz); arama tüm köylerde çalışır.
-let acikProje = null, projeAra = '';
+let acikProje = null, projeAra = '', projeSec = 0;
+// Arama kutusu doluyken ya da odaktayken seçili köy satırı çerçevelenir
+function projeIsaretle(kaydir) {
+  const kap = document.getElementById('t-gruplar'); if (!kap) return;
+  const ara = kap.querySelector('#t-ara');
+  const etkin = !!ara && (projeAra.trim() || document.activeElement === ara);
+  const satirlar = [...kap.querySelectorAll('#t-liste .k-proje>button:first-child')];
+  satirlar.forEach((b, i) => b.classList.toggle('sec', !!etkin && i === Math.min(projeSec, satirlar.length - 1)));
+  const s = satirlar[Math.min(projeSec, satirlar.length - 1)];
+  if (kaydir && s && s.scrollIntoView) s.scrollIntoView({ block: 'nearest' });
+}
 const kmYaz = m => m >= 1000 ? (m / 1000).toFixed(2) + ' km' : Math.round(m) + ' m';
 function gruplariCiz() {
   const kap = document.getElementById('t-gruplar'); if (!kap) return;
@@ -278,8 +288,25 @@ function gruplariCiz() {
     kap.dataset.kuruldu = '1';
     kap.innerHTML = '<div class="k-baslik">Hat projeleri</div><input id="t-ara" type="search" placeholder="Köy ara…" autocomplete="off"><div id="t-liste"></div><div id="t-hepsi"></div>';
     const ara = kap.querySelector('#t-ara');
-    ara.oninput = () => { projeAra = ara.value; listeCiz(); };
-    ara.onkeydown = e => e.stopPropagation();
+    ara.oninput = () => { projeAra = ara.value; projeSec = 0; listeCiz(); };
+    // ↓ ↑ ile köy satırları arasında gezilir (uçlarda sarar), Enter seçiliyi açıp köye yaklaştırır
+    ara.onkeydown = e => {
+      e.stopPropagation();
+      const satirlar = [...kap.querySelectorAll('#t-liste .k-proje>button:first-child')];
+      if (!satirlar.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        projeSec = (Math.min(projeSec, satirlar.length - 1) + (e.key === 'ArrowDown' ? 1 : -1) + satirlar.length) % satirlar.length;
+        projeIsaretle(true);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const x = K.hatProjeleri().find(p => p.kod === satirlar[Math.min(projeSec, satirlar.length - 1)].dataset.kod);
+        if (!x) return;
+        K.projeAc(x.kod, true);
+        try { map.fitBounds(x.bbox, { padding: [40, 40], maxZoom: 16 }); } catch (err) { /* sınır yok */ }
+        listeCiz();
+      }
+    };
   }
   kap.querySelector('#t-ara').style.display = tum.length > 5 ? '' : 'none';
   listeCiz();
@@ -302,6 +329,7 @@ function listeCiz() {
     const ad = document.createElement('span'); ad.className = 'k-ad'; ad.textContent = x.ad;
     const n = document.createElement('small'); n.textContent = x.n + ' · ' + kmYaz(x.uz);
     d.append(ad, n);
+    d.dataset.kod = x.kod;
     d.onclick = () => { K.projeAc(x.kod, !x.acik); listeCiz(); };
     const ok = document.createElement('button'); ok.className = 'k-ok'; ok.textContent = acikProje === x.kod ? '▾' : '▸';
     ok.title = 'Hat 1, Hat 2 … ayrı ayrı'; ok.onclick = e => { e.stopPropagation(); acikProje = acikProje === x.kod ? null : x.kod; listeCiz(); };
@@ -318,6 +346,7 @@ function listeCiz() {
   }
   if (!liste.length) { const bos = document.createElement('div'); bos.className = 'k-bos'; bos.textContent = ara ? 'Eşleşen köy yok.' : 'Bu alanda hat yok — haritayı kaydırın ya da köy arayın.'; L1.appendChild(bos); }
   if (fazla) { const f = document.createElement('div'); f.className = 'k-bos'; f.textContent = '+ ' + fazla + ' köy daha — aramayı daraltın.'; L1.appendChild(f); }
+  projeIsaretle(false);
   const H1 = kap.querySelector('#t-hepsi'); H1.innerHTML = '';
   if (liste.length > 1) {
     const mk2 = (yazi, on) => { const b = document.createElement('button'); b.className = 'arac k-toplu'; b.textContent = yazi; b.onclick = () => { liste.forEach(x => K.projeAc(x.kod, on)); listeCiz(); }; return b; };

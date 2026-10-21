@@ -23,18 +23,18 @@
 <span style="font:700 12px/1 var(--font-body);color:{{ ui.mut }}">Seçilenlere yakın köyler</span>
 <div style="display:flex;gap:7px;flex-wrap:wrap">
 <sc-for list="{{ koyAta.adaylar }}" as="v" hint-placeholder-count="4">
-<button onClick="{{ v.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 13px;border-radius:12px;border:1px solid {{ v.kenar }};background:{{ v.bg }};color:{{ v.fg }};display:flex;flex-direction:column;justify-content:center;gap:3px"><span style="font:700 13px/1 var(--font-body)">{{ v.ad }}</span><span style="font:500 11px/1 var(--font-body);opacity:.75">{{ v.alt }}</span></button>
+<button onClick="{{ v.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 13px;border-radius:12px;box-shadow:{{ v.vurgu }};border:1px solid {{ v.kenar }};background:{{ v.bg }};color:{{ v.fg }};display:flex;flex-direction:column;justify-content:center;gap:3px"><span style="font:700 13px/1 var(--font-body)">{{ v.ad }}</span><span style="font:500 11px/1 var(--font-body);opacity:.75">{{ v.alt }}</span></button>
 </sc-for>
 </div>
 </div>
 </sc-if>
 <div style="display:flex;flex-direction:column;gap:7px">
 <span style="font:700 12px/1 var(--font-body);color:{{ ui.mut }}">Başka köy ara</span>
-<input value="{{ koyAta.q }}" onChange="{{ koyAta.onQ }}" placeholder="Köy adı yazın" autocomplete="off" style="all:unset;box-sizing:border-box;width:100%;min-height:44px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)">
+<input value="{{ koyAta.q }}" onChange="{{ koyAta.onQ }}" onKeyDown="{{ koyAta.onTus }}" placeholder="Köy adı yazın" autocomplete="off" style="all:unset;box-sizing:border-box;width:100%;min-height:44px;padding:0 14px;border-radius:11px;border:1px solid {{ ui.rule }};background:{{ ui.surf }};color:{{ ui.fg }};font:500 14px/42px var(--font-body)">
 <sc-if value="{{ koyAta.sonucVar }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:7px;flex-wrap:wrap">
 <sc-for list="{{ koyAta.sonuclar }}" as="v" hint-placeholder-count="3">
-<button onClick="{{ v.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 13px;border-radius:12px;border:1px solid {{ v.kenar }};background:{{ v.bg }};color:{{ v.fg }};display:flex;flex-direction:column;justify-content:center;gap:3px"><span style="font:700 13px/1 var(--font-body)">{{ v.ad }}</span><span style="font:500 11px/1 var(--font-body);opacity:.75">{{ v.alt }}</span></button>
+<button onClick="{{ v.sec }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;padding:0 13px;border-radius:12px;box-shadow:{{ v.vurgu }};border:1px solid {{ v.kenar }};background:{{ v.bg }};color:{{ v.fg }};display:flex;flex-direction:column;justify-content:center;gap:3px"><span style="font:700 13px/1 var(--font-body)">{{ v.ad }}</span><span style="font:500 11px/1 var(--font-body);opacity:.75">{{ v.alt }}</span></button>
 </sc-for>
 </div>
 </sc-if>

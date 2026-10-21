@@ -109,6 +109,7 @@ body.dark .leaflet-popup-content-wrapper,body.dark .leaflet-popup-tip{background
 #tools .ks-katman .k-menu .k-sw{width:18px;height:5px;border-radius:3px;flex:none}
 #tools .ks-katman .k-menu .k-proje{display:flex;border-bottom:1px solid var(--color-divider)}
 #tools .ks-katman .k-menu .k-proje>button:first-child{flex:1;border-bottom:none}
+#tools .ks-katman .k-menu .k-proje>button.sec{box-shadow:inset 0 0 0 2px var(--color-accent)}
 #tools .ks-katman .k-menu .k-proje>.k-ok{flex:none;width:38px;justify-content:center;border-bottom:none;border-left:1px solid var(--color-divider);padding:0;color:var(--color-neutral-600)}
 #tools .ks-katman .k-menu button.k-grup{padding-left:26px;font-size:12px}
 #tools .ks-katman .k-menu .k-bos{padding:10px 14px;font:500 12px/1.4 var(--font-body);color:var(--color-neutral-600)}

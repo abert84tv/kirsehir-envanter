@@ -11,6 +11,9 @@ Kullanıcı Türkçe yazar; kısa, Türkçe cevap ver.
 - Masaüstü ve telefon şablonları ayrı parçalardır — her özellik ikisine de uygulanır (`esdeger-kontrol.js` denetler).
 - `main`'e push Vercel'e otomatik yayınlanır.
 
+## Veritabanı (Supabase)
+- Yeni tablo SQL'inde RLS açılır; `anon`/`authenticated`'a GRANT verilmez (erişim yalnız RPC). Edge Function `service_role` ile tabloya doğrudan erişecekse açık `grant ... to service_role` yazılır (Supabase 30 Ekim 2026'dan sonra otomatik yetki vermiyor). Ayrıntı: `SQL-INDEKS.md`.
+
 ## Kullanıcıyla çalışma biçimi
 - Menü/sayfa sadeleştirmesi kullanıcıyla **konuşarak** yapılır: önce tartış, kararları onaylat, sonra yap; soruları tek tek sor.
 - Alınmış kararlar ve sıradaki işler: `SADELESTIRME-RAPORU.md`, `DURUM.md`, `KONUM-ALTYAPI.md`.

@@ -3,6 +3,16 @@
 SQL dosyaları ilgili modülün klasöründe durur: `src/moduller/<modül>/sql/`. Edge function kaynakları `src/moduller/<modül>/islev/` altındadır.
 Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf yapar). Çoğu dosya Supabase SQL Editor'de bir kez çalıştırılır; canlı veritabanında hepsi uygulanmıştır.
 
+## Yeni tablo kuralı (Supabase, 30 Ekim 2026 değişikliği)
+
+Supabase 30 Ekim 2026'dan sonra `public` şemasındaki **yeni** tablolara Veri API (PostgREST) yetkisini otomatik vermeyecek; mevcut tablolar etkilenmez.
+Bu projede tablolara doğrudan erişim zaten kapalıdır (v200: `anon`/`authenticated` yetkisi yok, program yalnız RPC + Storage kullanır). Bu yüzden:
+- Yeni tabloya `anon` / `authenticated` GRANT **verilmez**; erişim `security definer` RPC işleviyle olur (işlev sahibi tabloya erişir).
+- Bir Edge Function tabloyu `service_role` ile doğrudan kullanacaksa (ör. `sb.from('denetim')`) tablo SQL'ine şu satır eklenir:
+  `grant select, insert, update, delete on public.<tablo> to service_role;`
+- Her yeni tabloda `alter table <tablo> enable row level security;` kalır (politikasız = doğrudan erişim kapalı).
+- Sıfırdan kurulum / önizleme dalı gerekirse tablolar bu dosyalardan yeniden kurulacağı için GRANT satırları dosyada açıkça yazılı olmalıdır.
+
 | Modül | Dosya | Not |
 |---|---|---|
 | envanter | `src/moduller/envanter/sql/SQL-tesis-degisiklik-onayi.sql` | tesis ekleme/silme önerisi ve iki aşamalı onay (şef → mühendis → müdür); şef ekip süzgeci; çöp temizleme yetkisi; veri okuma ve ekip konumu süzgeçleri — uygulandı 2026-10-10 |

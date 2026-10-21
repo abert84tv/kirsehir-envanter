@@ -9,7 +9,7 @@
 <div style="display:flex;align-items:center;gap:9px;padding:9px 12px">
 <div style="flex:1;min-height:42px;display:flex;align-items:center;gap:8px;border-radius:11px;border:1px solid {{ ui.rule }};padding:0 12px;background:{{ ui.bg }}">
 <span style="width:11px;height:11px;border-radius:10px;border:1px solid {{ ui.mut }};border-radius:50%;flex:none"></span>
-<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 14px/1 var(--font-body);color:{{ ui.fg }}">
+<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" onFocus="{{ aramaAc }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 14px/1 var(--font-body);color:{{ ui.fg }}">
 </div>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);display:flex;align-items:center;justify-content:center">{{ ikonlar.donustur }}</button>
 <div style="flex:none;display:flex;border-radius:11px;overflow:hidden;border:1px solid {{ net.border }}">
@@ -31,7 +31,7 @@
 <sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="position:absolute;left:8px;right:8px;top:100%;margin-top:4px;z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 30px rgba(0,0,0,.2);max-height:280px;overflow:auto;padding:4px">
 <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
-<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;width:100%;padding:10px 12px;border-radius:9px;text-align:left">
+<button onClick="{{ s.go }}" data-ara-sec="{{ s.secId }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:2px;width:100%;padding:10px 12px;border-radius:9px;text-align:left;background:{{ s.secBg }}">
 <span style="font:600 14px/1.15 var(--font-body)">{{ s.name }}</span>
 <span style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }}">{{ s.kind }} · {{ s.meta }}</span>
 </button>

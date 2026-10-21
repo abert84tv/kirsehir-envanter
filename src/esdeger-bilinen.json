@@ -124,5 +124,6 @@
   "telefon:telMenu.ogeler[].git": "tasarım: telefon gezinmesi (alt çubuk, açılır menü, süzgeç/araç şeridi)",
   "telefon:telSuz.aracTog": "tasarım: telefon gezinmesi (alt çubuk, açılır menü, süzgeç/araç şeridi)",
   "telefon:telSuz.listeTog": "tasarım: telefon gezinmesi (alt çubuk, açılır menü, süzgeç/araç şeridi)",
-  "telefon:telSuz.tamTog": "tasarım: telefon gezinmesi (alt çubuk, açılır menü, süzgeç/araç şeridi)"
+  "telefon:telSuz.tamTog": "tasarım: telefon gezinmesi (alt çubuk, açılır menü, süzgeç/araç şeridi)",
+  "masaustu:aramaKapat": "tasarım: masaüstünde arama kutusu üst çubukta; dışarı tıklayınca öneri listesi kapanır (telefonda öneri listesi arama satırının altında, seçim/silme/Esc ile kapanır)"
 }

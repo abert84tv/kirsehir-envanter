@@ -151,3 +151,6 @@
         }
       })));
     }
+    // Açılır öneri listesi: seçili satır yön tuşlarıyla değişir (Enter seçiliye gider), ilk satır varsayılan seçilidir
+    const aramaSec = Math.min(s.aramaSecili || 0, Math.max(0, suggestions.length - 1));
+    suggestions = suggestions.map((x, i) => ({ ...x, secBg: i === aramaSec ? ui.surf2 : 'transparent', secId: i === aramaSec ? '1' : '0' }));

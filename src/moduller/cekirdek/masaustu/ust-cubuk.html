@@ -1,11 +1,34 @@
 <!-- main -->
 <div style="flex:1;min-width:0;display:flex;flex-direction:column">
-<div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }};overflow:hidden">
+<div style="flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;height:58px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
 <sc-if value="{{ geziGeri.var }}" hint-placeholder-val="{{ false }}"><button onClick="{{ geziGeri.git }}" title="Önceki sayfaya dön" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;gap:6px;height:36px;padding:0 14px 0 10px;border-radius:10px;border:1px solid {{ ui.rule }};background:{{ ui.surf2 }};color:{{ ui.acc }};font:600 13px/1 var(--font-body)"><span style="font-size:18px;line-height:1;margin-top:-1px">‹</span>{{ geziGeri.ad }}</button></sc-if>
 <div style="flex:1 1 140px;min-width:110px;display:flex;flex-direction:column;gap:3px">
 <span style="font:700 17px/1.15 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.baslik }}</span>
 <span class="ks-bilgi" style="font:400 12px/1.2 var(--font-body);color:{{ ui.mut }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ustBar.alt }}</span>
 </div>
+<div style="flex:0 1 380px;min-width:150px;position:relative;z-index:65">
+<div style="display:flex;align-items:center;gap:8px;height:36px;border-radius:10px;border:1px solid {{ ui.rule }};padding:0 12px;background:{{ ui.bg }}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ ui.mut }}" stroke-width="2" stroke-linecap="round" style="flex:none"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" onFocus="{{ aramaAc }}" placeholder="Köy, kod veya koordinat" title="Köy, kayıt kodu, 39.1462 34.1583 veya 572799,55 4331744,74 — ↑ ↓ ile seçin, Enter ile gidin, Esc ile kapatın" aria-label="Ara" autocomplete="off" style="all:unset;flex:1;min-width:0;font:400 13px/1 var(--font-body);color:{{ ui.fg }}">
+<sc-if value="{{ seeking.on }}" hint-placeholder-val="{{ false }}">
+<span style="flex:none;font:600 10.5px/1 var(--font-body);color:var(--color-accent)">…</span>
+</sc-if>
+</div>
+<sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
+<div class="scroll ks-gir" style="position:absolute;top:calc(100% + 6px);left:0;width:max(100%,460px);max-width:calc(100vw - 100px);z-index:66;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 34px rgba(0,0,0,.2);max-height:340px;overflow:auto;padding:4px">
+<sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
+<button onClick="{{ s.go }}" data-ara-sec="{{ s.secId }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:9px 12px;border-radius:9px;background:{{ s.secBg }}" style-hover="background:{{ ui.surf2 }}">
+<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};width:78px;flex:none">{{ s.kind }}</span>
+<span style="font:600 13.5px/1 var(--font-body)">{{ s.name }}</span>
+<span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ s.meta }}</span>
+</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ aramaKapat }}" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:63"></div>
+</sc-if>
 <sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
 <span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
 </sc-if>
@@ -39,17 +62,6 @@
 
 <!--@dahil moduller/envanter/masaustu/naSz-acik.html-->
 
-<sc-if value="{{ hasSuggest }}" hint-placeholder-val="{{ false }}">
-<div class="scroll ks-gir" style="position:absolute;top:100px;left:12px;width:480px;max-width:calc(100% - 40px);z-index:64;border:1px solid {{ ui.rule }};border-radius:12px;background:{{ ui.surf }};box-shadow:0 12px 34px rgba(0,0,0,.16);max-height:320px;overflow:auto;padding:4px">
-<sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
-<button onClick="{{ s.go }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;width:100%;padding:9px 12px;border-radius:9px" style-hover="background:{{ ui.surf2 }}">
-<span style="font:600 10.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};width:78px;flex:none">{{ s.kind }}</span>
-<span style="font:600 13.5px/1 var(--font-body)">{{ s.name }}</span>
-<span style="font:400 12.5px/1 var(--font-body);color:{{ ui.mut }}">{{ s.meta }}</span>
-</button>
-</sc-for>
-</div>
-</sc-if>
 
 <sc-if value="{{ saltOkur }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;padding:9px 20px;border-bottom:1px solid var(--color-uyari-200);background:var(--color-uyari-100);font:600 12px/1.45 var(--font-body);color:var(--color-uyari-800)">{{ saltOkurNot }}</div>

@@ -5,13 +5,6 @@
 <span style="width:24px;height:24px;border-radius:7px;background:var(--color-accent);flex:none;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"></path></svg></span>
 <span class="ks-et" style="font:700 14.5px/1 var(--font-heading);letter-spacing:-.015em;color:{{ ui.fg }}">Kırşehir Envanter</span>
 </div>
-<div style="flex:none;margin:0 12px 6px;display:flex;align-items:center;gap:8px;border-radius:9px;border:1px solid {{ ui.rule }};padding:8px 12px;background:{{ ui.bg }}">
-<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ ui.mut }}" stroke-width="2" stroke-linecap="round" style="flex:none"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-<input class="ks-et" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" title="Köy, kayıt kodu, 39.1462 34.1583 veya 572799,55 4331744,74" aria-label="Ara" style="all:unset;flex:1;min-width:0;font:400 13px/1 var(--font-body);color:{{ ui.fg }}">
-<sc-if value="{{ seeking.on }}" hint-placeholder-val="{{ false }}">
-<span style="flex:none;font:600 10.5px/1 var(--font-body);color:var(--color-accent)">…</span>
-</sc-if>
-</div>
 <div class="scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;padding:4px 12px 8px;gap:2px">
 <sc-for list="{{ navGruplu }}" as="g" hint-placeholder-count="4">
 <div style="flex:none;display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:10px">

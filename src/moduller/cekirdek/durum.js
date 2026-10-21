@@ -155,6 +155,8 @@
     })(),
     denetimQ: '', denetimSinif: '', denetimKim: '',
     menuAcik: false,
+    // Arama kutusu: öneri listesinde seçili satır; Esc/dışarı tıklamayla kapatılınca true
+    aramaSecili: 0, aramaKapali: false,
     // Sunucuya işlenmeyi bekleyen ambar hareketleri
     ambarKuyruk: (() => {
       try {

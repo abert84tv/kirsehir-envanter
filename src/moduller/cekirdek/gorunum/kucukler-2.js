@@ -74,14 +74,26 @@
         })()
       },
       toggleTheme: () => this.temaSec(dark ? 'light' : 'dark'),
-      onQuery: e => this.setState({ query: e.target.value }),
+      onQuery: e => this.setState({ query: e.target.value, aramaSecili: 0, aramaKapali: false }),
+      aramaAc: () => { if (s.aramaKapali) this.setState({ aramaKapali: false }); },
+      aramaKapat: () => this.setState({ aramaKapali: true }),
       onQueryKey: e => {
+        const n = suggestions.length, acik = n > 0 && !s.aramaKapali;
+        // ↓ ↑: öneriler arasında gez (uçlarda başa/sona sarar); seçili satır görünür alana kayar
+        if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && n) {
+          e.preventDefault();
+          const i = Math.min(s.aramaSecili || 0, n - 1);
+          this.setState({ aramaSecili: e.key === 'ArrowDown' ? (i + 1) % n : (i - 1 + n) % n, aramaKapali: false },
+            () => { const el = document.querySelector('[data-ara-sec="1"]'); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' }); });
+          return;
+        }
+        if (e.key === 'Escape') { if (acik) { e.preventDefault(); this.setState({ aramaKapali: true }); } else if (q) { e.preventDefault(); this.setState({ query: '', aramaSecili: 0 }); } return; }
         if (e.key !== 'Enter') return;
         e.preventDefault();
-        if (suggestions.length) suggestions[0].go();
+        if (n) suggestions[Math.min(s.aramaSecili || 0, n - 1)].go();
         else if (q) this.say('Bu aramaya karşılık kayıt yok. Koordinat yazıyorsanız iki sayı olmalı: 39.1462 34.1583 (WGS84) veya 572799,55 4331744,74 (ITRF96 sağa-yukarı).');
       },
-      suggestions, hasSuggest: suggestions.length > 0,
+      suggestions, hasSuggest: suggestions.length > 0 && !s.aramaKapali,
       seeking: { on: !!s.seeking, text: s.seeking ? `${s.seeking} köyünün yeri aranıyor…` : '' },
       esitle: {
         label: 'Yenile',

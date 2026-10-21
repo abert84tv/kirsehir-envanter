@@ -99,6 +99,17 @@
     const ts = d => { const p = String(d || '').split('.'); return p.length === 3 ? +p[2] * 10000 + +p[1] * 100 + +p[0] : 0; };
     return [...added].sort((x, y) => ts(y.date) - ts(x.date));
   }
+  // Verilen konumun esikM metre içindeki, aynı türden en yakın kayıt: { a, m } ya da null (tekrar kayıt uyarısı için)
+  yakinKayit(tur, lat, lon, esikM) {
+    const kx = 111320 * Math.cos(lat * Math.PI / 180), ky = 110540;
+    let en = null;
+    for (const a of this.state.assets) {
+      if (a.type !== tur || a.silindi || a.lat == null || a.lon == null) continue;
+      const m = Math.hypot((a.lon - lon) * kx, (a.lat - lat) * ky);
+      if (m <= esikM && (!en || m < en.m)) en = { a, m };
+    }
+    return en;
+  }
   // Masaüstü yeni tesis sihirbazı (3 adım: tür ve yer → konum → bilgi ve foto)
   naAc() {
     const m = this.state.data;

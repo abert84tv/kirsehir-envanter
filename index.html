@@ -10,7 +10,11 @@
 <script src="./support.js"></script>
 </head>
 <body>
-<x-dc>
+<!-- Açılış hızı: 1,8 MB'lık şablon canlı DOM'a girmesin diye template öğesi içinde (etkisiz) durur; çalışma zamanı (support.js)
+     metni yeniden okuyup (fetch) derler. Bu yüzden gerçek x-dc bloğu metinde İLK açılış ve SON kapanış olmalı (kapanış etiketini
+     açılış-kapanış çifti olarak bu yorumda YAZMAYIN); canlı boş x-dc öğesi (çalışma zamanının yer tutucusu) boşluklu yazılır ki
+     metin taramasında eşleşmesin. Ayrıntı: ONIZLEME-NOTLARI.md -->
+<template id="ks-ham"><x-dc>
 <helmet>
 <link rel="stylesheet" href="_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/styles.css">
 <script src="_ds/modernist-803f2872-3d47-4f54-a490-6b99844264cd/_ds_bundle.js"></script>
@@ -10278,7 +10282,7 @@ Malzeme istekleri
 <iframe src="hat.html" title="Hat güzergâhları" style="flex:1;width:100%;min-height:0;border:none;display:block;background:{{ ui.bg }}"></iframe>
 </div>
 </sc-if>
-</x-dc>
+</x-dc></template><x-dc ></x-dc >
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1500,&quot;height&quot;:1160},&quot;arizaModulu&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;},&quot;yerlesimSekmesi&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Modüller&quot;}}">
 const ELL = { grs80: { a: 6378137, f: 1 / 298.257222101 }, intl: { a: 6378388, f: 1 / 297 } };
 // ED50 → WGS84/ITRF96: Netcad 8.6'nın kullandığı ayarla birebir (Datum Dönüşümü sekmesi, 2026-10-13): bölge “Europe - West (DMA ED50 Mean) (v1)”,
@@ -10896,7 +10900,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.15-215';
+const SURUM = '2026.10.21-216';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -13956,6 +13960,17 @@ class Component extends DCLogic {
     const added = this.state.tests[a.id] || [];
     const ts = d => { const p = String(d || '').split('.'); return p.length === 3 ? +p[2] * 10000 + +p[1] * 100 + +p[0] : 0; };
     return [...added].sort((x, y) => ts(y.date) - ts(x.date));
+  }
+  // Verilen konumun esikM metre içindeki, aynı türden en yakın kayıt: { a, m } ya da null (tekrar kayıt uyarısı için)
+  yakinKayit(tur, lat, lon, esikM) {
+    const kx = 111320 * Math.cos(lat * Math.PI / 180), ky = 110540;
+    let en = null;
+    for (const a of this.state.assets) {
+      if (a.type !== tur || a.silindi || a.lat == null || a.lon == null) continue;
+      const m = Math.hypot((a.lon - lon) * kx, (a.lat - lat) * ky);
+      if (m <= esikM && (!en || m < en.m)) en = { a, m };
+    }
+    return en;
   }
   // Masaüstü yeni tesis sihirbazı (3 adım: tür ve yer → konum → bilgi ve foto)
   naAc() {
@@ -21839,6 +21854,12 @@ class Component extends DCLogic {
         const yilHam = String(n.year || '').trim();
         const yil = parseInt(yilHam, 10);
         if (yilHam && !(yil >= 1900 && yil <= new Date().getFullYear() + 1)) return this.say('Yapım yılı geçersiz — bilinmiyorsa boş bırakın.');
+        // Aynı türde, 30 m içinde kayıt varsa bir kez uyarılır (tekrar kayıt); aynı kayda ikinci "Kaydet" onay sayılır
+        const yakin = this.yakinKayit(n.type, n.lat, n.lon, 30);
+        if (yakin && n.tekrarOnay !== yakin.a.id) {
+          this.setState({ newAsset: { ...n, tekrarOnay: yakin.a.id } });
+          return this.say(`Bu konumda aynı türde kayıt var: ${yakin.a.code} · ${yakin.a.village} (${Math.round(yakin.m)} m). Aynı tesis değilse yeniden Kaydet'e basın.`, true);
+        }
         // Ekleme yetkisi yok ama “tesis önerme” yetkisi var: kayıt açılmaz, mühendis ve müdür onayına öneri gider
         if (!can('create') && can('tesisOner')) return this.tesisEkleOner(n);
         const dosyalar = this._naFiles || [];
@@ -22194,7 +22215,14 @@ class Component extends DCLogic {
                 : s.queue
             }, () => { if (yerDegisti) this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }); });
             if (yerDegisti) this.iz(a.id, 'Köy bilgisi düzeltildi', `${a.village || '(boş)'} → ${koy || '(boş)'} · ${ilce}`);
-            this.iz(a.id, 'Alanlar güncellendi', dolu + ' alan dolu');
+            // Geçmişe yalnız "N alan dolu" değil, hangi alanın neden nereye değiştiği yazılır (en çok 8 alan)
+            const etiket = {};
+            for (const [, alanlar] of (ALANLAR[a.type] || [])) for (const [k, ad] of alanlar) etiket[k] = ad;
+            const goster = v => v === true ? 'Var' : (v === false ? 'Yok' : (v == null || v === '' ? '(boş)' : String(v)));
+            const degisen = Object.keys(temiz)
+              .filter(k => k !== 'koyOtomatik' && k !== 'koyElle' && goster((a.d || {})[k]) !== goster(temiz[k]))
+              .map(k => `${etiket[k] || k}: ${goster((a.d || {})[k])} → ${goster(temiz[k])}`);
+            this.iz(a.id, 'Alanlar güncellendi', degisen.length ? degisen.slice(0, 8).join('; ') + (degisen.length > 8 ? ` (+${degisen.length - 8} alan)` : '') : dolu + ' alan dolu (değişiklik yok)');
             if (!(yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline)) {
               this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
               return;

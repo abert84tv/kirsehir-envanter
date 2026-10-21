@@ -6,6 +6,12 @@
         const yilHam = String(n.year || '').trim();
         const yil = parseInt(yilHam, 10);
         if (yilHam && !(yil >= 1900 && yil <= new Date().getFullYear() + 1)) return this.say('Yapım yılı geçersiz — bilinmiyorsa boş bırakın.');
+        // Aynı türde, 30 m içinde kayıt varsa bir kez uyarılır (tekrar kayıt); aynı kayda ikinci "Kaydet" onay sayılır
+        const yakin = this.yakinKayit(n.type, n.lat, n.lon, 30);
+        if (yakin && n.tekrarOnay !== yakin.a.id) {
+          this.setState({ newAsset: { ...n, tekrarOnay: yakin.a.id } });
+          return this.say(`Bu konumda aynı türde kayıt var: ${yakin.a.code} · ${yakin.a.village} (${Math.round(yakin.m)} m). Aynı tesis değilse yeniden Kaydet'e basın.`, true);
+        }
         // Ekleme yetkisi yok ama “tesis önerme” yetkisi var: kayıt açılmaz, mühendis ve müdür onayına öneri gider
         if (!can('create') && can('tesisOner')) return this.tesisEkleOner(n);
         const dosyalar = this._naFiles || [];

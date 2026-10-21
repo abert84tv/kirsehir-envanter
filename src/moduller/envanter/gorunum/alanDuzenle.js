@@ -75,7 +75,14 @@
                 : s.queue
             }, () => { if (yerDegisti) this.toMap({ ks: 'assets', assets: this.state.assets, faults: this.state.faults }); });
             if (yerDegisti) this.iz(a.id, 'Köy bilgisi düzeltildi', `${a.village || '(boş)'} → ${koy || '(boş)'} · ${ilce}`);
-            this.iz(a.id, 'Alanlar güncellendi', dolu + ' alan dolu');
+            // Geçmişe yalnız "N alan dolu" değil, hangi alanın neden nereye değiştiği yazılır (en çok 8 alan)
+            const etiket = {};
+            for (const [, alanlar] of (ALANLAR[a.type] || [])) for (const [k, ad] of alanlar) etiket[k] = ad;
+            const goster = v => v === true ? 'Var' : (v === false ? 'Yok' : (v == null || v === '' ? '(boş)' : String(v)));
+            const degisen = Object.keys(temiz)
+              .filter(k => k !== 'koyOtomatik' && k !== 'koyElle' && goster((a.d || {})[k]) !== goster(temiz[k]))
+              .map(k => `${etiket[k] || k}: ${goster((a.d || {})[k])} → ${goster(temiz[k])}`);
+            this.iz(a.id, 'Alanlar güncellendi', degisen.length ? degisen.slice(0, 8).join('; ') + (degisen.length > 8 ? ` (+${degisen.length - 8} alan)` : '') : dolu + ' alan dolu (değişiklik yok)');
             if (!(yeni.dbId && this._sb && this._sb.tokenOku() && !s.offline)) {
               this.duyur(`${a.code} güncellendi · ${koy || '(köy boş)'} · ${ilce} · ${dolu} alan dolu.` + (s.offline ? ' Çevrimdışısınız — kuyruğa alındı.' : ''), 6000, 'iyi');
               return;

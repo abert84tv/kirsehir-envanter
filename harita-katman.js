@@ -100,30 +100,51 @@ export function katmanKur(map, o) {
   const hatGizliMi = h => hatGizli.has((h.kod || '') + '|*') || hatGizli.has((h.kod || '') + '|' + (h.grup || 'Hat'));
   // Uzaktan ince çizgi (yüzlerce hat birbirine karışmasın), yaklaştıkça kalınlaşır
   const hatKova = () => { const z = map.getZoom(); return z < 12 ? 0 : (z < 14 ? 1 : 2); };
-  let sonKova = -1;
+  let sonKova = -1, sonCizSinir = null;
+  // Hat başına çizim verisi (geçerli noktalar, sınır kutusu, uzunluk, renk, ipucu yazısı) bir kez hesaplanır
+  const hatOnbellek = new WeakMap();
+  function hatCizimVeri(h) {
+    if (hatOnbellek.has(h)) return hatOnbellek.get(h);
+    let d = null;
+    const p = (h.noktalar || []).filter(x => x && konumGecerli(x[0], x[1])).map(x => [+x[0], +x[1]]);
+    if (p.length >= 2) {
+      let uz = 0;
+      for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
+      d = {
+        p, bbox: L.latLngBounds(p), renk: grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d',
+        yazi: (h.koy ? h.koy + ' · ' : '') + (h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz)
+      };
+    }
+    hatOnbellek.set(h, d);
+    return d;
+  }
+  // Yalnız görünen alanın (ve çevresinin) hatları çizilir: yüzlerce hat olunca kaydırma/yakınlaştırma yükü SVG düğüm sayısıyla artmaz
   function cizHatlar() {
     hatLayer.clearLayers();
     sonKova = hatKova();
+    sonCizSinir = null;
     if (!hatAcik) return;
+    // Harita henüz görünüm almadıysa (getBounds hata verir) sınırsız çizilir
+    let sinir = null;
+    try { sinir = map._loaded ? map.getBounds().pad(0.6) : null; } catch (e) { sinir = null; }
+    sonCizSinir = sinir;
     const kal = [{ w: 2.5, halo: 0 }, { w: 3.5, halo: 6 }, { w: 4.5, halo: 8 }][sonKova];
     for (const h of hatVeri) {
       if (hatGizliMi(h)) continue;
       try {
-        const p = (h.noktalar || []).filter(x => x && konumGecerli(x[0], x[1])).map(x => [+x[0], +x[1]]);
-        if (p.length < 2) continue;
-        let uz = 0;
-        for (let i = 1; i < p.length; i++) uz += hatMesafe(p[i - 1], p[i]);
-        const renk = grupRenk(h.grup) || HAT_REN[h.tur] || '#201e1d';
-        if (kal.halo) L.polyline(p, { color: '#fff', weight: kal.halo, opacity: .65, interactive: false }).addTo(hatLayer);
-        const yazi = (h.koy ? h.koy + ' · ' : '') + (h.grup ? h.grup + ' · ' : '') + (HAT_AD[h.tur] || h.tur) + (h.kod ? ' · ' + h.kod : '') + (h.cap ? ' · Ø' + h.cap : '') + ' · ' + hatKm(uz);
+        const d = hatCizimVeri(h);
+        if (!d || (sinir && !sinir.intersects(d.bbox))) continue;
+        if (kal.halo) L.polyline(d.p, { color: '#fff', weight: kal.halo, opacity: .65, interactive: false }).addTo(hatLayer);
         // Tooltip ilk üzerine gelişte kurulur: yüzlerce hat için baştan yüzlerce tooltip nesnesi üretilmez
-        L.polyline(p, { color: renk, weight: kal.w, opacity: .95, smoothFactor: 1.5 })
-          .once('mouseover', function (ev) { this.bindTooltip(yazi, { sticky: true }).openTooltip(ev.latlng); })
+        L.polyline(d.p, { color: d.renk, weight: kal.w, opacity: .95, smoothFactor: 1.5 })
+          .once('mouseover', function (ev) { this.bindTooltip(d.yazi, { sticky: true }).openTooltip(ev.latlng); })
           .addTo(hatLayer);
       } catch (e) { if (typeof o.hata === 'function') o.hata('Hat çizilemedi: ' + (e && e.message || e)); }
     }
   }
   map.on('zoomend', () => { if (hatKova() !== sonKova) cizHatlar(); });
+  // Görünen alan son çizilen alanın dışına çıktıysa yeniden çiz
+  map.on('moveend', () => { if (hatAcik && sonCizSinir && !sonCizSinir.contains(map.getBounds())) cizHatlar(); });
   cizHatlar();
 
   // ── görünüm yöneticisi

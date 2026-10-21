@@ -124,7 +124,8 @@ const AYAR_GRUP = [
   ['g-kullanici', 'Kullanıcılar ve yetki', 'Kim neyi görebilir, müdür vekâleti', ['yetki', 'vekalet']],
   ['g-ekip', 'Ekipler', 'Ekip, personel ve ekip konumu', ['ekip', 'personel', 'konum']],
   ['g-bildirim', 'Bildirim ve entegrasyon', 'Başvuru uyarısı, ekip mesajları, yapay zekâ', ['uyari', 'bildirim', 'yapayzeka']],
-  ['g-veri', 'Veri ve gizlilik', 'Senkron, köy listesi, aktarım, çöp kutusu, KVKK, denetim', ['veri', 'yerlesim', 'koyeslestir', 'aktarim', 'cop', 'kvkk', 'denetim']],
+  ['g-veri', 'Veri', 'Senkron, kayıt araçları, köy listesi, aktarım, çöp kutusu', ['veri', 'koyeslestir', 'yerlesim', 'aktarim', 'cop']],
+  ['g-gizlilik', 'Gizlilik ve denetim', 'Kişisel veri saklama, kim neyi değiştirdi', ['kvkk', 'denetim']],
   ['g-gorunum', 'Görünüm ve modüller', 'Harita, tema, menü; kullanılmayan bölümleri kapatma', ['gorunum', 'modul']]
 ];
 // Rolün Ayarlar'da görebileceği bölümler (listede olmayan rol: hepsi, yetkisine göre). Operatör yalnız ekip işleriyle, mühendis yalnız envanter araçlarıyla ilgilenir.

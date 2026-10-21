@@ -230,7 +230,7 @@
     this.raporPencere(k.koy + ' köy karnesi', govde);
   }
   // Özet sayfasındaki Rapor paneli
-  raporPanelAc() { this.setState({ raporPanel: !this.state.raporPanel }); }
+  raporPanelAc() { this.setState({ raporPanel: this.state.raporPanel === false }); }
   raporKoySec(v) { this.setState({ raporKoy: v }); }
   // Excel: tesisler, hatlar, köy özeti, ilçe özeti (çok sayfalı .xlsx; yüklenemezse eski CSV)
   async excelVer() {

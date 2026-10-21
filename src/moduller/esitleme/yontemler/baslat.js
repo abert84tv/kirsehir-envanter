@@ -47,9 +47,14 @@
     };
     window.addEventListener('online', this._agGeldi);
     window.addEventListener('offline', this._agGitti);
-    this._gorunur = () => { if (!document.hidden) this.senkron(true); };
+    // Sekme gizliyken zamanlayıcılar çalışmaz; sekme görünür olunca hem kuyruk hem (30 sn'den eskiyse) veri hemen yenilenir
+    this._gorunur = () => {
+      if (document.hidden) return;
+      this.senkron(true);
+      if (this.state.session && !this.state.scenario && Date.now() - (this._sonVeri || 0) > 25000) { this._sonVeri = Date.now(); this.veriYenile(true, true); }
+    };
     document.addEventListener('visibilitychange', this._gorunur);
-    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); this.konumGonderTik(); if (['isPanosu', 'isKarti'].includes(this.state.tab)) this.konumYenile(); }, 60000);
+    this._kuyrukSaat = setInterval(() => { if (document.hidden) return; this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); this.konumGonderTik(); if (['isPanosu', 'isKarti'].includes(this.state.tab)) this.konumYenile(); }, 60000);
   }
   baslatPeriyodik() {
     setTimeout(() => this.aracBelgeUyari(), 9000);
@@ -57,7 +62,8 @@
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
     this._veriSaat = setInterval(() => {
-      if (this.state.session && !this.state.scenario) this.veriYenile(true, true);
+      if (document.hidden) return;
+      if (this.state.session && !this.state.scenario) { this._sonVeri = Date.now(); this.veriYenile(true, true); }
       if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
       this.onayBildir();
     }, 30000);

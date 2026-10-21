@@ -35,9 +35,12 @@
       })).filter(g => g.ogeler.length),
       // Telefon alt çubuğu: en çok dört sayfa, kalanı "Tümü"
       navPhone: (() => {
+        // Rol sırasındaki sayfalar önce; çubukta yer kalırsa (modüller kapalıyken) öteki görünür sayfalar da girer
         const secili = telSira
           .map(id => navVisible.find(g => g.id === id))
-          .filter(Boolean).slice(0, 4);
+          .filter(Boolean);
+        for (const g of navVisible) if (!secili.includes(g)) secili.push(g);
+        secili.length = Math.min(secili.length, 4);
         const acikBadge = navVisible
           .filter(g => !secili.includes(g))
           .reduce((t, g) => t + (g.badge || 0), 0);

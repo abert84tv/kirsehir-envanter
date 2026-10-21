@@ -44,6 +44,8 @@
         // Süzgeç çubuğunda yer az: kısa biçim yazılır, tamamı ipucunda durur
         kisa: `${vis.length} kayıt`,
         line2: 'OpenStreetMap' },
+      // Arıza modülü kapalıyken telefon haritasında arıza düğmesinin yerine yeni tesis düğmesi (masaüstünde üst çubukta zaten var)
+      yeniTesisHaritaVar: s.device === 'phone' && !arizaOn && (can('create') || can('tesisOner')),
       map: {
         filtreBos: !['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].some(k => s.filter[k]),
         hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true } }, () => this.pushMap()),

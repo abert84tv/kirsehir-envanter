@@ -334,10 +334,12 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 <sc-if value="{{ tab.envanter }}" hint-placeholder-val="{{ false }}">
 <span style="flex:none;font:600 12.5px/1 var(--font-body);color:{{ ui.fg }}">{{ envKontrol.sayi }}</span>
 </sc-if>
+<div style="flex:none;display:flex;border-radius:10px;overflow:hidden">
 <sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;background:var(--color-uyari);color:#fff;font:600 12px/34px var(--font-body);letter-spacing:-.01em" style-hover="opacity:.88">{{ kuyrukG.label }}</button>
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:0;background:var(--color-uyari);color:#fff;font:600 12px/34px var(--font-body);letter-spacing:-.01em" style-hover="opacity:.88">{{ kuyrukG.label }}</button>
 </sc-if>
-<button onClick="{{ toggleNet }}" title="{{ net.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:10px;display:flex;align-items:center;gap:8px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ net.yazi }};background:{{ net.zemin }}"><span class="ks-canli {{ net.nokta }}"></span>{{ net.badge }}</button>
+<button onClick="{{ toggleNet }}" title="{{ net.ipucu }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 12px;border-radius:0;display:flex;align-items:center;gap:8px;font:600 12px/1 var(--font-body);letter-spacing:-.01em;color:{{ net.yazi }};background:{{ net.zemin }}"><span class="ks-canli {{ net.nokta }}"></span>{{ net.badge }}</button>
+</div>
 <button onClick="{{ masaMenu.ac }}" title="Yenile, koordinat dönüşümü, tema, yardım, çıkış" aria-label="Menü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid {{ masaMenu.kenar }};background:{{ masaMenu.zemin }};color:{{ masaMenu.yazi }};display:flex;align-items:center;justify-content:center;font:700 18px/1 var(--font-body)">⋮</button>
 <sc-if value="{{ naAcVar }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ naAc }}" title="Yeni tesis kaydı aç" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;height:34px;padding:0 14px;border-radius:10px;background:var(--color-accent);color:#fff;font:600 12.5px/34px var(--font-body);letter-spacing:-.01em" style-hover="background:var(--color-accent-600)">+<span class="ks-ust-etiket"> Yeni tesis</span></button>
@@ -5461,10 +5463,12 @@ Malzeme istekleri
 <input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Köy, kod veya koordinat" style="all:unset;flex:1;min-width:0;font:400 14px/1 var(--font-body);color:{{ ui.fg }}">
 </div>
 <button onClick="{{ openConv }}" title="Koordinat dönüşümü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--color-accent);color:var(--color-accent);display:flex;align-items:center;justify-content:center">{{ ikonlar.donustur }}</button>
+<div style="flex:none;display:flex;border-radius:11px;overflow:hidden;border:1px solid {{ net.border }}">
 <sc-if value="{{ kuyrukG.var }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:42px;min-width:46px;padding:0 10px;border-radius:11px;border:1px solid var(--color-accent);background:var(--color-accent);color:#fff;font:600 13.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
+<button onClick="{{ kuyrukG.git }}" title="{{ kuyrukG.not }}" style="all:unset;box-sizing:border-box;cursor:pointer;height:40px;min-width:44px;padding:0 10px;border-radius:0;border:none;background:var(--color-accent);color:#fff;font:600 13.5px/1 var(--font-body);display:flex;align-items:center;justify-content:center">{{ kuyrukG.n }}</button>
 </sc-if>
-<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-width:46px;height:42px;padding:0 10px;border-radius:11px;border:1px solid {{ net.border }};background:{{ net.fill }};color:{{ net.ink }};font:600 12px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap">{{ net.short }}</button>
+<button onClick="{{ toggleNet }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-width:44px;height:40px;padding:0 10px;border-radius:0;border:none;background:{{ net.fill }};color:{{ net.ink }};font:600 12px/1.1 var(--font-body);display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap">{{ net.short }}</button>
+</div>
 <button onClick="{{ telMenu.ac }}" aria-label="Menü" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;width:42px;height:42px;border-radius:11px;border:1px solid {{ telMenu.kenar }};background:{{ telMenu.zemin }};color:{{ telMenu.yazi }};display:flex;align-items:center;justify-content:center;font:700 20px/1 var(--font-body)">⋮</button>
 </div>
 <sc-if value="{{ telMenu.acik }}" hint-placeholder-val="{{ false }}">
@@ -5523,6 +5527,7 @@ Malzeme istekleri
 <iframe src="harita.html" title="Kırşehir haritası (telefon)" style="flex:1;width:100%;border:none;display:block;background:{{ ui.bg }}"></iframe>
 <div style="position:absolute;right:12px;bottom:14px;z-index:5;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
 <sc-if value="{{ newFaultVar }}" hint-placeholder-val="{{ true }}"><button onClick="{{ newFault }}" title="Yeni arıza bildir" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:{{ map.arizaBtn }};align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)">{{ ikonlar.arizaBuyuk }}</button></sc-if>
+<sc-if value="{{ yeniTesisHaritaVar }}" hint-placeholder-val="{{ false }}"><button onClick="{{ yeniTesisAc }}" aria-label="Yeni tesis" title="Yeni tesis kaydı aç" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></sc-if>
 <button onClick="{{ goToMyLocation }}" aria-label="Konumuma git" title="Konumuma git" style="all:unset;box-sizing:border-box;cursor:pointer;width:42px;height:42px;background:{{ ui.surf }};border-radius:12px;border:1px solid {{ ui.rule }};box-shadow:0 2px 8px rgba(0,0,0,.18);color:var(--color-accent);display:flex;align-items:center;justify-content:center" style-hover="background:rgba(0,113,227,.14);border-color:var(--color-accent)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.6" opacity=".9"/><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"/></svg></button>
 </div>
 </div>
@@ -10740,7 +10745,8 @@ const AYAR_GRUP = [
   ['g-kullanici', 'Kullanıcılar ve yetki', 'Kim neyi görebilir, müdür vekâleti', ['yetki', 'vekalet']],
   ['g-ekip', 'Ekipler', 'Ekip, personel ve ekip konumu', ['ekip', 'personel', 'konum']],
   ['g-bildirim', 'Bildirim ve entegrasyon', 'Başvuru uyarısı, ekip mesajları, yapay zekâ', ['uyari', 'bildirim', 'yapayzeka']],
-  ['g-veri', 'Veri ve gizlilik', 'Senkron, köy listesi, aktarım, çöp kutusu, KVKK, denetim', ['veri', 'yerlesim', 'koyeslestir', 'aktarim', 'cop', 'kvkk', 'denetim']],
+  ['g-veri', 'Veri', 'Senkron, kayıt araçları, köy listesi, aktarım, çöp kutusu', ['veri', 'koyeslestir', 'yerlesim', 'aktarim', 'cop']],
+  ['g-gizlilik', 'Gizlilik ve denetim', 'Kişisel veri saklama, kim neyi değiştirdi', ['kvkk', 'denetim']],
   ['g-gorunum', 'Görünüm ve modüller', 'Harita, tema, menü; kullanılmayan bölümleri kapatma', ['gorunum', 'modul']]
 ];
 // Rolün Ayarlar'da görebileceği bölümler (listede olmayan rol: hepsi, yetkisine göre). Operatör yalnız ekip işleriyle, mühendis yalnız envanter araçlarıyla ilgilenir.
@@ -11718,13 +11724,20 @@ class Component extends DCLogic {
       const r = document.documentElement;
       const b = document.getElementById('tel-bas');
       const n = document.getElementById('tel-nav');
+      // Boyut değişimi ResizeObserver ile yakalanır; öğe yeniden çizilip değiştiyse yeni öğe izlenir (aşağıdaki seyrek yoklama bunu fark eder)
+      if (typeof ResizeObserver === 'function') {
+        if (!this._katRO) this._katRO = new ResizeObserver(() => this._olcKat());
+        if (b && this._katIzB !== b) { if (this._katIzB) this._katRO.unobserve(this._katIzB); this._katRO.observe(b); this._katIzB = b; }
+        if (n && this._katIzN !== n) { if (this._katIzN) this._katRO.unobserve(this._katIzN); this._katRO.observe(n); this._katIzN = n; }
+      }
       // Eleman yoksa varsayılan (58/60) korunur — 0 yazmak panelleri çakıştırır
       if (b) { const bv = Math.round(b.getBoundingClientRect().bottom); if (bv > 0 && this._katB !== bv) { this._katB = bv; r.style.setProperty('--tel-bas', bv + 'px'); } }
       if (n) { const nv = Math.round(n.getBoundingClientRect().height); if (nv > 0 && this._katN !== nv) { this._katN = nv; r.style.setProperty('--tel-nav', nv + 'px'); } }
     };
     this._olcKat();
     requestAnimationFrame(this._olcKat);
-    this._katSaat = setInterval(this._olcKat, 1500);
+    // ResizeObserver yoksa (eski tarayıcı) 1,5 sn; varsa yalnız yeni öğeyi izlemeye almak için 5 sn'de bir, sekme görünürken
+    this._katSaat = setInterval(() => { if (!document.hidden) this._olcKat(); }, typeof ResizeObserver === 'function' ? 5000 : 1500);
     window.addEventListener('resize', this._olcKat);
     window.addEventListener('orientationchange', this._olcKat);
   }
@@ -14990,9 +15003,14 @@ class Component extends DCLogic {
     };
     window.addEventListener('online', this._agGeldi);
     window.addEventListener('offline', this._agGitti);
-    this._gorunur = () => { if (!document.hidden) this.senkron(true); };
+    // Sekme gizliyken zamanlayıcılar çalışmaz; sekme görünür olunca hem kuyruk hem (30 sn'den eskiyse) veri hemen yenilenir
+    this._gorunur = () => {
+      if (document.hidden) return;
+      this.senkron(true);
+      if (this.state.session && !this.state.scenario && Date.now() - (this._sonVeri || 0) > 25000) { this._sonVeri = Date.now(); this.veriYenile(true, true); }
+    };
     document.addEventListener('visibilitychange', this._gorunur);
-    this._kuyrukSaat = setInterval(() => { this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); this.konumGonderTik(); if (['isPanosu', 'isKarti'].includes(this.state.tab)) this.konumYenile(); }, 60000);
+    this._kuyrukSaat = setInterval(() => { if (document.hidden) return; this.senkron(true); this.planliKontrol(); this.aracBelgeUyari(); this.isEmriTamamla(); this.konumGonderTik(); if (['isPanosu', 'isKarti'].includes(this.state.tab)) this.konumYenile(); }, 60000);
   }
   baslatPeriyodik() {
     setTimeout(() => this.aracBelgeUyari(), 9000);
@@ -15000,7 +15018,8 @@ class Component extends DCLogic {
     // görünsün diye — sessiz, yalnızca oturum açıkken. Düzenleme formu açıkken
     // veriYenile ekranı altından değiştirmesin diye o an atlanır.
     this._veriSaat = setInterval(() => {
-      if (this.state.session && !this.state.scenario) this.veriYenile(true, true);
+      if (document.hidden) return;
+      if (this.state.session && !this.state.scenario) { this._sonVeri = Date.now(); this.veriYenile(true, true); }
       if (this.state.session && this.state.tab === 'telemetri') this.telemetriYenile(true);
       this.onayBildir();
     }, 30000);
@@ -16209,7 +16228,7 @@ class Component extends DCLogic {
     this.raporPencere(k.koy + ' köy karnesi', govde);
   }
   // Özet sayfasındaki Rapor paneli
-  raporPanelAc() { this.setState({ raporPanel: !this.state.raporPanel }); }
+  raporPanelAc() { this.setState({ raporPanel: this.state.raporPanel === false }); }
   raporKoySec(v) { this.setState({ raporKoy: v }); }
   // Excel: tesisler, hatlar, köy özeti, ilçe özeti (çok sayfalı .xlsx; yüklenemezse eski CSV)
   async excelVer() {
@@ -18496,9 +18515,12 @@ class Component extends DCLogic {
       })).filter(g => g.ogeler.length),
       // Telefon alt çubuğu: en çok dört sayfa, kalanı "Tümü"
       navPhone: (() => {
+        // Rol sırasındaki sayfalar önce; çubukta yer kalırsa (modüller kapalıyken) öteki görünür sayfalar da girer
         const secili = telSira
           .map(id => navVisible.find(g => g.id === id))
-          .filter(Boolean).slice(0, 4);
+          .filter(Boolean);
+        for (const g of navVisible) if (!secili.includes(g)) secili.push(g);
+        secili.length = Math.min(secili.length, 4);
         const acikBadge = navVisible
           .filter(g => !secili.includes(g))
           .reduce((t, g) => t + (g.badge || 0), 0);
@@ -22445,6 +22467,8 @@ class Component extends DCLogic {
         // Süzgeç çubuğunda yer az: kısa biçim yazılır, tamamı ipucunda durur
         kisa: `${vis.length} kayıt`,
         line2: 'OpenStreetMap' },
+      // Arıza modülü kapalıyken telefon haritasında arıza düğmesinin yerine yeni tesis düğmesi (masaüstünde üst çubukta zaten var)
+      yeniTesisHaritaVar: s.device === 'phone' && !arizaOn && (can('create') || can('tesisOner')),
       map: {
         filtreBos: !['kuyu', 'depo', 'ag', 'ges', 'baca', 'vana'].some(k => s.filter[k]),
         hepsiniAc: () => this.setState({ filter: { ...s.filter, kuyu: true, depo: true, ag: true, ges: true, baca: true, vana: true, kaynak: true, memba: true } }, () => this.pushMap()),
@@ -23406,7 +23430,7 @@ class Component extends DCLogic {
       exportPdf: () => this.pdfVer(),
       // Özet sayfasındaki "Rapor" paneli: Genel rapor, İlçe raporu, Köy karnesi (seçilen köy)
       rapor: {
-        acik: !!s.raporPanel, tog: () => this.raporPanelAc(),
+        acik: s.raporPanel !== false, tog: () => this.raporPanelAc(),
         genel: () => this.raporGenel(), ilce: () => this.raporIlce(),
         koyler: s.raporPanel ? this.raporKoyListe() : [],
         koy: s.raporKoy || '', onKoy: e => this.raporKoySec(e.target.value),

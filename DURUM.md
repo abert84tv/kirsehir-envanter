@@ -2409,3 +2409,7 @@ Telefon > İşler > Bana atanan: iş kartında her adımda büyük ana düğme (
 - Hat çizimi yalnız görünen alan + çevresi için (`harita-katman.js`); sekme arka plandayken 30/60 sn yenileme durur, sekmeye dönünce hemen yenilenir; telefon çubuk ölçümü ResizeObserver ile.
 - Yeni tesiste aynı türde 30 m içinde kayıt varsa bir kez uyarı (ikinci Kaydet onay); alan düzenlemede geçmişe "hangi alan neden nereye" yazılır.
 - Bilinen açık: `hat_kaydet` (bir tesisin bütün hatlarını toptan yazar) sürüm denetimsiz — iki kişi aynı köyde aynı anda hat çizerse sonraki öncekini siler (sunucu işi). Ayrıntı: ONIZLEME-NOTLARI.md.
+
+## 2026.10.21-218 — Ayarlar listesi otomatik; telefon "Tümü" sadeleşti
+- **Ayarlar sol bölüm listesi (masaüstü):** düğme kalktı; 1200 px'ten geniş pencerede hep açık, dar pencerede kendiliğinden kenara çekilir, imleç sol kenar şeridine (›) gelince içeriğin üstüne kayarak açılır, ayrılınca kapanır (yalnız CSS: `src/stil/ana.css` `.ks-ayar-*`; durum/yerel tercih yok).
+- **Telefon "Tümü":** "Bütün ekranlar · Kapat" başlık satırı kaldırıldı (alt çubuktan sayfa seçmek ya da Tümü'ye tekrar basmak zaten kapatıyor). Tüm görünür sayfalar alt çubuğa sığıyorsa (modüller kapalıyken: Envanter · Özet · Ayarlar) "Tümü" düğmesi hiç çıkmaz.

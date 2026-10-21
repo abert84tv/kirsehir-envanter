@@ -195,6 +195,18 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 }
 @media (max-width:1099px){.ks-sk-ana{display:flex;flex-wrap:wrap}.ks-sk-yan{display:contents}.ks-sk-uyari{order:0;flex:1 1 280px;align-self:flex-start}.ks-sk-liste{order:1;flex:1 1 100%}.ks-sk-zimmet{order:2;flex:1 1 100%}.ks-sk-kiv{display:none}}
 
+/* Ayarlar sol bölüm listesi (masaüstü): geniş pencerede hep açık; dar pencerede (<1200 px) kendiliğinden kenara çekilir,
+   imleç sol kenar şeridine gelince içeriğin üstüne kayarak açılır, imleç ayrılınca kapanır. Düğme/durum yok. */
+.ks-ayar-bos{display:none}
+@media (max-width:1199px){
+  .ks-ayar-kap{position:relative;overflow:hidden}
+  .ks-ayar-bos{display:block;flex:none;width:22px}
+  .ks-ayar-liste{position:absolute;left:0;top:0;bottom:0;z-index:30;transform:translateX(-242px);transition:transform .16s ease-out;box-shadow:none}
+  .ks-ayar-liste::after{content:'A';position:absolute;right:0;top:12px;width:22px;text-align:center;font:700 20px/1 var(--font-body);opacity:.55;pointer-events:none}
+  .ks-ayar-liste:hover,.ks-ayar-liste:focus-within{transform:none;box-shadow:6px 0 22px rgba(0,0,0,.22)}
+  .ks-ayar-liste:hover::after,.ks-ayar-liste:focus-within::after{display:none}
+}
+
 </style>
 </helmet>
 
@@ -2652,10 +2664,9 @@ Malzeme istekleri
 
 <!-- ayarlar -->
 <sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
-<div style="flex:1;display:flex;min-height:0;background:{{ ui.bg }}">
-<sc-if value="{{ ayar.listeVar }}" hint-placeholder-val="{{ true }}">
-<div class="scroll" style="flex:none;width:264px;overflow:auto;border-right:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:4px 10px 24px">
-<button onClick="{{ ayar.listeTog }}" title="Bölüm listesini gizle" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;margin-top:6px;border-radius:10px;color:{{ ui.mut }};font:600 12px/1 var(--font-body)" style-hover="background:{{ ui.surf2 }}">« Listeyi gizle</button>
+<div class="ks-ayar-kap" style="flex:1;display:flex;min-height:0;background:{{ ui.bg }}">
+<div class="ks-ayar-bos"></div>
+<div class="scroll ks-ayar-liste" style="flex:none;width:264px;overflow:auto;border-right:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:4px 10px 24px">
 <sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
 <div style="padding:18px 10px 6px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
 <sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
@@ -2666,13 +2677,9 @@ Malzeme istekleri
 </sc-for>
 </sc-for>
 </div>
-</sc-if>
 <div class="scroll" style="flex:1;min-width:0;overflow:auto">
 <sc-if value="{{ ayar.detay }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:14px 20px 4px;background:{{ ui.bg }}">
-<sc-if value="{{ ayar.listeKapali }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ ayar.listeTog }}" title="Bölüm listesini göster" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body)" style-hover="background:{{ ui.surf2 }}">☰ Bölümler</button>
-</sc-if>
 <span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ayar.bolumAd }}</span>
 </div>
 <sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">
@@ -9792,10 +9799,6 @@ Malzeme istekleri
 
 <sc-if value="{{ menuSayfa.acik }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="position:absolute;left:0;right:0;top:var(--tel-bas);bottom:var(--tel-nav);z-index:60;overflow:auto;background:{{ ui.bg }};display:flex;flex-direction:column">
-<div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<span style="font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">Bütün ekranlar</span>
-<button onClick="{{ menuSayfa.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">Kapat</button>
-</div>
 <sc-for list="{{ menuSayfa.gruplar }}" as="g" hint-placeholder-count="4">
 <div style="flex:none;display:flex;flex-direction:column;align-items:stretch">
 <div style="margin:12px 12px 0;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">
@@ -10906,7 +10909,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.21-217';
+const SURUM = '2026.10.21-218';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11135,8 +11138,6 @@ class Component extends DCLogic {
     })(),
     denetimQ: '', denetimSinif: '', denetimKim: '',
     menuAcik: false,
-    // Masaüstü Ayarlar: sol bölüm listesi gizlenebilir; tercih cihazda hatırlanır
-    ayarListeKapali: (() => { try { return localStorage.getItem('ks-ayar-liste') === '0'; } catch (e) { return false; } })(),
     // Sunucuya işlenmeyi bekleyen ambar hareketleri
     ambarKuyruk: (() => {
       try {
@@ -18552,12 +18553,13 @@ class Component extends DCLogic {
           .reduce((t, g) => t + (g.badge || 0), 0);
         // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
         const KISA = (RM.ad || {}).kaynaklar ? {} : { kaynaklar: 'Kaynaklar' };
-        return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
+        const butunu = navVisible.length <= secili.length;   // bütün sayfalar çubuğa sığdıysa "Tümü" listesi aynısını tekrarlardı
+        return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), ...(butunu ? [] : [{
           label: 'Tümü', go: () => this.setState({ menuAcik: !s.menuAcik }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
           mark: 'transparent', dot: s.menuAcik ? 'var(--color-accent)' : 'transparent',
           badge: acikBadge > 0, badgeN: acikBadge
-        }];
+        }])];
       })(),
       // "Tümü" sayfası — başlıklı tam liste
       menuSayfa: {
@@ -20611,9 +20613,6 @@ class Component extends DCLogic {
         return {
           // Liste yalnız hiçbir bölüm seçili değilken görünür
           listeAcik: a && !sec,
-          // Masaüstü sol liste: açık/kapalı (tercih hatırlanır)
-          listeVar: !s.ayarListeKapali, listeKapali: !!s.ayarListeKapali,
-          listeTog: () => { const k = !s.ayarListeKapali; try { localStorage.setItem('ks-ayar-liste', k ? '0' : '1'); } catch (e) { /* depolama kapalı */ } this.setState({ ayarListeKapali: k }); },
           detay: a && !!sec,
           bolumAd: ayarAdi(sec),
           // Aynı başlığın öteki bölümleri üst sekmeler olarak (tek bölümlü başlıkta sekme çıkmaz)

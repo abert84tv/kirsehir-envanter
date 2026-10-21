@@ -155,8 +155,6 @@
     })(),
     denetimQ: '', denetimSinif: '', denetimKim: '',
     menuAcik: false,
-    // Masaüstü Ayarlar: sol bölüm listesi gizlenebilir; tercih cihazda hatırlanır
-    ayarListeKapali: (() => { try { return localStorage.getItem('ks-ayar-liste') === '0'; } catch (e) { return false; } })(),
     // Sunucuya işlenmeyi bekleyen ambar hareketleri
     ambarKuyruk: (() => {
       try {

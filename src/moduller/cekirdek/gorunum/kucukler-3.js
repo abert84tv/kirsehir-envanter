@@ -46,12 +46,13 @@
           .reduce((t, g) => t + (g.badge || 0), 0);
         // Alt çubukta uzun grup adı sığmıyor ("Ekip, Araç, …") — kısa adı kullanılır
         const KISA = (RM.ad || {}).kaynaklar ? {} : { kaynaklar: 'Kaynaklar' };
-        return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), {
+        const butunu = navVisible.length <= secili.length;   // bütün sayfalar çubuğa sığdıysa "Tümü" listesi aynısını tekrarlardı
+        return [...secili.map(g => ({ ...navItem(g), ...(KISA[g.id] ? { label: KISA[g.id] } : {}) })), ...(butunu ? [] : [{
           label: 'Tümü', go: () => this.setState({ menuAcik: !s.menuAcik }),
           bg: 'transparent', fg: s.menuAcik ? ui.acc : ui.mut,
           mark: 'transparent', dot: s.menuAcik ? 'var(--color-accent)' : 'transparent',
           badge: acikBadge > 0, badgeN: acikBadge
-        }];
+        }])];
       })(),
       // "Tümü" sayfası — başlıklı tam liste
       menuSayfa: {

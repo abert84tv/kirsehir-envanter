@@ -1,9 +1,8 @@
 <!-- ayarlar -->
 <sc-if value="{{ tab.ayarKap }}" hint-placeholder-val="{{ false }}">
-<div style="flex:1;display:flex;min-height:0;background:{{ ui.bg }}">
-<sc-if value="{{ ayar.listeVar }}" hint-placeholder-val="{{ true }}">
-<div class="scroll" style="flex:none;width:264px;overflow:auto;border-right:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:4px 10px 24px">
-<button onClick="{{ ayar.listeTog }}" title="Bölüm listesini gizle" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;margin-top:6px;border-radius:10px;color:{{ ui.mut }};font:600 12px/1 var(--font-body)" style-hover="background:{{ ui.surf2 }}">« Listeyi gizle</button>
+<div class="ks-ayar-kap" style="flex:1;display:flex;min-height:0;background:{{ ui.bg }}">
+<div class="ks-ayar-bos"></div>
+<div class="scroll ks-ayar-liste" style="flex:none;width:264px;overflow:auto;border-right:1px solid {{ ui.rule }};background:{{ ui.surf }};padding:4px 10px 24px">
 <sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
 <div style="padding:18px 10px 6px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
 <sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
@@ -14,13 +13,9 @@
 </sc-for>
 </sc-for>
 </div>
-</sc-if>
 <div class="scroll" style="flex:1;min-width:0;overflow:auto">
 <sc-if value="{{ ayar.detay }}" hint-placeholder-val="{{ false }}">
 <div style="flex:none;display:flex;align-items:center;gap:12px;padding:14px 20px 4px;background:{{ ui.bg }}">
-<sc-if value="{{ ayar.listeKapali }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ ayar.listeTog }}" title="Bölüm listesini göster" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.fg }};font:600 12.5px/1 var(--font-body)" style-hover="background:{{ ui.surf2 }}">☰ Bölümler</button>
-</sc-if>
 <span style="font:600 19px/1.2 var(--font-heading);letter-spacing:-.022em;color:{{ ui.fg }}">{{ ayar.bolumAd }}</span>
 </div>
 <sc-if value="{{ ayar.altVar }}" hint-placeholder-val="{{ false }}">

@@ -15,10 +15,6 @@
 
 <sc-if value="{{ menuSayfa.acik }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="position:absolute;left:0;right:0;top:var(--tel-bas);bottom:var(--tel-nav);z-index:60;overflow:auto;background:{{ ui.bg }};display:flex;flex-direction:column">
-<div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid {{ ui.rule }};background:{{ ui.surf }}">
-<span style="font:600 14px/1 var(--font-heading);color:{{ ui.fg }}">Bütün ekranlar</span>
-<button onClick="{{ menuSayfa.kapat }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:40px;display:flex;align-items:center;padding:0 14px;border-radius:10px;border:1px solid {{ ui.rule }};color:{{ ui.mut }};font:600 11.5px/1 var(--font-body);letter-spacing:-.01em">Kapat</button>
-</div>
 <sc-for list="{{ menuSayfa.gruplar }}" as="g" hint-placeholder-count="4">
 <div style="flex:none;display:flex;flex-direction:column;align-items:stretch">
 <div style="margin:12px 12px 0;border-radius:12px;overflow:hidden;background:{{ ui.surf }}">

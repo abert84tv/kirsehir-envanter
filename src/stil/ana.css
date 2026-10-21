@@ -173,3 +173,15 @@ html.ks-yardim .ks-bilgi{display:revert !important}
   .ks-sk-bas{display:none!important}
 }
 @media (max-width:1099px){.ks-sk-ana{display:flex;flex-wrap:wrap}.ks-sk-yan{display:contents}.ks-sk-uyari{order:0;flex:1 1 280px;align-self:flex-start}.ks-sk-liste{order:1;flex:1 1 100%}.ks-sk-zimmet{order:2;flex:1 1 100%}.ks-sk-kiv{display:none}}
+
+/* Ayarlar sol bölüm listesi (masaüstü): geniş pencerede hep açık; dar pencerede (<1200 px) kendiliğinden kenara çekilir,
+   imleç sol kenar şeridine gelince içeriğin üstüne kayarak açılır, imleç ayrılınca kapanır. Düğme/durum yok. */
+.ks-ayar-bos{display:none}
+@media (max-width:1199px){
+  .ks-ayar-kap{position:relative;overflow:hidden}
+  .ks-ayar-bos{display:block;flex:none;width:22px}
+  .ks-ayar-liste{position:absolute;left:0;top:0;bottom:0;z-index:30;transform:translateX(-242px);transition:transform .16s ease-out;box-shadow:none}
+  .ks-ayar-liste::after{content:'A';position:absolute;right:0;top:12px;width:22px;text-align:center;font:700 20px/1 var(--font-body);opacity:.55;pointer-events:none}
+  .ks-ayar-liste:hover,.ks-ayar-liste:focus-within{transform:none;box-shadow:6px 0 22px rgba(0,0,0,.22)}
+  .ks-ayar-liste:hover::after,.ks-ayar-liste:focus-within::after{display:none}
+}

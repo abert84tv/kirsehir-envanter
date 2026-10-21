@@ -2413,3 +2413,4 @@ Telefon > İşler > Bana atanan: iş kartında her adımda büyük ana düğme (
 ## 2026.10.21-218 — Ayarlar listesi otomatik; telefon "Tümü" sadeleşti
 - **Ayarlar sol bölüm listesi (masaüstü):** düğme kalktı; 1200 px'ten geniş pencerede hep açık, dar pencerede kendiliğinden kenara çekilir, imleç sol kenar şeridine (›) gelince içeriğin üstüne kayarak açılır, ayrılınca kapanır (yalnız CSS: `src/stil/ana.css` `.ks-ayar-*`; durum/yerel tercih yok).
 - **Telefon "Tümü":** "Bütün ekranlar · Kapat" başlık satırı kaldırıldı (alt çubuktan sayfa seçmek ya da Tümü'ye tekrar basmak zaten kapatıyor). Tüm görünür sayfalar alt çubuğa sığıyorsa (modüller kapalıyken: Envanter · Özet · Ayarlar) "Tümü" düğmesi hiç çıkmaz.
+- **2026.10.21-219:** Telefon Hat kesiti sekmesindeki "Araç ▾" düğmesi "Köy ara ▾" oldu (arama çubuğunu açıp kapatır).

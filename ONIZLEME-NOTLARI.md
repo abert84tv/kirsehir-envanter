@@ -1,7 +1,6 @@
 # Önizleme dalı: `iyilestirme-onizleme` (sürüm 2026.10.21-216)
 
-Canlıya (`main`) alınmadı. Bu dal yalnız Vercel önizleme adresinde denenir; onay verilince `main`'e birleştirilir.
-Önizleme canlı veritabanına bağlıdır: denerken kayıt değiştirmeyin ya da yalnız bildiğiniz kaydı değiştirin.
+2026-10-21: kullanıcı onayıyla `main`'e birleştirildi ve canlıya alındı (sürüm 2026.10.21-217). Aşağıdaki liste o sürümün içeriğidir; son turda ayrıca Ayarlar listesi açılır/kapanır, telefon "Tümü" düzeltmesi ve envanter dışı bildirimlerin kapatılması eklendi (DURUM.md).
 
 ## Ne değişti, nerede bakılır
 

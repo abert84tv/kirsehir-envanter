@@ -195,16 +195,17 @@ html.ks-yardim .ks-bilgi{display:revert !important}
 }
 @media (max-width:1099px){.ks-sk-ana{display:flex;flex-wrap:wrap}.ks-sk-yan{display:contents}.ks-sk-uyari{order:0;flex:1 1 280px;align-self:flex-start}.ks-sk-liste{order:1;flex:1 1 100%}.ks-sk-zimmet{order:2;flex:1 1 100%}.ks-sk-kiv{display:none}}
 
-/* Ayarlar sol bölüm listesi (masaüstü): geniş pencerede hep açık; dar pencerede (<1200 px) kendiliğinden kenara çekilir,
-   imleç sol kenar şeridine gelince içeriğin üstüne kayarak açılır, imleç ayrılınca kapanır. Düğme/durum yok. */
+/* Ayarlar sol bölüm listesi (masaüstü): geniş pencerede (>=1200 px) simge + ad hep açık. Dar pencerede 52 px'lik simge şeridi
+   olarak kalır; imleç gelince (ya da dokununca/odaklanınca) içeriğin üstüne 264 px'e kayarak adlarıyla açılır. Yalnız CSS. */
 .ks-ayar-bos{display:none}
 @media (max-width:1199px){
   .ks-ayar-kap{position:relative;overflow:hidden}
-  .ks-ayar-bos{display:block;flex:none;width:22px}
-  .ks-ayar-liste{position:absolute;left:0;top:0;bottom:0;z-index:30;transform:translateX(-242px);transition:transform .16s ease-out;box-shadow:none}
-  .ks-ayar-liste::after{content:'A';position:absolute;right:0;top:12px;width:22px;text-align:center;font:700 20px/1 var(--font-body);opacity:.55;pointer-events:none}
-  .ks-ayar-liste:hover,.ks-ayar-liste:focus-within{transform:none;box-shadow:6px 0 22px rgba(0,0,0,.22)}
-  .ks-ayar-liste:hover::after,.ks-ayar-liste:focus-within::after{display:none}
+  .ks-ayar-bos{display:block;flex:none;width:52px}
+  .ks-ayar-liste{position:absolute;left:0;top:0;bottom:0;z-index:30;width:52px!important;padding-left:6px!important;padding-right:6px!important;overflow-x:hidden;overflow-y:auto;transition:width .16s ease-out,box-shadow .16s}
+  .ks-ayar-liste .ks-ayar-satir{padding:0 10px!important}
+  .ks-ayar-liste .ks-ayar-ad{opacity:0;white-space:nowrap;transition:opacity .12s}
+  .ks-ayar-liste:hover,.ks-ayar-liste:focus-within{width:264px!important;box-shadow:6px 0 22px rgba(0,0,0,.22)}
+  .ks-ayar-liste:hover .ks-ayar-ad,.ks-ayar-liste:focus-within .ks-ayar-ad{opacity:1;transition-delay:.06s}
 }
 
 </style>
@@ -2670,9 +2671,10 @@ Malzeme istekleri
 <sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
 <div style="padding:18px 10px 6px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
 <sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
-<button onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;margin-bottom:2px;border-radius:10px;background:{{ r.zemin }}" style-hover="background:{{ ui.surf2 }}">
-<span style="flex:1;min-width:0;font:500 14.5px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ r.renk }}">{{ r.ad }}</span>
-<span style="flex:none;font:700 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ r.rozet }}</span>
+<button class="ks-ayar-satir" title="{{ r.ad }}" onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;margin-bottom:2px;border-radius:10px;background:{{ r.zemin }}" style-hover="background:{{ ui.surf2 }}">
+<span style="flex:none;display:flex;color:{{ r.renk }}">{{ r.ikon }}</span>
+<span class="ks-ayar-ad" style="flex:1;min-width:0;font:500 14.5px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ r.renk }}">{{ r.ad }}</span>
+<span class="ks-ayar-ad" style="flex:none;font:700 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ r.rozet }}</span>
 </button>
 </sc-for>
 </sc-for>
@@ -10909,7 +10911,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.21-219';
+const SURUM = '2026.10.21-220';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -11556,6 +11558,13 @@ class Component extends DCLogic {
       envanter: ['M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12z', 'M12 6.6a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8'],
       kesit: ['M3 17l5-6 4 3 4-7 5 6', 'M3 21h18'],
       ozet: ['M4 20V10', 'M10 20V4', 'M16 20v-7', 'M22 20H2'],
+      // Ayarlar bölüm grupları
+      kalkan: ['M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'],
+      kisiler: ['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2', 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8', 'M22 21v-2a4 4 0 0 0-3-3.87', 'M16 3.13a4 4 0 0 1 0 7.75'],
+      zil: ['M10.268 21a2 2 0 0 0 3.464 0', 'M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326'],
+      veritabani: ['M12 8c4.97 0 9-1.34 9-3s-4.03-3-9-3-9 1.34-9 3 4.03 3 9 3', 'M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5', 'M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3'],
+      kilit: ['M5 11h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1z', 'M7 11V7a5 5 0 0 1 10 0v4'],
+      cubuklar: ['M21 4h-7', 'M10 4H3', 'M21 12h-9', 'M8 12H3', 'M21 20h-5', 'M12 20H3', 'M14 2v4', 'M8 10v4', 'M16 18v4'],
       ayarlar: ['M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6', 'M12 2v3', 'M12 19v3', 'M4.2 4.2l2.1 2.1', 'M17.7 17.7l2.1 2.1', 'M2 12h3', 'M19 12h3', 'M4.2 19.8l2.1-2.1', 'M17.7 6.3l2.1-2.1']
     };
     const b = boyut || 16;
@@ -20716,6 +20725,8 @@ class Component extends DCLogic {
           const aktif = gorunen.includes(aktifUye);
           return {
             ad, alt,
+            // Dar pencerede liste yalnız simge olarak görünür; simge her grup için sabittir
+            ikon: this.ikon({ 'g-kullanici': 'kalkan', 'g-ekip': 'kisiler', 'g-bildirim': 'zil', 'g-veri': 'veritabani', 'g-gizlilik': 'kilit', 'g-gorunum': 'cubuklar' }[gid] || 'ayarlar', 20),
             aktif,
             zemin: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.sel : 'transparent',
             renk: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.acc : ui.fg,

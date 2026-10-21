@@ -6,9 +6,10 @@
 <sc-for list="{{ ayarListe }}" as="g" hint-placeholder-count="3">
 <div style="padding:18px 10px 6px;font:600 11.5px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.mut }}">{{ g.baslik }}</div>
 <sc-for list="{{ g.satirlar }}" as="r" hint-placeholder-count="3">
-<button onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;margin-bottom:2px;border-radius:10px;background:{{ r.zemin }}" style-hover="background:{{ ui.surf2 }}">
-<span style="flex:1;min-width:0;font:500 14.5px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ r.renk }}">{{ r.ad }}</span>
-<span style="flex:none;font:700 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ r.rozet }}</span>
+<button class="ks-ayar-satir" title="{{ r.ad }}" onClick="{{ r.git }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;margin-bottom:2px;border-radius:10px;background:{{ r.zemin }}" style-hover="background:{{ ui.surf2 }}">
+<span style="flex:none;display:flex;color:{{ r.renk }}">{{ r.ikon }}</span>
+<span class="ks-ayar-ad" style="flex:1;min-width:0;font:500 14.5px/1.25 var(--font-body);letter-spacing:-.015em;color:{{ r.renk }}">{{ r.ad }}</span>
+<span class="ks-ayar-ad" style="flex:none;font:700 11.5px/1 var(--font-body);color:{{ ui.mut }}">{{ r.rozet }}</span>
 </button>
 </sc-for>
 </sc-for>

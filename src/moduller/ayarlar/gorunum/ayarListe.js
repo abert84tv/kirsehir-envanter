@@ -10,6 +10,8 @@
           const aktif = gorunen.includes(aktifUye);
           return {
             ad, alt,
+            // Dar pencerede liste yalnız simge olarak görünür; simge her grup için sabittir
+            ikon: this.ikon({ 'g-kullanici': 'kalkan', 'g-ekip': 'kisiler', 'g-bildirim': 'zil', 'g-veri': 'veritabani', 'g-gizlilik': 'kilit', 'g-gorunum': 'cubuklar' }[gid] || 'ayarlar', 20),
             aktif,
             zemin: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.sel : 'transparent',
             renk: aktif && ['ayarlar', 'denetim', 'cop'].includes(tabId) ? ui.acc : ui.fg,

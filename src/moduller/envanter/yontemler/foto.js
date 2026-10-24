@@ -37,6 +37,8 @@
       inp.value = '';
       if (list.length) this.fotoGonder(sel, list);
     };
+    // Kamera/galeri "geri" ile kapatılırsa niyet silinir; yoksa sonraki açılışta kart kendiliğinden açılırdı
+    inp.oncancel = () => { try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* yok */ } };
     inp.click();
   }
   // İnternet yoksa (ya da kayıt henüz sunucuda değilse) fotoğraf telefonun deposunda bekler
@@ -88,16 +90,32 @@
       this.duyur('Fotoğraf çöp kutusuna taşındı — 30 gün içinde geri getirilebilir. Ayarlar > Çöp kutusu.', 6000);
     });
   }
+  // Yeni kayıt formunda kamera açılırken program bellekten atılırsa form (fotoğrafsız) geri açılır
+  naTaslakGeriYukle() {
+    if (this._naTaslakIsledi) return;
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem('ks-na-taslak') || 'null'); } catch (e) { /* yok */ }
+    this._naTaslakIsledi = true;
+    if (!d) return;
+    try { localStorage.removeItem('ks-na-taslak'); } catch (e) { /* depolama kapalı */ }
+    if (!d.t || Date.now() - d.t > 600000 || !d.na || this.state.newAsset || this.state.device !== 'phone') return;
+    this.setState({ tab: 'islem', scenario: 'yeni', newAsset: d.na });
+    this.duyur('Yeni kayıt formu yeniden açıldı. Telefon kamera açıkken programı bellekten attığı için çekilen kare ulaşmadı — fotoğrafı yeniden ekleyin.', 12000);
+  }
   // Kamera açılırken telefon programı bellekten atarsa kullanıcı bıraktığı yere döner
   fotoNiyetGeriYukle() {
+    this.naTaslakGeriYukle();
     if (this._niyetIsledi) return;
     let n = null;
     try { n = JSON.parse(localStorage.getItem(FOTO_NIYET) || 'null'); } catch (e) { /* yok */ }
     if (!n) return;
-    try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* depolama kapalı */ }
-    if (!n.t || Date.now() - n.t > 600000) return;
+    const sil = () => { try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* depolama kapalı */ } };
+    if (!n.t || Date.now() - n.t > 600000) return sil();
+    // Açılışta liste henüz sunucudan gelmemiş olabilir: kayıt bulunana dek niyet saklı kalır
+    // (sonraki yüklemede yeniden denenir), yoksa kart kaybolup ana ekrana düşülüyordu.
     const a = this.state.assets.find(x => x.id === n.id) || this.state.assets.find(x => x.code === n.kod);
     if (!a) return;
+    sil();
     this._niyetIsledi = true;
     this.setState({ selected: a.id, panel: 'detay', detailTab: 'medya', tab: 'harita' });
     if (a.dbId) this.fotoYenile(a.dbId);

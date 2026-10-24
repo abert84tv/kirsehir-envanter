@@ -16,7 +16,14 @@
         inp.multiple = s.device !== 'phone';
         if (s.device === 'phone') inp.setAttribute('capture', 'environment');
         else inp.removeAttribute('capture');
+        // Telefon kamerayı açarken programı bellekten atabilir: form cihaza yazılır, dönüşte geri gelir
+        if (s.device === 'phone' && s.newAsset) {
+          try { localStorage.setItem('ks-na-taslak', JSON.stringify({ t: Date.now(), na: { ...s.newAsset, photos: 0, fotoUrl: [] } })); } catch (e) { /* depolama kapalı */ }
+        }
+        const taslakSil = () => { try { localStorage.removeItem('ks-na-taslak'); } catch (e) { /* yok */ } };
+        inp.oncancel = taslakSil;
         inp.onchange = () => {
+          taslakSil();
           const list = [...(inp.files || [])].filter(f => /^image\//.test(f.type));
           inp.value = '';
           if (!list.length || !this.state.newAsset) return;

@@ -8799,7 +8799,7 @@ Malzeme istekleri
 <div class="scroll" style="position:absolute;left:0;right:0;bottom:var(--tel-nav);top:var(--tel-bas);background:{{ ui.bg }};border-top:1px solid var(--color-accent);z-index:15;overflow:auto">
 
 <sc-if value="{{ panel.isDetail }}" hint-placeholder-val="{{ false }}">
-<div style="padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:{{ ui.surf }}">
+<div style="position:sticky;top:0;z-index:6;padding:12px 14px;border-bottom:1px solid {{ ui.rule }};display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:{{ ui.surf }}">
 <div style="min-width:0">
 <div style="font:600 11px/1 var(--font-body);letter-spacing:-.01em;color:{{ ui.acc }};margin-bottom:6px">{{ detail.kind }}</div>
 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -10916,7 +10916,7 @@ const ISTISNA_DISI = ['sil', 'admin', 'gor'];
 const SAYFA_ADLARI = { harita: 'Harita', profil: 'Hat kesiti', envanter: 'Liste', ozet: 'Özet', ayarlar: 'Ayarlar', denetim: 'Denetim izi', cop: 'Çöp kutusu', yerlesim: 'Köy listesi', aktarim: 'Aktarım', isPanosu: 'İş panosu', ekipPano: 'Ekipler', ambar: 'Stok', arac: 'Araç', telemetri: 'Telemetri', bakim: 'Bakım', gunluk: 'Bana atanan', islem: 'İşlem' };
 const sayfaAdi = tab => SAYFA_ADLARI[tab] || 'Geri';
 
-const SURUM = '2026.10.21-222';
+const SURUM = '2026.10.24-223';
 const STD_LOC = { lat: 39.1462, lon: 34.1583 };
 const SES_KEY = 'ks-envanter-oturum';
 const FOTO_NIYET = 'ks-foto-niyet';
@@ -14169,6 +14169,8 @@ class Component extends DCLogic {
       inp.value = '';
       if (list.length) this.fotoGonder(sel, list);
     };
+    // Kamera/galeri "geri" ile kapatılırsa niyet silinir; yoksa sonraki açılışta kart kendiliğinden açılırdı
+    inp.oncancel = () => { try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* yok */ } };
     inp.click();
   }
   // İnternet yoksa (ya da kayıt henüz sunucuda değilse) fotoğraf telefonun deposunda bekler
@@ -14220,16 +14222,32 @@ class Component extends DCLogic {
       this.duyur('Fotoğraf çöp kutusuna taşındı — 30 gün içinde geri getirilebilir. Ayarlar > Çöp kutusu.', 6000);
     });
   }
+  // Yeni kayıt formunda kamera açılırken program bellekten atılırsa form (fotoğrafsız) geri açılır
+  naTaslakGeriYukle() {
+    if (this._naTaslakIsledi) return;
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem('ks-na-taslak') || 'null'); } catch (e) { /* yok */ }
+    this._naTaslakIsledi = true;
+    if (!d) return;
+    try { localStorage.removeItem('ks-na-taslak'); } catch (e) { /* depolama kapalı */ }
+    if (!d.t || Date.now() - d.t > 600000 || !d.na || this.state.newAsset || this.state.device !== 'phone') return;
+    this.setState({ tab: 'islem', scenario: 'yeni', newAsset: d.na });
+    this.duyur('Yeni kayıt formu yeniden açıldı. Telefon kamera açıkken programı bellekten attığı için çekilen kare ulaşmadı — fotoğrafı yeniden ekleyin.', 12000);
+  }
   // Kamera açılırken telefon programı bellekten atarsa kullanıcı bıraktığı yere döner
   fotoNiyetGeriYukle() {
+    this.naTaslakGeriYukle();
     if (this._niyetIsledi) return;
     let n = null;
     try { n = JSON.parse(localStorage.getItem(FOTO_NIYET) || 'null'); } catch (e) { /* yok */ }
     if (!n) return;
-    try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* depolama kapalı */ }
-    if (!n.t || Date.now() - n.t > 600000) return;
+    const sil = () => { try { localStorage.removeItem(FOTO_NIYET); } catch (e) { /* depolama kapalı */ } };
+    if (!n.t || Date.now() - n.t > 600000) return sil();
+    // Açılışta liste henüz sunucudan gelmemiş olabilir: kayıt bulunana dek niyet saklı kalır
+    // (sonraki yüklemede yeniden denenir), yoksa kart kaybolup ana ekrana düşülüyordu.
     const a = this.state.assets.find(x => x.id === n.id) || this.state.assets.find(x => x.code === n.kod);
     if (!a) return;
+    sil();
     this._niyetIsledi = true;
     this.setState({ selected: a.id, panel: 'detay', detailTab: 'medya', tab: 'harita' });
     if (a.dbId) this.fotoYenile(a.dbId);
@@ -21882,7 +21900,14 @@ class Component extends DCLogic {
         inp.multiple = s.device !== 'phone';
         if (s.device === 'phone') inp.setAttribute('capture', 'environment');
         else inp.removeAttribute('capture');
+        // Telefon kamerayı açarken programı bellekten atabilir: form cihaza yazılır, dönüşte geri gelir
+        if (s.device === 'phone' && s.newAsset) {
+          try { localStorage.setItem('ks-na-taslak', JSON.stringify({ t: Date.now(), na: { ...s.newAsset, photos: 0, fotoUrl: [] } })); } catch (e) { /* depolama kapalı */ }
+        }
+        const taslakSil = () => { try { localStorage.removeItem('ks-na-taslak'); } catch (e) { /* yok */ } };
+        inp.oncancel = taslakSil;
         inp.onchange = () => {
+          taslakSil();
           const list = [...(inp.files || [])].filter(f => /^image\//.test(f.type));
           inp.value = '';
           if (!list.length || !this.state.newAsset) return;

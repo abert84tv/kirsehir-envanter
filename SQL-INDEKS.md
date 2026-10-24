@@ -8,7 +8,7 @@ Dosya adları değişmedi (dosyalar birbirine adıyla "Ön koşul" olarak atıf 
 Supabase 30 Ekim 2026'dan sonra `public` şemasındaki **yeni** tablolara Veri API (PostgREST) yetkisini otomatik vermeyecek; mevcut tablolar etkilenmez.
 Bu projede tablolara doğrudan erişim zaten kapalıdır (v200: `anon`/`authenticated` yetkisi yok, program yalnız RPC + Storage kullanır). Bu yüzden:
 - Yeni tabloya `anon` / `authenticated` GRANT **verilmez**; erişim `security definer` RPC işleviyle olur (işlev sahibi tabloya erişir).
-- Edge Function'lar tabloyu `service_role` ile kullanır (ör. `sb.from('denetim')`). Bu yetkiyi tek seferde `src/moduller/cekirdek/sql/SQL-service-role-yetki-2026-10-21.sql` verir (varsayılan yetki: postgres'in oluşturduğu yeni tablolar otomatik service_role'e açılır). **Bu dosya henüz uygulanmadı — 30 Ekim'den önce uygulanmalı.** Uygulanana kadar yeni tabloya elle `grant select, insert, update, delete on public.<tablo> to service_role;` yazılır.
+- Edge Function'lar tabloyu `service_role` ile kullanır (ör. `sb.from('denetim')`). Bu yetkiyi tek seferde `src/moduller/cekirdek/sql/SQL-service-role-yetki-2026-10-21.sql` verir (varsayılan yetki: postgres'in oluşturduğu yeni tablolar otomatik service_role'e açılır). **Bu dosya 2026-10-24 canlıya uygulandı**; yeni tabloya ayrıca GRANT yazmak gerekmez.
 - Her yeni tabloda `alter table <tablo> enable row level security;` kalır (politikasız = doğrudan erişim kapalı).
 - Aşağıdaki eski dosyalarda GRANT satırı yoktur; sıfırdan kurulum / önizleme dalı gerekirse önce bu dosyalar, sonra `SQL-service-role-yetki-2026-10-21.sql` çalıştırılır.
 

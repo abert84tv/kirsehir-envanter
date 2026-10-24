@@ -1,4 +1,4 @@
--- 2026-10-21 — service_role yetkisi (UYGULANMADI: onay bekliyor; 30 Ekim 2026'dan önce uygulanmalı)
+-- 2026-10-21 — service_role yetkisi (UYGULANDI 2026-10-24, canlı veritabanı)
 --
 -- Supabase 30 Ekim 2026'dan sonra `public` şemasındaki yeni tablolara Veri API yetkisini (service_role dahil) otomatik vermeyecek.
 -- Edge Function'lar (mesaj-gonder, telegram-basvuru, talep-siniflandir) tabloya service_role ile eriştiği için, yeni tabloda
